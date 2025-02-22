@@ -20,13 +20,13 @@ class Food:
     @property
     def price_per_protein(self):
         if self.protein == 0:
-            return 99999999
+            return None
         return round(self.price / self.protein, 2)
 
     @property
     def kcal_per_protein(self):
         if self.protein == 0:
-            return 99999999
+            return None
         return round(self.kcal / self.protein, 2)
 
     def __repr__(self):
