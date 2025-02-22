@@ -38,6 +38,24 @@ class Menu:
     def add_food(self, food: Food):
         self.foods.append(food)
 
+    def to_myfitnesspal_entries(self) -> dict:
+        chicken_grams = (self.total_protein / 25.0) * 100.0
+        chicken_fat = (chicken_grams / 100.0) * 3.0
+        leftover_fat = self.total_fat - chicken_fat
+
+        if leftover_fat < 0:
+            leftover_fat = 0
+
+        sugar_grams = self.total_carbs
+
+        oil_grams = leftover_fat
+
+        return {
+            "Chicken (g)": round(chicken_grams, 1),
+            "Sugar (g)": round(sugar_grams, 1),
+            "Olive Oil (g)": round(oil_grams, 1)
+        }
+
     def __repr__(self):
         food_names = ',\n '.join(food.name for food in self.foods)
         return (

@@ -19,15 +19,11 @@ class Food:
 
     @property
     def price_per_protein(self):
-        if self.protein == 0:
-            return None
-        return round(self.price / self.protein, 2)
+        return 0 if self.protein == 0 else round(self.price / self.protein, 2)
 
     @property
     def kcal_per_protein(self):
-        if self.protein == 0:
-            return None
-        return round(self.kcal / self.protein, 2)
+        return 0 if self.protein == 0 else round(self.kcal / self.protein, 2)
 
     def __repr__(self):
         return (f"Food(name={self.name}, food_id={self.food_id} kcal={self.kcal}, protein={self.protein}, "
