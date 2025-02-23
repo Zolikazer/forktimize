@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, PositiveInt
 from typing_extensions import Self
 
 
@@ -16,18 +16,16 @@ class Square(BaseModel):
 
 
 class NutritionalConstraints(BaseModel):
-    min_calories: Optional[int] = 2300
-    max_calories: Optional[int] = 2700
-    min_protein: Optional[int] = 200
-    max_protein: Optional[int] = None
-    min_carbs: Optional[int] = None
-    max_carbs: Optional[int] = None
-    min_fat: Optional[int] = None
-    max_fat: Optional[int] = None
-    max_occurrences_per_food: Optional[int] = None
+    min_calories: Optional[PositiveInt] = 2300
+    max_calories: Optional[PositiveInt] = 2700
+    min_protein: Optional[PositiveInt] = 200
+    max_protein: Optional[PositiveInt] = None
+    min_carbs: Optional[PositiveInt] = None
+    max_carbs: Optional[PositiveInt] = None
+    min_fat: Optional[PositiveInt] = None
+    max_fat: Optional[PositiveInt] = None
+    max_occurrences_per_food: Optional[PositiveInt] = None
 
-    # self._validate_min_lower_than_max()
-    # self._validate_macro_constraints_consistent_with_calories()
     @model_validator(mode='after')
     def _validate_min_lower_than_max(self) -> Self:
         if self.min_calories is not None and self.max_calories is not None and self.min_calories > self.max_calories:
