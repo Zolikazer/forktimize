@@ -59,8 +59,10 @@ class Menu(BaseModel):
         }
 
     def __repr__(self):
-        food_names = ',\n '.join(food.name for food in self.foods)
-        return (
-            f"Menu(foods=[\n{food_names}\n]\ntotal_calories={self.total_calories}\ntotal_protein={self.total_protein}\n"
-            f"total_price={self.total_price}\ntotal_fat={self.total_fat}\ntotal_carbs={self.total_carbs}\n"
-            f"price_per_calorie={self.price_per_calorie}\nprice_per_protein={self.price_per_protein}\n)")
+        return "GEEEEECIIII"
+    # def __repr__(self):
+    #     food_names = ',\n '.join(food.name for food in self.foods)
+    #     return (
+    #         f"heeeeeee(foods=[\n{food_names}\n]\ntotal_calories={self.total_calories}\ntotal_protein={self.total_protein}\n"
+    #         f"total_price={self.total_price}\ntotal_fat={self.total_fat}\ntotal_carbs={self.total_carbs}\n"
+    #         f"price_per_calorie={self.price_per_calorie}\nprice_per_protein={self.price_per_protein}\n)")

@@ -17,4 +17,4 @@ from controller.endpoints import router
     # print(menu)
     # print("Approximate MyFitnessPal Log:", menu.to_myfitnesspal_entries())
 app = FastAPI()
-app.include_router(router, prefix="/users", tags=["users"])
+app.include_router(router)
