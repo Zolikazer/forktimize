@@ -1,11 +1,13 @@
 from typing import List
 
+from pydantic import BaseModel, ConfigDict
+
 from model.food import Food
 
 
-class Menu:
-    def __init__(self, foods: List[Food]):
-        self.foods = foods
+class Menu(BaseModel):
+    foods: List[Food] = []
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @property
     def total_calories(self) -> int:
@@ -51,9 +53,9 @@ class Menu:
         oil_grams = leftover_fat
 
         return {
-            "Chicken (g)": round(chicken_grams, 1),
-            "Sugar (g)": round(sugar_grams, 1),
-            "Olive Oil (g)": round(oil_grams, 1)
+            "Chicken (g)": int(chicken_grams),
+            "Sugar (g)": int(sugar_grams),
+            "Olive Oil (g)": int(oil_grams)
         }
 
     def __repr__(self):

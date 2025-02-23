@@ -1,17 +1,19 @@
 import datetime
 
+from pydantic import BaseModel, ConfigDict
 
-class Food:
-    def __init__(self, food_id: int, name: str, kcal: int, protein: int, carbs: int, fat: int, price: int,
-                 date: datetime.datetime):
-        self.food_id = food_id
-        self.name = name
-        self.kcal = int(kcal)
-        self.protein = int(protein)
-        self.carbs = int(carbs)
-        self.fat = int(fat)
-        self.price = price
-        self.date = date
+
+class Food(BaseModel):
+    food_id: int
+    name: str
+    kcal: int
+    protein: float
+    carbs: float
+    fat: float
+    price: int
+    date: datetime
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @property
     def price_per_kcal(self):
@@ -30,3 +32,6 @@ class Food:
                 f"carbs={self.carbs}, fat={self.fat}, price={self.price}, date={self.date}, "
                 f"price_per_kcal={self.price_per_kcal}, kcal_per_protein={self.kcal_per_protein}, "
                 f"price_per_protein={self.price_per_protein})")
+
+    def __hash__(self):
+        return hash(self.food_id)

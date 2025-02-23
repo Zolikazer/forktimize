@@ -44,7 +44,7 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
 
     status = LpStatus[problem.solve(solver)]
 
-    menu = Menu(list())
+    menu = Menu()
     if status == "Optimal":
         chosen_foods = _convert_result_to_menu(foods, menu, x_vars)
 
