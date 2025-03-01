@@ -30,7 +30,7 @@
 </script>
 
 <div class="field">
-    <label class="label">Foods You Dislike 🤮</label>
+    <label class="label">Foods You Dislike</label>
     <div class="control" bind:this={inputRef}>
         <input
                 type="text"
