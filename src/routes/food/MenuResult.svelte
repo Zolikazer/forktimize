@@ -43,7 +43,7 @@
             <section class="summary-flex mb-3 border-bottom">
                 <div class="summary-item">💰 <strong>Total Cost:</strong>
                     ${menu.reduce((sum, food) => sum + food.price, 0).toFixed(2)}</div>
-                <div class="summary-item">📊 <strong>Total
+                <div class="summary-item">🔥 <strong>Total
                     Calories:</strong> {menu.reduce((sum, food) => sum + food.calories, 0)} kcal
                 </div>
             </section>
@@ -54,7 +54,7 @@
                 <div class="summary-item">🥖 <strong>Total
                     Carbs:</strong> {menu.reduce((sum, food) => sum + food.carbs, 0)} g
                 </div>
-                <div class="summary-item">🛢️ <strong>Total
+                <div class="summary-item">🧈️ <strong>Total
                     Fats:</strong> {menu.reduce((sum, food) => sum + food.fats, 0)} g
                 </div>
             </section>
