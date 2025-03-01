@@ -1,5 +1,7 @@
 <script>
     import '../app.css';
+    import Hero from "./food/Hero.svelte";
+    import Footer from "./food/Footer.svelte";
 
     let {children} = $props();
 </script>
@@ -7,9 +9,12 @@
 
 
 <div class="app">
-    <main>
+    <main style="min-height: 95vh;">
+        <Hero/>
         {@render children()}
     </main>
+    <Footer/>
+
 </div>
 
 <!--<style>-->

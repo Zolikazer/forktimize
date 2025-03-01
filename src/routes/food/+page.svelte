@@ -1,8 +1,6 @@
 <script>
     import Input from "./Input.svelte";
-    import Hero from "./Hero.svelte";
     import Result from "./MenuResult.svelte";
-    import Footer from "./Footer.svelte";
 
     let menu = [];
 
@@ -25,24 +23,20 @@
     }
 
 </style>
-<Hero/>
 
 
-<div style="min-height: 80vh;">
-    <section class="main-container">
-        <div class="container is-fluid">
-            <div class="columns is-centered">
-                <div class="column">
-                    <Input {generateMenu}/>
-                </div>
-                <div class="column">
-                    <Result {menu}/>
-                </div>
+<section class="main-container">
+    <div class="container is-fluid">
+        <div class="columns is-centered">
+            <div class="column">
+                <Input {generateMenu}/>
+            </div>
+            <div class="column">
+                <Result {menu}/>
             </div>
         </div>
-    </section>
-</div>
-<Footer/>
+    </div>
+</section>
 
 
 
