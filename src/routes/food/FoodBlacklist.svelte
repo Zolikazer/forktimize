@@ -1,19 +1,18 @@
 <script>
-    import { onMount } from "svelte";
+    import {onMount} from "svelte";
+    import {dislikedFoods} from "$lib/dislikedFoodsStore.js";
 
-    let dislikedFoods = [];
     let newFood = "";
     let inputRef; // Reference to input field
 
     function addFood() {
-        if (newFood.trim() && !dislikedFoods.includes(newFood.trim())) {
-            dislikedFoods = [...dislikedFoods, newFood.trim()];
+        if (newFood.trim()) {
+            dislikedFoods.update(foods => [...foods, newFood.trim()]);
             newFood = "";
         }
     }
-
     function removeFood(food) {
-        dislikedFoods = dislikedFoods.filter(f => f !== food);
+        dislikedFoods.update(foods => foods.filter(f => f !== food));
     }
 
     function handleClickOutside(event) {
@@ -45,7 +44,7 @@
     </div>
 
     <div class="tags mt-2">
-        {#each dislikedFoods as food}
+        {#each $dislikedFoods as food}
             <span class="tag is-danger is-light" data-tooltip={food}>
                 {shortenText(food)}
                 <button class="delete is-small" on:click={() => removeFood(food)}></button>

@@ -1,7 +1,13 @@
 <script>
     import Help from "./Help.svelte";
+    import { dislikedFoods } from "$lib/dislikedFoodsStore.js";
 
     export let menu = [];
+
+    function removeFood(foodName) {
+        menu = menu.filter(food => food.name !== foodName); // Remove from menu
+        dislikedFoods.update(foods => [...foods, foodName]); // Add to disliked foods
+    }
 </script>
 
 <div class="box">
@@ -22,7 +28,7 @@
             <tbody>
             {#each menu as food}
                 <tr>
-                    <td>{food.name}</td>
+                    <td><button class="delete is-small delete-button" on:click={() => removeFood(food.name)}></button> {food.name}</td>
                     <td>{food.calories}</td>
                     <td>{food.protein}</td>
                     <td>{food.carbs}</td>
@@ -79,5 +85,9 @@
         border-bottom: 2px solid #e0e0e0;
         padding-bottom: 1rem;
         margin-bottom: 1.5rem;
+    }
+
+    .delete-button:hover {
+        transform: scale(1.1);
     }
 </style>
