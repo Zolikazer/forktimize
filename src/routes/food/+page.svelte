@@ -3,12 +3,14 @@
     import Result from "$lib/components/app/MenuResult.svelte";
     import Help from "$lib/components/app/Help.svelte";
     import MenuResult from "$lib/components/app/MenuResult.svelte";
+    import Food from "$lib/components/app/Food.svelte";
 
     let menu = [];
 
+    let aFood = {name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi", calories: 300, protein: 400, carbs: 100, fats: 78, price: 2565};
     function generateMenu() {
         menu = [
-            {name: "Grilled Chicken", calories: 300, protein: 40, carbs: 5, fats: 7, price: 3.50},
+            aFood,
             {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 2.00}
         ];
     }
@@ -41,8 +43,7 @@
                         <div class="notification is-info has-text-centered">
                             No menu generated yet. Click <strong>"Generate My Menu"</strong> to get started! 🚀
                         </div>
-                        <Help/>
-
+                        <Food food={aFood}/>
                     {/if}
 
                 </div>

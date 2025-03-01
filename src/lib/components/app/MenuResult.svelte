@@ -16,23 +16,26 @@
     <tr>
         <th>Food</th>
         <th>Calories</th>
-        <th>Protein (g)</th>
-        <th>Carbs (g)</th>
-        <th>Fats (g)</th>
-        <th>Price ($)</th>
+        <th>Protein</th>
+        <th>Carbs</th>
+        <th>Fats</th>
+        <th>Price</th>
+<!--        <th>Nem Szereted?</th>-->
     </tr>
     </thead>
     <tbody>
     {#each menu as food}
         <tr>
-            <td>
-                <button class="delete is-small delete-button"
-                        on:click={() => removeFood(food.name)}></button> {food.name}</td>
-            <td>{food.calories}</td>
-            <td>{food.protein}</td>
-            <td>{food.carbs}</td>
-            <td>{food.fats}</td>
-            <td>${food.price.toFixed(2)}</td>
+            <td>{food.name}</td>
+            <td>{food.calories} kcal</td>
+            <td>{food.protein} g</td>
+            <td>{food.carbs} g</td>
+            <td>{food.fats} g</td>
+            <td>{food.price} Ft</td>
+<!--            <td>-->
+<!--                <button class="button is-small is-danger is-light delete-button"-->
+<!--                        on:click={() => removeFood(food.name)}><span class="emoji">🤮</span>-->
+<!--                </button></td>-->
         </tr>
     {/each}
     </tbody>
@@ -81,6 +84,10 @@
     }
 
     .delete-button:hover {
-        transform: scale(1.1);
+        transform: scale(1.4);
+    }
+
+    .emoji {
+        font-size: 0.7rem; /* Slightly larger emoji */
     }
 </style>
