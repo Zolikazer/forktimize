@@ -13,7 +13,7 @@
 </script>
 
 <div class="field">
-    <label class="label">Select a Date</label>
+    <label class="label">Select a Date 📅 </label>
     <div class="control">
         <div class="select is-fullwidth">
             <select bind:value={selectedDate}>
