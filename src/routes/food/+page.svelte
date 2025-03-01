@@ -7,8 +7,8 @@
 
     function generateMenu() {
         menu = [
-            { name: "Grilled Chicken", calories: 300, protein: 40, carbs: 5, fats: 7, price: 3.50 },
-            { name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 2.00 }
+            {name: "Grilled Chicken", calories: 300, protein: 40, carbs: 5, fats: 7, price: 3.50},
+            {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 2.00}
         ];
     }
 </script>
@@ -60,42 +60,47 @@
     }
 </style>
 
-<Hero />
+<Hero/>
 
 <div class="main-container">
-    <!-- Left Side: Input Section -->
-    <div class="left-column">
-        <Input {generateMenu}/>
-    </div>
+    <Input />
 
-    <!-- Right Side: How to Use Section -->
-    <div class="right-column">
-        <h2 class="how-to-title">How to Use 🍽️</h2>
 
-        <div class="how-to-step">
-            <span class="how-to-step-icon">🎯</span>
-            <p><strong>Step 1:</strong> Set your nutritional goals (calories, protein, carbs, fats).</p>
-        </div>
+    <!--    &lt;!&ndash; Left Side: Input Section &ndash;&gt;-->
+    <!--    <div class="left-column">-->
+    <!--        <Input {generateMenu}/>-->
+    <!--    </div>-->
 
-        <div class="how-to-step">
-            <span class="how-to-step-icon">🍏</span>
-            <p><strong>Step 2:</strong> Add any dietary restrictions (allergies, hated foods, etc.).</p>
-        </div>
 
-        <div class="how-to-step">
-            <span class="how-to-step-icon">⚡</span>
-            <p><strong>Step 3:</strong> Click "Generate My Menu" to get a meal plan!</p>
-        </div>
+    <!--    &lt;!&ndash; Right Side: How to Use Section &ndash;&gt;-->
+    <!--    <div class="right-column">-->
+    <!--        <h2 class="how-to-title">How to Use 🍽️</h2>-->
 
-        <div class="how-to-step">
-            <span class="how-to-step-icon">📊</span>
-            <p><strong>Step 4:</strong> View your customized meal plan with total nutrients & cost.</p>
-        </div>
+    <!--        <div class="how-to-step">-->
+    <!--            <span class="how-to-step-icon">🎯</span>-->
+    <!--            <p><strong>Step 1:</strong> Set your nutritional goals (calories, protein, carbs, fats).</p>-->
+    <!--        </div>-->
 
-        <div class="how-to-step">
-            <span class="how-to-step-icon">🔄</span>
-            <p><strong>Step 5:</strong> Adjust settings and regenerate if needed!</p>
-        </div>
-    </div>
+    <!--        <div class="how-to-step">-->
+    <!--            <span class="how-to-step-icon">🍏</span>-->
+    <!--            <p><strong>Step 2:</strong> Add any dietary restrictions (allergies, hated foods, etc.).</p>-->
+    <!--        </div>-->
+
+    <!--        <div class="how-to-step">-->
+    <!--            <span class="how-to-step-icon">⚡</span>-->
+    <!--            <p><strong>Step 3:</strong> Click "Generate My Menu" to get a meal plan!</p>-->
+    <!--        </div>-->
+
+    <!--        <div class="how-to-step">-->
+    <!--            <span class="how-to-step-icon">📊</span>-->
+    <!--            <p><strong>Step 4:</strong> View your customized meal plan with total nutrients & cost.</p>-->
+    <!--        </div>-->
+
+    <!--        <div class="how-to-step">-->
+    <!--            <span class="how-to-step-icon">🔄</span>-->
+    <!--            <p><strong>Step 5:</strong> Adjust settings and regenerate if needed!</p>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+    <Result {menu}/>
 </div>
-<Result {menu}/>
