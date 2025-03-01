@@ -13,9 +13,9 @@
 </script>
 
 <div class="box">
-    <h2 class="input-card-header">Set Your Nutritional Goals</h2>
+    <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
-    <div class="input-row">
+    <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
         <InputGroup label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal"/>
         <InputGroup label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g"/>
         <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g"/>
@@ -23,46 +23,17 @@
     </div>
 
     <div class="has-text-centered">
-        <button class="button generate-button" on:click={generateMenu}>Generate My Menu 🍽️</button>
+        <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3  is-size-5 "
+                on:click={generateMenu}>Generate My Menu 🍽️
+        </button>
     </div>
 </div>
 
 <style>
-    .input-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
-        max-width: 800px; /* Reduced width */
-        margin: auto;
-    }
-
-    .input-card-header {
-        text-align: center;
-        font-size: 1.4rem;
-        font-weight: bold;
-        color: black;
-        padding-bottom: 0.8rem;
-        border-bottom: 1px solid #e0e0e0;
-        margin-bottom: 1rem;
-    }
-
-    /* FLEXBOX for aligning inputs in one row */
-    .input-row {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
     .generate-button {
-        width: 100%;
         font-size: 1rem;
-        font-weight: bold;
-        padding: 0.8rem;
-        border-radius: 30px;
         background: #00d1b2;
-        color: white;
+        /*color: white;*/
         box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease-in-out;
     }
