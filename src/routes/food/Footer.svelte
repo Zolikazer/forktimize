@@ -1,0 +1,37 @@
+<script>
+    export let footerText = "© 2024 Menu Maker Pro. All rights reserved. Made by Zoltán Spagina";
+</script>
+
+<style>
+    .footer-custom {
+        background: linear-gradient(135deg, #00d1b2, #009e8e);
+        /*url("https://www.transparenttextures.com/patterns/food.png");*/
+        background-blend-mode: overlay;
+        padding: 1rem 1rem;
+        /*color: white;*/
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        animation: floatUpDown 3s ease-in-out infinite alternate;
+    }
+
+    .footer-content {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    /* Subtle floating animation */
+    .footer-text {
+        display: inline-block;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .footer-text:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<footer class="footer footer-custom">
+    <div class="container">
+        <p class="footer-content footer-text">{footerText}</p>
+    </div>
+</footer>
