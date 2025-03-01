@@ -6,13 +6,13 @@
     <div class="card-image">
         <figure class="image is-16by9">
             <img
-                    src="https://bulma.io/assets/images/placeholders/1280x960.png"
+                    src="https://ca.cityfood.hu/api/v1/i?menu_item_id=96019&width=425&height=425"
                     alt="Placeholder image"
             />
         </figure>
     </div>
     <div class="card-content">
-        <div class="media">
+        <div class="media mb-1">
             <div class="media-content">
                 <p class="title is-5">{food.name}</p>
                 <p class="subtitle is-6">{food.price} Ft</p>
