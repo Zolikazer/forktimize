@@ -2,7 +2,7 @@
     import Input from "./Input.svelte";
     import Hero from "./Hero.svelte";
     import Result from "./Result.svelte";
-    import InputGroup from "./InputGroup.svelte";
+    import DateSelector from "./DateSelector.svelte";
 
     let menu = [];
 
@@ -34,7 +34,6 @@
             <div class="column">
                 <Input {generateMenu}/>
             </div>
-
             <div class="column">
                 <Result {menu} />
             </div>

@@ -1,14 +1,16 @@
 <script>
-    import InputGroup from "./InputGroup.svelte";
+    import InputGroup from "./MacroConstraint.svelte";
+    import DateSelector from "./DateSelector.svelte";
+    import FoodBlacklist from "./FoodBlacklist.svelte";
 
     export let minCalories = 1500;
     export let maxCalories = 2500;
-    export let minProtein = 50;
-    export let maxProtein = 150;
-    export let minCarbs = 100;
-    export let maxCarbs = 300;
-    export let minFats = 20;
-    export let maxFats = 80;
+    export let minProtein ;
+    export let maxProtein ;
+    export let minCarbs ;
+    export let maxCarbs ;
+    export let minFats ;
+    export let maxFats;
     export let generateMenu;
 </script>
 
@@ -21,6 +23,16 @@
         <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g"/>
         <InputGroup label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g"/>
     </div>
+
+    <div class="columns is-centered mt-3">
+        <div class="column">
+            <DateSelector/>
+        </div>
+        <div class="column">
+            <FoodBlacklist/>
+        </div>
+    </div>
+
 
     <div class="has-text-centered">
         <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3  is-size-5 "
