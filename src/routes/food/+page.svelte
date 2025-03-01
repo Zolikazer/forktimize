@@ -2,6 +2,7 @@
     import Input from "./Input.svelte";
     import Hero from "./Hero.svelte";
     import Result from "./Result.svelte";
+    import InputGroup from "./InputGroup.svelte";
 
     let menu = [];
 
@@ -27,11 +28,6 @@
 
 <Hero/>
 
-<!--<div class="main-container">-->
-<!--        <Input/>-->
-<!--    <Input />-->
-<!--    <Result {menu}/>-->
-
 <section class="main-container">
     <div class="container is-fluid">
         <div class="columns is-centered">
@@ -46,4 +42,3 @@
     </div>
 </section>
 
-<!--</div>-->
