@@ -12,7 +12,7 @@
     export let generateMenu;
 </script>
 
-<div class="input-card">
+<div class="box">
     <h2 class="input-card-header">Set Your Nutritional Goals</h2>
 
     <div class="input-row">

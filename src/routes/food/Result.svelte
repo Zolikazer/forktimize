@@ -4,14 +4,6 @@
 
 <style>
     /* Stylish box for the entire results section */
-    .results-box {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
-        max-width: 1000px;
-        margin: auto;
-    }
 
     /* Box for summary totals */
     .summary-box {
@@ -46,10 +38,9 @@
 </style>
 
 {#if menu.length}
-    <section class="section">
-        <div class="container">
+<!--        <div class="container">-->
             <!-- Boxed Results Section -->
-            <div class="results-box">
+            <div class="box">
                 <h2 class="title has-text-centered">Your Custom Menu</h2>
 
                 <table class="table is-fullwidth is-striped is-hoverable">
@@ -88,6 +79,5 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+<!--        </div>-->
 {/if}
