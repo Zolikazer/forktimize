@@ -1,7 +1,7 @@
 <div class="box has-background-light p-4 is-rounded shadow">
     <h2 class="title is-5 has-text-centered">📋 Need help?</h2>
     <ul class="content">
-        <li>✅ Add your <strong>nutritional constraints</strong> (calories, protein, carbs, fats). <strong>You only need to enter either the minimum or maximum values.</strong></li>
+        <li>✅ Add your <strong>nutritional constraints</strong> (calories, protein, carbs, fats).</li>
         <li>⚖️ <strong>You only need to enter either the minimum or maximum values.</strong></li>
         <li>📅 <strong>Select a day</strong> for which you want to order.</li>
         <li>🍽️ The system will generate a <strong>list of food</strong> that fit your requirements.</li>

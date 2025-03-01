@@ -4,9 +4,15 @@
     export let maxValue;
     export let unit = "";
     export let emoji = "";
+    let isInvalid = false;
 
-    function validateNumber(value) {
+    function validateNotNegative(value) {
         return (value < 0 || isNaN(value)) ? "" : value; // Return corrected value
+    }
+
+    function validateMax() {
+        isInvalid = maxValue !== "" && minValue !== "" && maxValue < minValue;
+        console.log(isInvalid)
     }
 
 </script>
@@ -17,20 +23,34 @@
     <div class="is-flex is-justify-content-center gap-2">
         <div class="is-flex is-flex-direction-column is-align-items-center is-flex-grow-1">
             <label class="has-text-grey-darker has-text-weight-bold is-size-7 mb-1">Min</label>
-            <input type="number"
-                   bind:value={minValue}
-                   on:blur={() => minValue = validateNumber(minValue)}
-                   class="input is-small has-text-centered is-rounded"
-                   placeholder="Optional"
-            >
+            <div class="tooltip-container" data-tooltip="Max should be greater than or equal to Min"
+                 class:has-tooltip={isInvalid}>
+                <input type="number"
+                       bind:value={minValue}
+                       on:blur={() => {
+                       minValue = validateNotNegative(minValue);
+                       validateMax()
+                   }} class="input is-small has-text-centered is-rounded"
+                       placeholder="Optional"
+                       class:is-danger={isInvalid}
+                >
+            </div>
         </div>
         <div class="is-flex is-flex-direction-column is-align-items-center is-flex-grow-1">
             <label class="has-text-grey-darker has-text-weight-bold is-size-7 mb-1">Max</label>
-            <input type="number"
-                   bind:value={maxValue}
-                   on:blur={() => maxValue = validateNumber(maxValue)}
-                   class="input is-small has-text-centered is-rounded"
-                   placeholder="Optional">
+            <div class="tooltip-container" data-tooltip="Max should be greater than or equal to Min"
+                 class:has-tooltip={isInvalid}>
+                <input type="number"
+                       bind:value={maxValue}
+                       on:blur={() => {
+                       maxValue = validateNotNegative(maxValue);
+                       validateMax()
+                   }}
+                       class="input is-small has-text-centered is-rounded"
+                       placeholder="Optional"
+                       class:is-danger={isInvalid}>
+            </div>
+
         </div>
     </div>
 </div>
@@ -44,6 +64,25 @@
         text-align: center;
         font-size: 0.9rem;
         width: 200px; /* Adjusted width to fit inline */
+    }
+
+    /* Tooltip styling */
+    .tooltip-container {
+        position: relative;
+    }
+
+    .tooltip-container.has-tooltip:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: red;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        white-space: nowrap;
     }
 
     /* Remove spinner/arrows for Chrome, Safari, Edge, Opera */
