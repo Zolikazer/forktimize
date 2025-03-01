@@ -5,12 +5,14 @@
 
 <style>
     .hero-custom {
-        background: linear-gradient(135deg, #00d1b2, #009e8e);
+        background: linear-gradient(135deg, #00d1b2, #009e8e),
+        url("https://www.transparenttextures.com/patterns/food.png");
+        background-blend-mode: overlay; /* Blends the gradient & pattern */;
         padding: 1.5rem 1rem; /* Reduced padding */
         color: white;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        animation: floatUpDown 3s ease-in-out infinite alternate;
     }
-
     .hero-body {
         padding: 1.5rem 0; /* Less vertical spacing */
     }

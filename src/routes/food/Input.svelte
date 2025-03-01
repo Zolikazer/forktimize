@@ -1,11 +1,14 @@
 <script>
+    import InputGroup from "./InputGroup.svelte";
+
     export let minCalories = 1500;
     export let maxCalories = 2500;
-    export let protein = 100;
-    export let carbs = 200;
-    export let fats = 50;
-    export let allergies = "";
-    export let hatedFoods = "";
+    export let minProtein = 50;
+    export let maxProtein = 150;
+    export let minCarbs = 100;
+    export let maxCarbs = 300;
+    export let minFats = 20;
+    export let maxFats = 80;
     export let generateMenu;
 </script>
 
@@ -14,38 +17,10 @@
         <div class="input-card">
             <h2 class="input-card-header">Set Your Nutritional Goals</h2>
 
-            <div class="columns is-multiline">
-                <div class="column is-half form-group">
-                    <label class="label">Min Calories</label>
-                    <input type="number" bind:value={minCalories} class="input">
-                </div>
-                <div class="column is-half form-group">
-                    <label class="label">Max Calories</label>
-                    <input type="number" bind:value={maxCalories} class="input">
-                </div>
-
-                <div class="column is-one-third form-group">
-                    <label class="label">Protein (g)</label>
-                    <input type="number" bind:value={protein} class="input">
-                </div>
-                <div class="column is-one-third form-group">
-                    <label class="label">Carbs (g)</label>
-                    <input type="number" bind:value={carbs} class="input">
-                </div>
-                <div class="column is-one-third form-group">
-                    <label class="label">Fats (g)</label>
-                    <input type="number" bind:value={fats} class="input">
-                </div>
-
-                <div class="column is-half form-group">
-                    <label class="label">Allergies / Dietary Restrictions</label>
-                    <input type="text" bind:value={allergies} class="input">
-                </div>
-                <div class="column is-half form-group">
-                    <label class="label">Hated Foods</label>
-                    <input type="text" bind:value={hatedFoods} class="input">
-                </div>
-            </div>
+            <InputGroup label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal" />
+            <InputGroup label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g" />
+            <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g" />
+            <InputGroup label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g" />
 
             <div class="has-text-centered">
                 <button class="button generate-button" on:click={generateMenu}>Generate My Menu 🍽️</button>
@@ -72,16 +47,6 @@
         padding-bottom: 1rem;
         border-bottom: 2px solid #e0e0e0;
         margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-
-    .input {
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        transition: 0.2s ease-in-out;
     }
 
     .generate-button {
