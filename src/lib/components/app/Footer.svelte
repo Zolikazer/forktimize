@@ -2,6 +2,12 @@
     export let footerText = "© 2024 Menu Maker Pro. All rights reserved. Made by Zoltán Spagina";
 </script>
 
+<footer class="footer footer-custom">
+    <div class="container">
+        <p class="has-text-centered is-size-6 has-text-weight-bold footer-text">{footerText}</p>
+    </div>
+</footer>
+
 <style>
     .footer-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e);
@@ -12,13 +18,6 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
         animation: floatUpDown 3s ease-in-out infinite alternate;
     }
-
-    .footer-content {
-        text-align: center;
-        font-size: 1rem;
-        font-weight: bold;
-    }
-
     /* Subtle floating animation */
     .footer-text {
         display: inline-block;
@@ -29,9 +28,3 @@
         transform: scale(1.05);
     }
 </style>
-
-<footer class="footer footer-custom">
-    <div class="container">
-        <p class="footer-content footer-text">{footerText}</p>
-    </div>
-</footer>

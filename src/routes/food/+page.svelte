@@ -1,6 +1,8 @@
 <script>
     import Input from "$lib/components/app/Input.svelte";
     import Result from "$lib/components/app/MenuResult.svelte";
+    import Help from "$lib/components/app/Help.svelte";
+    import MenuResult from "$lib/components/app/MenuResult.svelte";
 
     let menu = [];
 
@@ -32,7 +34,21 @@
                 <Input {generateMenu}/>
             </div>
             <div class="column">
-                <Result {menu}/>
+                <div class="box">
+                    {#if menu.length}
+                        <MenuResult menu={menu}/>
+                    {:else}
+                        <div class="notification is-info has-text-centered">
+                            No menu generated yet. Click <strong>"Generate My Menu"</strong> to get started! 🚀
+                        </div>
+                        <Help/>
+
+                    {/if}
+
+                </div>
+
+
+                <!--                <Result {menu}/>-->
             </div>
         </div>
     </div>

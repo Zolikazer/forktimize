@@ -3,6 +3,17 @@
     export let subtitle = "Eat Smart, Spend Less!";
 </script>
 
+
+<section class="hero hero-custom">
+    <div class="hero-body has-text-centered hero-content">
+        <div class="container">
+            <h1 class="title hero-title title-animated">{title}</h1>
+            <p class="subtitle hero-subtitle">{subtitle}</p>
+            <!--            <button class="button hero-button">Get Started 🚀</button>-->
+        </div>
+    </div>
+</section>
+
 <style>
     .hero-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e),
@@ -68,13 +79,3 @@
         }
     }
 </style>
-
-<section class="hero hero-custom">
-    <div class="hero-body has-text-centered hero-content">
-        <div class="container">
-            <h1 class="title hero-title title-animated">{title}</h1>
-            <p class="subtitle hero-subtitle">{subtitle}</p>
-<!--            <button class="button hero-button">Get Started 🚀</button>-->
-        </div>
-    </div>
-</section>

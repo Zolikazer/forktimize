@@ -5,29 +5,28 @@
     let newFood = "";
     let inputRef; // Reference to input field
 
-    function addFood() {
+    function blacklistFood() {
         if (newFood.trim()) {
             dislikedFoods.update(foods => [...foods, newFood.trim()]);
             newFood = "";
         }
     }
-    function removeFood(food) {
+    function removeFoodFromBlacklist(food) {
         dislikedFoods.update(foods => foods.filter(f => f !== food));
     }
 
-    function handleClickOutside(event) {
+    function addFoodIfUserClickedOutside(event) {
         if (inputRef && !inputRef.contains(event.target)) {
-            addFood(); // Add the food if user clicks outside
+            blacklistFood();
         }
     }
 
     onMount(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => document.removeEventListener("click", handleClickOutside);
+        document.addEventListener("click", addFoodIfUserClickedOutside);
+        return () => document.removeEventListener("click", addFoodIfUserClickedOutside);
     });
 
-    // Function to shorten the displayed text but keep full value
-    function shortenText(text, length = 6) {
+    function shortenText(text, length = 8) {
         return text.length > length ? text.slice(0, length) + "..." : text;
     }
 </script>
@@ -38,7 +37,7 @@
         <input
                 type="text"
                 bind:value={newFood}
-                on:keydown={(e) => e.key === 'Enter' && addFood()}
+                on:keydown={(e) => e.key === 'Enter' && blacklistFood()}
                 class="input"
                 placeholder="Type a food and press Enter">
     </div>
@@ -47,14 +46,13 @@
         {#each $dislikedFoods as food}
             <span class="tag is-danger is-light" data-tooltip={food}>
                 {shortenText(food)}
-                <button class="delete is-small" on:click={() => removeFood(food)}></button>
+                <button class="delete is-small" on:click={() => removeFoodFromBlacklist(food)}></button>
             </span>
         {/each}
     </div>
 </div>
 
 <style>
-    /* Tooltip styling */
     .tag[data-tooltip] {
         position: relative;
         cursor: pointer;
