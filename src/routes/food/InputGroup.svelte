@@ -5,7 +5,7 @@
     export let unit = "";
 </script>
 
-<div class="input-group has-background-white-ter">
+<div class="input-group has-background-white-ter mx-auto mb-3">
     <p class="has-text-weight-bold has-text-grey-darker is-size-7 mb-2">{label} ({unit})</p>
 
     <div class="is-flex is-justify-content-center gap-2">
@@ -29,6 +29,6 @@
         text-align: center;
         font-size: 0.9rem;
         width: 200px; /* Adjusted width to fit inline */
-        margin: auto;
+
     }
 </style>
