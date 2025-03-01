@@ -3,6 +3,7 @@
     export let minValue;
     export let maxValue;
     export let unit = "";
+    export let emoji = "";
 
     function validateNumber(value) {
         return (value < 0 || isNaN(value)) ? "" : value; // Return corrected value
@@ -11,7 +12,7 @@
 </script>
 
 <div class="input-group has-background-white-ter mx-auto mb-3">
-    <p class="has-text-weight-bold has-text-grey-darker is-size-7 mb-2">{label} ({unit})</p>
+    <p class="has-text-weight-bold has-text-grey-darker is-size-7 mb-2">{label} ({unit}) {emoji}</p>
 
     <div class="is-flex is-justify-content-center gap-2">
         <div class="is-flex is-flex-direction-column is-align-items-center is-flex-grow-1">

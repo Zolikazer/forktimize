@@ -2,7 +2,6 @@
     import Input from "./Input.svelte";
     import Hero from "./Hero.svelte";
     import Result from "./Result.svelte";
-    import DateSelector from "./DateSelector.svelte";
 
     let menu = [];
 

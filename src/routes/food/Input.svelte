@@ -18,10 +18,10 @@
     <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
     <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        <InputGroup label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal"/>
-        <InputGroup label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g"/>
-        <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g"/>
-        <InputGroup label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g"/>
+        <InputGroup label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal" emoji="🔥"/>
+        <InputGroup label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g" emoji="💪"/>
+        <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g" emoji="🥖"/>
+        <InputGroup label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g" emoji="🧈"/>
     </div>
 
     <div class="columns is-centered mt-3">
