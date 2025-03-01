@@ -1,6 +1,6 @@
 <script>
     import Help from "./Help.svelte";
-    import { dislikedFoods } from "$lib/dislikedFoodsStore.js";
+    import { dislikedFoods } from "$lib/stores/dislikedFoodsStore.js";
 
     export let menu = [];
 

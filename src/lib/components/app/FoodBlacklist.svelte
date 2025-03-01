@@ -1,6 +1,6 @@
 <script>
     import {onMount} from "svelte";
-    import {dislikedFoods} from "$lib/dislikedFoodsStore.js";
+    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
 
     let newFood = "";
     let inputRef; // Reference to input field

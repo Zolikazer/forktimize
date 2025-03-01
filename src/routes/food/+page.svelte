@@ -1,6 +1,6 @@
 <script>
-    import Input from "./Input.svelte";
-    import Result from "./MenuResult.svelte";
+    import Input from "$lib/components/app/Input.svelte";
+    import Result from "$lib/components/app/MenuResult.svelte";
 
     let menu = [];
 
