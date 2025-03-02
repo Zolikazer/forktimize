@@ -40,10 +40,17 @@
                     {#if menu.length}
                         <MenuResult menu={menu}/>
                     {:else}
-                        <div class="notification is-info has-text-centered">
-                            No menu generated yet. Click <strong>"Generate My Menu"</strong> to get started! 🚀
-                        </div>
+<!--                        <div class="notification is-info has-text-centered">-->
+<!--                            No menu generated yet. Click <strong>"Generate My Menu"</strong> to get started! 🚀-->
+<!--                        </div>-->
                         <Food food={aFood}/>
+                        <Food food={aFood}/>
+
+                        <Food food={aFood}/>
+
+                        <Food food={aFood}/>
+                        <Food food={aFood}/>
+
                     {/if}
 
                 </div>

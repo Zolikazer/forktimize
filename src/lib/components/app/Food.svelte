@@ -14,19 +14,19 @@
     <div class="card-content">
         <div class="media mb-1">
             <div class="media-content">
-                <p class="title is-5">{food.name}</p>
-                <p class="subtitle is-6">{food.price} Ft</p>
+                <p class="title is-6">{food.name}</p>
+                <p class="subtitle is-7">{food.price} Ft</p>
             </div>
         </div>
 
         <div class="columns is-centered">
             <div class="column">
-                <div><strong>🔥 {food.calories}</strong> kcal kalória</div>
-            <div><strong>💪 {food.protein}</strong> g fehérje</div>
+                <div class="subtitle is-7"><strong>🔥 {food.calories}</strong> kcal kalória</div>
+            <div class="subtitle is-7"><strong>💪 {food.protein}</strong> g fehérje</div>
             </div>
             <div class="column">
-                <div><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
-                <div><strong>🛢️ {food.fats}</strong> g     zsír</div>
+                <div class="subtitle is-7"><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
+                <div class="subtitle is-7"><strong>🛢️ {food.fats}</strong> g     zsír</div>
             </div>
         </div>
 
