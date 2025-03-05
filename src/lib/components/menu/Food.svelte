@@ -2,12 +2,17 @@
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import { menu } from "$lib/stores/menuStore.js";
 
+    const MAX_FOOD_LENGTH = 42;
 
     export let food;
 
     function removeFood(foodName) {
         dislikedFoods.update(foods => [...foods, foodName]);
         menu.update(currentMenu => currentMenu.filter(food => food.name !== foodName));
+    }
+
+    function getShortenedName(name) {
+        return name.length > MAX_FOOD_LENGTH ? name.substring(0, MAX_FOOD_LENGTH) + "..." : name;
     }
 
 </script>
@@ -24,7 +29,7 @@
     <div class="card-content">
         <div class="media mb-1">
             <div class="media-content">
-                <p class="title is-6">{food.name}</p>
+                <p class="title is-6 food-name"  data-tooltip={food.name}>{getShortenedName(food.name)}</p>
                 <p class="subtitle is-7">{food.price} Ft</p>
             </div>
         </div>
@@ -66,4 +71,29 @@
         min-width: 150px; /* Ensures a nice button size */
         align-self: center; /* Centers button in flex container */
     }
+
+    .food-name {
+        cursor: pointer; /* Indicate hover behavior */
+        position: relative; /* Needed for tooltip */
+        display: inline-block;
+        max-width: 90%;
+    }
+
+    .food-name:hover::after {
+        content: attr(data-tooltip); /* Shows full name */
+        position: absolute;
+        left: 50%;
+        bottom: 120%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        z-index: 10;
+        opacity: 1;
+        transition: opacity 0.2s ease-in-out;
+    }
+
 </style>
