@@ -4,6 +4,7 @@
     import Menu from "$lib/components/menu/Menu.svelte";
     import {menu} from "$lib/stores/menuStore.js";
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
+    import Myfitnesspal from "$lib/components/myfitnesspal/Myfitnesspal.svelte";
 
 </script>
 
@@ -38,6 +39,7 @@
                 </div>
                 <div class="column">
                     <MenuSummary/>
+                    <Myfitnesspal/>
                 </div>
             </div>
         {/if}

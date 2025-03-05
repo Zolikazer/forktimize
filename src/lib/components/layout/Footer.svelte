@@ -1,5 +1,5 @@
 <script>
-    export let footerText = "© 2024 Menu Maker Pro. All rights reserved. Made by Zoltán Spagina";
+    const footerText = "© 2025 Menu Maker Pro App created by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
 </script>
 
 <footer class="footer footer-custom">
