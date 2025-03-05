@@ -14,7 +14,7 @@
     let maxFats;
 
     let aFood = {
-        name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi",
+        name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi buziiiiiiiiiiiiiiiiiiiiiiiiiiiii",
         calories: 300,
         protein: 400,
         carbs: 100,
@@ -28,6 +28,8 @@
             {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 1600},
             {name: "Rántott fasza hús", calories: 450, protein: 8, carbs: 36, fats: 38, price: 2000},
             {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 3560},
+            {name: "Saláta", calories: 250, protein: 8, carbs: 45, fats: 4, price: 3560},
+            aFood
         ]);
     }
 </script>

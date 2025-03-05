@@ -11,7 +11,7 @@
             />
         </figure>
     </div>
-    <div class="card-content is-flex-grow-1">
+    <div class="card-content">
         <div class="media mb-1">
             <div class="media-content">
                 <p class="title is-6">{food.name}</p>
@@ -30,14 +30,14 @@
             </div>
         </div>
     </div>
-    <button class="button is-danger is-light mt-auto" on:click={() => removeFood(food.name)}>
+    <button class="button is-danger is-light mt-auto mb-3 custom-button" on:click={() => removeFood(food.name)}>
         🤮 Nem szeretem
     </button>
 </div>
 
 <style>
     .food-card {
-        width: 250px;
+        width: 30%;
         border-radius: 12px;
         box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease-in-out;
@@ -49,5 +49,11 @@
 
     .media-content p {
         margin: 0;
+    }
+
+    .custom-button {
+        width: auto;  /* Adjust width automatically */
+        min-width: 150px; /* Ensures a nice button size */
+        align-self: center; /* Centers button in flex container */
     }
 </style>

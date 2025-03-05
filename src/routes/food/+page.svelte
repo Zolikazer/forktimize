@@ -3,6 +3,7 @@
     import Help from "$lib/components/app/Help.svelte";
     import Menu from "$lib/components/app/Menu.svelte";
     import {menu} from "$lib/stores/menuStore.js";
+    import MenuSummary from "$lib/components/app/MenuSummary.svelte";
 
 </script>
 
@@ -36,6 +37,7 @@
                     <Menu/>
                 </div>
                 <div class="column">
+                    <MenuSummary/>
                 </div>
             </div>
         {/if}
