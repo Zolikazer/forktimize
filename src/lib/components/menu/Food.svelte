@@ -1,5 +1,15 @@
 <script>
-    export let food; // Pass food object as a prop
+    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
+    import { menu } from "$lib/stores/menuStore.js";
+
+
+    export let food;
+
+    function removeFood(foodName) {
+        dislikedFoods.update(foods => [...foods, foodName]);
+        menu.update(currentMenu => currentMenu.filter(food => food.name !== foodName));
+    }
+
 </script>
 
 <div class="card food-card mx-auto is-flex is-flex-direction-column">
