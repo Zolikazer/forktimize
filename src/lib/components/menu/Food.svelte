@@ -76,24 +76,29 @@
         cursor: pointer; /* Indicate hover behavior */
         position: relative; /* Needed for tooltip */
         display: inline-block;
-        max-width: 90%;
     }
 
+    /* Tooltip Styling with Controlled Line Breaks */
     .food-name:hover::after {
-        content: attr(data-tooltip); /* Shows full name */
+        content: attr(data-tooltip);
         position: absolute;
         left: 50%;
         bottom: 120%;
         transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         color: white;
         padding: 6px 10px;
         border-radius: 6px;
         font-size: 0.8rem;
-        white-space: nowrap;
+        white-space: normal; /* Allows wrapping */
+        max-width: 220px; /* Tooltip wraps after 220px */
+        text-align: center;
         z-index: 10;
         opacity: 1;
         transition: opacity 0.2s ease-in-out;
+        line-height: 1.4; /* Improves readability */
+        word-break: normal; /* Default: only breaks at spaces */
+        overflow-wrap: break-word; /* Wraps long words properly */
     }
 
 </style>
