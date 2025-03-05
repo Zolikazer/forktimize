@@ -2,16 +2,34 @@
     import InputGroup from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
+    import {menu} from "$lib/stores/menuStore.js";
 
-    export let minCalories = 1500;
-    export let maxCalories = 2500;
-    export let minProtein ;
-    export let maxProtein ;
-    export let minCarbs ;
-    export let maxCarbs ;
-    export let minFats ;
-    export let maxFats;
-    export let generateMenu;
+    let minCalories = 1500;
+    let maxCalories = 2500;
+    let minProtein;
+    let maxProtein;
+    let minCarbs;
+    let maxCarbs;
+    let minFats;
+    let maxFats;
+
+    let aFood = {
+        name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi",
+        calories: 300,
+        protein: 400,
+        carbs: 100,
+        fats: 78,
+        price: 2565
+    };
+
+    function generateMenu() {
+        menu.set([
+            aFood,
+            {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 1600},
+            {name: "Rántott fasza hús", calories: 450, protein: 8, carbs: 36, fats: 38, price: 2000},
+            {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 3560},
+        ]);
+    }
 </script>
 
 <div class="box">

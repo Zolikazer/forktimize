@@ -2,24 +2,8 @@
     import Input from "$lib/components/app/Input.svelte";
     import Help from "$lib/components/app/Help.svelte";
     import Menu from "$lib/components/app/Menu.svelte";
+    import {menu} from "$lib/stores/menuStore.js";
 
-    let menu = [];
-
-    let aFood = {
-        name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi",
-        calories: 300,
-        protein: 400,
-        carbs: 100,
-        fats: 78,
-        price: 2565
-    };
-
-    function generateMenu() {
-        menu = [
-            aFood,
-            {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 2.00}
-        ];
-    }
 </script>
 
 <style>
@@ -39,20 +23,22 @@
     <div class="container is-fluid">
         <div class="columns is-centered">
             <div class="column">
-                <Input {generateMenu}/>
+                <Input/>
             </div>
             <div class="column">
                 <Help/>
             </div>
         </div>
 
-        <div class="columns is-centered">
-            <div class="column">
-                <Menu/>
+        {#if $menu}
+            <div class="columns is-centered">
+                <div class="column">
+                    <Menu/>
+                </div>
+                <div class="column">
+                </div>
             </div>
-            <div class="column">
-            </div>
-        </div>
+        {/if}
     </div>
 </section>
 

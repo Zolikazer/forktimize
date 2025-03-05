@@ -2,7 +2,7 @@
     export let food; // Pass food object as a prop
 </script>
 
-<div class="card food-card mx-auto">
+<div class="card food-card mx-auto is-flex is-flex-direction-column">
     <div class="card-image">
         <figure class="image is-16by9">
             <img
@@ -11,7 +11,7 @@
             />
         </figure>
     </div>
-    <div class="card-content">
+    <div class="card-content is-flex-grow-1">
         <div class="media mb-1">
             <div class="media-content">
                 <p class="title is-6">{food.name}</p>
@@ -26,13 +26,13 @@
             </div>
             <div class="column">
                 <div class="subtitle is-7 mb-1"><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
-                <div class="subtitle is-7"><strong>🛢️ {food.fats}</strong> g zsír</div>
+                <div class="subtitle is-7"><strong>🧈️ {food.fats}</strong> g zsír</div>
             </div>
         </div>
-        <button class="button is-danger is-light is-fullwidth mt-3" on:click={() => removeFood(food.name)}>
-            🤮 Nem szeretem
-        </button>
     </div>
+    <button class="button is-danger is-light mt-auto" on:click={() => removeFood(food.name)}>
+        🤮 Nem szeretem
+    </button>
 </div>
 
 <style>
@@ -50,5 +50,4 @@
     .media-content p {
         margin: 0;
     }
-
 </style>
