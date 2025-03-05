@@ -2,7 +2,7 @@
     export let food; // Pass food object as a prop
 </script>
 
-<div class="card food-card">
+<div class="card food-card mx-auto">
     <div class="card-image">
         <figure class="image is-16by9">
             <img
@@ -21,21 +21,21 @@
 
         <div class="columns is-centered">
             <div class="column">
-                <div class="subtitle is-7"><strong>🔥 {food.calories}</strong> kcal kalória</div>
-            <div class="subtitle is-7"><strong>💪 {food.protein}</strong> g fehérje</div>
+                <div class="subtitle is-7 mb-1"><strong>🔥 {food.calories}</strong> kcal kalória</div>
+                <div class="subtitle is-7"><strong>💪 {food.protein}</strong> g fehérje</div>
             </div>
             <div class="column">
-                <div class="subtitle is-7"><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
-                <div class="subtitle is-7"><strong>🛢️ {food.fats}</strong> g     zsír</div>
+                <div class="subtitle is-7 mb-1"><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
+                <div class="subtitle is-7"><strong>🛢️ {food.fats}</strong> g zsír</div>
             </div>
         </div>
 
-<!--        <div class="nutrient-grid">-->
-<!--            <div><strong>🔥 {food.calories}</strong> kcal</div>-->
-<!--            <div><strong>💪 {food.protein}</strong> g fehérje</div>-->
-<!--            <div><strong>🥖 {food.carbs}</strong> g szénhidrát</div>-->
-<!--            <div><strong>🛢️ {food.fats}</strong> g zsír</div>-->
-<!--        </div>-->
+        <!--        <div class="nutrient-grid">-->
+        <!--            <div><strong>🔥 {food.calories}</strong> kcal</div>-->
+        <!--            <div><strong>💪 {food.protein}</strong> g fehérje</div>-->
+        <!--            <div><strong>🥖 {food.carbs}</strong> g szénhidrát</div>-->
+        <!--            <div><strong>🛢️ {food.fats}</strong> g zsír</div>-->
+        <!--        </div>-->
 
         <button class="button is-danger is-light is-fullwidth mt-3" on:click={() => removeFood(food.name)}>
             🤮 Nem szeretem
