@@ -1,5 +1,5 @@
 <script>
-    import Food from "$lib/components/app/Food.svelte";
+    import Food from "$lib/components/menu/Food.svelte";
     import { menu } from "$lib/stores/menuStore.js";
 
 </script>

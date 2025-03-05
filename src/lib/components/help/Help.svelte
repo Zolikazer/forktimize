@@ -1,5 +1,5 @@
 <script>
-    import Instructions from "$lib/components/app/Instructions.svelte";
+    import Instructions from "$lib/components/help/Instructions.svelte";
 </script>
 
 <div class="box">

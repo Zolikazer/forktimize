@@ -1,7 +1,7 @@
 <script>
     import '../app.css';
-    import Hero from "$lib/components/app/Hero.svelte";
-    import Footer from "$lib/components/app/Footer.svelte";
+    import Hero from "$lib/components/layout/Hero.svelte";
+    import Footer from "$lib/components/layout/Footer.svelte";
 
     let {children} = $props();
 </script>

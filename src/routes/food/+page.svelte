@@ -1,9 +1,9 @@
 <script>
-    import Input from "$lib/components/app/Input.svelte";
-    import Help from "$lib/components/app/Help.svelte";
-    import Menu from "$lib/components/app/Menu.svelte";
+    import Input from "$lib/components/input/Input.svelte";
+    import Help from "$lib/components/help/Help.svelte";
+    import Menu from "$lib/components/menu/Menu.svelte";
     import {menu} from "$lib/stores/menuStore.js";
-    import MenuSummary from "$lib/components/app/MenuSummary.svelte";
+    import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
 
 </script>
 
