@@ -13,7 +13,7 @@
 </script>
 
 <div class="box">
-    <h2 class="title border-bottom is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Your Custom Menu</h2>
+    <h2 class="title border-bottom is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Your Menu On Wednesday</h2>
 
     <div class="is-flex is-flex-wrap-wrap is-justify-content-center">
             <Food food={aFood}/>

@@ -1,7 +1,5 @@
 <script>
     import Input from "$lib/components/app/Input.svelte";
-    import MenuResult from "$lib/components/app/MenuResult.svelte";
-    import Food from "$lib/components/app/Food.svelte";
     import Help from "$lib/components/app/Help.svelte";
     import Menu from "$lib/components/app/Menu.svelte";
 

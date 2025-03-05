@@ -29,14 +29,6 @@
                 <div class="subtitle is-7"><strong>🛢️ {food.fats}</strong> g zsír</div>
             </div>
         </div>
-
-        <!--        <div class="nutrient-grid">-->
-        <!--            <div><strong>🔥 {food.calories}</strong> kcal</div>-->
-        <!--            <div><strong>💪 {food.protein}</strong> g fehérje</div>-->
-        <!--            <div><strong>🥖 {food.carbs}</strong> g szénhidrát</div>-->
-        <!--            <div><strong>🛢️ {food.fats}</strong> g zsír</div>-->
-        <!--        </div>-->
-
         <button class="button is-danger is-light is-fullwidth mt-3" on:click={() => removeFood(food.name)}>
             🤮 Nem szeretem
         </button>
