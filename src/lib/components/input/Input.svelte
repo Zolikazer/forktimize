@@ -4,6 +4,8 @@
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {menu} from "$lib/stores/menuStore.js";
     import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
+    import { showError} from "$lib/stores/errorStore.js";
+
 
 
     let minCalories = 2000;
@@ -43,36 +45,21 @@
         return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
     }
 
-    let aFood = {
-        name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi buziiiiiiiiiiiiiiiiiiiiiiiiiiiii",
-        calories: 300,
-        protein: 400,
-        carbs: 100,
-        fats: 78,
-        price: 2565
-    };
 
     function generateMenu() {
+        try {
+
         FoodPlannerClient.getMenuPlan(createRequestBody())
             .then(response => {
                 menu.set(response.data.foods);
             })
             .catch(error => {
-                console.error(error);
+                showError(`${error.message}`);
             });
+        } catch (error) {
+            console.log("aAAAAAAAAAAAAAAAA")
+        }
     }
-
-    // function generateMenu() {
-    //     menu.set([
-    //         aFood,
-    //         {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 1600},
-    //         {name: "Rántott fasza hús", calories: 450, protein: 8, carbs: 36, fats: 38, price: 2000},
-    //         {name: "Quinoa Salad", calories: 250, protein: 8, carbs: 45, fats: 4, price: 3560},
-    //         {name: "Saláta", calories: 250, protein: 8, carbs: 45, fats: 4, price: 3560},
-    //         aFood
-    //     ]);
-    // }
-
 
 </script>
 

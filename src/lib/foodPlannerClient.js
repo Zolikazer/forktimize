@@ -5,7 +5,7 @@ export class FoodPlannerClient {
         if (res.ok) {
             return await res.json();
         } else {
-            console.log("Failed to fetch dates");
+            console.log("Failed to fetch dates.");
             return [];
         }
     }
@@ -23,8 +23,8 @@ export class FoodPlannerClient {
             console.log(response);
             return {statusCode: res.status, data: response};
         } else {
-            console.log("Failed to fetch menu");
-            return {foods: []};
+            console.log(res.status)
+                throw new Error("Failed to fetch menu.");
         }
     }
 }
