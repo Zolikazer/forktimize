@@ -11,7 +11,7 @@
             <div class="summary-item">💰 <strong>Total Cost:</strong>
                 {$menu.reduce((sum, food) => sum + food.price, 0).toLocaleString('fr-FR')} Ft</div>
             <div class="summary-item">🔥 <strong>Total
-                Calories:</strong> {$menu.reduce((sum, food) => sum + food.calories, 0).toLocaleString('fr-FR')} kcal
+                Calories:</strong> {$menu.reduce((sum, food) => sum + food.kcal, 0).toLocaleString('fr-FR')} kcal
             </div>
         </section>
         <section class="summary-flex">
@@ -22,7 +22,7 @@
                 Carbs:</strong> {$menu.reduce((sum, food) => sum + food.carbs, 0)} g
             </div>
             <div class="summary-item">🧈️ <strong>Total
-                Fats:</strong> {$menu.reduce((sum, food) => sum + food.fats, 0)} g
+                Fats:</strong> {$menu.reduce((sum, food) => sum + food.fat, 0)} g
             </div>
         </section>
     </div>

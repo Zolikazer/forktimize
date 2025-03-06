@@ -24,7 +24,6 @@
     "jsdom": "^25.0.1",
     "msw": "^2.7.3",
     "svelte": "^5.0.0",
-    "svelte-component-double": "^2.1.0",
     "vite": "^6.0.0",
     "vitest": "^3.0.0"
   },

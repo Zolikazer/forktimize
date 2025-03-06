@@ -1,6 +1,6 @@
 <script>
-    export let title = "Menu Maker Pro 🥗🍽️";
-    export let subtitle = "Eat Smart, Spend Less!";
+    export let title = "CityFood Meal Planner 🥗🍽️";
+    export let subtitle = "Tervezz, Zabálj!";
 </script>
 
 
