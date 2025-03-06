@@ -6,6 +6,8 @@
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
     import Myfitnesspal from "$lib/components/myfitnesspal/Myfitnesspal.svelte";
 
+    export let data;
+
 </script>
 
 <style>
@@ -25,7 +27,7 @@
     <div class="container is-fluid">
         <div class="columns is-centered">
             <div class="column">
-                <Input/>
+                <Input dates={data.dates}/>
             </div>
             <div class="column">
                 <Help/>

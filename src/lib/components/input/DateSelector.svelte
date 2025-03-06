@@ -1,13 +1,5 @@
 <script>
-    let today = new Date();
-    let dates = [];
-
-    // Generate the next 10 dates dynamically
-    for (let i = 0; i < 10; i++) {
-        let futureDate = new Date();
-        futureDate.setDate(today.getDate() + i);
-        dates.push(futureDate.toISOString().split("T")[0]); // Format: YYYY-MM-DD
-    }
+    export let dates = [];
 
     let selectedDate = dates[0]; // Default selected date
 </script>

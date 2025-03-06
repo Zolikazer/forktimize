@@ -13,6 +13,8 @@
     let minFats;
     let maxFats;
 
+    export let dates = [];
+
     let aFood = {
         name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi buziiiiiiiiiiiiiiiiiiiiiiiiiiiii",
         calories: 300,
@@ -46,7 +48,7 @@
 
     <div class="columns is-centered mt-3">
         <div class="column">
-            <DateSelector/>
+            <DateSelector dates={dates}/>
         </div>
         <div class="column">
             <FoodBlacklist/>
