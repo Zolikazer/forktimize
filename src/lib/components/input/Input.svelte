@@ -1,5 +1,5 @@
 <script>
-    import InputGroup from "./MacroConstraint.svelte";
+    import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {menu} from "$lib/stores/menuStore.js";
@@ -38,10 +38,10 @@
     <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
     <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        <InputGroup label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal" emoji="🔥"/>
-        <InputGroup label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g" emoji="💪"/>
-        <InputGroup label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g" emoji="🥖"/>
-        <InputGroup label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g" emoji="🧈"/>
+        <MacroConstraint label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal" emoji="🔥"/>
+        <MacroConstraint label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g" emoji="💪"/>
+        <MacroConstraint label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g" emoji="🥖"/>
+        <MacroConstraint label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g" emoji="🧈"/>
     </div>
 
     <div class="columns is-centered mt-3">
