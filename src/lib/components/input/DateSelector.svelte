@@ -1,7 +1,7 @@
 <script>
-    export let dates = [];
+    export let dates;
 
-    let selectedDate = dates[0]; // Default selected date
+    export let selectedDate;
 </script>
 
 <div class="field">

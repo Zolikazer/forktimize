@@ -36,12 +36,12 @@
 
         <div class="columns is-centered">
             <div class="column">
-                <div class="subtitle is-7 mb-1"><strong>🔥 {food.calories}</strong> kcal kalória</div>
+                <div class="subtitle is-7 mb-1"><strong>🔥 {food.kcal}</strong> kcal kalória</div>
                 <div class="subtitle is-7"><strong>💪 {food.protein}</strong> g fehérje</div>
             </div>
             <div class="column">
                 <div class="subtitle is-7 mb-1"><strong>🥖 {food.carbs}</strong> g szénhidrát</div>
-                <div class="subtitle is-7"><strong>🧈️ {food.fats}</strong> g zsír</div>
+                <div class="subtitle is-7"><strong>🧈️ {food.fat}</strong> g zsír</div>
             </div>
         </div>
     </div>
