@@ -21,7 +21,7 @@ export class FoodPlannerClient {
         if (res.ok) {
             let response = await res.json();
             console.log(response);
-            return response;
+            return {statusCode: res.status, data: response};
         } else {
             console.log("Failed to fetch menu");
             return {foods: []};

@@ -55,7 +55,7 @@
     function generateMenu() {
         FoodPlannerClient.getMenuPlan(createRequestBody())
             .then(response => {
-                menu.set(response.foods);
+                menu.set(response.data.foods);
             })
             .catch(error => {
                 console.error(error);

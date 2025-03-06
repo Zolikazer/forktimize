@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        {#if $menu}
+        {#if $menu && $menu.length > 0}
             <div class="columns is-centered">
                 <div class="column">
                     <Menu/>
