@@ -9,9 +9,9 @@
     <div class="box-has-shadow has-background-white-ter p-4 is-rounded shadow mt-4 has-text-centered is-size-5 has-text-weight-bold">
         <section class="summary-flex mb-3 border-bottom">
             <div class="summary-item">💰 <strong>Total Cost:</strong>
-                ${$menu.reduce((sum, food) => sum + food.price, 0).toFixed(2)}</div>
+                {$menu.reduce((sum, food) => sum + food.price, 0).toLocaleString('fr-FR')} Ft</div>
             <div class="summary-item">🔥 <strong>Total
-                Calories:</strong> {$menu.reduce((sum, food) => sum + food.calories, 0)} kcal
+                Calories:</strong> {$menu.reduce((sum, food) => sum + food.calories, 0).toLocaleString('fr-FR')} kcal
             </div>
         </section>
         <section class="summary-flex">
