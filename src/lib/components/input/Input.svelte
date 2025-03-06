@@ -4,7 +4,7 @@
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {menu} from "$lib/stores/menuStore.js";
 
-    let minCalories = 1500;
+    let minCalories = 2000;
     let maxCalories = 2500;
     let minProtein;
     let maxProtein;

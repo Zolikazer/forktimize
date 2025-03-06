@@ -5,6 +5,6 @@
             <span class="icon has-tooltip-multiline">
                 <i class="fas fa-info-circle"></i>
             </span>
-            To track your macros add these food to MyFitnessPal as equivalent macros.</strong>
+            To track your macros add these food to MyFitnessPal to track as equivalent macros.</strong>
     </div>
 </div>
