@@ -5,6 +5,8 @@
     import {menu} from "$lib/stores/menuStore.js";
     import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
+    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
+
 
 
     let minCalories = 2000;
@@ -33,7 +35,7 @@
                 maxFat,
             },
             date,
-            
+            foodBlacklist: $dislikedFoods,
         };
 
         // ✅ Remove undefined values and convert keys to snake_case
