@@ -26,7 +26,7 @@ def create_menu_endpoint(menu_request: MenuRequest) -> Menu:
     foods_of_today = categorize_foods_by_date(foods)[menu_request.date]
 
     food_blacklist = ["Paradicsomsaláta", "hal", "halász", "harcsa", "tengeri", "Ecetes almapaprika", "máj",
-                      "tartármártás", "Barbeque", "Ludaskása"]
+                      "tartármártás", "Barbeque", "Ludaskása"] + menu_request.food_blacklist
     filtered_foods = filter_out_food(food_blacklist, foods_of_today)
 
     menu = create_menu(filtered_foods, menu_request.nutritional_constraints)

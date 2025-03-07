@@ -6,17 +6,6 @@ from typing_extensions import Self
 from model.alias_generator import to_camel
 
 
-class Square(BaseModel):
-    width: float
-    height: float
-
-    @model_validator(mode='after')
-    def verify_square(self) -> Self:
-        if self.width != self.height:
-            raise ValueError('width and height do not match')
-        return self
-
-
 class NutritionalConstraints(BaseModel):
     min_calories: Optional[PositiveInt] = 2300
     max_calories: Optional[PositiveInt] = 2700

@@ -21,15 +21,17 @@ class TestCreateMenuEndpoint(TestCase):
             "nutritional_constraints": {
                 "min_calories": 1500,
                 "max_calories": 2700,
-            }
+            },
+            "food_blacklist": ["Lencsefőzelék"]
         }
         response = self.client.post("/menu", json=menu_request)
         self.assertEqual(response.status_code, 200)
 
         result = Menu(**response.json())
-        self.assertEqual(4, len(result.foods))
-        self.assertEqual(5650, result.total_price)
-        self.assertEqual(2572, result.total_calories)
+        self.assertEqual(5, len(result.foods))
+        self.assertEqual(5800, result.total_price)
+        self.assertEqual(2410, result.total_calories)
+        self.assertNotIn("Lencsefőzelék vagdalttal", [food.name for food in result.foods])
         print(result)
 
     @freeze_time("2024-02-26")
