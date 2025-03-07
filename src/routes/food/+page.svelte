@@ -10,19 +10,6 @@
 
 </script>
 
-<style>
-    /* Main container for two-column layout */
-    .main-container {
-        display: flex;
-        /*justify-content: center;*/
-        /*gap: 2rem;*/
-        /*max-width: 1200px;*/
-        margin: 2rem auto;
-    }
-
-</style>
-
-
 <section class="main-container">
     <div class="container is-fluid">
         <div class="columns is-centered">
@@ -48,5 +35,15 @@
     </div>
 </section>
 
+<style>
+    /* Main container for two-column layout */
+    .main-container {
+        display: flex;
+        /*justify-content: center;*/
+        /*gap: 2rem;*/
+        /*max-width: 1200px;*/
+        margin: 2rem auto;
+    }
 
+</style>
 

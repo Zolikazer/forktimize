@@ -13,7 +13,7 @@ export const handlers = [
         return HttpResponse.json({
             foods: [
                 {
-                    food_id: 1,
+                    food_id: 3125,
                     name: "Saláta",
                     kcal: 850,
                     protein: 65,
@@ -23,7 +23,7 @@ export const handlers = [
                     date: "2025-01-01"
                 },
                 {
-                    food_id: 2,
+                    food_id: 3126,
                     name: "Csirkepörkölt krumplival",
                     kcal: 850,
                     protein: 65,
@@ -33,7 +33,7 @@ export const handlers = [
                     date: "2025-01-01"
                 },
                 {
-                    food_id: 3,
+                    food_id: 3127,
                     name: "Quinoa Salad",
                     kcal: 380,
                     protein: 10,
@@ -43,7 +43,7 @@ export const handlers = [
                     date: "2025-01-01"
                 },
                 {
-                    food_id: 4,
+                    food_id: 3128,
                     name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi",
                     kcal: 650,
                     protein: 45,
@@ -53,7 +53,7 @@ export const handlers = [
                     date: "2025-01-01"
                 },
                 {
-                    food_id: 5,
+                    food_id: 3129,
                     name: "Rántott fasza sajt",
                     kcal: 850,
                     protein: 65,

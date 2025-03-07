@@ -21,7 +21,7 @@
     <div class="card-image">
         <figure class="image is-16by9">
             <img
-                    src="https://ca.cityfood.hu/api/v1/i?menu_item_id=96019&width=425&height=425"
+                    src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.food_id}&width=425&height=425`}
                     alt="Placeholder image"
             />
         </figure>
