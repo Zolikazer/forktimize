@@ -56,6 +56,7 @@
         border-radius: 12px;
         box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease-in-out;
+        min-width: 200px;
     }
 
     .food-card:hover {
