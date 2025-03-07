@@ -23,9 +23,9 @@ def parse_json(json_file: str) -> List[Food]:
                     food_id=item['id'],
                     name=item["food"]['name'],
                     kcal=item['energy_portion_food_one'],
-                    protein=item['protein_portion_food_one'],
-                    carbs=item['carb_portion_food_one'],
-                    fat=item['fat_portion_food_one'],
+                    protein=int(item['protein_portion_food_one']),
+                    carbs=int(item['carb_portion_food_one']),
+                    fat=int(item['fat_portion_food_one']),
                     price=item['price'],
                     date=datetime.strptime(item['date'], "%Y-%m-%d")
                 )

@@ -1,0 +1,7 @@
+fastapi~=0.115.11
+pydantic~=2.10.6
+typing_extensions~=4.12.2
+starlette~=0.46.0
+httpx~=0.28.1
+pulp
+freezegun

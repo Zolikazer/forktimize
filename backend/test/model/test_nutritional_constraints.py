@@ -43,8 +43,8 @@ class TestNutritionalConstraints(TestCase):
     def test_invalid_carb_range(self):
         with self.assertRaises(ValueError):
             NutritionalConstraints(
-                min_carbs=50,
-                max_carbs=10
+                min_carb=50,
+                max_carb=10
             )
 
     def test_invalid_fat_range(self):

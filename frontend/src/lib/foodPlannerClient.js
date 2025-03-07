@@ -1,9 +1,12 @@
 export class FoodPlannerClient {
     static async getDates() {
         // fetch data from server
-        const res = await fetch("https://example.com/dates");
+        const res = await fetch("http://127.0.0.1:8000/dates");
         if (res.ok) {
-            return await res.json();
+            const foo = await res.json()
+            console.log("Succ=essfully fetched dates.");
+            console.log(foo)
+            return foo;
         } else {
             console.log("Failed to fetch dates.");
             return [];
@@ -11,11 +14,13 @@ export class FoodPlannerClient {
     }
 
     static async getMenuPlan(constraints) {
-        const res = await fetch("https://example.com/menu", {
+        const res = await fetch("http://127.0.0.1:8000/menu", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Cache-Control': 'no-cache'
             },
+            cache: 'no-store',
             body: JSON.stringify(constraints),
         });
         if (res.ok) {

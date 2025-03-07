@@ -84,12 +84,12 @@ def _add_fat_constraints(foods, nutrition_constraints, problem, x_vars):
 
 
 def _add_carbs_constrains(foods, nutrition_constraints, problem, x_vars):
-    if nutrition_constraints.min_carbs is not None:
+    if nutrition_constraints.min_carb is not None:
         total_carbs_ = lpSum(x_vars[f] * f.carbs for f in foods)
-        problem += total_carbs_ >= nutrition_constraints.min_carbs, "MinCarbs"
-    if nutrition_constraints.max_carbs is not None:
+        problem += total_carbs_ >= nutrition_constraints.min_carb, "MinCarbs"
+    if nutrition_constraints.max_carb is not None:
         total_carbs_ = lpSum(x_vars[f] * f.carbs for f in foods)
-        problem += total_carbs_ <= nutrition_constraints.max_carbs, "MaxCarbs"
+        problem += total_carbs_ <= nutrition_constraints.max_carb, "MaxCarbs"
     return problem
 
 

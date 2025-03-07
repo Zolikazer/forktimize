@@ -1,6 +1,8 @@
+from pathlib import Path
 from unittest import TestCase
 
 from fastapi.testclient import TestClient
+from freezegun import freeze_time
 
 from main import app
 from model.menu import Menu
@@ -11,7 +13,7 @@ class TestCreateMenuEndpoint(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.client = TestClient(app)
-        settings.DATA_DIR = "../resources"
+        settings.DATA_DIR = str(Path(__file__).parent.resolve() / "../resources")
 
     def test_create_menu_endpoint(self):
         menu_request = {
@@ -29,3 +31,14 @@ class TestCreateMenuEndpoint(TestCase):
         self.assertEqual(5650, result.total_price)
         self.assertEqual(2572, result.total_calories)
         print(result)
+
+    @freeze_time("2024-02-26")
+    def test_get_available_dates(self):
+        response = self.client.get("/dates")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), ["2025-02-24",
+                                           "2025-02-25",
+                                           "2025-02-26",
+                                           "2025-02-27",
+                                           "2025-02-28",
+                                           "2025-03-01"])

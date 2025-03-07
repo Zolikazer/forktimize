@@ -7,9 +7,9 @@ class Food(BaseModel):
     food_id: int
     name: str
     kcal: int
-    protein: float
-    carbs: float
-    fat: float
+    protein: int
+    carbs: int
+    fat: int
     price: int
     date: datetime
 

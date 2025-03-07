@@ -11,6 +11,14 @@ from settings import settings
 router = APIRouter()
 
 
+@router.get("/dates")
+def get_available_dates() -> list[str]:
+    current_week = datetime.now().isocalendar()[1]
+    foods = parse_json(f"{settings.DATA_DIR}/city-response-week-{current_week + 1}.json")
+    unique_dates = {food.date.strftime("%Y-%m-%d") for food in foods}
+    return sorted(unique_dates)
+
+
 @router.post("/menu")
 def create_menu_endpoint(menu_request: MenuRequest) -> Menu:
     week_of_the_year = datetime.strptime(menu_request.date, "%Y-%m-%d").date().isocalendar()[1]

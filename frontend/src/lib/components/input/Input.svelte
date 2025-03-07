@@ -4,33 +4,36 @@
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {menu} from "$lib/stores/menuStore.js";
     import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
-    import { showError} from "$lib/stores/errorStore.js";
-
+    import {showError} from "$lib/stores/errorStore.js";
 
 
     let minCalories = 2000;
     let maxCalories = 2500;
     let minProtein;
     let maxProtein;
-    let minCarbs;
-    let maxCarbs;
-    let minFats;
-    let maxFats;
+    let minCarb;
+    let maxCarb;
+    let minFat;
+    let maxFat;
 
 
     export let dates = [];
-    let selectedDate = dates[0];
+    let date = dates[0];
 
     function createRequestBody() {
         const requestBody = {
-            minCalories,
-            maxCalories,
-            minProtein,
-            maxProtein,
-            minCarbs,
-            maxCarbs,
-            minFats,
-            maxFats
+            nutritionalConstraints: {
+                minCalories,
+                maxCalories,
+                minProtein,
+                maxProtein,
+                minCarb,
+                maxCarb,
+                minFat,
+                maxFat,
+            },
+            date,
+            
         };
 
         // ✅ Remove undefined values and convert keys to snake_case
@@ -48,14 +51,14 @@
 
     function generateMenu() {
         try {
-
-        FoodPlannerClient.getMenuPlan(createRequestBody())
-            .then(response => {
-                menu.set(response.data.foods);
-            })
-            .catch(error => {
-                showError(`${error.message}`);
-            });
+            console.log(createRequestBody())
+            FoodPlannerClient.getMenuPlan(createRequestBody())
+                .then(response => {
+                    menu.set(response.data.foods);
+                })
+                .catch(error => {
+                    showError(`${error.message}`);
+                });
         } catch (error) {
             console.log("aAAAAAAAAAAAAAAAA")
         }
@@ -70,13 +73,13 @@
         <MacroConstraint label="Calories" bind:minValue={minCalories} bind:maxValue={maxCalories} unit="kcal"
                          emoji="🔥"/>
         <MacroConstraint label="Protein" bind:minValue={minProtein} bind:maxValue={maxProtein} unit="g" emoji="💪"/>
-        <MacroConstraint label="Carbs" bind:minValue={minCarbs} bind:maxValue={maxCarbs} unit="g" emoji="🥖"/>
-        <MacroConstraint label="Fats" bind:minValue={minFats} bind:maxValue={maxFats} unit="g" emoji="🧈"/>
+        <MacroConstraint label="Carbs" bind:minValue={minCarb} bind:maxValue={maxCarb} unit="g" emoji="🥖"/>
+        <MacroConstraint label="Fats" bind:minValue={minFat} bind:maxValue={maxFat} unit="g" emoji="🧈"/>
     </div>
 
     <div class="columns is-centered mt-3">
         <div class="column">
-            <DateSelector dates={dates} bind:minValue={selectedDate}/>
+            <DateSelector dates={dates} bind:minValue={date}/>
         </div>
         <div class="column">
             <FoodBlacklist/>
