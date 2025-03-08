@@ -9,7 +9,6 @@ from monitoring import LOGGER
 
 
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
-    # Create the LP problem
     problem = LpProblem("Menu_Creation_ILP", LpMinimize)
 
     # Create an integer variable x_i for each food (0 <= x_i)
@@ -22,22 +21,14 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
 
     # ---------------------- CONSTRAINTS ----------------------
 
-    # # 1) TOTAL ITEMS <= max_items
-    # problem += lpSum(x_vars[f] for f in foods) <= max_items, "MaxItems"
-
-    # 2) CALORIES in [min_cal, max_cal]
     problem = _add_calorie_constraints(foods, nutrition_constraints, problem, x_vars)
 
-    # 3) Protein in [min_protein, max_protein] (if specified)
     problem = _add_protein_constraints(foods, nutrition_constraints, problem, x_vars)
 
-    # 4) Carbs in [min_carbs, max_carbs] (if specified)
     problem = _add_carbs_constrains(foods, nutrition_constraints, problem, x_vars)
 
-    # 5) Fat in [min_fat, max_fat] (if specified)
     problem = _add_fat_constraints(foods, nutrition_constraints, problem, x_vars)
 
-    # Add a universal max occurrences constraint if desired
     problem = _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
 
     # ---------------------- SOLVE ----------------------
@@ -45,12 +36,11 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
 
     status = LpStatus[problem.solve(solver)]
 
-    menu = Menu()
     if status == "Optimal":
-        return menu
+        return _convert_result_to_menu(foods, x_vars)
     else:
         LOGGER.info("Could not create menu. Status: %s", status)
-        return menu
+        return Menu()
 
 
 def _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars):
@@ -60,14 +50,15 @@ def _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, proble
     return problem
 
 
-def _convert_result_to_menu(foods, menu, x_vars):
+def _convert_result_to_menu(foods, x_vars):
+    menu = Menu()
     chosen_foods = {}
     for f in foods:
-        qty = int(x_vars[f].varValue)  # quantity chosen
+        qty = int(x_vars[f].varValue)
         if qty > 0:
             chosen_foods[f] = qty
             [menu.add_food(f) for _ in range(qty)]
-    return chosen_foods
+    return menu
 
 
 def _add_fat_constraints(foods, nutrition_constraints, problem, x_vars):
