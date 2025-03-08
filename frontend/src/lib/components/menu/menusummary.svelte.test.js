@@ -7,18 +7,18 @@ vi.mock('$lib/stores/menuStore.js', () => {
     const mockMenu = [
         {
             name: 'Test Food 1',
-            calories: 300,
+            kcal: 300,
             protein: 20,
             carbs: 40,
-            fats: 10,
+            fat: 10,
             price: 1500
         },
         {
             name: 'Test Food 2',
-            calories: 400,
+            kcal: 400,
             protein: 25,
             carbs: 50,
-            fats: 15,
+            fat: 15,
             price: 2000
         }
     ];

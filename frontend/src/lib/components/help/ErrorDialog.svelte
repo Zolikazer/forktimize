@@ -13,7 +13,7 @@
             </header>
             <section class="modal-card-body">
                 <div class="notification is-danger has-text-centered">
-                    <p>Something went wrong: <strong> {$errorStore.message}</strong></p>
+                    <p><strong> {$errorStore.message}</strong></p>
                     <p>Try again later! ⚠️</p>
                 </div>
             </section>
