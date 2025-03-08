@@ -6,13 +6,16 @@
     export let emoji = "";
     let isInvalid = false;
 
-    function validateNotNegative(value) {
-        return (value < 0 || isNaN(value)) ? "" : value; // Return corrected value
+    function resetInvalidInput(value) {
+        return isPositiveInteger(value) ? value : undefined;
     }
 
-    function validateMax() {
-        isInvalid = maxValue !== "" && minValue !== "" && maxValue < minValue;
-        console.log(isInvalid)
+    function validateMinLowerThanMax() {
+        isInvalid = maxValue < minValue;
+    }
+
+    function isPositiveInteger(value) {
+        return Number.isInteger(value) || value > 0;
     }
 
 </script>
@@ -28,8 +31,8 @@
                 <input type="number"
                        bind:value={minValue}
                        on:blur={() => {
-                       minValue = validateNotNegative(minValue);
-                       validateMax()
+                       minValue = resetInvalidInput(minValue);
+                       validateMinLowerThanMax()
                    }} class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"
                        class:is-danger={isInvalid}
@@ -43,8 +46,8 @@
                 <input type="number"
                        bind:value={maxValue}
                        on:blur={() => {
-                       maxValue = validateNotNegative(maxValue);
-                       validateMax()
+                       maxValue = resetInvalidInput(maxValue);
+                       validateMinLowerThanMax()
                    }}
                        class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"

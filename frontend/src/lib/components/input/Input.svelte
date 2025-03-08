@@ -8,7 +8,6 @@
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
 
 
-
     let minCalories = 2000;
     let maxCalories = 2500;
     let minProtein;
@@ -17,13 +16,27 @@
     let maxCarb;
     let minFat;
     let maxFat;
-
+    console.log(maxCarb);
 
     export let dates = [];
     let date = dates[0];
 
+    function generateMenu() {
+        try {
+            FoodPlannerClient.getMenuPlan(createRequestBody())
+                .then(response => {
+                    menu.set(response.data.foods);
+                })
+                .catch(error => {
+                    showError(`${error.message}`);
+                });
+        } catch (error) {
+            console.log("aAAAAAAAAAAAAAAAA")
+        }
+    }
+
     function createRequestBody() {
-        const requestBody = {
+        return {
             nutritionalConstraints: {
                 minCalories,
                 maxCalories,
@@ -37,33 +50,6 @@
             date,
             foodBlacklist: $dislikedFoods,
         };
-
-        // ✅ Remove undefined values and convert keys to snake_case
-        return Object.fromEntries(
-            Object.entries(requestBody)
-                .filter(([_, value]) => value !== undefined) // Remove undefined values
-                .map(([key, value]) => [toSnakeCase(key), value]) // Convert keys to snake_case
-        );
-    }
-
-    function toSnakeCase(str) {
-        return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-    }
-
-
-    function generateMenu() {
-        try {
-            console.log(createRequestBody())
-            FoodPlannerClient.getMenuPlan(createRequestBody())
-                .then(response => {
-                    menu.set(response.data.foods);
-                })
-                .catch(error => {
-                    showError(`${error.message}`);
-                });
-        } catch (error) {
-            console.log("aAAAAAAAAAAAAAAAA")
-        }
     }
 
 </script>

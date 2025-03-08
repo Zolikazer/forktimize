@@ -2,11 +2,11 @@ import {http, HttpResponse} from 'msw'
 
 export const handlers = [
 
-    http.get('https://example.com/dates', () => {
+    http.get('*/dates', () => {
         return HttpResponse.json(["2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04", "2025-01-05"]);
     }),
 
-    http.post('https://example.com/menu', () => {
+    http.post('*/menu', () => {
         // return HttpResponse.json({
         //     foods: []});
         // return HttpResponse(null, {status: 500});

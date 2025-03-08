@@ -1,6 +1,6 @@
 <script>
     export let title = "CityFood Meal Planner 🥗🍽️";
-    export let subtitle = "Tervezz, Zabálj!";
+    export let subtitle = "Tervezz, Zabálj, Be Fit!";
 </script>
 
 

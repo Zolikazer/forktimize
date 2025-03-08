@@ -4,8 +4,7 @@ export class FoodPlannerClient {
         const res = await fetch("http://127.0.0.1:8000/dates");
         if (res.ok) {
             const foo = await res.json()
-            console.log("Succ=essfully fetched dates.");
-            console.log(foo)
+            console.log("Successfully fetched dates.");
             return foo;
         } else {
             console.log("Failed to fetch dates.");
