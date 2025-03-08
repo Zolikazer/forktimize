@@ -2,7 +2,7 @@ import time
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from monitoring import LOGGER
+from monitoring.logging import LOGGER
 
 
 # Custom Middleware to Log Request & Response

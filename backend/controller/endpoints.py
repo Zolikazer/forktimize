@@ -2,10 +2,10 @@ from datetime import datetime
 
 from fastapi import APIRouter
 
-from algorithm.lp_menu_algorithm_advanced import create_menu
+from algorithm.lp_menu_algorithm import create_menu
 from model.menu import Menu
 from model.menu_request import MenuRequest
-from parser import parse_json, categorize_foods_by_date, filter_out_food
+from data.parser import parse_json, categorize_foods_by_date, filter_out_food
 from settings import settings
 
 router = APIRouter()

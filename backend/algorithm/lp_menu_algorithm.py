@@ -5,7 +5,7 @@ from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_C
 from model.nutritional_constraints import NutritionalConstraints
 from model.food import Food
 from model.menu import Menu
-from monitoring import LOGGER
+from monitoring.logging import LOGGER
 
 
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:

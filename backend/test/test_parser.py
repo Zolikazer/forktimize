@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from model.food import Food
-from parser import categorize_foods_by_date, parse_json, filter_out_food
+from data.parser import categorize_foods_by_date, parse_json, filter_out_food
 
 
 class TestFoodParser(unittest.TestCase):

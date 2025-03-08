@@ -1,6 +1,6 @@
 from algorithm.lp_menu_algorithm_advanced import create_menu
 from model.nutritional_constraints import NutritionalConstraints
-from parser import parse_json, categorize_foods_by_date, filter_out_food
+from data.parser import parse_json, categorize_foods_by_date, filter_out_food
 
 if __name__ == "__main__":
     constraints = NutritionalConstraints(min_protein=200, min_calories=2300, max_calories=2700)
