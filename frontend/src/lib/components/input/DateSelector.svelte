@@ -10,7 +10,7 @@
         <div class="select is-fullwidth">
             <select bind:value={selectedDate}>
                 {#each dates as date}
-                    <option value={date}>{date}</option>
+                    <option value={date}>{`${date} | ${new Date(date).toLocaleDateString("en-US", { weekday: "long" })}`}</option>
                 {/each}
             </select>
         </div>
