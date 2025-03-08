@@ -10,7 +10,7 @@
 
 
     export let dates = [];
-    let date = dates[0];
+    let selectedDate;
 
     function generateMenu() {
         try {
@@ -27,7 +27,6 @@
     }
 
     function createRequestBody() {
-        console.log()
         const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
@@ -37,7 +36,7 @@
 
         return {
             nutritionalConstraints,
-            date,
+            date: selectedDate,
             foodBlacklist: $dislikedFoods,
         };
     }
@@ -63,7 +62,7 @@
 
     <div class="columns is-centered mt-3">
         <div class="column">
-            <DateSelector dates={dates} bind:minValue={date}/>
+            <DateSelector dates={dates} bind:selectedDate={selectedDate}/>
         </div>
         <div class="column">
             <FoodBlacklist/>
