@@ -6,38 +6,13 @@
     import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
-
-
-    let calorieConstraint = {
-        min: 2300,
-        max: 2700,
-        isValid: true
-    }
-
-    let proteinConstraint = {
-        min: undefined,
-        max: undefined,
-        isValid: true
-    }
-
-    let carbConstraint = {
-        min: undefined,
-        max: undefined,
-        isValid: true
-    }
-
-    let fatConstraint = {
-        min: undefined,
-        max: undefined,
-        isValid: true
-    }
+    import {macroConstraints} from "$lib/stores/constraintStore.js";
 
 
     export let dates = [];
     let date = dates[0];
 
     function generateMenu() {
-        console.log(calorieConstraint.max)
         try {
             FoodPlannerClient.getMenuPlan(createRequestBody())
                 .then(response => {
@@ -47,26 +22,26 @@
                     showError(`${error.message}`);
                 });
         } catch (error) {
-            console.log("aAAAAAAAAAAAAAAAA")
+            console.log(error)
         }
     }
 
     function createRequestBody() {
+        console.log()
+        const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
+            acc[`min${constraint.name}`] = constraint.min;
+            acc[`max${constraint.name}`] = constraint.max;
+            return acc;
+        }, {});
+        console.log(nutritionalConstraints)
+
         return {
-            nutritionalConstraints: {
-                minCalories: calorieConstraint.min,
-                maxCalories: calorieConstraint.max,
-                minProtein: proteinConstraint.min,
-                maxProtein: proteinConstraint.max,
-                minCarb: carbConstraint.min,
-                maxCarb: carbConstraint.max,
-                minFat: fatConstraint.min,
-                maxFat: fatConstraint.max,
-            },
+            nutritionalConstraints,
             date,
             foodBlacklist: $dislikedFoods,
         };
     }
+
 
 </script>
 
@@ -74,25 +49,16 @@
     <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
     <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        <MacroConstraint label="Calories" bind:minValue={calorieConstraint.min}
-                         bind:maxValue={calorieConstraint.max}
-                         bind:isValid={calorieConstraint.isValid}
-                         unit="kcal"
-                         emoji="🔥"/>
-        <MacroConstraint label="Protein" bind:minValue={proteinConstraint.min}
-                         bind:maxValue={proteinConstraint.max}
-                         bind:isValid={proteinConstraint.isValid}
-                         unit="g" emoji="💪"/>
-        <MacroConstraint label="Carbs" bind:minValue={carbConstraint.min}
-                         bind:maxValue={carbConstraint.max}
-                         bind:isValid={carbConstraint.isValid}
-                         unit="g"
-                         emoji="🥖"/>
-        <MacroConstraint label="Fats" bind:minValue={fatConstraint.min}
-                         bind:maxValue={fatConstraint.max}
-                         bind:isValid={fatConstraint.isValid}
-                         unit="g"
-                         emoji="🧈"/>
+        {#each $macroConstraints as constraint (constraint.name)}
+            <MacroConstraint
+                    bind:minValue={constraint.min}
+                    bind:maxValue={constraint.max}
+                    bind:isValid={constraint.isValid}
+                    label={constraint.name}
+                    unit={constraint.unit}
+                    emoji={constraint.emoji}
+            />
+        {/each}
     </div>
 
     <div class="columns is-centered mt-3">

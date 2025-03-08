@@ -11,11 +11,11 @@
     }
 
     function validateMinLowerThanMax() {
-        isValid = maxValue > minValue;
+        isValid = minValue === undefined || maxValue === undefined || maxValue > minValue;
     }
 
     function isPositiveInteger(value) {
-        return Number.isInteger(value) || value > 0;
+        return Number.isInteger(value) && value > 0;
     }
 
 </script>
@@ -27,7 +27,7 @@
         <div class="is-flex is-flex-direction-column is-align-items-center is-flex-grow-1">
             <label class="has-text-grey-darker has-text-weight-bold is-size-7 mb-1">Min</label>
             <div class="tooltip-container" data-tooltip="Max should be greater than or equal to Min"
-                 class:has-tooltip={isValid}>
+                 class:has-tooltip={!isValid}>
                 <input type="number"
                        bind:value={minValue}
                        on:blur={() => {
@@ -35,14 +35,14 @@
                        validateMinLowerThanMax()
                    }} class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"
-                       class:is-danger={isValid}
+                       class:is-danger={!isValid}
                 >
             </div>
         </div>
         <div class="is-flex is-flex-direction-column is-align-items-center is-flex-grow-1">
             <label class="has-text-grey-darker has-text-weight-bold is-size-7 mb-1">Max</label>
             <div class="tooltip-container" data-tooltip="Max should be greater than or equal to Min"
-                 class:has-tooltip={isValid}>
+                 class:has-tooltip={!isValid}>
                 <input type="number"
                        bind:value={maxValue}
                        on:blur={() => {
@@ -51,7 +51,7 @@
                    }}
                        class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"
-                       class:is-danger={isValid}>
+                       class:is-danger={!isValid}>
             </div>
 
         </div>
