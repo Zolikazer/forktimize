@@ -5,6 +5,7 @@ from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_C
 from model.nutritional_constraints import NutritionalConstraints
 from model.food import Food
 from model.menu import Menu
+from monitoring import LOGGER
 
 
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
@@ -37,26 +38,22 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
     problem = _add_fat_constraints(foods, nutrition_constraints, problem, x_vars)
 
     # Add a universal max occurrences constraint if desired
-    problem = _add_max_occurance_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
+    problem = _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
 
     # ---------------------- SOLVE ----------------------
-    solver = PULP_CBC_CMD(msg=True)  # msg=0 to suppress solver output
+    solver = PULP_CBC_CMD(msg=False)  # msg=0 to suppress solver output
 
     status = LpStatus[problem.solve(solver)]
 
     menu = Menu()
     if status == "Optimal":
-        chosen_foods = _convert_result_to_menu(foods, menu, x_vars)
-
-        total_cost = sum(f.price * chosen_foods.get(f, 0) for f in foods)
-        print((status, chosen_foods, total_cost))
         return menu
     else:
-        print("No feasible solution found.")
+        LOGGER.info("Could not create menu. Status: %s", status)
         return menu
 
 
-def _add_max_occurance_per_food_constraint(foods, nutrition_constraints, problem, x_vars):
+def _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars):
     if nutrition_constraints.max_occurrences_per_food is not None:
         for f in foods:
             problem += (x_vars[f] <= nutrition_constraints.max_occurrences_per_food), f"MaxOccurEach_{f.food_id}"
@@ -69,7 +66,7 @@ def _convert_result_to_menu(foods, menu, x_vars):
         qty = int(x_vars[f].varValue)  # quantity chosen
         if qty > 0:
             chosen_foods[f] = qty
-            [menu.add_food(f) for x in range(qty)]
+            [menu.add_food(f) for _ in range(qty)]
     return chosen_foods
 
 
