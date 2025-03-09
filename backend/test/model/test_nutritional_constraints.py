@@ -1,6 +1,8 @@
 from unittest import TestCase
 
-from model.nutritional_constraints import NutritionalConstraints
+import pytest
+
+from model.nutritional_constraints import NutritionalConstraints, to_camel
 
 
 class TestNutritionalConstraints(TestCase):

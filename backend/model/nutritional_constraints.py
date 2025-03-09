@@ -3,7 +3,10 @@ from typing import Optional
 from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict
 from typing_extensions import Self
 
-from model.alias_generator import to_camel
+
+def to_camel(string: str) -> str:
+    parts = string.split('_')
+    return parts[0] + ''.join(word.capitalize() for word in parts[1:])
 
 
 class NutritionalConstraints(BaseModel):

@@ -1,12 +1,15 @@
-from typing import List
+from typing import List, ClassVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from model.food import Food
 
 
 class Menu(BaseModel):
-    foods: List[Food] = []
+    CHICKEN_PROTEIN_RATIO: ClassVar[float] = 25.0
+    CHICKEN_FAT_RATIO: ClassVar[float] = 3.0
+
+    foods: List[Food] = Field(default_factory=list)
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @property
@@ -41,19 +44,12 @@ class Menu(BaseModel):
         self.foods.append(food)
 
     def to_myfitnesspal_entries(self) -> dict:
-        chicken_grams = (self.total_protein / 25.0) * 100.0
-        chicken_fat = (chicken_grams / 100.0) * 3.0
-        leftover_fat = self.total_fat - chicken_fat
-
-        if leftover_fat < 0:
-            leftover_fat = 0
-
-        sugar_grams = self.total_carbs
-
-        oil_grams = leftover_fat
+        chicken_grams = (self.total_protein / self.CHICKEN_PROTEIN_RATIO) * 100.0
+        chicken_fat = (chicken_grams / 100.0) * self.CHICKEN_FAT_RATIO
+        leftover_fat = max(0, self.total_fat - int(chicken_fat))
 
         return {
             "Chicken (g)": int(chicken_grams),
-            "Sugar (g)": int(sugar_grams),
-            "Olive Oil (g)": int(oil_grams)
+            "Sugar (g)": self.total_carbs,
+            "Olive Oil (g)": int(leftover_fat),
         }

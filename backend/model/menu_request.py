@@ -12,3 +12,4 @@ class MenuRequest(BaseModel):
     date: str
     nutritional_constraints: NutritionalConstraints
     food_blacklist: List[str] = []
+
