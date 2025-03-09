@@ -22,18 +22,18 @@ vi.mock("$lib/stores/menuStore.js", () => ({
 describe('Food component', () => {
     const mockFood = {
         name: "Test Food Item",
-        kcal: 300,
+        calories: 300,
         protein: 20,
-        carbs: 40,
+        carb: 40,
         fat: 10,
         price: 1500
     };
 
     const mockLongNameFood = {
         name: "This is a very long food name that exceeds the maximum length and should be truncated",
-        kcal: 400,
+        calories: 400,
         protein: 25,
-        carbs: 50,
+        carb: 50,
         fat: 15,
         price: 2000
     };
@@ -47,9 +47,9 @@ describe('Food component', () => {
 
         expect(getByText(mockFood.name)).toBeInTheDocument();
         expect(getByText(`${mockFood.price} Ft`)).toBeInTheDocument();
-        expect(getByText(`🔥 ${mockFood.kcal}`)).toBeInTheDocument();
+        expect(getByText(`🔥 ${mockFood.calories}`)).toBeInTheDocument();
         expect(getByText(`💪 ${mockFood.protein}`)).toBeInTheDocument();
-        expect(getByText(`🥖 ${mockFood.carbs}`)).toBeInTheDocument();
+        expect(getByText(`🥖 ${mockFood.carb}`)).toBeInTheDocument();
         expect(getByText(`🧈️ ${mockFood.fat}`)).toBeInTheDocument();
         expect(getByAltText('Placeholder image')).toBeInTheDocument();
         expect(getByText('🤮 Nem szeretem')).toBeInTheDocument();

@@ -4,20 +4,20 @@ from pydantic import BaseModel, ConfigDict
 
 
 class Food(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     food_id: int
     name: str
-    kcal: int
+    calories: int
     protein: int
-    carbs: int
+    carb: int
     fat: int
     price: int
     date: datetime
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
     @property
     def price_per_kcal(self):
-        return round(self.price / self.kcal, 2)
+        return round(self.price / self.calories, 2)
 
     @property
     def price_per_protein(self):
@@ -25,11 +25,11 @@ class Food(BaseModel):
 
     @property
     def kcal_per_protein(self):
-        return 0 if self.protein == 0 else round(self.kcal / self.protein, 2)
+        return 0 if self.protein == 0 else round(self.calories / self.protein, 2)
 
     def __repr__(self):
-        return (f"Food(name={self.name}, food_id={self.food_id} kcal={self.kcal}, protein={self.protein}, "
-                f"carbs={self.carbs}, fat={self.fat}, price={self.price}, date={self.date}, "
+        return (f"Food(name={self.name}, food_id={self.food_id} kcal={self.calories}, protein={self.protein}, "
+                f"carbs={self.carb}, fat={self.fat}, price={self.price}, date={self.date}, "
                 f"price_per_kcal={self.price_per_kcal}, kcal_per_protein={self.kcal_per_protein}, "
                 f"price_per_protein={self.price_per_protein})")
 

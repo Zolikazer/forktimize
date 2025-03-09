@@ -7,6 +7,8 @@ from model.alias_generator import to_camel
 
 
 class NutritionalConstraints(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
+
     min_calories: Optional[PositiveInt] = 2300
     max_calories: Optional[PositiveInt] = 2700
     min_protein: Optional[PositiveInt] = 200
@@ -17,19 +19,17 @@ class NutritionalConstraints(BaseModel):
     max_fat: Optional[PositiveInt] = None
     max_occurrences_per_food: Optional[PositiveInt] = None
 
-    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
-
     @model_validator(mode='after')
     def _validate_min_lower_than_max(self) -> Self:
-        if self.min_calories is not None and self.max_calories is not None and self.min_calories > self.max_calories:
-            raise ValueError("min_calories must be less than or equal to max_calories")
-        if self.min_protein is not None and self.max_protein is not None and self.min_protein > self.max_protein:
-            print(self.min_protein, self.max_protein)
-            raise ValueError("min_protein must be less than or equal to max_protein")
-        if self.min_carb is not None and self.max_carb is not None and self.min_carb > self.max_carb:
-            raise ValueError("min_carbs must be less than or equal to max_carbs")
-        if self.min_fat is not None and self.max_fat is not None and self.min_fat > self.max_fat:
-            raise ValueError("min_fat must be less than or equal to max_fat")
+        """Ensure min values are always less than max values."""
+        constraints = [("calories", self.min_calories, self.max_calories),
+                       ("protein", self.min_protein, self.max_protein),
+                       ("carb", self.min_carb, self.max_carb),
+                       ("fat", self.min_fat, self.max_fat)]
+
+        for name, min_val, max_val in constraints:
+            if min_val is not None and max_val is not None and min_val > max_val:
+                raise ValueError(f"min_{name} must be less than or equal to max_{name}")
 
         return self
 

@@ -11,7 +11,7 @@ class Menu(BaseModel):
 
     @property
     def total_calories(self) -> int:
-        return sum(food.kcal for food in self.foods)
+        return sum(food.calories for food in self.foods)
 
     @property
     def total_protein(self) -> int:
@@ -27,7 +27,7 @@ class Menu(BaseModel):
 
     @property
     def total_carbs(self) -> int:
-        return sum(food.carbs for food in self.foods)
+        return sum(food.carb for food in self.foods)
 
     @property
     def price_per_calorie(self) -> float:
@@ -57,12 +57,3 @@ class Menu(BaseModel):
             "Sugar (g)": int(sugar_grams),
             "Olive Oil (g)": int(oil_grams)
         }
-
-    def __repr__(self):
-        return "GEEEEECIIII"
-    # def __repr__(self):
-    #     food_names = ',\n '.join(food.name for food in self.foods)
-    #     return (
-    #         f"heeeeeee(foods=[\n{food_names}\n]\ntotal_calories={self.total_calories}\ntotal_protein={self.total_protein}\n"
-    #         f"total_price={self.total_price}\ntotal_fat={self.total_fat}\ntotal_carbs={self.total_carbs}\n"
-    #         f"price_per_calorie={self.price_per_calorie}\nprice_per_protein={self.price_per_protein}\n)")

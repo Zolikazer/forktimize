@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from controller.endpoints import router
-from monitoring.logging_middleware import LoggingMiddleware
+from monitoring.logger import LoggingMiddleware
+from routers.menu_routes import router
 
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)

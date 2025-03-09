@@ -2,19 +2,19 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 
+from data.data_loader import parse_json, categorize_foods_by_date, filter_out_food
 from model.food import Food
-from data.parser import categorize_foods_by_date, parse_json, filter_out_food
 
 
 class TestFoodParser(unittest.TestCase):
     def setUp(self):
-        self.test_file = str(Path(__file__).parent.resolve() / "resources/city-response-test.json")
+        self.test_file = str(Path(__file__).parent.parent.resolve() / "resources/city-response-test.json")
         self.example_foods = [
-            Food(food_id=1, name="Tejszínes meggyleves", kcal=205, protein=2, carbs=39, fat=4, price=1475,
+            Food(food_id=1, name="Tejszínes meggyleves", calories=205, protein=2, carb=39, fat=4, price=1475,
                  date=datetime(2025, 2, 19)),
-            Food(food_id=2, name="Gulyásleves", kcal=300, protein=15, carbs=20, fat=10, price=2000,
+            Food(food_id=2, name="Gulyásleves", calories=300, protein=15, carb=20, fat=10, price=2000,
                  date=datetime(2025, 2, 19)),
-            Food(food_id=13, name="Rántott hús", kcal=400, protein=30, carbs=50, fat=20, price=2500,
+            Food(food_id=13, name="Rántott hús", calories=400, protein=30, carb=50, fat=20, price=2500,
                  date=datetime(2025, 2, 20))
         ]
 
@@ -26,9 +26,9 @@ class TestFoodParser(unittest.TestCase):
         foods = parse_json(self.test_file)
         food = foods[0]
         self.assertEqual(food.name, "Thai marha üvegtésztával")
-        self.assertEqual(food.kcal, 620)
+        self.assertEqual(food.calories, 620)
         self.assertEqual(food.protein, 31)
-        self.assertEqual(food.carbs, 101)
+        self.assertEqual(food.carb, 101)
         self.assertEqual(food.fat, 9)
         self.assertEqual(food.price, 2130)
         self.assertEqual(food.date, datetime(2025, 2, 17))

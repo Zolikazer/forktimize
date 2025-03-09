@@ -1,11 +1,17 @@
+import logging
 import time
+
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from monitoring.logging import LOGGER
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
+
+LOGGER = logging.getLogger(__name__)
 
 
-# Custom Middleware to Log Request & Response
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()  # Track execution time
@@ -21,4 +27,3 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         LOGGER.info(f"📤 Response: {response.status_code} | Time: {process_time:.2f}s")
 
         return response
-
