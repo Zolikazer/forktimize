@@ -5,6 +5,7 @@ from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_C
 from model.nutritional_constraints import NutritionalConstraints
 from model.food import Food
 from model.menu import Menu
+from monitoring.logger import LOGGER
 
 
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
@@ -21,7 +22,11 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
     solver = PULP_CBC_CMD(msg=False)
     status = LpStatus[problem.solve(solver)]
 
-    return _convert_result_to_menu(foods, x_vars) if status == "Optimal" else Menu()
+    if status == "Optimal":
+        return _convert_result_to_menu(foods, x_vars)
+    else:
+        LOGGER.info("Could not create menu. Status: %s", status)
+        return Menu()
 
 
 def _add_nutrient_constraint(foods, nutrition_constraints, problem, x_vars, attr_name: str, label: str):
