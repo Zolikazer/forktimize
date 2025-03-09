@@ -1,8 +1,8 @@
 from typing import List
 
 from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
 
-from model.alias_generator import to_camel
 from model.nutritional_constraints import NutritionalConstraints
 
 

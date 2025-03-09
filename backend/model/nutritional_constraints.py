@@ -1,16 +1,16 @@
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict
+from pydantic.alias_generators import to_camel
 from typing_extensions import Self
-
-
-def to_camel(string: str) -> str:
-    parts = string.split('_')
-    return parts[0] + ''.join(word.capitalize() for word in parts[1:])
 
 
 class NutritionalConstraints(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
+
+    PROTEIN_CALORIE: ClassVar[int] = 4
+    CARB_CALORIE: ClassVar[int] = 4
+    FAT_CALORIE: ClassVar[int] = 9
 
     min_calories: Optional[PositiveInt] = 2300
     max_calories: Optional[PositiveInt] = 2700
@@ -37,20 +37,37 @@ class NutritionalConstraints(BaseModel):
         return self
 
     @model_validator(mode='after')
-    def _validate_macro_constraints_consistent_with_calories(self) -> Self:
+    def _validate_min_macro_constraints_consistent_with_calories(self) -> Self:
         if self._all_min_macros_given():
-            if self.min_carb * 4 + self.min_fat * 9 + self.min_protein * 4 > self.min_calories:
+            if self._total_min_calories() > self.min_calories:
                 raise ValueError(
-                    "The sum of min_carbs * 4, min_fat * 9, and min_protein * 4 must not exceed min_calories")
-        if self._all_max_macros_are_given():
-            if self.max_carb * 4 + self.max_fat * 9 + self.max_protein * 4 > self.max_calories:
-                raise ValueError(
-                    "The sum of max_carbs * 4, max_fat * 9, and max_protein * 4 must not exceed max_calories")
+                    f"The sum of max_carbs * {self.CARB_CALORIE}, "
+                    f"max_fat * {self.FAT_CALORIE}, "
+                    f"and max_protein * {self.PROTEIN_CALORIE} "
+                    f"must not exceed min_calories")
 
         return self
 
-    def _all_max_macros_are_given(self):
+    @model_validator(mode='after')
+    def _validate_max_macro_constraints_consistent_with_calories(self) -> Self:
+        if self._all_max_macros_given():
+            if self._total_max_calories() > self.max_calories:
+                raise ValueError(
+                    f"The sum of max_carbs * {self.CARB_CALORIE}, "
+                    f"max_fat * {self.FAT_CALORIE}, "
+                    f"and max_protein * {self.PROTEIN_CALORIE} "
+                    f"must not exceed max_calories")
+
+        return self
+
+    def _total_max_calories(self) -> int:
+        return self.max_carb * self.CARB_CALORIE + self.max_fat * self.FAT_CALORIE + self.max_protein * self.PROTEIN_CALORIE
+
+    def _total_min_calories(self) -> int:
+        return self.min_carb * self.CARB_CALORIE + self.min_fat * self.FAT_CALORIE + self.min_protein * self.PROTEIN_CALORIE
+
+    def _all_max_macros_given(self) -> bool:
         return self.max_calories is not None and self.max_carb is not None and self.max_fat is not None and self.max_protein is not None
 
-    def _all_min_macros_given(self):
+    def _all_min_macros_given(self) -> bool:
         return self.min_calories is not None and self.min_carb is not None and self.min_fat is not None and self.min_protein is not None
