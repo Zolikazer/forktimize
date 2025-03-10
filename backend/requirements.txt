@@ -3,5 +3,7 @@ pydantic~=2.10.6
 typing_extensions~=4.12.2
 starlette~=0.46.0
 httpx~=0.28.1
-pulp
-freezegun
+pulp~=3.0.2
+freezegun~=1.5.1
+requests~=2.32.3
+pytest~=8.3.5

@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 
-from data.data_loader import parse_json, categorize_foods_by_date, filter_out_food
+from data.data_loader import load_data, categorize_foods_by_date, filter_out_food
 from model.food import Food
 
 
@@ -19,11 +19,11 @@ class TestFoodParser(unittest.TestCase):
         ]
 
     def test_parse_json_parses_all_foods(self):
-        foods = parse_json(self.test_file)
+        foods = load_data(self.test_file)
         self.assertEqual(15, len(foods))
 
     def test_food_attributes(self):
-        foods = parse_json(self.test_file)
+        foods = load_data(self.test_file)
         food = foods[0]
         self.assertEqual(food.name, "Thai marha üvegtésztával")
         self.assertEqual(food.calories, 620)

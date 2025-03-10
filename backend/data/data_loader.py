@@ -12,7 +12,7 @@ def open_file(json_file):
     return data
 
 
-def parse_json(json_file: str) -> List[Food]:
+def load_data(json_file: str) -> List[Food]:
     """Parses a JSON file and returns a list of Food objects."""
     data = open_file(json_file)
 
@@ -39,8 +39,8 @@ def categorize_foods_by_date(foods: List[Food]) -> Dict[str, List[Food]]:
     return {date: list(group) for date, group in groupby(foods, key=lambda f: f.date.strftime("%Y-%m-%d"))}
 
 
-def filter_out_food(food_names: list, foods: List[Food]) -> List[Food]:
-    filtered_foods = filter(lambda f: not any(k.lower() in f.name.lower() for k in food_names), foods)
+def filter_out_food(food_blacklist: list, foods: List[Food]) -> List[Food]:
+    filtered_foods = filter(lambda f: not any(k.lower() in f.name.lower() for k in food_blacklist), foods)
     return _filter_out_zero_protein(filtered_foods)
 
 

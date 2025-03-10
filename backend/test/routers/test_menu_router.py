@@ -6,14 +6,14 @@ from freezegun import freeze_time
 
 from main import app
 from model.menu import Menu
-from settings import settings
+from settings import SETTINGS
 
 
 class TestCreateMenuEndpoint(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.client = TestClient(app)
-        settings.DATA_DIR = str(Path(__file__).parent.resolve() / "../resources")
+        SETTINGS.DATA_DIR = str(Path(__file__).parent.resolve() / "../resources")
 
     def test_create_menu_endpoint(self):
         menu_request = {
