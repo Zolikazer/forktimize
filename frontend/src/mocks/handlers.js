@@ -15,9 +15,9 @@ export const handlers = [
                 {
                     food_id: 3125,
                     name: "Saláta",
-                    kcal: 850,
+                    calories: 850,
                     protein: 65,
-                    carbs: 100,
+                    carb: 100,
                     fat: 30,
                     price: 1890,
                     date: "2025-01-01"
@@ -25,9 +25,9 @@ export const handlers = [
                 {
                     food_id: 3126,
                     name: "Csirkepörkölt krumplival",
-                    kcal: 850,
+                    calories: 850,
                     protein: 65,
-                    carbs: 100,
+                    carb: 100,
                     fat: 30,
                     price: 1890,
                     date: "2025-01-01"
@@ -35,9 +35,9 @@ export const handlers = [
                 {
                     food_id: 3127,
                     name: "Quinoa Salad",
-                    kcal: 380,
+                    calories: 380,
                     protein: 10,
-                    carbs: 15,
+                    carb: 15,
                     fat: 32,
                     price: 1890,
                     date: "2025-01-01"
@@ -45,9 +45,9 @@ export const handlers = [
                 {
                     food_id: 3128,
                     name: "Brünni sertésborda (mustárban pácolt) rántva, rizi-bizi",
-                    kcal: 650,
+                    calories: 650,
                     protein: 45,
-                    carbs: 10,
+                    carb: 10,
                     fat: 35,
                     price: 2890,
                     date: "2025-01-01"
@@ -55,9 +55,9 @@ export const handlers = [
                 {
                     food_id: 3129,
                     name: "Rántott fasza sajt",
-                    kcal: 850,
+                    calories: 850,
                     protein: 65,
-                    carbs: 100,
+                    carb: 100,
                     fat: 30,
                     price: 1890,
                     date: "2025-01-01"

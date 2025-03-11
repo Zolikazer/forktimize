@@ -7,37 +7,37 @@
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import {macroConstraints} from "$lib/stores/constraintStore.js";
+    import {get} from "svelte/store";
 
 
     export let dates = [];
-    let selectedDate;
+    let selectedDate = dates.length ? dates[0] : "";
 
-    function generateMenu() {
+    async function generateMenu() {
         try {
-            FoodPlannerClient.getMenuPlan(createRequestBody())
-                .then(response => {
-                    menu.set(response.data.foods);
-                })
-                .catch(error => {
-                    showError(`${error.message}`);
-                });
+            console.log(get(macroConstraints));
+            console.log(get(dislikedFoods));
+            const requestBody = createMenuRequest(get(macroConstraints), selectedDate, get(dislikedFoods));
+            const response = await FoodPlannerClient.getMenuPlan(requestBody);
+            menu.set(response.data.foods);
         } catch (error) {
-            console.log(error)
+            showError(error.message);
+            console.error("Menu generation failed:", error);
         }
     }
+    export function createMenuRequest(macroConstraints, selectedDate, dislikedFoods) {
+        if (!selectedDate) throw new Error("No date selected for menu generation.");
 
-    function createRequestBody() {
-        const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
+        const nutritionalConstraints = macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
             return acc;
         }, {});
-        console.log(nutritionalConstraints)
 
         return {
             nutritionalConstraints,
             date: selectedDate,
-            foodBlacklist: $dislikedFoods,
+            foodBlacklist: dislikedFoods,
         };
     }
 
@@ -81,7 +81,6 @@
     .generate-button {
         font-size: 1rem;
         background: #00d1b2;
-        /*color: white;*/
         box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease-in-out;
     }

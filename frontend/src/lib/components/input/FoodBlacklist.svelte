@@ -3,14 +3,20 @@
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
 
     let newFood = "";
-    let inputRef; // Reference to input field
+    let inputRef;
+    const truncateLength = 8;
+
 
     function blacklistFood() {
-        if (newFood.trim()) {
-            dislikedFoods.update(foods => [...foods, newFood.trim()]);
-            newFood = "";
+        const trimmedFood = newFood.trim();
+
+        if (trimmedFood && !$dislikedFoods.includes(trimmedFood)) {
+            dislikedFoods.update(foods => [...foods, trimmedFood]);
         }
+
+        newFood = "";
     }
+
     function removeFoodFromBlacklist(food) {
         dislikedFoods.update(foods => foods.filter(f => f !== food));
     }
@@ -26,7 +32,7 @@
         return () => document.removeEventListener("click", addFoodIfUserClickedOutside);
     });
 
-    function shortenText(text, length = 8) {
+    function shortenText(text, length = truncateLength) {
         return text.length > length ? text.slice(0, length) + "..." : text;
     }
 </script>
@@ -46,7 +52,11 @@
         {#each $dislikedFoods as food}
             <span class="tag is-danger is-light" data-tooltip={food}>
                 {shortenText(food)}
-                <button class="delete is-small" on:click={() => removeFoodFromBlacklist(food)}></button>
+                <button class="delete is-small"
+                        on:click={() => removeFoodFromBlacklist(food)}
+                        aria-label="Remove {food}">
+
+                </button>
             </span>
         {/each}
     </div>

@@ -41,7 +41,7 @@ def _add_nutrient_constraint(foods, nutrition_constraints, problem, x_vars, attr
         problem += total_nutrient <= max_val, f"Max{label}"
 
 
-def _convert_result_to_menu(foods, x_vars):
+def _convert_result_to_menu(foods, x_vars) -> Menu:
     menu = Menu()
     chosen_foods = {f: int(x_vars[f].varValue) for f in foods if int(x_vars[f].varValue) > 0}
 

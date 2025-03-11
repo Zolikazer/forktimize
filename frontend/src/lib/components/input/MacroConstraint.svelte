@@ -14,6 +14,8 @@
         isValid = minValue === undefined || maxValue === undefined || maxValue > minValue;
     }
 
+    $: isValid = minValue === undefined || maxValue === undefined || maxValue > minValue;
+
     function isPositiveInteger(value) {
         return Number.isInteger(value) && value > 0;
     }
@@ -66,10 +68,9 @@
         box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
         text-align: center;
         font-size: 0.9rem;
-        width: 200px; /* Adjusted width to fit inline */
+        width: 200px;
     }
 
-    /* Tooltip styling */
     .tooltip-container {
         position: relative;
     }

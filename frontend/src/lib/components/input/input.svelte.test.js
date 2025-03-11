@@ -2,7 +2,6 @@ import {fireEvent, render, screen} from "@testing-library/svelte";
 import {describe, expect, test, vi} from "vitest";
 import Input from "$lib/components/input/Input.svelte";
 import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
-import Food from "$lib/components/menu/Food.svelte";
 
 
 vi.mock("$lib/stores/menuStore.js", () => {
@@ -42,7 +41,12 @@ describe("Input Component", () => {
             data: { foods: [{ name: "Mocked Food", kcal: 500 }] }
         });
 
-        render(Input);
+        const { component } = render(Input, {
+            dates: ["2025-03-10", "2025-03-11", "2025-03-12"],
+        });
+
+        const select = screen.getByRole("combobox");
+        await fireEvent.change(select, { target: { value: "2025-03-10" } });
 
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
@@ -51,7 +55,6 @@ describe("Input Component", () => {
         const {menu} = await import("$lib/stores/menuStore.js");
         expect(menu.set).toHaveBeenCalled();
 
-        // expect(screen.getByText((content) => content.includes("Foods You Dislike 🤮")));
 
     });
 });

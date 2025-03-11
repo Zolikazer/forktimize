@@ -6,11 +6,11 @@
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
     import Myfitnesspal from "$lib/components/myfitnesspal/Myfitnesspal.svelte";
 
-    export let data;
+    export let data = { dates: [] };
 
 </script>
 
-<section class="main-container">
+<section class="mt-5">
     <div class="container is-fluid">
         <div class="columns is-centered">
             <div class="column">
@@ -34,16 +34,3 @@
         {/if}
     </div>
 </section>
-
-<style>
-    /* Main container for two-column layout */
-    .main-container {
-        display: flex;
-        /*justify-content: center;*/
-        /*gap: 2rem;*/
-        /*max-width: 1200px;*/
-        margin: 2rem auto;
-    }
-
-</style>
-

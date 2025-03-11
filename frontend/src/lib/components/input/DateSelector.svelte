@@ -1,16 +1,19 @@
 <script>
-    export let dates;
+    export let dates = [];
+    export let selectedDate = dates.length ? dates[0] : "";
 
-    export let selectedDate;
+    function formatDateLabel(date) {
+        return `${date} | ${new Date(date).toLocaleDateString("en-US", { weekday: "long" })}`;
+    }
 </script>
 
 <div class="field">
-    <label class="label">Select a Date 📅 </label>
+    <label for="date-selector" class="label">Select a Date 📅 </label>
     <div class="control">
         <div class="select is-fullwidth">
-            <select bind:value={selectedDate}>
+            <select id="date-selector" bind:value={selectedDate}>
                 {#each dates as date}
-                    <option value={date}>{`${date} | ${new Date(date).toLocaleDateString("en-US", { weekday: "long" })}`}</option>
+                    <option value={date}>{formatDateLabel(date)}</option>
                 {/each}
             </select>
         </div>

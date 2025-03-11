@@ -14,11 +14,10 @@
         /*url("https://www.transparenttextures.com/patterns/food.png");*/
         background-blend-mode: overlay;
         padding: 1rem 1rem;
-        /*color: white;*/
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
         animation: floatUpDown 3s ease-in-out infinite alternate;
     }
-    /* Subtle floating animation */
+
     .footer-text {
         display: inline-block;
         transition: transform 0.3s ease-in-out;

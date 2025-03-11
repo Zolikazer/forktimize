@@ -7,9 +7,22 @@
     export let food;
 
     function removeFood(foodName) {
-        dislikedFoods.update(foods => [...foods, foodName]);
+        updateDislikedFoods(foodName);
+        updateMenu(foodName);
+    }
+    function updateDislikedFoods(foodName) {
+        dislikedFoods.update(foods => {
+            if (!foods.includes(foodName)) {
+                return [...foods, foodName]; // ✅ Prevents duplicate entries
+            }
+            return foods;
+        });
+    }
+
+    function updateMenu(foodName) {
         menu.update(currentMenu => currentMenu.filter(food => food.name !== foodName));
     }
+
 
     function getShortenedName(name) {
         return name.length > MAX_FOOD_LENGTH ? name.substring(0, MAX_FOOD_LENGTH) + "..." : name;
@@ -35,11 +48,11 @@
         </div>
 
         <div class="columns is-centered">
-            <div class="column">
-                <div class="subtitle is-7 mb-1"><strong>🔥 {food.calories}</strong> kcal kalória</div>
+            <div class="column is-flex is-flex-wrap-wrap">
+                <div class="subtitle is-7 mb-1"><strong>🔥 {food.calories}</strong> kcal</div>
                 <div class="subtitle is-7"><strong>💪 {food.protein}</strong> g fehérje</div>
             </div>
-            <div class="column">
+            <div class="column is-flex is-flex-wrap-wrap">
                 <div class="subtitle is-7 mb-1"><strong>🥖 {food.carb}</strong> g szénhidrát</div>
                 <div class="subtitle is-7"><strong>🧈️ {food.fat}</strong> g zsír</div>
             </div>

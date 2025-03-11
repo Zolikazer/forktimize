@@ -1,6 +1,20 @@
 <script>
     import {menu} from "$lib/stores/menuStore.js";
 
+    $: totals = ($menu || []).reduce(
+        (acc, food) => {
+            acc.cost += food.price || 0;
+            acc.calories += food.calories || 0;
+            acc.protein += food.protein || 0;
+            acc.carbs += food.carb || 0;
+            acc.fats += food.fat || 0;
+            return acc;
+        },
+        { cost: 0, calories: 0, protein: 0, carbs: 0, fats: 0 }
+    );
+
+    $: formattedCost = totals.cost.toLocaleString("fr-FR");
+
 </script>
 
 <div class="box">
@@ -8,27 +22,17 @@
 
     <div class="box-has-shadow has-background-white-ter p-4 is-rounded shadow mt-4 has-text-centered is-size-5 has-text-weight-bold">
         <section class="summary-flex mb-3 border-bottom">
-            <div class="summary-item">💰 <strong>Total Cost:</strong>
-                {$menu.reduce((sum, food) => sum + food.price, 0).toLocaleString('fr-FR')} Ft</div>
-            <div class="summary-item">🔥 <strong>Total
-                Calories:</strong> {$menu.reduce((sum, food) => sum + food.kcal, 0).toLocaleString('fr-FR')} kcal
-            </div>
+            <div class="summary-item">💰 <strong>Total Cost:</strong> {formattedCost} Ft</div>
+            <div class="summary-item">🔥 <strong>Total Calories:</strong> {totals.calories.toLocaleString("fr-FR")} kcal</div>
         </section>
         <section class="summary-flex">
-            <div class="summary-item">💪 <strong>Total
-                Protein:</strong> {$menu.reduce((sum, food) => sum + food.protein, 0)} g
-            </div>
-            <div class="summary-item">🥖 <strong>Total
-                Carbs:</strong> {$menu.reduce((sum, food) => sum + food.carbs, 0)} g
-            </div>
-            <div class="summary-item">🧈️ <strong>Total
-                Fats:</strong> {$menu.reduce((sum, food) => sum + food.fat, 0)} g
-            </div>
+            <div class="summary-item">💪 <strong>Total Protein:</strong> {totals.protein} g</div>
+            <div class="summary-item">🥖 <strong>Total Carbs:</strong> {totals.carbs} g</div>
+            <div class="summary-item">🧈️ <strong>Total Fats:</strong> {totals.fats} g</div>
         </section>
     </div>
-
-
 </div>
+
 
 <style>
     .summary-flex {
