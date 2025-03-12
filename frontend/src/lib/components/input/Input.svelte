@@ -17,18 +17,19 @@
         try {
             console.log(get(macroConstraints));
             console.log(get(dislikedFoods));
-            const requestBody = createMenuRequest(get(macroConstraints), selectedDate, get(dislikedFoods));
+            const requestBody = createMenuRequest();
             const response = await FoodPlannerClient.getMenuPlan(requestBody);
+            console.log($menu);
             menu.set(response.data.foods);
         } catch (error) {
             showError(error.message);
             console.error("Menu generation failed:", error);
         }
     }
-    export function createMenuRequest(macroConstraints, selectedDate, dislikedFoods) {
+    export function createMenuRequest() {
         if (!selectedDate) throw new Error("No date selected for menu generation.");
 
-        const nutritionalConstraints = macroConstraints.reduce((acc, constraint) => {
+        const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
             return acc;
@@ -37,7 +38,7 @@
         return {
             nutritionalConstraints,
             date: selectedDate,
-            foodBlacklist: dislikedFoods,
+            foodBlacklist: $dislikedFoods,
         };
     }
 
