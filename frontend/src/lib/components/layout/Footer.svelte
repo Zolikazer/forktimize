@@ -2,7 +2,7 @@
     const footerText = "© 2025 Menu Maker Pro App created by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
 </script>
 
-<footer class="footer footer-custom">
+<footer class="footer footer-custom mt-5">
     <div class="container">
         <p class="has-text-centered is-size-6 has-text-weight-bold footer-text">{footerText}</p>
     </div>
