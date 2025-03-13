@@ -21,5 +21,14 @@ test-frontend:
 test-backend:
 	cd backend;source .venv/bin/activate;python -m unittest discover
 
-test: test-backend
+test-unit: test-backend
 	$(MAKE) test-frontend
+
+e2e-test:
+	cd frontend && npx playwright test
+
+test-e2e:
+	$(MAKE) run-backend &
+	$(MAKE) run-frontend &
+	sleep 5  # Give some time for the servers to start
+	$(MAKE) e2e-test
