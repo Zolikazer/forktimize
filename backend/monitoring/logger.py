@@ -24,6 +24,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         process_time = time.time() - start_time  # Calculate response time
-        LOGGER.info(f"📤 Response: {response.status_code} | Time: {process_time:.2f}s")
+        LOGGER.info(f"📤 Response: {response.status_code} |Time: {process_time:.2f}s")
 
         return response

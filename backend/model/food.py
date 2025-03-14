@@ -1,19 +1,19 @@
-import datetime
+from datetime import datetime
+from pydantic import ConfigDict
+from sqlmodel import SQLModel, Field
 
-from pydantic import BaseModel, ConfigDict
 
-
-class Food(BaseModel):
+class Food(SQLModel, table=True):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    food_id: int
+    food_id: int = Field(primary_key=True)
+    date: datetime = Field(primary_key=True)
     name: str
     calories: int
     protein: int
     carb: int
     fat: int
     price: int
-    date: datetime
 
     @property
     def price_per_kcal(self):

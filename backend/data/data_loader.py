@@ -12,10 +12,19 @@ def open_file(json_file):
     return data
 
 
+def save_to_file(data: dict, path: str):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4)
+
+
 def load_data(json_file: str) -> List[Food]:
     """Parses a JSON file and returns a list of Food objects."""
     data = open_file(json_file)
 
+    return serialize_food_items(data)
+
+
+def serialize_food_items(data: dict) -> List[Food]:
     return [
         Food(
             food_id=item['id'],
