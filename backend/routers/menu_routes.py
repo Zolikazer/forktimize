@@ -1,5 +1,4 @@
 from datetime import datetime
-from functools import lru_cache
 
 from fastapi import APIRouter
 
@@ -15,7 +14,6 @@ router = APIRouter()
 @router.get("/dates")
 def get_available_dates() -> list[str]:
     current_week = datetime.now().isocalendar()[1]
-    print(current_week + 1)
     foods = load_data(f"{SETTINGS.DATA_DIR}/city-response-week-{current_week + 1}.json")
     unique_dates = {food.date.strftime("%Y-%m-%d") for food in foods}
 

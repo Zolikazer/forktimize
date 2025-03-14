@@ -1,3 +1,3 @@
 from settings import SETTINGS
 
-# SETTINGS.TEST_MODE = True
+SETTINGS.TEST_MODE = True

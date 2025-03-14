@@ -43,15 +43,16 @@ def test_session():
 
 
 def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
-    """Test that the job fetches and stores data correctly in the real database."""
-    fetch_and_store_food_data()
+    with patch("data.fetch_food_selection_job.save_to_file") as mock_save_to_file:
+        fetch_and_store_food_data()
 
-    job_run = test_session.exec(select(JobRun)).first()
+        mock_save_to_file.assert_called()
 
-    assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
+        job_run = test_session.exec(select(JobRun)).first()
+        assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
 
-    food_entries = test_session.exec(select(Food)).all()
-    assert len(food_entries) > 0, "No food entries were inserted into the database!"
+        food_entries = test_session.exec(select(Food)).all()
+        assert len(food_entries) > 0, "No food entries were inserted into the database!"
 
 
 def test_fetch_fails_and_marks_job_as_failed(mock_requests_post_failure, test_session):
