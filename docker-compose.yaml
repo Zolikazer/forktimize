@@ -8,6 +8,6 @@ services:
     volumes:
       - /var/lib/food_planner:/var/lib/food_planner
       - /var/log/food_planner:/var/log/food_planner
-      - /opt/forktimize/:/app
+      - /opt/forktimize/backend:/app
     ports:
       - "80:8000"

@@ -43,4 +43,4 @@ deploy-backend:
 
 live-patch:
 	rsync -rv backend spazo@forktimize:/opt/forktimize/ --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
-	ssh $(VPS_USER)@$(VPS_HOST) "sudo su && docker compose restart forktimize"
+	ssh $(VPS_USER)@$(VPS_HOST) "sudo su && docker compose restart forktimize -d"
