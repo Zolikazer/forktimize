@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, date
 from pathlib import Path
 
-from data.data_loader import load_food_from_json
+from data.serialization import load_food_from_json
 from model.food import Food
 
 

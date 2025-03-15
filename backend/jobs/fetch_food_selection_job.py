@@ -4,7 +4,7 @@ from pathlib import Path
 import requests
 from sqlmodel import Session
 
-from data.data_loader import serialize_food_items, save_to_json
+from data.serialization import save_to_json, serialize_food_items
 from database.db import init_db, get_session
 from model.job_run import JobRun, JobStatus
 from monitoring.logger import LOGGER

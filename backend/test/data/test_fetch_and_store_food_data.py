@@ -6,8 +6,8 @@ from requests import Response
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from data.data_loader import open_json
-from data.fetch_food_selection_job import fetch_and_store_cityfood_data
+from data.serialization import open_json
+from jobs.fetch_food_selection_job import fetch_and_store_cityfood_data
 from model.food import Food
 from model.job_run import JobRun, JobStatus
 
@@ -46,7 +46,7 @@ def test_session():
 
 
 def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
-    with patch("data.fetch_food_selection_job.save_to_json") as mock_save_to_file:
+    with patch("jobs.fetch_food_selection_job.save_to_json") as mock_save_to_file:
         fetch_and_store_cityfood_data(test_session)
 
         mock_save_to_file.assert_called()

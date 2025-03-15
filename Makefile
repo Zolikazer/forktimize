@@ -25,7 +25,7 @@ test-unit: test-backend
 	$(MAKE) test-frontend
 
 e2e-test:
-	cd frontend && npx playwright test
+	cd frontend && npm run test:e2e
 
 test-e2e:
 	$(MAKE) run-backend &
@@ -34,4 +34,4 @@ test-e2e:
 	$(MAKE) e2e-test
 
 deploy-backend:
-	ssh forktimize "cd /opt/forktimize && bash update_deployment.sh"
+	ssh forktimize "cd /opt/forktimize/ && sudo /opt/forktimize/update_deployment.sh"

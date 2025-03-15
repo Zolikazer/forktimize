@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "test:unit": "vitest",
-    "test": "npm run test:unit -- --run && npm run test:e2e",
+    "test": "npm run test:unit -- --run",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
