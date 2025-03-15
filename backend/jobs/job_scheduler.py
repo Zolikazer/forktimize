@@ -11,7 +11,10 @@ scheduler = BackgroundScheduler()
 def is_database_empty():
     session = next(get_session())
     try:
+        LOGGER.info()
         return session.query(Food).count() == 0
+    except Exception as e:
+        LOGGER.info(f"Something fucked {e}")
     finally:
         session.close()
 
