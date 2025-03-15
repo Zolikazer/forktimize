@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from database.db import init_db
 from monitoring.logger import LoggingMiddleware, LOGGER
-from routers.menu_routes import router
+from routers.planner_routes import router
 
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)

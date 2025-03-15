@@ -1,8 +1,8 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
 
-from data.data_loader import load_data, categorize_foods_by_date, filter_out_food
+from data.data_loader import load_food_from_json
 from model.food import Food
 
 
@@ -19,11 +19,11 @@ class TestFoodParser(unittest.TestCase):
         ]
 
     def test_parse_json_parses_all_foods(self):
-        foods = load_data(self.test_file)
+        foods = load_food_from_json(self.test_file)
         self.assertEqual(15, len(foods))
 
     def test_food_attributes(self):
-        foods = load_data(self.test_file)
+        foods = load_food_from_json(self.test_file)
         food = foods[0]
         self.assertEqual(food.name, "Thai marha üvegtésztával")
         self.assertEqual(food.calories, 620)
@@ -31,19 +31,4 @@ class TestFoodParser(unittest.TestCase):
         self.assertEqual(food.carb, 101)
         self.assertEqual(food.fat, 9)
         self.assertEqual(food.price, 2130)
-        self.assertEqual(food.date, datetime(2025, 2, 17))
-
-    def test_categorize_foods_by_date(self):
-        categorized_foods = categorize_foods_by_date(self.example_foods)
-
-        self.assertEqual(len(categorized_foods), 2)
-        self.assertEqual(len(categorized_foods["2025-02-19"]), 2)
-        self.assertEqual(len(categorized_foods["2025-02-20"]), 1)
-        self.assertEqual(categorized_foods["2025-02-19"][0].name, "Tejszínes meggyleves")
-        self.assertEqual(categorized_foods["2025-02-19"][1].name, "Gulyásleves")
-        self.assertEqual(categorized_foods["2025-02-20"][0].name, "Rántott hús")
-
-    def test_filter_out_food(self):
-        filtered_foods = filter_out_food(["Gulyásleves", "hús"], self.example_foods)
-        self.assertEqual(len(filtered_foods), 1)
-        self.assertEqual(filtered_foods[0].name, "Tejszínes meggyleves")
+        self.assertEqual(food.date, date(2025, 2, 17))

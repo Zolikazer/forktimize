@@ -6,7 +6,7 @@ import requests
 from requests import RequestException
 from sqlmodel import Session
 
-from data.data_loader import serialize_food_items, save_to_file
+from data.data_loader import serialize_food_items, save_to_json
 from database.db import engine, init_db
 from model.JobRun import JobRun, JobStatus
 from monitoring.logger import LOGGER
@@ -43,7 +43,7 @@ def fetch_and_store_food_data(weeks_to_fetch: int = 3):
 def _save_food_to_json(data, week):
     RESOURCES_DIR.mkdir(parents=True, exist_ok=True)
     filename = RESOURCES_DIR / f"city-response-week-{week}.json"
-    save_to_file(data, filename)
+    save_to_json(data, filename)
 
     LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 

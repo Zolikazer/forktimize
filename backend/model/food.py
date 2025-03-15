@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import date as datetime_date
+
 from pydantic import ConfigDict
 from sqlmodel import SQLModel, Field
 
@@ -7,8 +8,8 @@ class Food(SQLModel, table=True):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     food_id: int = Field(primary_key=True)
-    date: datetime = Field(primary_key=True)
-    name: str
+    date: datetime_date = Field(primary_key=True, index=True)
+    name: str = Field(index=True)
     calories: int
     protein: int
     carb: int

@@ -5,7 +5,7 @@ import pytest
 from requests import Response
 from sqlmodel import select, SQLModel, Session
 
-from data.data_loader import open_file
+from data.data_loader import open_json
 from data.fetch_food_selection_job import fetch_and_store_food_data
 from database.db import engine
 from model.JobRun import JobRun, JobStatus
@@ -16,7 +16,7 @@ from model.food import Food
 def mock_requests_post_success():
     with patch("requests.post") as mock_post:
         mock_response = Mock()
-        mock_response.json.return_value = open_file(
+        mock_response.json.return_value = open_json(
             str(Path(__file__).parent.parent.resolve() / "resources/city-response-test.json"))
         mock_response.status_code = 200
         mock_post.return_value = mock_response
@@ -43,7 +43,7 @@ def test_session():
 
 
 def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
-    with patch("data.fetch_food_selection_job.save_to_file") as mock_save_to_file:
+    with patch("data.fetch_food_selection_job.save_to_json") as mock_save_to_file:
         fetch_and_store_food_data()
 
         mock_save_to_file.assert_called()
