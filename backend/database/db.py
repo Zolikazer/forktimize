@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, create_engine, Session
 
 from settings import SETTINGS
 
-engine = create_engine(SETTINGS.DATABASE_LOCATION, echo=False)
+engine = create_engine(SETTINGS.DATABASE_CONNECTION_STRING, echo=False)
 
 
 def init_db():

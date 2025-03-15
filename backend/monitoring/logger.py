@@ -1,12 +1,21 @@
 import logging
+import os
 import time
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from settings import SETTINGS
+
+os.makedirs(SETTINGS.LOG_LOCATION, exist_ok=True)
+
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler(f"{SETTINGS.LOG_LOCATION}/{SETTINGS.LOG_FILE}"),
+        logging.StreamHandler()
+    ]
 )
 
 LOGGER = logging.getLogger(__name__)
