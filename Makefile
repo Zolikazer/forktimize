@@ -32,3 +32,6 @@ test-e2e:
 	$(MAKE) run-frontend &
 	sleep 5  # Give some time for the servers to start
 	$(MAKE) e2e-test
+
+deploy-backend:
+	ssh forktimize "cd /opt/forktimize && bash update_deployment.sh"

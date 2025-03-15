@@ -9,4 +9,4 @@ services:
       - /var/lib/food_planner:/var/lib/food_planner
       - /var/log/food_planner:/var/log/food_planner
     ports:
-      - "8000:8000"
+      - "80:8000"
