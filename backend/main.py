@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
@@ -20,5 +22,6 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     LOGGER.info("🚀 Starting up...")
+    LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
     init_db()
     LOGGER.info("🌐 Database initialized.")

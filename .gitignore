@@ -29,5 +29,8 @@ backend/**/*.pyc
 backend/**/*.pyo
 backend/**/*.pyd
 backend/*.sqlite3
+backend/resources/city-response*
+backend/logs
+backend/foods.db
 
 .idea
