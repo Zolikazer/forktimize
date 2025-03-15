@@ -6,11 +6,12 @@ from model.food import Food
 
 
 class Menu(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     CHICKEN_PROTEIN_RATIO: ClassVar[float] = 25.0
     CHICKEN_FAT_RATIO: ClassVar[float] = 3.0
 
-    foods: List[Food] = Field(default_factory=list)
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    foods: list[Food] = Field(default_factory=list)
 
     @property
     def total_calories(self) -> int:

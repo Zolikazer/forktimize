@@ -10,10 +10,10 @@ from model.menu import Menu
 from model.menu_request import MenuRequest
 from optimizers.menu_optimizer import create_menu
 
-router = APIRouter()
+planner = APIRouter()
 
 
-@router.get("/dates")
+@planner.get("/dates")
 def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     today = date.today()
     statement = select(col(Food.date)).distinct().where(Food.date > today)
@@ -22,7 +22,7 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     return sorted([d.strftime("%Y-%m-%d") for d in unique_dates])
 
 
-@router.post("/menu")
+@planner.post("/menu")
 def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(get_session)) -> Menu:
     request_date = datetime.strptime(menu_request.date, "%Y-%m-%d").date()
 

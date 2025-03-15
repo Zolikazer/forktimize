@@ -16,10 +16,10 @@ CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
 
-def fetch_and_store_food_data(session: Session, weeks_to_fetch: int = 3):
+def fetch_and_store_cityfood_data(session: Session, weeks_to_fetch: int = 3):
     for week in range(CURRENT_WEEK, CURRENT_WEEK + weeks_to_fetch):
         try:
-            data = _fetch_food_selection_for_week(week)
+            data = _fetch_food_selection_for(week)
             _save_food_to_json(data, week)
             _save_food_to_db(session, data, week)
 
@@ -49,7 +49,7 @@ def _save_food_to_db(session: Session, data: dict, week: int):
     LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
-def _fetch_food_selection_for_week(week: int) -> dict:
+def _fetch_food_selection_for(week: int) -> dict:
     response = requests.post(DATA_ENDPOINT, json=_get_request_body(CURRENT_YEAR, week), timeout=10)
     response.raise_for_status()
     data = response.json()
@@ -76,5 +76,5 @@ def _get_request_body(year: int, week: int) -> dict:
 
 if __name__ == "__main__":
     init_db()
-    db_session = get_session()
-    fetch_and_store_food_data(db_session)
+    with next(get_session()) as db_session:
+        fetch_and_store_cityfood_data(db_session)
