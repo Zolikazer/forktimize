@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
@@ -19,10 +20,13 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
 
     _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
 
+    start_time = time.time()
     solver = PULP_CBC_CMD(msg=False)
     status = LpStatus[problem.solve(solver)]
+    duration = time.time() - start_time
 
     if status == "Optimal":
+        LOGGER.info(f"✅ Successfully created a menu in {duration:.4f} seconds.")
         return _convert_result_to_menu(foods, x_vars)
     else:
         LOGGER.info("Could not create menu. Status: %s", status)
