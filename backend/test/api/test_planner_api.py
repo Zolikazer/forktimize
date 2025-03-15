@@ -72,10 +72,16 @@ def test_create_menu_endpoint(client, session: Session):
 
 @freeze_time("2025-02-23")
 def test_get_available_dates(client, session):
-    """Test that the API correctly returns available dates after today."""
     insert_test_food(session)
 
     response = client.get("/dates")
 
     assert response.status_code == 200
     assert response.json() == ["2025-02-24", "2025-02-25"]
+
+
+def test_health_check(client):
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "healthy", "database": "connected"}

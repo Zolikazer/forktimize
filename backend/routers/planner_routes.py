@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from enum import Enum
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import String
@@ -8,7 +9,14 @@ from database.db import get_session
 from model.food import Food
 from model.menu import Menu
 from model.menu_request import MenuRequest
+from monitoring.logger import LOGGER
 from optimizers.menu_optimizer import create_menu
+
+
+class AppStatus(Enum):
+    HEALTHY = "healthy"
+    UNHEALTHY = "unhealthy"
+
 
 planner = APIRouter()
 
@@ -38,3 +46,16 @@ def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(g
     menu = create_menu(foods, menu_request.nutritional_constraints)
 
     return menu
+
+
+@planner.get("/health", tags=["Monitoring"])
+def health_check(session: Session = Depends(get_session)) -> dict:
+    try:
+        session.exec(select(1)).first()
+
+        LOGGER.info("✅ Health check passed.")
+        return {"status": AppStatus.HEALTHY, "database": "connected"}
+
+    except Exception as e:
+        LOGGER.error(f"❌ Health check failed: {e}")
+        return {"status": AppStatus.UNHEALTHY, "database": "error"}
