@@ -3,13 +3,13 @@ from unittest.mock import patch, Mock
 
 import pytest
 from requests import Response
+from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
 from data.data_loader import open_json
 from data.fetch_food_selection_job import fetch_and_store_cityfood_data
-from database.db import engine
-from model.job_run import JobRun, JobStatus
 from model.food import Food
+from model.job_run import JobRun, JobStatus
 
 
 @pytest.fixture
@@ -36,6 +36,9 @@ def mock_requests_post_failure():
 
 @pytest.fixture(scope="function")
 def test_session():
+    engine = create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
