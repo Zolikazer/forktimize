@@ -7,3 +7,5 @@ pulp~=3.0.2
 freezegun~=1.5.1
 requests~=2.32.3
 pytest~=8.3.5
+sqlmodel~=0.0.24
+SQLAlchemy~=2.0.39

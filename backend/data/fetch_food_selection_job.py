@@ -1,14 +1,12 @@
 from datetime import datetime
-from json import JSONDecodeError
 from pathlib import Path
 
 import requests
-from requests import RequestException
 from sqlmodel import Session
 
 from data.data_loader import serialize_food_items, save_to_json
-from database.db import engine, init_db
-from model.JobRun import JobRun, JobStatus
+from database.db import init_db, get_session
+from model.job_run import JobRun, JobStatus
 from monitoring.logger import LOGGER
 from settings import SETTINGS
 
@@ -18,25 +16,17 @@ CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
 
-def fetch_and_store_food_data(weeks_to_fetch: int = 3):
-    init_db()
-
+def fetch_and_store_food_data(session: Session, weeks_to_fetch: int = 3):
     for week in range(CURRENT_WEEK, CURRENT_WEEK + weeks_to_fetch):
         try:
             data = _fetch_food_selection_for_week(week)
             _save_food_to_json(data, week)
-            _save_food_to_db(data, week)
+            _save_food_to_db(session, data, week)
 
-            job_id = _track_job_run(week, CURRENT_YEAR, JobStatus.SUCCESS)
+            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS)
             LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for Week {week}.")
-        except RequestException as e:
-            job_id = _track_job_run(week, CURRENT_YEAR, JobStatus.FAILURE)
-            LOGGER.error(f"❌ Job ID={job_id}: Network error while fetching Week {week}: {e}")
-        except JSONDecodeError as e:
-            job_id = _track_job_run(week, CURRENT_YEAR, JobStatus.FAILURE)
-            LOGGER.error(f"❌ Job ID={job_id}: Invalid JSON received for Week {week}. Error: {e}")
         except Exception as e:
-            job_id = _track_job_run(week, CURRENT_YEAR, JobStatus.FAILURE)
+            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE)
             LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
 
@@ -48,16 +38,15 @@ def _save_food_to_json(data, week):
     LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
 
-def _save_food_to_db(data: dict, week: int):
-    with Session(engine) as session:
-        foods = serialize_food_items(data)
+def _save_food_to_db(session: Session, data: dict, week: int):
+    foods = serialize_food_items(data)
 
-        for food in foods:
-            session.merge(food)
+    for food in foods:
+        session.merge(food)
 
-        session.commit()
+    session.commit()
 
-        LOGGER.info(f"✅ Week {week} food selection stored in the database.")
+    LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
 def _fetch_food_selection_for_week(week: int) -> dict:
@@ -68,15 +57,14 @@ def _fetch_food_selection_for_week(week: int) -> dict:
     return data
 
 
-def _track_job_run(week: int, year: int, status: JobStatus) -> int:
-    with Session(engine) as session:
-        job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now())
-        session.add(job_run)
-        session.commit()
-        session.refresh(job_run)
+def _track_job_run(session: Session, week: int, year: int, status: JobStatus) -> int:
+    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now())
+    session.add(job_run)
+    session.commit()
+    session.refresh(job_run)
 
-        LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
-        return job_run.id
+    LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
+    return job_run.id
 
 
 def _get_request_body(year: int, week: int) -> dict:
@@ -87,4 +75,6 @@ def _get_request_body(year: int, week: int) -> dict:
 
 
 if __name__ == "__main__":
-    fetch_and_store_food_data()
+    init_db()
+    db_session = get_session()
+    fetch_and_store_food_data(db_session)

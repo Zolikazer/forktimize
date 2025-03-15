@@ -8,7 +8,7 @@ from sqlmodel import select, SQLModel, Session
 from data.data_loader import open_json
 from data.fetch_food_selection_job import fetch_and_store_food_data
 from database.db import engine
-from model.JobRun import JobRun, JobStatus
+from model.job_run import JobRun, JobStatus
 from model.food import Food
 
 
@@ -44,7 +44,7 @@ def test_session():
 
 def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
     with patch("data.fetch_food_selection_job.save_to_json") as mock_save_to_file:
-        fetch_and_store_food_data()
+        fetch_and_store_food_data(test_session)
 
         mock_save_to_file.assert_called()
 
@@ -56,7 +56,7 @@ def test_fetch_and_store_food_data_success(mock_requests_post_success, test_sess
 
 
 def test_fetch_fails_and_marks_job_as_failed(mock_requests_post_failure, test_session):
-    fetch_and_store_food_data()
+    fetch_and_store_food_data(test_session)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"

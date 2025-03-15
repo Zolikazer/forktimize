@@ -2,9 +2,7 @@ from sqlmodel import SQLModel, create_engine, Session
 
 from settings import SETTINGS
 
-DATABASE_URL = "sqlite:///:memory:" if SETTINGS.TEST_MODE else SETTINGS.DATABASE_LOCATION
-
-engine = create_engine(DATABASE_URL, echo=False)
+engine = create_engine(SETTINGS.DATABASE_LOCATION, echo=False)
 
 
 def init_db():

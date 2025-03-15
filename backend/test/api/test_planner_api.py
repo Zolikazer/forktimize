@@ -64,9 +64,9 @@ def test_create_menu_endpoint(client, session: Session):
 
     result = Menu(**response.json())
 
-    assert len(result.foods) == 4  # 5 original - 1 blacklisted
-    assert result.total_price == 4000  # Adjusted expected price
-    assert result.total_calories == 2000  # Adjusted expected calories
+    assert len(result.foods) == 4
+    assert result.total_price == 4000
+    assert result.total_calories == 2000
     assert "Lencsefőzelék vagdalttal" not in [food.name for food in result.foods]
 
 
