@@ -3,7 +3,6 @@ import time
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
