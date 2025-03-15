@@ -1,5 +1,10 @@
 SHELL := /bin/bash
 
+VPS_USER := spazo
+VPS_HOST := forktimize
+REMOTE_DIR := /opt/forktimize/
+LOCAL_DIR := .backend/
+
 run-frontend-dev:
 	cd frontend;npm run dev
 
@@ -35,3 +40,7 @@ test-e2e:
 
 deploy-backend:
 	ssh forktimize "cd /opt/forktimize/ && sudo /opt/forktimize/update_deployment.sh"
+
+live-patch:
+	rsync -rv backend spazo@forktimize:/opt/forktimize/ --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
+	ssh $(VPS_USER)@$(VPS_HOST) "sudo su && docker compose restart forktimize"

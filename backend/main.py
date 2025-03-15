@@ -7,7 +7,6 @@ from database.db import init_db
 from jobs.job_scheduler import scheduler, is_database_empty, run_fetch_job
 from monitoring.logger import LoggingMiddleware, LOGGER
 from routers.planner_routes import planner
-
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)
 app.include_router(planner)

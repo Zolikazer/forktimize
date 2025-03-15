@@ -1,6 +1,8 @@
 set -e
 
 echo "Pulling latest code..."
+git reset --hard origin/master
+git clean -fd
 git pull origin master
 
 echo "Stopping old containers..."

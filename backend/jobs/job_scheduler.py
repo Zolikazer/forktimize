@@ -13,7 +13,7 @@ def is_database_empty():
     try:
         return session.query(Food).count() == 0
     except Exception as e:
-        LOGGER.info(f"Something fucked {e}")
+        LOGGER.info(f"Something fucked when checking if DB is empty {e}")
     finally:
         session.close()
 

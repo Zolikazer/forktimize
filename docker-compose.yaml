@@ -1,12 +1,13 @@
 services:
   backend:
     build: backend/
-    container_name: food_planner_backend
+    container_name: forktimize
     restart: always 
     environment:
       ENV: production
     volumes:
       - /var/lib/food_planner:/var/lib/food_planner
       - /var/log/food_planner:/var/log/food_planner
+      - /opt/forktimize/:/app
     ports:
       - "80:8000"
