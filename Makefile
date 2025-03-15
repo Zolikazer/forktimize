@@ -39,8 +39,8 @@ test-e2e:
 	$(MAKE) e2e-test
 
 deploy-backend:
-	ssh forktimize "cd /opt/forktimize/ && sudo /opt/forktimize/update_deployment.sh"
+	ssh ${VPS_HOST} "cd ${REMOTE_DIR} && sudo ${REMOTE_DIR}update_deployment.sh"
 
 live-patch:
 	rsync -rv backend spazo@forktimize:/opt/forktimize/ --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
-	ssh $(VPS_USER)@$(VPS_HOST) "sudo su && docker compose restart forktimize -d"
+	ssh $(VPS_USER)@$(VPS_HOST) "cd ${REMOTE_DIR} && sudo docker compose restart backend"
