@@ -9,10 +9,10 @@ class Settings(BaseSettings):
     DATA_DIR: str = f"{ROOT_DIR}/resources"
     CITY_FOOD_API_URL: str = "https://ca.cityfood.hu"
     CITY_FOOD_API_FOOD_PATH: str = "api/v1/menu"
-    DATABASE_PATH: str = f"/var/lib/food_planner/food_planner.db"
+    DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
     DATABASE_CONNECTION_STRING: str = f"sqlite:///{DATABASE_PATH}"
-    LOG_LOCATION: str = f"/var/log/food_planner"
-    LOG_FILE: str = "food_planner.log"
+    LOG_LOCATION: str = f"/var/log/forktimize"
+    LOG_FILE: str = "forktimize.log"
 
 
 class DevSettings(Settings):

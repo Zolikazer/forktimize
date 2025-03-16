@@ -1,13 +1,27 @@
 services:
-  backend:
+  forktimize-backend:
     build: backend/
     container_name: forktimize
     restart: always 
     environment:
       ENV: production
     volumes:
-      - /var/lib/food_planner:/var/lib/food_planner
-      - /var/log/food_planner:/var/log/food_planner
+      - /var/lib/forktimize:/var/lib/forktimize
+      - /var/log/forktimize:/var/log/forktimize
       - /opt/forktimize/backend:/app
     ports:
-      - "80:8000"
+      - "8000:8000"
+  
+  nginx:
+    image: nginx:latest
+    container_name: forktimize-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/forktimize/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+    depends_on:
+      - forktimize-backend

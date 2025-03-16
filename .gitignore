@@ -34,3 +34,5 @@ backend/logs
 backend/foods.db
 
 .idea
+
+docker-compose.override.yml
