@@ -7,7 +7,7 @@ export default defineConfig({
 
     test: {
         workspace: [{
-            extends: "./vite.config.js",
+            extends: "./vite.settings.js",
             plugins: [svelteTesting()],
 
             test: {
@@ -19,7 +19,7 @@ export default defineConfig({
                 setupFiles: ['./vitest-setup-client.js']
             }
         }, {
-            extends: "./vite.config.js",
+            extends: "./vite.settings.js",
 
             test: {
                 name: "server",
