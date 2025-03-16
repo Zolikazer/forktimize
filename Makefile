@@ -42,5 +42,5 @@ deploy-backend:
 	ssh ${VPS_HOST} "cd ${REMOTE_DIR} && sudo ${REMOTE_DIR}update_deployment.sh"
 
 live-patch:
-	rsync -rv backend spazo@forktimize:/opt/forktimize/ --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
-	ssh $(VPS_USER)@$(VPS_HOST) "cd ${REMOTE_DIR} && sudo docker compose restart forktimize-backend"
+	rsync -rv . spazo@forktimize:/opt/forktimize/ --exclude='frontend' --exclude='docker-compose.override.yml' --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
+	ssh $(VPS_USER)@$(VPS_HOST) "cd ${REMOTE_DIR} && sudo docker compose restart"
