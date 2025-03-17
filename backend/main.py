@@ -5,9 +5,10 @@ from starlette.middleware.cors import CORSMiddleware
 
 from database.db import init_db
 from jobs.job_scheduler import scheduler, is_database_empty, run_fetch_job
-from monitoring.logger import LoggingMiddleware, LOGGER
+from monitoring.logger import LoggingMiddleware, APP_LOGGER
 from routers.planner_routes import planner
-app = FastAPI()
+
+app = FastAPI(root_path="/api")
 app.add_middleware(LoggingMiddleware)
 app.include_router(planner)
 app.add_middleware(
@@ -21,18 +22,18 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
-    LOGGER.info("🚀 Starting up...")
-    LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
+    APP_LOGGER.info("🚀 Starting up...")
+    APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
 
     init_db()
-    LOGGER.info("🌐 Database initialized.")
+    APP_LOGGER.info("🌐 Database initialized.")
 
     scheduler.add_job(run_fetch_job, "cron", hour=0, minute=0)
-    LOGGER.info("Jobs scheduled.")
+    APP_LOGGER.info("Jobs scheduled.")
 
     if is_database_empty():
+        APP_LOGGER.info("🔄 Cold start detected. Running initial fetch job...")
         scheduler.add_job(run_fetch_job, "date")
-        LOGGER.info("🔄 Cold start detected. Running initial fetch job...")
 
     scheduler.start()
 
@@ -40,4 +41,4 @@ def on_startup():
 @app.on_event("shutdown")
 def shutdown_event():
     scheduler.shutdown()
-    LOGGER.info("Jobs stopped.")
+    APP_LOGGER.info("Jobs stopped.")

@@ -7,7 +7,7 @@ from sqlmodel import Session
 from data.serialization import save_to_json, serialize_food_items
 from database.db import init_db, get_session
 from model.job_run import JobRun, JobStatus
-from monitoring.logger import LOGGER
+from monitoring.logger import JOB_LOGGER
 from settings import SETTINGS
 
 DATA_ENDPOINT = f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}"
@@ -24,10 +24,10 @@ def fetch_and_store_cityfood_data(session: Session, weeks_to_fetch: int = 3):
             _save_food_to_db(session, data, week)
 
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS)
-            LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for Week {week}.")
+            JOB_LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for Week {week}.")
         except Exception as e:
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE)
-            LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
+            JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
 
 def _save_food_to_json(data, week):
@@ -35,7 +35,7 @@ def _save_food_to_json(data, week):
     filename = RESOURCES_DIR / f"city-response-week-{week}.json"
     save_to_json(data, filename)
 
-    LOGGER.info(f"✅ Week {week} data saved to {filename}.")
+    JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
 
 def _save_food_to_db(session: Session, data: dict, week: int):
@@ -46,7 +46,7 @@ def _save_food_to_db(session: Session, data: dict, week: int):
 
     session.commit()
 
-    LOGGER.info(f"✅ Week {week} food selection stored in the database.")
+    JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
 def _fetch_food_selection_for(week: int) -> dict:
@@ -63,7 +63,7 @@ def _track_job_run(session: Session, week: int, year: int, status: JobStatus) ->
     session.commit()
     session.refresh(job_run)
 
-    LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
+    JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
     return job_run.id
 
 

@@ -9,7 +9,7 @@ from database.db import get_session
 from model.food import Food
 from model.menu import Menu
 from model.menu_request import MenuRequest
-from monitoring.logger import LOGGER
+from monitoring.logger import APP_LOGGER
 from optimizers.menu_optimizer import create_menu
 
 
@@ -53,9 +53,9 @@ def health_check(session: Session = Depends(get_session)) -> dict:
     try:
         session.exec(select(1)).first()
 
-        LOGGER.info("✅ Health check passed.")
+        APP_LOGGER.info("✅ Health check passed.")
         return {"status": AppStatus.HEALTHY, "database": "connected"}
 
     except Exception as e:
-        LOGGER.error(f"❌ Health check failed: {e}")
+        APP_LOGGER.error(f"❌ Health check failed: {e}")
         return {"status": AppStatus.UNHEALTHY, "database": "error"}

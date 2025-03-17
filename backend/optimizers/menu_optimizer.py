@@ -3,10 +3,10 @@ from typing import List
 
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
 
-from model.nutritional_constraints import NutritionalConstraints
 from model.food import Food
 from model.menu import Menu
-from monitoring.logger import LOGGER
+from model.nutritional_constraints import NutritionalConstraints
+from monitoring.logger import APP_LOGGER
 
 
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
@@ -26,10 +26,10 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
     duration = time.time() - start_time
 
     if status == "Optimal":
-        LOGGER.info(f"✅ Successfully created a menu in {duration:.4f} seconds.")
+        APP_LOGGER.info(f"✅ Successfully created a menu in {duration:.4f} seconds.")
         return _convert_result_to_menu(foods, x_vars)
     else:
-        LOGGER.info("Could not create menu. Status: %s", status)
+        APP_LOGGER.info("Could not create menu. Status: %s", status)
         return Menu()
 
 

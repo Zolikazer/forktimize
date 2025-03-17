@@ -11,8 +11,10 @@ class Settings(BaseSettings):
     CITY_FOOD_API_FOOD_PATH: str = "api/v1/menu"
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
     DATABASE_CONNECTION_STRING: str = f"sqlite:///{DATABASE_PATH}"
-    LOG_LOCATION: str = f"/var/log/forktimize"
-    LOG_FILE: str = "forktimize.log"
+    LOG_DIR: str = f"/var/log/forktimize"
+    API_LOG_FILE: str = "api.log"
+    JOB_LOG_FILE: str = "job.log"
+    APP_LOG_FILE: str = "app.log"
 
 
 class DevSettings(Settings):
@@ -20,7 +22,7 @@ class DevSettings(Settings):
         super().__init__(**kwargs)
         self.DATABASE_PATH: str = f"{self.ROOT_DIR}/foods.db"
         self.DATABASE_CONNECTION_STRING: str = f"sqlite:///{self.DATABASE_PATH}"
-        self.LOG_LOCATION: str = f"{self.ROOT_DIR}/logs/"
+        self.LOG_DIR: str = f"{self.ROOT_DIR}/logs/"
 
 
 def get_settings() -> Settings:
