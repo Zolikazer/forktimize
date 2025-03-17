@@ -29,6 +29,7 @@ def _create_logger(name: str, filename: str):
 API_LOGGER = _create_logger("api", SETTINGS.API_LOG_FILE)
 APP_LOGGER = _create_logger("app", SETTINGS.APP_LOG_FILE)
 JOB_LOGGER = _create_logger("job", SETTINGS.JOB_LOG_FILE)
+PERF_LOGGER = _create_logger("perf", SETTINGS.PERF_LOG_FILE)
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):

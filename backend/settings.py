@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     API_LOG_FILE: str = "api.log"
     JOB_LOG_FILE: str = "job.log"
     APP_LOG_FILE: str = "app.log"
+    PERF_LOG_FILE: str = "perf.log"
 
 
 class DevSettings(Settings):

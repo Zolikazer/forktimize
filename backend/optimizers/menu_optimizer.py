@@ -7,8 +7,10 @@ from model.food import Food
 from model.menu import Menu
 from model.nutritional_constraints import NutritionalConstraints
 from monitoring.logger import APP_LOGGER
+from monitoring.performance import benchmark
 
 
+@benchmark
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
     problem = LpProblem("Menu_Creation_ILP", LpMinimize)
 
