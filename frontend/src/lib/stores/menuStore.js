@@ -5,7 +5,7 @@ export const menu = writable(null);
 
 export const MenuStatusEnum = {
     NOT_GENERATED: "notGenerated",
-    IN_PROGRESS: "inProgress",  // ✅ New state added
+    IN_PROGRESS: "inProgress",
     SUCCESS: "success",
     FAILURE: "failure"
 };

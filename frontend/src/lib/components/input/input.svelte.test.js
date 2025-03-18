@@ -6,6 +6,12 @@ import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
 
 vi.mock("$lib/stores/menuStore.js", () => {
     return {
+        MenuStatusEnum: {
+            NOT_GENERATED: "notGenerated",
+            IN_PROGRESS: "inProgress",
+            SUCCESS: "success",
+            FAILURE: "failure"
+        },
         menu: {
             set: vi.fn(),
             subscribe: vi.fn().mockImplementation((run) => {
@@ -13,8 +19,16 @@ vi.mock("$lib/stores/menuStore.js", () => {
                 return {unsubscribe: vi.fn()};
             }),
         },
+        currentMenuStatus: {
+            set: vi.fn(),
+            subscribe: vi.fn().mockImplementation((run) => {
+                run("notGenerated"); // Default: No menu generated yet
+                return {unsubscribe: vi.fn()};
+            }),
+        },
     };
 });
+
 
 vi.mock("$lib/foodPlannerClient.js"); // Mock the entire module
 
