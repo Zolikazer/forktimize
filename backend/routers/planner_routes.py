@@ -13,8 +13,8 @@ from repository.forktimize_repository import get_unique_dates_after, get_foods_f
 
 
 class AppStatus(Enum):
-    HEALTHY = "healthy"
-    UNHEALTHY = "unhealthy"
+    HEALTHY = "HEALTHY"
+    UNHEALTHY = "UNHEALTHY"
 
 
 planner = APIRouter()

@@ -4,9 +4,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-API_URL = "https://forktimize.xyz/api/menu"  # Replace with your actual endpoint
-NUM_THREADS = 30  # Number of concurrent requests
-NUM_REQUESTS = 3000  # Total number of requests to send
+CREATE_MENU_URL = "https://forktimize.xyz/api/menu"  # Replace with your actual endpoint
+NUM_THREADS = 5  # Number of concurrent requests
+NUM_REQUESTS = 500  # Total number of requests to send
 
 PAYLOAD = {
     "date": "2025-03-18",
@@ -25,7 +25,7 @@ response_times = []
 def send_request():
     """Function to send a single request and measure response time."""
     start_time = time.perf_counter()
-    response = requests.post(API_URL, json=PAYLOAD)
+    response = requests.post(CREATE_MENU_URL, json=PAYLOAD)
     end_time = time.perf_counter()
 
     duration = end_time - start_time
