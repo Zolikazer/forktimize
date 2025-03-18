@@ -2,30 +2,35 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {menu} from "$lib/stores/menuStore.js";
+    import {menu, currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
     import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import {macroConstraints} from "$lib/stores/constraintStore.js";
-    import {get} from "svelte/store";
 
 
     export let dates = [];
     let selectedDate = dates.length ? dates[0] : "";
 
     async function generateMenu() {
+        currentMenuStatus.set(MenuStatusEnum.IN_PROGRESS);
         try {
-            console.log(get(macroConstraints));
-            console.log(get(dislikedFoods));
             const requestBody = createMenuRequest();
             const response = await FoodPlannerClient.getMenuPlan(requestBody);
-            console.log($menu);
             menu.set(response.data.foods);
+            if (response.data.foods.length > 0) {
+                currentMenuStatus.set(MenuStatusEnum.SUCCESS);
+            } else {
+                menu.set([]);
+                currentMenuStatus.set(MenuStatusEnum.FAILURE);
+            }
         } catch (error) {
+            menu.set([]);
+            currentMenuStatus.set(MenuStatusEnum.FAILURE);
             showError(error.message);
-            console.error("Menu generation failed:", error);
         }
     }
+
     export function createMenuRequest() {
         if (!selectedDate) throw new Error("No date selected for menu generation.");
 
