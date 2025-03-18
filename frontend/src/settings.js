@@ -13,7 +13,10 @@ const PROD_SETTINGS = {
 const DEV_SETTINGS = {
     ...PROD_SETTINGS,
     MODE: "development",
-    URL: "http://localhost:8000",
+    API: {
+        ...PROD_SETTINGS.API,
+        URL: "http://localhost:8000/api",
+    },
     RUN_MOCK_BACKEND: import.meta.env.VITE_RUN_MOCK_BACKEND || false
 }
 
