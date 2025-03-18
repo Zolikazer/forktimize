@@ -1,16 +1,15 @@
-from datetime import datetime, date
+from datetime import date
 from enum import Enum
 
 from fastapi import APIRouter, Depends
-from sqlalchemy import String
-from sqlmodel import Session, select, col, cast
+from sqlmodel import Session, select
 
 from database.db import get_session
-from model.food import Food
 from model.menu import Menu
 from model.menu_request import MenuRequest
 from monitoring.logger import APP_LOGGER
 from optimizers.menu_optimizer import create_menu
+from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
 
 
 class AppStatus(Enum):
@@ -24,26 +23,18 @@ planner = APIRouter()
 @planner.get("/dates")
 def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     today = date.today()
-    statement = select(col(Food.date)).distinct().where(Food.date > today)
-    unique_dates = session.exec(statement).all()
 
-    return sorted([d.strftime("%Y-%m-%d") for d in unique_dates])
+    return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
 
 
 @planner.post("/menu")
 def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(get_session)) -> Menu:
-    request_date = datetime.strptime(menu_request.date, "%Y-%m-%d").date()
+    food_selection = get_foods_for_given_date(session, menu_request.date, menu_request.food_blacklist)
 
-    statement = select(Food).where(Food.date == request_date)
-    for blacklisted in menu_request.food_blacklist:
-        statement = statement.where(cast(Food.name, String).not_like(f"%{blacklisted}%"))
-
-    foods = list(session.exec(statement).all())
-
-    if not foods:
+    if not food_selection:
         return Menu(foods=[])
 
-    menu = create_menu(foods, menu_request.nutritional_constraints)
+    menu = create_menu(food_selection, menu_request.nutritional_constraints)
 
     return menu
 

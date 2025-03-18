@@ -1,6 +1,6 @@
 const PROD_SETTINGS = {
     API: {
-        URL: "https://forktimize.xyz",
+        URL: "https://forktimize.xyz/api",
         ENDPOINT: {
             DATES: "dates",
             MENU: "menu",
