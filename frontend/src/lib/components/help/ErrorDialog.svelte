@@ -2,7 +2,6 @@
     import { errorStore, hideError } from "$lib/stores/errorStore.js";
 </script>
 
-<!-- ✅ Bulma Modal for Error -->
 {#if $errorStore.show}
     <div class="modal is-active">
         <div class="modal-background" on:click={hideError}></div>
