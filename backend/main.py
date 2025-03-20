@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from database.db import init_db
 from jobs.job_scheduler import scheduler, is_database_empty, run_fetch_job
-from monitoring.logger import LoggingMiddleware, APP_LOGGER
+from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.planner_routes import planner
 
 app = FastAPI(root_path="/api")

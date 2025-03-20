@@ -7,7 +7,7 @@ from sqlmodel import Session
 from data.serialization import save_to_json, serialize_food_items
 from database.db import init_db, get_session
 from model.job_run import JobRun, JobStatus
-from monitoring.logger import JOB_LOGGER
+from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
 DATA_ENDPOINT = f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}"

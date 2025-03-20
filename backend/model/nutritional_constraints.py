@@ -24,50 +24,44 @@ class NutritionalConstraints(BaseModel):
 
     @model_validator(mode='after')
     def _validate_min_lower_than_max(self) -> Self:
-        """Ensure min values are always less than max values."""
-        constraints = [("calories", self.min_calories, self.max_calories),
-                       ("protein", self.min_protein, self.max_protein),
-                       ("carb", self.min_carb, self.max_carb),
-                       ("fat", self.min_fat, self.max_fat)]
+        for attr in ["calories", "protein", "carb", "fat"]:
+            min_val = getattr(self, f"min_{attr}")
+            max_val = getattr(self, f"max_{attr}")
 
-        for name, min_val, max_val in constraints:
             if min_val is not None and max_val is not None and min_val > max_val:
-                raise ValueError(f"min_{name} must be less than or equal to max_{name}")
+                raise ValueError(f"min_{attr} must be less than or equal to max_{attr}")
 
         return self
 
     @model_validator(mode='after')
     def _validate_min_macro_constraints_consistent_with_calories(self) -> Self:
-        if self._all_min_macros_given():
-            if self._total_min_calories() > self.min_calories:
-                raise ValueError(
-                    f"The sum of max_carbs * {self.CARB_CALORIE}, "
-                    f"max_fat * {self.FAT_CALORIE}, "
-                    f"and max_protein * {self.PROTEIN_CALORIE} "
-                    f"must not exceed min_calories")
+        if self.min_calories and self._total_min_macro_calories() > self.min_calories:
+            raise ValueError("Total min macro calories exceed min_calories.")
 
+        if self.max_calories and self._total_max_macro_calories() > self.max_calories:
+            raise ValueError("Total max macro calories exceed max_calories.")
         return self
 
-    @model_validator(mode='after')
-    def _validate_max_macro_constraints_consistent_with_calories(self) -> Self:
-        if self._all_max_macros_given():
-            if self._total_max_calories() > self.max_calories:
-                raise ValueError(
-                    f"The sum of max_carbs * {self.CARB_CALORIE}, "
-                    f"max_fat * {self.FAT_CALORIE}, "
-                    f"and max_protein * {self.PROTEIN_CALORIE} "
-                    f"must not exceed max_calories")
+    def _total_max_macro_calories(self) -> int:
+        return self._max_carb_calories() + self._max_fat_calories() + self._max_protein_calories()
 
-        return self
+    def _max_protein_calories(self):
+        return self.max_protein * self.PROTEIN_CALORIE if self.max_protein else 0
 
-    def _total_max_calories(self) -> int:
-        return self.max_carb * self.CARB_CALORIE + self.max_fat * self.FAT_CALORIE + self.max_protein * self.PROTEIN_CALORIE
+    def _max_fat_calories(self):
+        return self.max_fat * self.FAT_CALORIE if self.max_fat else 0
 
-    def _total_min_calories(self) -> int:
-        return self.min_carb * self.CARB_CALORIE + self.min_fat * self.FAT_CALORIE + self.min_protein * self.PROTEIN_CALORIE
+    def _max_carb_calories(self):
+        return self.max_carb * self.CARB_CALORIE if self.max_carb else 0
 
-    def _all_max_macros_given(self) -> bool:
-        return self.max_calories is not None and self.max_carb is not None and self.max_fat is not None and self.max_protein is not None
+    def _total_min_macro_calories(self) -> int:
+        return self._min_carbs_calories() + self._min_fat_calories() + self._min_protein_calories()
 
-    def _all_min_macros_given(self) -> bool:
-        return self.min_calories is not None and self.min_carb is not None and self.min_fat is not None and self.min_protein is not None
+    def _min_protein_calories(self):
+        return self.min_protein * self.PROTEIN_CALORIE if self.min_protein else 0
+
+    def _min_fat_calories(self):
+        return self.min_fat * self.FAT_CALORIE if self.min_fat else 0
+
+    def _min_carbs_calories(self):
+        return self.min_carb * self.CARB_CALORIE if self.min_carb else 0

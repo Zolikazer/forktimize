@@ -19,9 +19,14 @@ def _create_logger(name: str, filename: str):
         logger.setLevel(logging.INFO)
 
         log_file = os.path.join(SETTINGS.LOG_DIR, filename)
+
         handler = RotatingFileHandler(log_file, maxBytes=5 * 1024 * 1024)
         handler.setFormatter(logging.Formatter(LOG_FORMAT))
         logger.addHandler(handler)
+
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(logging.Formatter(LOG_FORMAT))
+        logger.addHandler(console_handler)
 
     return logger
 

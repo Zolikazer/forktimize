@@ -7,7 +7,7 @@ from sqlmodel import Session, select
 from database.db import get_session
 from model.menu import Menu
 from model.menu_request import MenuRequest
-from monitoring.logger import APP_LOGGER
+from monitoring.logging import APP_LOGGER
 from optimizers.menu_optimizer import create_menu
 from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
 

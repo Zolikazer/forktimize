@@ -8,7 +8,6 @@ from model.menu import Menu
 
 @pytest.fixture
 def sample_food():
-    """Fixture to provide a sample food object."""
     return Food(
         food_id=1,
         name="Chicken Breast",
@@ -22,13 +21,11 @@ def sample_food():
 
 
 def test_menu_creation():
-    """Test that a Menu object initializes correctly."""
     menu = Menu()
     assert menu.foods == []
 
 
 def test_add_food(sample_food):
-    """Test that adding food to the menu works correctly."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -36,8 +33,15 @@ def test_add_food(sample_food):
     assert menu.foods[0] == sample_food
 
 
+def test_add_foods(sample_food):
+    menu = Menu()
+    menu.add_foods([sample_food, sample_food, sample_food])
+
+    assert len(menu.foods) == 3
+    assert menu.foods[0] == sample_food
+
+
 def test_total_calories(sample_food):
-    """Test that total_calories property sums correctly."""
     menu = Menu()
     menu.add_food(sample_food)
     menu.add_food(sample_food)  # Add same food twice
@@ -46,7 +50,6 @@ def test_total_calories(sample_food):
 
 
 def test_total_protein(sample_food):
-    """Test that total_protein property sums correctly."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -54,7 +57,6 @@ def test_total_protein(sample_food):
 
 
 def test_total_price(sample_food):
-    """Test that total_price property sums correctly."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -62,7 +64,6 @@ def test_total_price(sample_food):
 
 
 def test_total_fat(sample_food):
-    """Test that total_fat property sums correctly."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -70,7 +71,6 @@ def test_total_fat(sample_food):
 
 
 def test_total_carbs(sample_food):
-    """Test that total_carbs property sums correctly."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -78,7 +78,6 @@ def test_total_carbs(sample_food):
 
 
 def test_price_per_calorie(sample_food):
-    """Test price per calorie calculation."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -91,7 +90,6 @@ def test_price_per_calorie(sample_food):
 
 
 def test_price_per_protein(sample_food):
-    """Test price per protein calculation."""
     menu = Menu()
     menu.add_food(sample_food)
 
@@ -117,7 +115,6 @@ def test_price_per_protein(sample_food):
 
 
 def test_to_myfitnesspal_entries():
-    """Test conversion to MyFitnessPal entries."""
     menu = Menu()
 
     menu.add_food(Food(food_id=1, name="Chicken", calories=400, protein=50, carb=20, fat=10, price=800,

@@ -13,6 +13,12 @@ class Menu(BaseModel):
 
     foods: list[Food] = Field(default_factory=list)
 
+    def add_food(self, food: Food):
+        self.foods.append(food)
+
+    def add_foods(self, foods: list[Food]):
+        self.foods.extend(foods)
+
     @property
     def total_calories(self) -> int:
         return sum(food.calories for food in self.foods)
@@ -40,9 +46,6 @@ class Menu(BaseModel):
     @property
     def price_per_protein(self) -> float:
         return 0 if self.total_protein == 0 else round(self.total_price / self.total_protein, 2)
-
-    def add_food(self, food: Food):
-        self.foods.append(food)
 
     def to_myfitnesspal_entries(self) -> dict:
         chicken_grams = (self.total_protein / self.CHICKEN_PROTEIN_RATIO) * 100.0

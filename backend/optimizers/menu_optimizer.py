@@ -6,7 +6,7 @@ from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_C
 from model.food import Food
 from model.menu import Menu
 from model.nutritional_constraints import NutritionalConstraints
-from monitoring.logger import APP_LOGGER
+from monitoring.logging import APP_LOGGER
 from monitoring.performance import benchmark
 
 
@@ -14,11 +14,10 @@ from monitoring.performance import benchmark
 def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
     problem = LpProblem("Menu_Creation_ILP", LpMinimize)
 
-    x_vars = {food: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
-    problem += lpSum(x_vars[f] * f.price for f in foods), "TotalCost"
+    x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
+    problem += lpSum(x_vars[f.food_id] * f.price for f in foods), "TotalCost"
 
-    for attr, label in [("calories", "Calories"), ("protein", "Protein"), ("carb", "Carbs"), ("fat", "Fat")]:
-        _add_nutrient_constraint(foods, nutrition_constraints, problem, x_vars, attr, label)
+    _add_nutrient_constraints(foods, nutrition_constraints, problem, x_vars)
 
     _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
 
@@ -35,25 +34,31 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
         return Menu()
 
 
-def _add_nutrient_constraint(foods, nutrition_constraints, problem, x_vars, attr_name: str, label: str):
-    min_val = getattr(nutrition_constraints, f"min_{attr_name}")
-    max_val = getattr(nutrition_constraints, f"max_{attr_name}")
+def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: NutritionalConstraints, problem, x_vars: dict):
+    constraints = {
+        "calories": "Calories",
+        "protein": "Protein",
+        "carb": "Carbs",
+        "fat": "Fat"
+    }
+    for attr, label in constraints.items():
+        min_val = getattr(nutrition_constraints, f"min_{attr}")
+        max_val = getattr(nutrition_constraints, f"max_{attr}")
 
-    total_nutrient = lpSum(x_vars[f] * getattr(f, attr_name) for f in foods)
+        total_nutrient = lpSum(x_vars[f.food_id] * getattr(f, attr) for f in foods)
 
-    if min_val is not None:
-        problem += total_nutrient >= min_val, f"Min{label}"
-    if max_val is not None:
-        problem += total_nutrient <= max_val, f"Max{label}"
+        if min_val is not None:
+            problem += total_nutrient >= min_val, f"Min{label}"
+        if max_val is not None:
+            problem += total_nutrient <= max_val, f"Max{label}"
 
 
 def _convert_result_to_menu(foods, x_vars) -> Menu:
     menu = Menu()
-    chosen_foods = {f: int(x_vars[f].varValue) for f in foods if int(x_vars[f].varValue) > 0}
+    chosen_foods = [f for f in foods if x_vars[f.food_id].varValue and int(x_vars[f.food_id].varValue) > 0]
 
-    for food, qty in chosen_foods.items():
-        for _ in range(qty):
-            menu.add_food(food)
+    for food in chosen_foods:
+        menu.add_foods([food] * int(x_vars[food.food_id].varValue))
 
     return menu
 

@@ -1,6 +1,6 @@
 import time
 
-from monitoring.logger import PERF_LOGGER
+from monitoring.logging import PERF_LOGGER
 
 
 def benchmark(func):

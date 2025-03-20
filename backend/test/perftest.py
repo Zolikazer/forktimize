@@ -4,9 +4,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-CREATE_MENU_URL = "https://forktimize.xyz/api/menu"  # Replace with your actual endpoint
-NUM_THREADS = 5  # Number of concurrent requests
-NUM_REQUESTS = 500  # Total number of requests to send
+CREATE_MENU_URL = "https://forktimize.xyz/api/menu"
+NUM_THREADS = 5
+NUM_REQUESTS = 500
 
 PAYLOAD = {
     "date": "2025-03-18",
