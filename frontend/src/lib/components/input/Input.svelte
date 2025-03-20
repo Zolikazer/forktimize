@@ -17,6 +17,9 @@
             const generatedMenu = await getMenuPlan(requestedMenuConstraints)
             currentMenuStatus.set(MenuStatusEnum.SUCCESS);
             menu.set(generatedMenu.foods)
+            if (generatedMenu.length === 0) {
+                currentMenuStatus.set(MenuStatusEnum.FAILURE);
+            }
         } catch (error) {
             menu.set([])
             currentMenuStatus.set(MenuStatusEnum.FAILURE);
@@ -80,13 +83,13 @@
     .generate-button {
         font-size: 1rem;
         background: #00d1b2;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease-in-out;
     }
 
     .generate-button:hover {
         background: #009e8e;
         transform: scale(1.03);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     }
 </style>
