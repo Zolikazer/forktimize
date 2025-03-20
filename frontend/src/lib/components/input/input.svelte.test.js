@@ -1,8 +1,8 @@
 import {fireEvent, render, screen} from "@testing-library/svelte";
-import {describe, expect, test, vi, beforeEach} from "vitest";
+import {beforeEach, describe, expect, test, vi} from "vitest";
 import Input from "$lib/components/input/Input.svelte";
-import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
-import {menu, currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
+import * as FoodPlannerClient from "$lib/foodPlannerClient.js";
+import {currentMenuStatus, menu, MenuStatusEnum} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
 
 
@@ -33,12 +33,10 @@ describe("Input Component", () => {
     });
 
     test("generates menu when clicking 'Generate My Menu'", async () => {
-        const generatedMenu = {name: "Mocked Food", kcal: 500};
-        FoodPlannerClient.getMenuPlan.mockResolvedValue({
-            data: {foods: [generatedMenu]}
-        });
+        const mockMenu = [{name: "Mocked Food", kcal: 500}];
+        vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({foods: [{name: "Mocked Food", kcal: 500}]});
 
-        render(Input, {dates: ["2025-03-10", "2025-03-11", "2025-03-12"],});
+        render(Input);
 
         const select = screen.getByRole("combobox");
         await fireEvent.change(select, {target: {value: "2025-03-10"}});
@@ -46,6 +44,6 @@ describe("Input Component", () => {
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
 
-        expect(get(menu)).toEqual([generatedMenu]);
+        expect(get(menu)).toEqual(mockMenu);
     });
 });

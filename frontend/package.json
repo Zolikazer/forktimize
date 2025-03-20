@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
-    "bulma": "^1.0.3"
+    "bulma": "^1.0.3",
+    "ky": "^1.7.5"
   },
   "msw": {
     "workerDirectory": "static"

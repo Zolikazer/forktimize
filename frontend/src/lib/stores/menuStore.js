@@ -10,5 +10,4 @@ export const MenuStatusEnum = {
     FAILURE: "failure"
 };
 
-// 🔥 New store to track menu generation status
 export const currentMenuStatus = writable(MenuStatusEnum.NOT_GENERATED);

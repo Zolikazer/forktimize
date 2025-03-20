@@ -3,37 +3,29 @@
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {menu, currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
-    import {FoodPlannerClient} from "$lib/foodPlannerClient.js";
+    import {getMenuPlan} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import {macroConstraints} from "$lib/stores/constraintStore.js";
+    import {selectedDate} from "$lib/stores/dateStore.js";
 
-
-    export let dates = [];
-    let selectedDate = dates.length ? dates[0] : "";
 
     async function generateMenu() {
         currentMenuStatus.set(MenuStatusEnum.IN_PROGRESS);
+        const requestedMenuConstraints = createMenuRequest();
         try {
-            const requestBody = createMenuRequest();
-            const response = await FoodPlannerClient.getMenuPlan(requestBody);
-            menu.set(response.data.foods);
-            if (response.data.foods.length > 0) {
-                currentMenuStatus.set(MenuStatusEnum.SUCCESS);
-            } else {
-                menu.set([]);
-                currentMenuStatus.set(MenuStatusEnum.FAILURE);
-            }
+            const generatedMenu = await getMenuPlan(requestedMenuConstraints)
+            currentMenuStatus.set(MenuStatusEnum.SUCCESS);
+            menu.set(generatedMenu.foods)
         } catch (error) {
-            menu.set([]);
+            menu.set([])
             currentMenuStatus.set(MenuStatusEnum.FAILURE);
             showError(error.message);
         }
+
     }
 
     export function createMenuRequest() {
-        if (!selectedDate) throw new Error("No date selected for menu generation.");
-
         const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
@@ -42,7 +34,7 @@
 
         return {
             nutritionalConstraints,
-            date: selectedDate,
+            date: $selectedDate,
             foodBlacklist: $dislikedFoods,
         };
     }
@@ -68,8 +60,9 @@
 
     <div class="columns is-centered mt-3">
         <div class="column">
-            <DateSelector dates={dates} bind:selectedDate={selectedDate}/>
+            <DateSelector/>
         </div>
+
         <div class="column">
             <FoodBlacklist/>
         </div>
