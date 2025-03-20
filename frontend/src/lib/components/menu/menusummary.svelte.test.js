@@ -1,10 +1,10 @@
-import {render, screen} from '@testing-library/svelte';
-import {describe, expect, test, vi} from 'vitest';
+import { render, screen } from '@testing-library/svelte';
+import { beforeEach, describe, expect, test } from 'vitest';
 import MenuSummary from '$lib/components/menu/MenuSummary.svelte';
+import { menu } from '$lib/stores/menuStore.js';
 
-// Mock the menu store
-vi.mock('$lib/stores/menuStore.js', () => {
-    const mockMenu = [
+beforeEach(() => {
+    menu.set([
         {
             name: 'Test Food 1',
             calories: 300,
@@ -21,46 +21,30 @@ vi.mock('$lib/stores/menuStore.js', () => {
             fat: 15,
             price: 2000
         }
-    ];
-
-    return {
-        menu: {
-            subscribe: vi.fn(callback => {
-                callback(mockMenu);
-                return {unsubscribe: vi.fn()};
-            })
-        }
-    };
+    ]);
 });
 
 describe('MenuSummary Component', () => {
     test('renders title correctly', () => {
         render(MenuSummary);
-
-        expect(screen.getByText('Menu Summary')).toBeInTheDocument();
+        expect(screen.getByText(/Menu Summary/i)).toBeInTheDocument();
     });
 
     test('calculates and displays total cost correctly', () => {
         render(MenuSummary);
-
         expect(screen.getByText(/3 500 Ft/)).toBeInTheDocument();
     });
 
     test('calculates and displays total calories correctly', () => {
         render(MenuSummary);
-
         expect(screen.getByText(/700 kcal/)).toBeInTheDocument();
     });
 
     test('calculates and displays macronutrients correctly', () => {
         render(MenuSummary);
 
-        expect(screen.getByText((content) => content.includes("45 g")));
-
-        expect(screen.getByText((content) => content.includes("90 g")));
-
-        expect(screen.getByText((content) => content.includes("25 g")));
-
+        expect(screen.getByText(/45 g/i)).toBeInTheDocument();
+        expect(screen.getByText(/90 g/i)).toBeInTheDocument();
+        expect(screen.getByText(/25 g/i)).toBeInTheDocument();
     });
-
 });

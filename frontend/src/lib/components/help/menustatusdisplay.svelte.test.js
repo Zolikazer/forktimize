@@ -11,7 +11,7 @@ describe("Menu status Component", () => {
 
         render(MenuStatusDisplay);
 
-        expect(screen.getByText("Your menu is ready. ✅")).toBeInTheDocument();
+        expect(screen.getByText(/Your menu is ready/i)).toBeInTheDocument();
     });
 
     test("shows default message when no menu is generated", async () => {
@@ -35,6 +35,6 @@ describe("Menu status Component", () => {
 
         render(MenuStatusDisplay);
 
-        expect(screen.getByText(/Sorry, we could not find a menu that meets your needs./i)).toBeInTheDocument();
+        expect(screen.getByText(/Sorry, we could not find a menu that meets your needs/i)).toBeInTheDocument();
     });
 });

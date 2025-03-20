@@ -8,7 +8,7 @@ describe("DateSelector", () => {
     test("renders dropdown with correct dates", () => {
         render(DateSelector, { dates: mockDates, selectedDate: mockDates[0] });
 
-        const select = screen.getByLabelText("Select a Date 📅");
+        const select = screen.getByLabelText(/Select a Date/i);
         expect(select).toBeInTheDocument();
 
         mockDates.forEach((date) => {
@@ -31,22 +31,21 @@ describe("DateSelector", () => {
         const select = screen.getByRole("combobox");
         await fireEvent.change(select, { target: { value: mockDates[1] } });
 
-        // ✅ This is the correct way to verify the change!
         expect(select.value).toBe(mockDates[1]);
     });
 
     test("handles empty dates array gracefully", () => {
         render(DateSelector, { dates: [] });
 
-        const select = screen.getByLabelText("Select a Date 📅");
+        const select = screen.getByLabelText(/Select a Date/i);
         expect(select).toBeInTheDocument();
-        expect(select.children.length).toBe(0); // No options should exist
+        expect(select.children.length).toBe(0);
     });
 
     test("defaults to the first available date if selectedDate is not provided", () => {
         render(DateSelector, { dates: mockDates });
 
         const select = screen.getByRole("combobox");
-        expect(select.value).toBe(mockDates[0]); // Should default to first date
+        expect(select.value).toBe(mockDates[0]);
     });
 });

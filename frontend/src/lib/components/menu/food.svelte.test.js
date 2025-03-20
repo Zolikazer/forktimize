@@ -1,23 +1,14 @@
-import {fireEvent, render} from '@testing-library/svelte';
+import {fireEvent, render, screen} from '@testing-library/svelte';
 import Food from '$lib/components/menu/Food.svelte';
 import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
 import {menu} from "$lib/stores/menuStore.js";
-import {beforeEach, describe, expect, test, vi} from 'vitest';
+import {beforeEach, describe, expect, test} from 'vitest';
+import {get} from "svelte/store";
 
-// Mock the stores
-vi.mock("$lib/stores/dislikedFoodsStore.js", () => ({
-    dislikedFoods: {
-        subscribe: vi.fn(),
-        update: vi.fn()
-    }
-}));
-
-vi.mock("$lib/stores/menuStore.js", () => ({
-    menu: {
-        subscribe: vi.fn(),
-        update: vi.fn()
-    }
-}));
+beforeEach(() => {
+    dislikedFoods.set([]);
+    menu.set([]);
+});
 
 describe('Food component', () => {
     const mockFood = {
@@ -38,28 +29,24 @@ describe('Food component', () => {
         price: 2000
     };
 
-    beforeEach(() => {
-        vi.resetAllMocks();
-    });
-
     test('renders food information correctly', () => {
-        const {getByText, getByAltText} = render(Food, {food: mockFood});
+        render(Food, {food: mockFood});
 
-        expect(getByText(mockFood.name)).toBeInTheDocument();
-        expect(getByText(`${mockFood.price} Ft`)).toBeInTheDocument();
-        expect(getByText(`🔥 ${mockFood.calories}`)).toBeInTheDocument();
-        expect(getByText(`💪 ${mockFood.protein}`)).toBeInTheDocument();
-        expect(getByText(`🥖 ${mockFood.carb}`)).toBeInTheDocument();
-        expect(getByText(`🧈️ ${mockFood.fat}`)).toBeInTheDocument();
-        expect(getByAltText('Placeholder image')).toBeInTheDocument();
-        expect(getByText('🤮 Nem szeretem')).toBeInTheDocument();
+        expect(screen.getByText(mockFood.name)).toBeInTheDocument();
+        expect(screen.getByText(`${mockFood.price} Ft`)).toBeInTheDocument();
+        expect(screen.getByText(`🔥 ${mockFood.calories}`)).toBeInTheDocument();
+        expect(screen.getByText(`💪 ${mockFood.protein}`)).toBeInTheDocument();
+        expect(screen.getByText(`🥖 ${mockFood.carb}`)).toBeInTheDocument();
+        expect(screen.getByText(`🧈️ ${mockFood.fat}`)).toBeInTheDocument();
+        expect(screen.getByAltText(/Placeholder image/i)).toBeInTheDocument();
+        expect(screen.getByText(/Nem szeretem/i)).toBeInTheDocument();
     });
 
     test('truncates long food names', () => {
-        const {getByText} = render(Food, {food: mockLongNameFood});
+        render(Food, {food: mockLongNameFood});
 
         const truncatedName = mockLongNameFood.name.substring(0, 42) + "...";
-        expect(getByText(truncatedName)).toBeInTheDocument();
+        expect(screen.getByText(truncatedName)).toBeInTheDocument();
     });
 
     test('displays full name in tooltip data attribute', () => {
@@ -70,23 +57,12 @@ describe('Food component', () => {
     });
 
     test('removes food when button is clicked', async () => {
-        const {getByText} = render(Food, {food: mockFood});
-        const button = getByText('🤮 Nem szeretem');
+        render(Food, {food: mockFood});
+        const button = screen.getByText(/Nem szeretem/i);
 
         await fireEvent.click(button);
 
-        expect(dislikedFoods.update).toHaveBeenCalled();
-        expect(menu.update).toHaveBeenCalled();
-
-        // Extract the function passed to dislikedFoods.update
-        const dislikedFoodsUpdateFn = dislikedFoods.update.mock.calls[0][0];
-        const updatedDislikedFoods = dislikedFoodsUpdateFn([]);
-        expect(updatedDislikedFoods).toContain(mockFood.name);
-
-        // Extract the function passed to menu.update
-        const menuUpdateFn = menu.update.mock.calls[0][0];
-        const updatedMenu = menuUpdateFn([mockFood]);
-        expect(updatedMenu).toHaveLength(0);
+        expect(get(dislikedFoods)).toContain(mockFood.name);
+        expect(get(menu)).toHaveLength(0);
     });
-
 });
