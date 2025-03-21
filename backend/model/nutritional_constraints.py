@@ -1,6 +1,6 @@
 from typing import Optional, ClassVar
 
-from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict
+from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict, NonNegativeInt
 from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
@@ -12,13 +12,13 @@ class NutritionalConstraints(BaseModel):
     CARB_CALORIE: ClassVar[int] = 4
     FAT_CALORIE: ClassVar[int] = 9
 
-    min_calories: Optional[PositiveInt] = None
+    min_calories: Optional[NonNegativeInt] = None
     max_calories: Optional[PositiveInt] = None
-    min_protein: Optional[PositiveInt] = None
+    min_protein: Optional[NonNegativeInt] = None
     max_protein: Optional[PositiveInt] = None
-    min_carb: Optional[PositiveInt] = None
+    min_carb: Optional[NonNegativeInt] = None
     max_carb: Optional[PositiveInt] = None
-    min_fat: Optional[PositiveInt] = None
+    min_fat: Optional[NonNegativeInt] = None
     max_fat: Optional[PositiveInt] = None
     max_occurrences_per_food: Optional[PositiveInt] = None
 

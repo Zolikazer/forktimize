@@ -1,16 +1,17 @@
 from __future__ import annotations
+
 from typing import ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, NonNegativeInt
 
 
 class FoodLogEntry(BaseModel):
     CHICKEN_PROTEIN_RATIO: ClassVar[float] = 25
     CHICKEN_FAT_RATIO: ClassVar[float] = 3
 
-    chicken: int = 0
-    sugar: int = 0
-    oil: int = 0
+    chicken: NonNegativeInt = 0
+    sugar: NonNegativeInt = 0
+    oil: NonNegativeInt = 0
 
     @classmethod
     def from_macros(cls, protein: int, carb: int, fat: int) -> FoodLogEntry:
