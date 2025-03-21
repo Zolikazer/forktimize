@@ -40,7 +40,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.  }}
+          key: ${{ secrets.VPS_KEY  }}
           script: |
             cd /opt/forktimize
             ./update_deployment.sh
