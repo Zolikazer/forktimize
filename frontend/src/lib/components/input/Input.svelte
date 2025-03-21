@@ -2,7 +2,7 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {menu, currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
+    import {menu, currentMenuStatus, MenuStatusEnum, foodLogEntryStore} from "$lib/stores/menuStore.js";
     import {getMenuPlan} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
@@ -16,6 +16,8 @@
         try {
             const generatedMenu = await getMenuPlan(requestedMenuConstraints)
             currentMenuStatus.set(MenuStatusEnum.SUCCESS);
+            console.log(generatedMenu.foodLogEntry)
+            foodLogEntryStore.set(generatedMenu.foodLogEntry)
             menu.set(generatedMenu.foods)
             if (generatedMenu.length === 0) {
                 currentMenuStatus.set(MenuStatusEnum.FAILURE);

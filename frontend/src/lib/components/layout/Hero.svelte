@@ -17,7 +17,7 @@
 <style>
     .hero-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e),
-        url("https://www.transparenttextures.com/patterns/food.png");
+        url("/food.png");
         background-blend-mode: overlay; /* Blends the gradient & pattern */;
         padding: 1.5rem 1rem; /* Reduced padding */
         color: white;
@@ -57,13 +57,13 @@
         padding: 0.75rem 1.5rem;
         border-radius: 50px;
         transition: all 0.3s ease-in-out;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     }
 
     .hero-button:hover {
         background: #f0fdfa;
         transform: scale(1.05);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     }
 
     .hero-content {

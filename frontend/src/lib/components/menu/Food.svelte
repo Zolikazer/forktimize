@@ -34,7 +34,7 @@
     <div class="card-image">
         <figure class="image is-16by9">
             <img
-                    src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.food_id}&width=425&height=425`}
+                    src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
                     alt="Placeholder image"
             />
         </figure>
@@ -67,7 +67,7 @@
     .food-card {
         width: 30%;
         border-radius: 12px;
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease-in-out;
         min-width: 200px;
     }

@@ -2,6 +2,7 @@
 import { writable } from "svelte/store";
 
 export const menu = writable(null);
+export const foodLogEntryStore = writable(null)
 
 export const MenuStatusEnum = {
     NOT_GENERATED: "notGenerated",

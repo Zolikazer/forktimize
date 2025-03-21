@@ -4,7 +4,7 @@
     import Menu from "$lib/components/menu/Menu.svelte";
     import {menu} from "$lib/stores/menuStore.js";
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
-    import Myfitnesspal from "$lib/components/myfitnesspal/Myfitnesspal.svelte";
+    import FoodLogEntry from "$lib/components/menu/FoodLogEntry.svelte";
 
     export let data = { dates: [] };
 
@@ -28,7 +28,7 @@
                 </div>
                 <div class="column">
                     <MenuSummary/>
-                    <Myfitnesspal/>
+                    <FoodLogEntry/>
                 </div>
             </div>
         {/if}
