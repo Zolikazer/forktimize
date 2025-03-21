@@ -29,3 +29,7 @@ def get_foods_for_given_date(session: Session, food_date: date, food_blacklist: 
     foods = list(session.exec(statement).all())
 
     return foods
+
+
+def is_database_empty(session: Session):
+    return session.query(Food).count() == 0

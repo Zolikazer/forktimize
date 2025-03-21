@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 VPS_USER := spazo
 VPS_HOST := forktimize
-REMOTE_DIR := /opt/forktimize/
+REMOTE_DIR := /opt/forktimize
 LOCAL_DIR := .backend/
 
 run-frontend-dev:
@@ -32,15 +32,12 @@ test-unit: test-backend
 e2e-test:
 	cd frontend && npm run test:e2e
 
-test-e2e:
-	$(MAKE) run-backend &
-	$(MAKE) run-frontend &
-	sleep 5  # Give some time for the servers to start
-	$(MAKE) e2e-test
-
 deploy-backend:
-	ssh ${VPS_HOST} "cd ${REMOTE_DIR} && sudo ${REMOTE_DIR}update_deployment.sh"
+	ssh ${VPS_HOST} "cd ${REMOTE_DIR} && sudo ${REMOTE_DIR}/update_deployment.sh"
 
 live-patch:
 	rsync -rv . spazo@forktimize:/opt/forktimize/ --exclude='frontend' --exclude='docker-compose.override.yml' --exclude='.git' --exclude='__pycache__' --exclude='logs' --exclude="foods.db" --exclude=".venv" --exclude=".pytest_cache" --exclude=".idea" --rsync-path="sudo rsync"
 	ssh $(VPS_USER)@$(VPS_HOST) "cd ${REMOTE_DIR} && sudo docker compose restart"
+
+healthcheck:
+	curl -s https://forktimize.xyz/api/health | jq -e '.status'

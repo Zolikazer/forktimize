@@ -5,7 +5,7 @@ import requests
 from sqlmodel import Session
 
 from data.serialization import save_to_json, serialize_food_items
-from database.db import init_db, get_session
+from database.db import init_db, engine
 from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
@@ -76,5 +76,5 @@ def _get_request_body(year: int, week: int) -> dict:
 
 if __name__ == "__main__":
     init_db()
-    with next(get_session()) as db_session:
-        fetch_and_store_cityfood_data(db_session)
+    with Session(engine) as session:
+        fetch_and_store_cityfood_data(session)

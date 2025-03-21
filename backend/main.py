@@ -1,10 +1,12 @@
 import os
 
 from fastapi import FastAPI
+from sqlmodel import Session
 from starlette.middleware.cors import CORSMiddleware
 
-from database.db import init_db
-from jobs.job_scheduler import scheduler, is_database_empty, run_fetch_job
+from database.db import init_db, engine
+from jobs.job_scheduler import scheduler, run_fetch_job
+from repository.forktimize_repository import is_database_empty
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.planner_routes import planner
 
@@ -22,20 +24,24 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
-    APP_LOGGER.info("🚀 Starting up...")
-    APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
+    with Session(engine) as session:
+        APP_LOGGER.info("🚀 Starting up...")
+        APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
 
-    init_db()
-    APP_LOGGER.info("🌐 Database initialized.")
+        try:
+            init_db()
+            APP_LOGGER.info("🌐 Database initialized.")
 
-    scheduler.add_job(run_fetch_job, "cron", hour=0, minute=0)
-    APP_LOGGER.info("Jobs scheduled.")
+            scheduler.add_job(run_fetch_job, "cron", hour=0, minute=0)
+            APP_LOGGER.info("Jobs scheduled.")
 
-    if is_database_empty():
-        APP_LOGGER.info("🔄 Cold start detected. Running initial fetch job...")
-        scheduler.add_job(run_fetch_job, "date")
+            if is_database_empty(session):
+                APP_LOGGER.info("🔄 Cold start detected. Running initial fetch job...")
+                scheduler.add_job(run_fetch_job, "date")
 
-    scheduler.start()
+            scheduler.start()
+        except Exception as e:
+            APP_LOGGER.info(f"Something fucked when starting upp the app {e}")
 
 
 @app.on_event("shutdown")
