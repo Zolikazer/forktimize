@@ -32,10 +32,13 @@ jobs:
           working-directory: frontend
           run: npm test
         - name: 🚀 Start FastAPI backend
+          working-directory: backend
+          run: |
+            uvicorn main:app --reload &
+            sleep 5
+        - name: 🚀 Start FastAPI backend
           working-directory: frontend
           run: |
-            uvicorn main:app --reload
-            sleep 5
             npm run test:e2e
 
   deploy:
