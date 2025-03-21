@@ -25,13 +25,12 @@ jobs:
         - name: ✅ Run backend tests
           run: pytest
         - name: 📦 Install frontend deps
-          run: |
-            cd frontend
-            npm ci
+          working-directory: frontend
+          run: npm ci
 
         - name: 🧪 Run frontend tests
+          working-directory: frontend
           run: npm test
-
 
   deploy:
     runs-on: ubuntu-latest
