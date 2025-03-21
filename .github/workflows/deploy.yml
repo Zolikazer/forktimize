@@ -45,4 +45,4 @@ jobs:
           script: |
             cd /opt/forktimize
             git config --global --add safe.directory /opt/forktimize
-            sudo ./update_deployment.sh
+            ./update_deployment.sh
