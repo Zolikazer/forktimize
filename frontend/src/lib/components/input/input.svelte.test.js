@@ -1,4 +1,4 @@
-import {fireEvent, render, screen} from "@testing-library/svelte";
+import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import Input from "$lib/components/input/Input.svelte";
 import * as FoodPlannerClient from "$lib/foodPlannerClient.js";
@@ -46,4 +46,23 @@ describe("Input Component", () => {
 
         expect(get(menu)).toEqual(mockMenu);
     });
+
+    test('disables button while fetching', async () => {
+        const mockMenu = {foods: [], foodLogEntry: {chicken: 0, sugar: 0, oil: 0}};
+
+        const delayedResponse = new Promise(resolve => setTimeout(() => resolve(mockMenu), 200));
+        vi.spyOn(FoodPlannerClient, 'getMenuPlan').mockImplementation(() => delayedResponse);
+
+        render(Input);
+        const button = screen.getByRole('button', {name: /Generate My Menu/i});
+
+        expect(button).not.toBeDisabled();
+
+        fireEvent.click(button);
+
+        await waitFor(() => {
+            expect(button).toBeDisabled();
+        });
+    });
+
 });

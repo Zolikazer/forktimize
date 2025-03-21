@@ -9,16 +9,19 @@
     import {macroConstraints} from "$lib/stores/constraintStore.js";
     import {selectedDate} from "$lib/stores/dateStore.js";
 
+    let isLoading = false;
 
     async function generateMenu() {
+        isLoading = true;
         currentMenuStatus.set(MenuStatusEnum.IN_PROGRESS);
+
         const requestedMenuConstraints = createMenuRequest();
         try {
             const generatedMenu = await getMenuPlan(requestedMenuConstraints)
             currentMenuStatus.set(MenuStatusEnum.SUCCESS);
-            console.log(generatedMenu.foodLogEntry)
             foodLogEntryStore.set(generatedMenu.foodLogEntry)
             menu.set(generatedMenu.foods)
+
             if (generatedMenu.length === 0) {
                 currentMenuStatus.set(MenuStatusEnum.FAILURE);
             }
@@ -27,6 +30,7 @@
             currentMenuStatus.set(MenuStatusEnum.FAILURE);
             showError(error.message);
         }
+        isLoading = false
 
     }
 
@@ -76,7 +80,8 @@
 
     <div class="has-text-centered">
         <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3  is-size-5 "
-                on:click={generateMenu}>Generate My Menu 🍽️
+                on:click={generateMenu}
+                disabled="{isLoading}">Generate My Menu 🍽️
         </button>
     </div>
 </div>
