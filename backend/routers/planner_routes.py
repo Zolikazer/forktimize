@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from sqlmodel import Session, select
 
 from database.db import get_session
@@ -9,6 +9,7 @@ from model.menu_request import MenuRequest
 from monitoring.logging import APP_LOGGER
 from optimizers.menu_optimizer import create_menu
 from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
+from util import ONE_DAY
 
 
 class AppStatus:
@@ -20,8 +21,9 @@ planner = APIRouter()
 
 
 @planner.get("/dates")
-def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
+def get_available_dates(response: Response, session: Session = Depends(get_session)) -> list[str]:
     today = date.today()
+    response.headers["Cache-Control"] = f"public, max-age={ONE_DAY}"
 
     return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
 

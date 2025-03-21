@@ -1,0 +1,47 @@
+name: Deploy Forktimize 🚀
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+      name: 🧪 Run tests
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: 🧲 Checkout code
+          uses: actions/checkout@v3
+
+        - name: 🐍 Set up Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: "3.12"
+
+        - name: 🧪 Install backend dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r backend/requirements.txt
+        - name: ✅ Run backend tests
+          run: pytest
+        - name: 📦 Install frontend deps
+          run: |
+            cd frontend
+            npm ci
+
+        - name: 🧪 Run frontend tests
+          run: npm test
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚪 SSH & Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.  }}
+          script: |
+            cd /opt/forktimize
+            ./update_deployment.sh

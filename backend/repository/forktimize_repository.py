@@ -6,8 +6,7 @@ from sqlmodel import select, col, Session, cast
 
 from model.food import Food
 from monitoring.performance import benchmark
-
-ONE_DAY = 60 * 60 * 24
+from util import ONE_DAY
 
 
 @benchmark
