@@ -72,6 +72,10 @@ def test_create_menu_endpoint(client, session: Session):
     assert result.total_calories == 2000
     assert "Lencsefőzelék vagdalttal" not in [food.name for food in result.foods]
 
+    assert result.food_log_entry.chicken == 800
+    assert result.food_log_entry.oil == 16
+    assert result.food_log_entry.sugar == 80
+
 
 @freeze_time("2025-02-23")
 def test_get_available_dates(client, session):

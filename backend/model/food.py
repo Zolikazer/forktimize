@@ -1,11 +1,12 @@
 from datetime import date as datetime_date
 
 from pydantic import ConfigDict
+from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
 
 class Food(SQLModel, table=True):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
 
     food_id: int = Field(primary_key=True)
     date: datetime_date = Field(primary_key=True, index=True)

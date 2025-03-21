@@ -1,5 +1,4 @@
 from datetime import date
-from enum import Enum
 
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select

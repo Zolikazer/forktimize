@@ -3,6 +3,7 @@ import datetime
 import pytest
 
 from model.food import Food
+from model.food_log_entry import FoodLogEntry
 from model.menu import Menu
 
 
@@ -44,7 +45,7 @@ def test_add_foods(sample_food):
 def test_total_calories(sample_food):
     menu = Menu()
     menu.add_food(sample_food)
-    menu.add_food(sample_food)  # Add same food twice
+    menu.add_food(sample_food)
 
     assert menu.total_calories == sample_food.calories * 2
 
@@ -84,7 +85,6 @@ def test_price_per_calorie(sample_food):
     expected_price_per_kcal = round(sample_food.price / sample_food.calories, 2)
     assert menu.price_per_calorie == expected_price_per_kcal
 
-    # Edge case: No food in menu (should return 0)
     empty_menu = Menu()
     assert empty_menu.price_per_calorie == 0
 
@@ -96,7 +96,6 @@ def test_price_per_protein(sample_food):
     expected_price_per_protein = round(sample_food.price / sample_food.protein, 2)
     assert menu.price_per_protein == expected_price_per_protein
 
-    # Edge case: No protein in menu (should return 0)
     food_no_protein = Food(
         food_id=2,
         name="Zero Protein Food",
@@ -114,16 +113,12 @@ def test_price_per_protein(sample_food):
     assert menu_no_protein.price_per_protein == 0
 
 
-def test_to_myfitnesspal_entries():
-    menu = Menu()
+def test_menu_initializes_food_log_entry(sample_food):
+    foods = [sample_food, sample_food]
 
-    menu.add_food(Food(food_id=1, name="Chicken", calories=400, protein=50, carb=20, fat=10, price=800,
-                       date=datetime.datetime.now()))
-    menu.add_food(
-        Food(food_id=2, name="Rice", calories=300, protein=5, carb=60, fat=1, price=200, date=datetime.datetime.now()))
+    menu = Menu(foods=foods)
 
-    entries = menu.to_myfitnesspal_entries()
-
-    assert entries["Chicken (g)"] == 220
-    assert entries["Sugar (g)"] == menu.total_carbs
-    assert entries["Olive Oil (g)"] == 5
+    assert isinstance(menu.food_log_entry, FoodLogEntry)
+    assert menu.food_log_entry.chicken == 320
+    assert menu.food_log_entry.sugar == 10
+    assert menu.food_log_entry.oil == 0
