@@ -39,6 +39,7 @@ jobs:
         - name: 🚀 Start FastAPI backend
           working-directory: frontend
           run: |
+            npx playwright install --with-deps
             npm run test:e2e
 
   deploy:
