@@ -4,7 +4,6 @@ from sqlmodel import SQLModel, create_engine, Session
 from model.food import Food
 from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
 
-# 🔥 Create an in-memory SQLite test database
 test_engine = create_engine("sqlite:///:memory:", echo=True)
 
 

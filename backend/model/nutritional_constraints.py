@@ -12,9 +12,9 @@ class NutritionalConstraints(BaseModel):
     CARB_CALORIE: ClassVar[int] = 4
     FAT_CALORIE: ClassVar[int] = 9
 
-    min_calories: Optional[PositiveInt] = 2300
-    max_calories: Optional[PositiveInt] = 2700
-    min_protein: Optional[PositiveInt] = 200
+    min_calories: Optional[PositiveInt] = None
+    max_calories: Optional[PositiveInt] = None
+    min_protein: Optional[PositiveInt] = None
     max_protein: Optional[PositiveInt] = None
     min_carb: Optional[PositiveInt] = None
     max_carb: Optional[PositiveInt] = None

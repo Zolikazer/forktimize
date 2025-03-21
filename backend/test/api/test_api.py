@@ -1,4 +1,5 @@
 from datetime import date
+from unittest.mock import MagicMock
 
 import pytest
 from freezegun import freeze_time
@@ -10,6 +11,7 @@ from database.db import get_session
 from main import app
 from model.food import Food
 from model.menu import Menu
+from routers.planner_routes import AppStatus
 
 
 @pytest.fixture(name="session")
@@ -54,6 +56,7 @@ def test_create_menu_endpoint(client, session: Session):
         "nutritional_constraints": {
             "min_calories": 1500,
             "max_calories": 2700,
+            "min_protein": 200
         },
         "food_blacklist": ["Lencsefőzelék"]
     }
@@ -85,3 +88,19 @@ def test_health_check(client):
 
     assert response.status_code == 200
     assert response.json() == {"status": "HEALTHY", "database": "connected"}
+
+
+def test_health_check_unhealthy(client):
+    broken_session = MagicMock()
+    broken_session.exec.side_effect = Exception("Database gone fishing 🐟")
+
+    app.dependency_overrides = {
+        get_session: lambda: broken_session
+    }
+
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": AppStatus.UNHEALTHY,
+        "database": "error"
+    }
