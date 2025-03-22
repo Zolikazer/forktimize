@@ -1,5 +1,4 @@
 <script>
-    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
 
     export let menu = [];
 

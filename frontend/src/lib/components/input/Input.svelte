@@ -2,17 +2,17 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {menuStore, MenuGenerationStatus} from "$lib/stores/menuStore.js";
-    import {getMenuPlan} from "$lib/foodPlannerClient.js";
+    import {MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
+    import {getMenuPlan} from "$lib/api/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
-    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
-    import {macroConstraints} from "$lib/stores/constraintStore.js";
-    import {selectedDate} from "$lib/stores/dateStore.js";
+    import {menuFormStore} from "$lib/stores/menuFormStore.js";
+    import {get} from "svelte/store";
 
 
     async function generateMenu() {
         menuStore.setLoading();
-        const menuRequest = createMenuRequest();
+        const formState = get(menuFormStore);
+        const menuRequest = createMenuRequest(formState);
 
         try {
             const generatedMenu = await getMenuPlan(menuRequest)
@@ -27,8 +27,8 @@
         }
     }
 
-    export function createMenuRequest() {
-        const nutritionalConstraints = $macroConstraints.reduce((acc, constraint) => {
+    export function createMenuRequest(formState) {
+        const nutritionalConstraints = formState.macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
             return acc;
@@ -36,18 +36,19 @@
 
         return {
             nutritionalConstraints,
-            date: $selectedDate,
-            foodBlacklist: $dislikedFoods,
+            date: formState.selectedDate,
+            foodBlacklist: formState.dislikedFoods,
         };
     }
 
+    $: formData = $menuFormStore;
 </script>
 
 <div class="box">
     <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
     <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        {#each $macroConstraints as constraint (constraint.name)}
+        {#each formData.macroConstraints as constraint (constraint.name)}
             <MacroConstraint
                     bind:minValue={constraint.min}
                     bind:maxValue={constraint.max}

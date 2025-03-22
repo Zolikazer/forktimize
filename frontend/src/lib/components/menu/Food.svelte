@@ -1,6 +1,6 @@
 <script>
-    import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import {menuStore} from "$lib/stores/menuStore.js";
+    import {menuFormStore} from "$lib/stores/menuFormStore.js";
 
     const MAX_FOOD_LENGTH = 42;
 
@@ -12,12 +12,7 @@
     }
 
     function updateDislikedFoods(foodName) {
-        dislikedFoods.update(foods => {
-            if (!foods.includes(foodName)) {
-                return [...foods, foodName];
-            }
-            return foods;
-        });
+        menuFormStore.addDislikedFood(foodName);
     }
 
     function updateMenu(foodName) {
@@ -35,7 +30,7 @@
     <div class="card-image">
         <figure class="image is-16by9">
             <img alt="Placeholder image"
-                src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
+                 src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
             />
         </figure>
     </div>

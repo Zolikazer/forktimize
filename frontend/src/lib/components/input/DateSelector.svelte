@@ -1,15 +1,15 @@
 <script>
     import {onMount} from "svelte";
-    import {getDates} from "$lib/foodPlannerClient.js";
-    import {selectedDate} from "$lib/stores/dateStore.js";
+    import {getDates} from "$lib/api/foodPlannerClient.js";
+    import {menuFormStore} from "$lib/stores/menuFormStore.js";
 
     let dates = getDefaultAvailableDates();
-    selectedDate.set(dates[0])
+    menuFormStore.setSelectedDate(dates[0])
 
     onMount(async () => {
         try {
             dates = await getDates();
-            selectedDate.set(dates[0])
+            menuFormStore.setSelectedDate(dates[0])
         } catch (err) {
         }
     });
@@ -36,7 +36,7 @@
     <label for="date-selector" class="label">Select a Date 📅 </label>
     <div class="control">
         <div class="select is-fullwidth">
-            <select id="date-selector" bind:value={$selectedDate}>
+            <select id="date-selector" bind:value={$menuFormStore.selectedDate}>
                 {#each dates as date}
                     <option value={date}>{formatDateLabel(date)}</option>
                 {/each}

@@ -1,13 +1,13 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
 import Food from '$lib/components/menu/Food.svelte';
-import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
-import {menu, menuStore} from "$lib/stores/menuStore.js";
+import {menuStore} from "$lib/stores/menuStore.js";
 import {beforeEach, describe, expect, test} from 'vitest';
 import {get} from "svelte/store";
+import {menuFormStore} from "$lib/stores/menuFormStore.js";
 
 beforeEach(() => {
-    dislikedFoods.set([]);
     menuStore.reset();
+    menuFormStore.set({dislikedFoods: []})
 });
 
 describe('Food component', () => {
@@ -63,7 +63,7 @@ describe('Food component', () => {
 
         await fireEvent.click(button);
 
-        expect(get(dislikedFoods)).toContain(mockFood.name);
+        expect(get(menuFormStore).dislikedFoods).toContain(mockFood.name);
         expect(get(menuStore).foods).toHaveLength(0);
     });
 });
