@@ -12,6 +12,16 @@ test("User can generate a menu and interact with it", async ({page}) => {
     const blacklistInput = page.locator('input[placeholder="Type a food and press Enter"]');
     await blacklistInput.fill("Broccoli");
     await blacklistInput.press("Enter");
+    await blacklistInput.fill("Csoki");
+    await blacklistInput.press("Enter");
+
+    const blacklistedFood = page.locator(".tag", { hasText: "Csoki" });
+    await expect(blacklistedFood).toBeVisible();
+
+    const removeBlacklistBtn = blacklistedFood.locator("button.delete");
+    await removeBlacklistBtn.click();
+
+    await expect(blacklistedFood).not.toBeVisible();
 
     const generateButton = page.getByRole("button", {name: "Generate My Menu"});
     await generateButton.click();
