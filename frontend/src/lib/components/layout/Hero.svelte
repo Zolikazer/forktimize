@@ -25,7 +25,7 @@
         animation: floatUpDown 3s ease-in-out infinite alternate;
     }
     .hero-body {
-        padding: 1.5rem 0; /* Less vertical spacing */
+        padding: 1.15rem 0; /* Less vertical spacing */
     }
 
     .hero-title {
