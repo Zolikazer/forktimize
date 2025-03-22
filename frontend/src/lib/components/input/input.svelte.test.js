@@ -2,13 +2,13 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import Input from "$lib/components/input/Input.svelte";
 import * as FoodPlannerClient from "$lib/foodPlannerClient.js";
-import {currentMenuStatus, menu, MenuStatusEnum} from "$lib/stores/menuStore.js";
+import {menuStatus, menu, MenuGenerationStatus} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
 
 
 beforeEach(() => {
     menu.set([]);
-    currentMenuStatus.set(MenuStatusEnum.NOT_GENERATED);
+    menuStatus.set(MenuGenerationStatus.NOT_GENERATED);
 });
 
 

@@ -4,11 +4,11 @@ import { writable } from "svelte/store";
 export const menu = writable(null);
 export const foodLogEntryStore = writable(null)
 
-export const MenuStatusEnum = {
+export const MenuGenerationStatus = {
     NOT_GENERATED: "notGenerated",
     IN_PROGRESS: "inProgress",
     SUCCESS: "success",
     FAILURE: "failure"
 };
 
-export const currentMenuStatus = writable(MenuStatusEnum.NOT_GENERATED);
+export const menuStatus = writable(MenuGenerationStatus.NOT_GENERATED);

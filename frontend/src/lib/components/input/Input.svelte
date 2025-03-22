@@ -2,7 +2,7 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {menu, currentMenuStatus, MenuStatusEnum, foodLogEntryStore} from "$lib/stores/menuStore.js";
+    import {menu, menuStatus, MenuGenerationStatus, foodLogEntryStore} from "$lib/stores/menuStore.js";
     import {getMenuPlan} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
@@ -13,21 +13,21 @@
 
     async function generateMenu() {
         isLoading = true;
-        currentMenuStatus.set(MenuStatusEnum.IN_PROGRESS);
+        menuStatus.set(MenuGenerationStatus.IN_PROGRESS);
 
         const requestedMenuConstraints = createMenuRequest();
         try {
             const generatedMenu = await getMenuPlan(requestedMenuConstraints)
-            currentMenuStatus.set(MenuStatusEnum.SUCCESS);
+            menuStatus.set(MenuGenerationStatus.SUCCESS);
             foodLogEntryStore.set(generatedMenu.foodLogEntry)
             menu.set(generatedMenu.foods)
 
             if (generatedMenu.length === 0) {
-                currentMenuStatus.set(MenuStatusEnum.FAILURE);
+                menuStatus.set(MenuGenerationStatus.FAILURE);
             }
         } catch (error) {
             menu.set([])
-            currentMenuStatus.set(MenuStatusEnum.FAILURE);
+            menuStatus.set(MenuGenerationStatus.FAILURE);
             showError(error.message);
         }
         isLoading = false

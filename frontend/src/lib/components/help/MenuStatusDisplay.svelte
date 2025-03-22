@@ -1,18 +1,18 @@
 <script>
-    import {currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
+    import {menuStatus, MenuGenerationStatus} from "$lib/stores/menuStore.js";
 
 </script>
 
-{#if $currentMenuStatus === MenuStatusEnum.SUCCESS}
+{#if $menuStatus === MenuGenerationStatus.SUCCESS}
     <div class="notification is-success has-text-centered">
         <strong>Your menu is ready. ✅</strong>
     </div>
-{:else if $currentMenuStatus === MenuStatusEnum.FAILURE}
+{:else if $menuStatus === MenuGenerationStatus.FAILURE}
     <div class="notification is-danger has-text-centered">
         Sorry, we could not find a menu that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
         👍
     </div>
-{:else if $currentMenuStatus === MenuStatusEnum.IN_PROGRESS}
+{:else if $menuStatus === MenuGenerationStatus.IN_PROGRESS}
     <div class="notification is-primary has-text-centered">
         <span class="spinner"></span>
         <strong> Generating your menu... Please wait!</strong>

@@ -1,13 +1,13 @@
 import {describe, expect, test} from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import {render, screen} from '@testing-library/svelte';
-import {currentMenuStatus, MenuStatusEnum} from "$lib/stores/menuStore.js";
+import {menuStatus, MenuGenerationStatus} from "$lib/stores/menuStore.js";
 import MenuStatusDisplay from "$lib/components/help/MenuStatusDisplay.svelte";
 
 
 describe("Menu status Component", () => {
     test("shows success message when menu is available", async () => {
-        currentMenuStatus.set(MenuStatusEnum.SUCCESS);
+        menuStatus.set(MenuGenerationStatus.SUCCESS);
 
         render(MenuStatusDisplay);
 
@@ -15,7 +15,7 @@ describe("Menu status Component", () => {
     });
 
     test("shows default message when no menu is generated", async () => {
-        currentMenuStatus.set(MenuStatusEnum.NOT_GENERATED);
+        menuStatus.set(MenuGenerationStatus.NOT_GENERATED);
 
         render(MenuStatusDisplay);
 
@@ -23,7 +23,7 @@ describe("Menu status Component", () => {
     });
 
     test("shows in progress message when menu generation is in progress", async () => {
-        currentMenuStatus.set(MenuStatusEnum.IN_PROGRESS);
+        menuStatus.set(MenuGenerationStatus.IN_PROGRESS);
 
         render(MenuStatusDisplay);
 
@@ -31,7 +31,7 @@ describe("Menu status Component", () => {
     });
 
     test("shows failure message when could not generate menu", async () => {
-        currentMenuStatus.set(MenuStatusEnum.FAILURE);
+        menuStatus.set(MenuGenerationStatus.FAILURE);
 
         render(MenuStatusDisplay);
 
