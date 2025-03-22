@@ -58,7 +58,10 @@ jobs:
             ./update_deployment.sh
       - name: 📦 Install Vercel CLI
         run: npm install -g vercel
-
+      - name: Show working directory & contents
+        run: |
+          pwd
+          ls -la
       - name: 🌍 Deploy frontend to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
