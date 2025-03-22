@@ -1,28 +1,33 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
+    import MacroEquivalent from "$lib/components/menu/equivalent/MacroEquivalent.svelte";
 </script>
 
 <div class="box has-text-centered mt-4">
     <h2 class="title border-bottom is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Macro Equivalents (Trackable
         Format)</h2>
     <div class="macro-summary">
-        <div class="macro-box">
-            <span class="macro-emoji">🐔</span>
-            <h3>Chicken Breast</h3>
-            <p>{$menuStore.foodLogEntry.chicken}g</p>
-        </div>
+        <MacroEquivalent
+                emoji="🐔"
+                label="Chicken Breast"
+                value={$menuStore.foodLogEntry.chicken}
+                unit="g"
+        />
 
-        <div class="macro-box">
-            <span class="macro-emoji">🍯</span>
-            <h3>Sugar</h3>
-            <p>{$menuStore.foodLogEntry.sugar}g</p>
-        </div>
+        <MacroEquivalent
+                emoji="🍯"
+                label="Sugar"
+                value={$menuStore.foodLogEntry.sugar}
+                unit="g"
+        />
 
-        <div class="macro-box">
-            <span class="macro-emoji">🫒️</span>
-            <h3>Olive Oil</h3>
-            <p>{$menuStore.foodLogEntry.oil}g</p>
-        </div>
+        <MacroEquivalent
+                emoji="🫒"
+                label="Olive Oil"
+                value={$menuStore.foodLogEntry.oil}
+                unit="g"
+        />
+
     </div>
     <div class="notification is-info has-text-centered mt-5">
         <strong>

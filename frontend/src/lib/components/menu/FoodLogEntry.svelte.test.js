@@ -16,13 +16,13 @@ describe("FoodLogEntrySummary", () => {
         render(FoodLogEntry);
 
         expect(screen.getByText(/Chicken Breast/i)).toBeInTheDocument();
-        expect(screen.getByText(/350g/i)).toBeInTheDocument();
+        expect(screen.getByText(/350/i)).toBeInTheDocument();
 
         expect(screen.getByText(/Sugar/i)).toBeInTheDocument();
-        expect(screen.getByText(/180g/i)).toBeInTheDocument();
+        expect(screen.getByText(/180/i)).toBeInTheDocument();
 
         expect(screen.getByText(/Olive Oil/i)).toBeInTheDocument();
-        expect(screen.getByText(/45g/i)).toBeInTheDocument();
+        expect(screen.getByText(/45/i)).toBeInTheDocument();
     });
 
     test("renders informative description box", () => {
