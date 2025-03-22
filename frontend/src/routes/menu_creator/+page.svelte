@@ -5,6 +5,7 @@
     import {menuStore} from "$lib/stores/menuStore.js";
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
     import FoodLogEntry from "$lib/components/menu/FoodLogEntry.svelte";
+    import MenuSummaryRedesign from "$lib/components/menu/MenuSummaryRedesign.svelte";
 
     export let data = {dates: []};
 
@@ -27,7 +28,7 @@
                     <Menu/>
                 </div>
                 <div class="column">
-                    <MenuSummary/>
+                    <MenuSummaryRedesign/>
                     <FoodLogEntry/>
                 </div>
             </div>
