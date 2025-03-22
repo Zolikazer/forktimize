@@ -1,7 +1,7 @@
 import {render, screen} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test} from "vitest";
 import Menu from "$lib/components/menu/Menu.svelte";
-import {menu, menuStore} from "$lib/stores/menuStore.js";
+import {menuStore} from "$lib/stores/menuStore.js";
 
 beforeEach(() => {
     menuStore.setSuccess([
@@ -30,7 +30,7 @@ describe("Menu Component", () => {
         expect(screen.getByText(/Your Menu For/i)).toBeInTheDocument();
     });
 
-    test("renders a Food component for each item in the menu", () => {
+    test("renders a FoodCard component for each item in the menu", () => {
         const {container} = render(Menu);
         const foodComponents = container.querySelectorAll('.food-card');
         expect(foodComponents.length).toBe(2);

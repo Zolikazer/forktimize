@@ -1,5 +1,5 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
-import Food from '$lib/components/menu/Food.svelte';
+import FoodCard from '$lib/components/menu/FoodCard.svelte';
 import {menuStore} from "$lib/stores/menuStore.js";
 import {beforeEach, describe, expect, test} from 'vitest';
 import {get} from "svelte/store";
@@ -10,7 +10,7 @@ beforeEach(() => {
     menuFormStore.set({dislikedFoods: []})
 });
 
-describe('Food component', () => {
+describe('FoodCard component', () => {
     const mockFood = {
         name: "Test Food Item",
         calories: 300,
@@ -30,7 +30,7 @@ describe('Food component', () => {
     };
 
     test('renders food information correctly', () => {
-        render(Food, {food: mockFood});
+        render(FoodCard, {food: mockFood});
 
         expect(screen.getByText(mockFood.name)).toBeInTheDocument();
         expect(screen.getByText(`${mockFood.price} Ft`)).toBeInTheDocument();
@@ -43,14 +43,14 @@ describe('Food component', () => {
     });
 
     test('truncates long food names', () => {
-        render(Food, {food: mockLongNameFood});
+        render(FoodCard, {food: mockLongNameFood});
 
         const truncatedName = mockLongNameFood.name.substring(0, 42) + "...";
         expect(screen.getByText(truncatedName)).toBeInTheDocument();
     });
 
     test('displays full name in tooltip data attribute', () => {
-        const {container} = render(Food, {food: mockLongNameFood});
+        const {container} = render(FoodCard, {food: mockLongNameFood});
 
         const foodNameElement = container.querySelector('.food-name');
         expect(foodNameElement).toHaveAttribute('data-tooltip', mockLongNameFood.name);
@@ -58,7 +58,7 @@ describe('Food component', () => {
 
     test('removes food when button is clicked', async () => {
         menuStore.setSuccess([mockFood])
-        render(Food, {food: mockFood});
+        render(FoodCard, {food: mockFood});
         const button = screen.getByText(/Nem szeretem/i);
 
         await fireEvent.click(button);

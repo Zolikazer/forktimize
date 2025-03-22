@@ -1,9 +1,9 @@
 <script>
     import Instructions from "$lib/components/help/Instructions.svelte";
-    import MenuStatusComponent from "$lib/components/help/MenuStatusDisplay.svelte";
+    import MenuStatus from "$lib/components/help/MenuStatus.svelte";
 </script>
 
 <div class="box">
-    <MenuStatusComponent/>
+    <MenuStatus/>
     <Instructions/>
 </div>

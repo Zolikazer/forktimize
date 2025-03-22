@@ -1,5 +1,5 @@
 <script>
-    import Input from "$lib/components/input/Input.svelte";
+    import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
     import Help from "$lib/components/help/Help.svelte";
     import Menu from "$lib/components/menu/Menu.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
@@ -14,7 +14,7 @@
     <div class="container is-fluid">
         <div class="columns is-centered">
             <div class="column">
-                <Input dates={data.dates}/>
+                <MenuRequestForm dates={data.dates}/>
             </div>
             <div class="column">
                 <Help/>

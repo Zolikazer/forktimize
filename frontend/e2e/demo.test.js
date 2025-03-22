@@ -1,7 +1,7 @@
 import {expect, test} from '@playwright/test';
 
 test("User can generate a menu and interact with it", async ({page}) => {
-    await page.goto("/food"); // Change if needed
+    await page.goto("/menu_creator"); // Change if needed
 
     await expect(page.locator("text=Set Your Nutritional Goals")).toBeVisible();
     await expect(page.locator("text=No menu generated yet")).toBeVisible();

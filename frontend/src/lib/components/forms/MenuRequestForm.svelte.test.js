@@ -1,6 +1,6 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
-import Input from "$lib/components/input/Input.svelte";
+import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
 import {menuStatus, menu, MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
@@ -13,9 +13,9 @@ beforeEach(() => {
 
 vi.mock("$lib/foodPlannerClient.js");
 
-describe("Input Component", () => {
+describe("MenuRequestForm Component", () => {
     test("renders all macro constraint inputs", () => {
-        render(Input);
+        render(MenuRequestForm);
 
         expect(screen.getByText(/Calories/i)).toBeInTheDocument();
         expect(screen.getByText(/Protein/i)).toBeInTheDocument();
@@ -24,7 +24,7 @@ describe("Input Component", () => {
     });
 
     test("renders date selector and food blacklist", () => {
-        render(Input);
+        render(MenuRequestForm);
 
         expect(screen.getByText(/Select a Date/i)).toBeInTheDocument();
         expect(screen.getByText(/Foods You Dislike/i)).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe("Input Component", () => {
             foodLogEntry: {chicken: 500, sugar: 200, oil: 10}
         });
 
-        render(Input);
+        render(MenuRequestForm);
 
         const select = screen.getByRole("combobox");
         await fireEvent.change(select, {target: {value: "2025-03-10"}});
@@ -57,7 +57,7 @@ describe("Input Component", () => {
         const delayedResponse = new Promise(resolve => setTimeout(() => resolve(mockMenu), 200));
         vi.spyOn(FoodPlannerClient, 'getMenuPlan').mockImplementation(() => delayedResponse);
 
-        render(Input);
+        render(MenuRequestForm);
         const button = screen.getByRole('button', {name: /Generate My Menu/i});
 
         expect(button).not.toBeDisabled();

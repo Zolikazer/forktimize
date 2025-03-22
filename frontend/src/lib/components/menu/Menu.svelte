@@ -1,5 +1,5 @@
 <script>
-    import Food from "$lib/components/menu/Food.svelte";
+    import FoodCard from "$lib/components/menu/FoodCard.svelte";
     import { menuStore } from "$lib/stores/menuStore.js";
 
 </script>
@@ -9,7 +9,7 @@
 
     <div class="is-flex is-flex-wrap-wrap">
         {#each $menuStore.foods as food}
-            <Food food={food}/>
+            <FoodCard food={food}/>
         {/each}
     </div>
 </div>

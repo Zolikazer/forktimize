@@ -1,6 +1,6 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
 import {get} from 'svelte/store';
-import FoodBlacklist from '$lib/components/input/FoodBlacklist.svelte';
+import FoodBlacklist from '$lib/components/forms/FoodBlacklist.svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
 import {menuFormStore} from "$lib/stores/menuFormStore.js";
 
@@ -57,7 +57,7 @@ describe('FoodBlacklist component', () => {
         expect(screen.getByText('VeryLong...')).toBeInTheDocument();
     });
 
-    test('adds food when clicking outside the input', async () => {
+    test('adds food when clicking outside the forms', async () => {
         render(FoodBlacklist);
         const input = screen.getByPlaceholderText(/Type a food and press Enter/i);
 

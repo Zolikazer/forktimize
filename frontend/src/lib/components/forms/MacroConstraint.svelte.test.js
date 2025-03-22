@@ -1,5 +1,5 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
-import MacroConstraint from '$lib/components/input/MacroConstraint.svelte';
+import MacroConstraint from '$lib/components/forms/MacroConstraint.svelte';
 import {describe, expect, test} from 'vitest';
 
 describe('MacroConstraint component', () => {
