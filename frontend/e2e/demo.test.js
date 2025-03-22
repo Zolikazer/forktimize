@@ -35,8 +35,14 @@ test("User can generate a menu and interact with it", async ({page}) => {
 
     await expect(menuItems.first()).toBeVisible({timeout: 5000});
 
-    await expect(page.locator("text=Total Cost:")).toBeVisible();
-    await expect(page.locator("text=Total Calories:")).toBeVisible();
+    await expect(page.locator(".card-header-title", {hasText: "Your Menu Summary"})).toBeVisible();
+    await expect(page.locator(".tag.is-info", {hasText: /🔥.*calories/i})).toBeVisible();
+    await expect(page.locator(".tag.is-success", {hasText: /Ft/i})).toBeVisible();
+
+    await expect(page.locator(".macro-box", {hasText: /Protein/i})).toBeVisible();
+    await expect(page.locator(".macro-box", {hasText: /Carbs/i})).toBeVisible();
+    await expect(page.locator(".macro-box", {hasText: /Fat/i})).toBeVisible();
+
 
     const removeButton = menuItems.first().locator("button:has-text('🤮 Nem szeretem')");
     await removeButton.click();
