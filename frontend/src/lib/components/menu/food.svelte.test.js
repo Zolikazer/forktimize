@@ -1,13 +1,13 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
 import Food from '$lib/components/menu/Food.svelte';
 import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
-import {menu} from "$lib/stores/menuStore.js";
+import {menu, menuStore} from "$lib/stores/menuStore.js";
 import {beforeEach, describe, expect, test} from 'vitest';
 import {get} from "svelte/store";
 
 beforeEach(() => {
     dislikedFoods.set([]);
-    menu.set([]);
+    menuStore.reset();
 });
 
 describe('Food component', () => {
@@ -57,12 +57,13 @@ describe('Food component', () => {
     });
 
     test('removes food when button is clicked', async () => {
+        menuStore.setSuccess([mockFood])
         render(Food, {food: mockFood});
         const button = screen.getByText(/Nem szeretem/i);
 
         await fireEvent.click(button);
 
         expect(get(dislikedFoods)).toContain(mockFood.name);
-        expect(get(menu)).toHaveLength(0);
+        expect(get(menuStore).foods).toHaveLength(0);
     });
 });

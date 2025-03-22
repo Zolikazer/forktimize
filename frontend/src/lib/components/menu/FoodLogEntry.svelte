@@ -1,6 +1,5 @@
 <script>
-import {foodLogEntryStore} from "$lib/stores/menuStore.js";
-
+    import {menuStore} from "$lib/stores/menuStore.js";
 </script>
 
 <div class="box has-text-centered mt-4">
@@ -10,19 +9,19 @@ import {foodLogEntryStore} from "$lib/stores/menuStore.js";
         <div class="macro-box">
             <span class="macro-emoji">🐔</span>
             <h3>Chicken Breast</h3>
-            <p>{$foodLogEntryStore.chicken}g</p>
+            <p>{$menuStore.foodLogEntry.chicken}g</p>
         </div>
 
         <div class="macro-box">
             <span class="macro-emoji">🍯</span>
             <h3>Sugar</h3>
-            <p>{$foodLogEntryStore.sugar}g</p>
+            <p>{$menuStore.foodLogEntry.sugar}g</p>
         </div>
 
         <div class="macro-box">
             <span class="macro-emoji">🫒️</span>
             <h3>Olive Oil</h3>
-            <p>{$foodLogEntryStore.oil}g</p>
+            <p>{$menuStore.foodLogEntry.oil}g</p>
         </div>
     </div>
     <div class="notification is-info has-text-centered mt-5">

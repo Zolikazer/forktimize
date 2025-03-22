@@ -2,11 +2,11 @@
     import Input from "$lib/components/input/Input.svelte";
     import Help from "$lib/components/help/Help.svelte";
     import Menu from "$lib/components/menu/Menu.svelte";
-    import {menu} from "$lib/stores/menuStore.js";
+    import {menuStore} from "$lib/stores/menuStore.js";
     import MenuSummary from "$lib/components/menu/MenuSummary.svelte";
     import FoodLogEntry from "$lib/components/menu/FoodLogEntry.svelte";
 
-    export let data = { dates: [] };
+    export let data = {dates: []};
 
 </script>
 
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        {#if $menu && $menu.length > 0}
+        {#if $menuStore.foods && $menuStore.foods.length > 0}
             <div class="columns is-centered">
                 <div class="column">
                     <Menu/>

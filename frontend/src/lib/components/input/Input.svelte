@@ -2,36 +2,29 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {menu, menuStatus, MenuGenerationStatus, foodLogEntryStore} from "$lib/stores/menuStore.js";
+    import {menuStore, MenuGenerationStatus} from "$lib/stores/menuStore.js";
     import {getMenuPlan} from "$lib/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
     import {macroConstraints} from "$lib/stores/constraintStore.js";
     import {selectedDate} from "$lib/stores/dateStore.js";
 
-    let isLoading = false;
 
     async function generateMenu() {
-        isLoading = true;
-        menuStatus.set(MenuGenerationStatus.IN_PROGRESS);
+        menuStore.setLoading();
+        const menuRequest = createMenuRequest();
 
-        const requestedMenuConstraints = createMenuRequest();
         try {
-            const generatedMenu = await getMenuPlan(requestedMenuConstraints)
-            menuStatus.set(MenuGenerationStatus.SUCCESS);
-            foodLogEntryStore.set(generatedMenu.foodLogEntry)
-            menu.set(generatedMenu.foods)
-
-            if (generatedMenu.length === 0) {
-                menuStatus.set(MenuGenerationStatus.FAILURE);
+            const generatedMenu = await getMenuPlan(menuRequest)
+            if (generatedMenu.foods.length > 0) {
+                menuStore.setSuccess(generatedMenu.foods, generatedMenu.foodLogEntry)
+            } else {
+                menuStore.setFailure()
             }
         } catch (error) {
-            menu.set([])
-            menuStatus.set(MenuGenerationStatus.FAILURE);
+            menuStore.setFailure()
             showError(error.message);
         }
-        isLoading = false
-
     }
 
     export function createMenuRequest() {
@@ -47,7 +40,6 @@
             foodBlacklist: $dislikedFoods,
         };
     }
-
 
 </script>
 
@@ -81,7 +73,7 @@
     <div class="has-text-centered">
         <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3  is-size-5 "
                 on:click={generateMenu}
-                disabled="{isLoading}">Generate My Menu 🍽️
+                disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS}>Generate My Menu 🍽️
         </button>
     </div>
 </div>

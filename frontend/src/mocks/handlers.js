@@ -61,7 +61,8 @@ export const handlers = [
                     fat: 30,
                     price: 1890,
                     date: "2025-01-01"
-                }]
+                }],
+            foodLogEntry: {chicken: 360, sugar: 50, oil: 10}
         });
     }),
 

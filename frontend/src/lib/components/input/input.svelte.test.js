@@ -2,13 +2,12 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import Input from "$lib/components/input/Input.svelte";
 import * as FoodPlannerClient from "$lib/foodPlannerClient.js";
-import {menuStatus, menu, MenuGenerationStatus} from "$lib/stores/menuStore.js";
+import {menuStatus, menu, MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
 
 
 beforeEach(() => {
-    menu.set([]);
-    menuStatus.set(MenuGenerationStatus.NOT_GENERATED);
+    menuStore.reset()
 });
 
 
@@ -33,8 +32,11 @@ describe("Input Component", () => {
     });
 
     test("generates menu when clicking 'Generate My Menu'", async () => {
-        const mockMenu = [{name: "Mocked Food", kcal: 500}];
-        vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({foods: [{name: "Mocked Food", kcal: 500}]});
+        const mockFoods = [{name: "Mocked Food", kcal: 500}];
+        vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({
+            foods: mockFoods,
+            foodLogEntry: {chicken: 500, sugar: 200, oil: 10}
+        });
 
         render(Input);
 
@@ -44,7 +46,9 @@ describe("Input Component", () => {
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
 
-        expect(get(menu)).toEqual(mockMenu);
+        console.log(get(menuStore))
+
+        expect(get(menuStore).foods).toEqual(mockFoods);
     });
 
     test('disables button while fetching', async () => {

@@ -1,10 +1,10 @@
 import {render, screen} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test} from "vitest";
 import Menu from "$lib/components/menu/Menu.svelte";
-import {menu} from "$lib/stores/menuStore.js";
+import {menu, menuStore} from "$lib/stores/menuStore.js";
 
 beforeEach(() => {
-    menu.set([
+    menuStore.setSuccess([
         {
             name: "Test Food 1",
             calories: 300,
@@ -21,7 +21,7 @@ beforeEach(() => {
             fat: 15,
             price: 2000
         }
-    ]);
+    ], {});
 });
 
 describe("Menu Component", () => {

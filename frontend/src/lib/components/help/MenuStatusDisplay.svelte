@@ -1,18 +1,18 @@
 <script>
-    import {menuStatus, MenuGenerationStatus} from "$lib/stores/menuStore.js";
+    import {menuStore, MenuGenerationStatus} from "$lib/stores/menuStore.js";
 
 </script>
 
-{#if $menuStatus === MenuGenerationStatus.SUCCESS}
+{#if $menuStore.status === MenuGenerationStatus.SUCCESS}
     <div class="notification is-success has-text-centered">
         <strong>Your menu is ready. ✅</strong>
     </div>
-{:else if $menuStatus === MenuGenerationStatus.FAILURE}
+{:else if $menuStore.status === MenuGenerationStatus.FAILURE}
     <div class="notification is-danger has-text-centered">
         Sorry, we could not find a menu that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
         👍
     </div>
-{:else if $menuStatus === MenuGenerationStatus.IN_PROGRESS}
+{:else if $menuStore.status === MenuGenerationStatus.IN_PROGRESS}
     <div class="notification is-primary has-text-centered">
         <span class="spinner"></span>
         <strong> Generating your menu... Please wait!</strong>
@@ -37,8 +37,12 @@
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
 </style>

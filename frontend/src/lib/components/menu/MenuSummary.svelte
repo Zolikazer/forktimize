@@ -1,7 +1,7 @@
 <script>
-    import {menu} from "$lib/stores/menuStore.js";
+    import {menuStore} from "$lib/stores/menuStore.js";
 
-    $: totals = ($menu || []).reduce(
+    $: totals = ($menuStore.foods || []).reduce(
         (acc, food) => {
             acc.cost += food.price || 0;
             acc.calories += food.calories || 0;
@@ -10,7 +10,7 @@
             acc.fats += food.fat || 0;
             return acc;
         },
-        { cost: 0, calories: 0, protein: 0, carbs: 0, fats: 0 }
+        {cost: 0, calories: 0, protein: 0, carbs: 0, fats: 0}
     );
 
     $: formattedCost = totals.cost.toLocaleString("fr-FR");
@@ -23,7 +23,8 @@
     <div class="box-has-shadow has-background-white-ter p-4 is-rounded shadow mt-4 has-text-centered is-size-5 has-text-weight-bold">
         <section class="summary-flex mb-3 border-bottom">
             <div class="summary-item">💰 <strong>Total Cost:</strong> {formattedCost} Ft</div>
-            <div class="summary-item">🔥 <strong>Total Calories:</strong> {totals.calories.toLocaleString("fr-FR")} kcal</div>
+            <div class="summary-item">🔥 <strong>Total Calories:</strong> {totals.calories.toLocaleString("fr-FR")} kcal
+            </div>
         </section>
         <section class="summary-flex">
             <div class="summary-item">💪 <strong>Total Protein:</strong> {totals.protein} g</div>

@@ -1,6 +1,6 @@
 <script>
     import {dislikedFoods} from "$lib/stores/dislikedFoodsStore.js";
-    import { menu } from "$lib/stores/menuStore.js";
+    import {menuStore} from "$lib/stores/menuStore.js";
 
     const MAX_FOOD_LENGTH = 42;
 
@@ -10,17 +10,18 @@
         updateDislikedFoods(foodName);
         updateMenu(foodName);
     }
+
     function updateDislikedFoods(foodName) {
         dislikedFoods.update(foods => {
             if (!foods.includes(foodName)) {
-                return [...foods, foodName]; // ✅ Prevents duplicate entries
+                return [...foods, foodName];
             }
             return foods;
         });
     }
 
     function updateMenu(foodName) {
-        menu.update(currentMenu => currentMenu.filter(food => food.name !== foodName));
+        menuStore.removeFood(foodName);
     }
 
 
@@ -33,16 +34,15 @@
 <div class="card food-card mx-auto is-flex is-flex-direction-column">
     <div class="card-image">
         <figure class="image is-16by9">
-            <img
-                    src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
-                    alt="Placeholder image"
+            <img alt="Placeholder image"
+                src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
             />
         </figure>
     </div>
     <div class="card-content">
         <div class="media mb-1">
             <div class="media-content">
-                <p class="title is-6 food-name"  data-tooltip={food.name}>{getShortenedName(food.name)}</p>
+                <p class="title is-6 food-name" data-tooltip={food.name}>{getShortenedName(food.name)}</p>
                 <p class="subtitle is-7">{food.price} Ft</p>
             </div>
         </div>
@@ -81,7 +81,7 @@
     }
 
     .custom-button {
-        width: auto;  /* Adjust width automatically */
+        width: auto; /* Adjust width automatically */
         min-width: 150px; /* Ensures a nice button size */
         align-self: center; /* Centers button in flex container */
     }
