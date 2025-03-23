@@ -10,19 +10,19 @@
     </p>
     <div class="macro-ratio-bar">
         <div
-                class="ratio-segment ratio-protein"
+                class="ratio-segment has-background-info"
                 style="width: {proteinPercentage}%;"
         >
             {proteinPercentage > 10 ? proteinPercentage + '%' : ''}
         </div>
         <div
-                class="ratio-segment ratio-carbs"
+                class="ratio-segment has-background-danger"
                 style="width: {carbsPercentage}%;"
         >
             {carbsPercentage > 10 ? carbsPercentage + '%' : ''}
         </div>
         <div
-                class="ratio-segment ratio-fat"
+                class="ratio-segment has-background-warning"
                 style="width: {fatPercentage}%;"
         >
             {fatPercentage > 10 ? fatPercentage + '%' : ''}
@@ -32,15 +32,15 @@
 
     <div class="is-flex is-gap-1 mt-2 is-size-7 has-text-grey">
         <div class="is-flex is-align-items-center">
-            <div class="legend-dot protein-dot"></div>
+            <div class="legend-dot has-background-info"></div>
             <span>Protein</span>
         </div>
         <div class="is-flex is-align-items-center">
-            <div class="legend-dot carbs-dot"></div>
+            <div class="legend-dot has-background-danger"></div>
             <span>Carbs</span>
         </div>
         <div class="is-flex is-align-items-center">
-            <div class="legend-dot fat-dot"></div>
+            <div class="legend-dot has-background-warning"></div>
             <span>Fat</span>
         </div>
     </div>

@@ -3,7 +3,7 @@
     import MacroRatio from "$lib/components/menu/summary/MacroRatio.svelte";
     import MacroStat from "$lib/components/menu/summary/MacroStat.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
-    import {menuFormStore} from "$lib/stores/menuFormStore.js";
+    import {menuFormStore, selectedDateStore} from "$lib/stores/menuFormStore.js";
 
     $: totals = ($menuStore.foods || []).reduce(
         (acc, food) => {
@@ -33,13 +33,12 @@
         totalMacroKcals > 0 ? ((fatKcals / totalMacroKcals) * 100).toFixed(0) : 0;
 
 
-
 </script>
 
 <div class="card">
     <SummaryHeader
             title="Your Menu Summary"
-            planDate={$menuFormStore.date}
+            planDate={$selectedDateStore}
             totalCalories={totals.calories}
             totalPrice={totals.cost}
     />

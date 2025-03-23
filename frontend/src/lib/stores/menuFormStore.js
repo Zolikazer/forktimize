@@ -43,3 +43,5 @@ function createMenuFormStore() {
 }
 
 export const menuFormStore = createMenuFormStore();
+
+export const selectedDateStore = writable(null);

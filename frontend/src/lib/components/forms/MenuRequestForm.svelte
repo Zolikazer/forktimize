@@ -5,13 +5,14 @@
     import {MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
     import {getMenuPlan} from "$lib/api/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
-    import {menuFormStore} from "$lib/stores/menuFormStore.js";
+    import {menuFormStore, selectedDateStore} from "$lib/stores/menuFormStore.js";
     import {get} from "svelte/store";
 
 
     async function generateMenu() {
         menuStore.setLoading();
         const formState = get(menuFormStore);
+        selectedDateStore.set(formState.selectedDate);
         const menuRequest = createMenuRequest(formState);
 
         try {
@@ -72,7 +73,7 @@
 
 
     <div class="has-text-centered">
-        <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3  is-size-5 "
+        <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                 on:click={generateMenu}
                 disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS}>Generate My Menu 🍽️
         </button>

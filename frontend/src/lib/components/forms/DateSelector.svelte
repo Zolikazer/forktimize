@@ -17,6 +17,7 @@
     function getDefaultAvailableDates() {
         const generatedDates = [];
         let date = new Date();
+        date.setDate(date.getDate() + 1);
 
         while (generatedDates.length < 10) {
             date.setDate(date.getDate() + 1);
