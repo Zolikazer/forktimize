@@ -1,6 +1,6 @@
 import {render, screen} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test} from "vitest";
-import Menu from "$lib/components/menu/Menu.svelte";
+import Menu from "$lib/components/menu/food-plan/Menu.svelte";
 import {menuStore} from "$lib/stores/menuStore.js";
 
 beforeEach(() => {
