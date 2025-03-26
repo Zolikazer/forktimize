@@ -1,12 +1,12 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
     import MacroEquivalent from "$lib/components/menu/equivalent/MacroEquivalent.svelte";
+    import SectionHeader from "$lib/components/common/SectionHeader.svelte";
 </script>
 
-<div class="box has-text-centered mt-4">
-    <h2 class="title border-bottom is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Macro Equivalents (Trackable
-        Format)</h2>
-    <div class="macro-summary">
+<div class="card mt-4">
+    <SectionHeader title="Macro Equivalents" subTitle="Trackable Format"></SectionHeader>
+    <div class="macro-summary p-4">
         <MacroEquivalent
                 emoji="🐔"
                 label="Chicken Breast"

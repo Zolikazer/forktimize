@@ -3,9 +3,8 @@
     import Help from "$lib/components/help/Help.svelte";
     import Menu from "$lib/components/menu/food-plan/Menu.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
+    import FoodLogEntry from "$lib/components/menu/food-log/FoodLogEntry.svelte";
     import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
-    import FoodLogEntry from "$lib/components/menu/FoodLogEntry.svelte";
-    import MenuSummaryRedesign from "$lib/components/menu/summary/MenuSummaryRedesign.svelte";
 
     export let data = {dates: []};
 
@@ -28,7 +27,7 @@
                     <Menu/>
                 </div>
                 <div class="column">
-                    <MenuSummaryRedesign/>
+                    <MenuSummary/>
                     <FoodLogEntry/>
                 </div>
             </div>

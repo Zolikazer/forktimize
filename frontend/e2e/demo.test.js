@@ -35,8 +35,8 @@ test("User can generate a menu and interact with it", async ({page}) => {
 
     await expect(menuItems.first()).toBeVisible({timeout: 5000});
 
-    await expect(page.locator(".card-header-title", {hasText: "Your Menu Summary"})).toBeVisible();
-    await expect(page.locator(".tag.is-info", {hasText: /🔥.*calories/i})).toBeVisible();
+    await expect(page.locator(".card-header-title", {hasText: "Your Meal Plan"})).toBeVisible();
+    await expect(page.locator(".tag.is-success", {hasText: /🔥.*calories/i})).toBeVisible();
     await expect(page.locator(".tag.is-success", {hasText: /Ft/i})).toBeVisible();
 
     await expect(page.locator(".macro-box", {hasText: /Protein/i})).toBeVisible();

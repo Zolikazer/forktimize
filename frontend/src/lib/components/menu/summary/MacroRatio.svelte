@@ -47,11 +47,7 @@
 </div>
 
 <style>
-    .macro-ratio {
-        margin-bottom: 1rem; /* or whatever suits your layout */
-    }
 
-    /* The bar container */
     .macro-ratio-bar {
         display: flex;
         height: 1.25rem;
@@ -60,7 +56,6 @@
         background-color: #e0e0e0;
     }
 
-    /* Each colored segment */
     .ratio-segment {
         display: flex;
         align-items: center;
@@ -70,19 +65,6 @@
         white-space: nowrap;
     }
 
-    .ratio-protein {
-        background-color: #f14668; /* bulma "danger" shade */
-    }
-
-    .ratio-carbs {
-        background-color: #48c78e; /* bulma "success" shade */
-    }
-
-    .ratio-fat {
-        background-color: #3273dc; /* bulma "link" shade */
-    }
-
-    /* Legend dots */
     .legend-dot {
         width: 0.75rem;
         height: 0.75rem;
@@ -90,15 +72,4 @@
         margin-right: 0.25rem;
     }
 
-    .protein-dot {
-        background-color: #f14668;
-    }
-
-    .carbs-dot {
-        background-color: #48c78e;
-    }
-
-    .fat-dot {
-        background-color: #3273dc;
-    }
 </style>

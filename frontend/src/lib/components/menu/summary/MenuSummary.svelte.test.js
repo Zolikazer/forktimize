@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
-import MenuSummary from '$lib/components/menu/summary/MenuSummary.svelte';
 import {menuStore} from '$lib/stores/menuStore.js';
+import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
 
 beforeEach(() => {
     menuStore.setSuccess([
@@ -24,10 +24,10 @@ beforeEach(() => {
     ]);
 });
 
-describe('MenuSummary Component', () => {
+describe('MenuSummarySvelte Component', () => {
     test('renders title correctly', () => {
         render(MenuSummary);
-        expect(screen.getByText(/Menu Summary/i)).toBeInTheDocument();
+        expect(screen.getByText(/Meal Plan Summary/i)).toBeInTheDocument();
     });
 
     test('calculates and displays total cost correctly', () => {
@@ -37,7 +37,7 @@ describe('MenuSummary Component', () => {
 
     test('calculates and displays total calories correctly', () => {
         render(MenuSummary);
-        expect(screen.getByText(/700 kcal/)).toBeInTheDocument();
+        expect(screen.getByText(/700 calories/)).toBeInTheDocument();
     });
 
     test('calculates and displays macronutrients correctly', () => {
