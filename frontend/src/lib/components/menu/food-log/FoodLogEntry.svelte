@@ -5,7 +5,10 @@
 </script>
 
 <div class="card mt-4">
-    <SectionHeader title="Macro Equivalents" subTitle="Trackable Format"></SectionHeader>
+    <SectionHeader title="Macro Equivalents" subTitle="Trackable Format">
+        <span class="tag is-success is-light bigger-tag" slot="tags">📲 MyFitnessPal Ready</span>
+
+    </SectionHeader>
     <div class="macro-summary p-4">
         <MacroEquivalent
                 emoji="🐔"
@@ -45,26 +48,12 @@
         margin-top: 1.5rem;
     }
 
-    .macro-box {
-        flex: 1;
-        background: #f0f0f0;
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
     .macro-box h3 {
         margin-bottom: 0.25rem;
         font-weight: bold;
         font-size: 1.1rem;
     }
 
-    .macro-emoji {
-        font-size: 1.8rem;
-        display: block;
-        margin-bottom: 0.3rem;
-    }
 
     @media (max-width: 600px) {
         .macro-summary {
