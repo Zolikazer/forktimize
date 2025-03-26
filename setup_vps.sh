@@ -22,7 +22,7 @@ echo \
 
 sudo apt-get update
 sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo apt install -y vim htop rsync
+sudo apt install -y vim htop rsync sqlite3
 
 # ✅ Clone the repo if missing
 if [ ! -d "/opt/forktimize" ]; then
