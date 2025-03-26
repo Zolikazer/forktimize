@@ -76,18 +76,17 @@
     }
 
     .custom-button {
-        width: auto; /* Adjust width automatically */
-        min-width: 150px; /* Ensures a nice button size */
-        align-self: center; /* Centers button in flex container */
+        width: auto;
+        min-width: 150px;
+        align-self: center;
     }
 
     .food-name {
-        cursor: pointer; /* Indicate hover behavior */
-        position: relative; /* Needed for tooltip */
+        cursor: pointer;
+        position: relative;
         display: inline-block;
     }
 
-    /* Tooltip Styling with Controlled Line Breaks */
     .food-name:hover::after {
         content: attr(data-tooltip);
         position: absolute;
@@ -99,15 +98,16 @@
         padding: 6px 10px;
         border-radius: 6px;
         font-size: 0.8rem;
-        white-space: normal; /* Allows wrapping */
-        max-width: 220px; /* Tooltip wraps after 220px */
+        white-space: normal;
+        width: max-content;
+        max-width: 250px;
         text-align: center;
         z-index: 10;
         opacity: 1;
         transition: opacity 0.2s ease-in-out;
-        line-height: 1.4; /* Improves readability */
-        word-break: normal; /* Default: only breaks at spaces */
-        overflow-wrap: break-word; /* Wraps long words properly */
+        line-height: 1.4;
+        word-break: normal;
+        overflow-wrap: break-word;
     }
 
 </style>
