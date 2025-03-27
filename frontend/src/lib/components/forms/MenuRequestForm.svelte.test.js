@@ -2,7 +2,7 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
-import {menuStatus, menu, MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
+import {menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
 
 

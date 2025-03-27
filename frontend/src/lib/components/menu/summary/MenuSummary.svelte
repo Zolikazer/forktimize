@@ -2,28 +2,13 @@
     import MacroRatio from "$lib/components/menu/summary/MacroRatio.svelte";
     import MacroStat from "$lib/components/menu/summary/MacroStat.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
-    import {selectedDateStore} from "$lib/stores/menuFormStore.js";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
 
-    $: totals = ($menuStore.foods || []).reduce(
-        (acc, food) => {
-            acc.cost += food.price || 0;
-            acc.calories += food.calories || 0;
-            acc.protein += food.protein || 0;
-            acc.carbs += food.carb || 0;
-            acc.fats += food.fat || 0;
-            return acc;
-        },
-        {cost: 0, calories: 0, protein: 0, carbs: 0, fats: 0}
-    );
 
-
-    $: proteinKcals = totals.protein * 4;
-    $: carbsKcals = totals.carbs * 4;
-    $: fatKcals = totals.fats * 9;
+    $: proteinKcals = $menuStore.totalProtein * 4;
+    $: carbsKcals = $menuStore.totalCarbs * 4;
+    $: fatKcals = $menuStore.totalFat * 9;
     $: totalMacroKcals = proteinKcals + carbsKcals + fatKcals;
-
-    $: formattedCost = totals.cost.toLocaleString("fr-FR");
 
     $: proteinPercentage =
         totalMacroKcals > 0 ? ((proteinKcals / totalMacroKcals) * 100).toFixed(0) : 0;
@@ -36,7 +21,7 @@
 </script>
 
 <div class="card">
-    <SectionHeader title="Your Meal Plan Summary" subTitle={"📅" + new Date($selectedDateStore).toLocaleDateString("hu-HU", {
+    <SectionHeader title="Your Meal Plan Summary" subTitle={"📅" + new Date($menuStore.date).toLocaleDateString("hu-HU", {
             weekday: "long",
             month: "long",
             day: "numeric",
@@ -44,10 +29,10 @@
         })}>
         <div class="tags" slot="tags">
             <span class="tag is-success is-light bigger-tag">
-                💸 {totals.cost.toLocaleString("fr-FR")} Ft
+                💸 {$menuStore.totalPrice.toLocaleString("fr-FR")} Ft
               </span>
             <span class="tag is-success is-light bigger-tag">
-                🔥 {totals.calories.toLocaleString("fr-FR")} calories
+                🔥 {$menuStore.totalCalories.toLocaleString("fr-FR")} calories
               </span>
         </div>
     </SectionHeader>
@@ -58,7 +43,7 @@
                 <MacroStat
                         icon="💪"
                         label="Protein"
-                        value={`${totals.protein} g`}
+                        value={`${$menuStore.totalProtein} g`}
                         subValue={`${proteinPercentage}%`}
                         colorClass="danger"
                 />
@@ -68,7 +53,7 @@
                 <MacroStat
                         icon="🥖"
                         label="Carbs"
-                        value={`${totals.carbs} g`}
+                        value={`${$menuStore.totalCarbs} g`}
                         subValue={`${carbsPercentage}%`}
                         colorClass="success"
                 />
@@ -78,7 +63,7 @@
                 <MacroStat
                         icon="🧈"
                         label="Fat"
-                        value={`${totals.fats} g`}
+                        value={`${$menuStore.totalFat} g`}
                         subValue={`${fatPercentage}%`}
                         colorClass="link"
                 />

@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, test} from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import {render, screen, waitFor} from '@testing-library/svelte';
-import {menuStatus, MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
+import {menuStore} from "$lib/stores/menuStore.js";
 import MenuStatus from "$lib/components/help/MenuStatus.svelte";
 
 beforeEach(() => {

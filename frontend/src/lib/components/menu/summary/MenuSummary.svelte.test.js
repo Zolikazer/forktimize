@@ -4,24 +4,32 @@ import {menuStore} from '$lib/stores/menuStore.js';
 import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
 
 beforeEach(() => {
-    menuStore.setSuccess([
-        {
-            name: 'Test Food 1',
-            calories: 300,
-            protein: 20,
-            carb: 40,
-            fat: 10,
-            price: 1500
-        },
-        {
-            name: 'Test Food 2',
-            calories: 400,
-            protein: 25,
-            carb: 50,
-            fat: 15,
-            price: 2000
-        }
-    ]);
+    menuStore.setSuccess(
+        [
+            {
+                name: 'Test Food 1',
+                calories: 300,
+                protein: 20,
+                carb: 40,
+                fat: 10,
+                price: 1500
+            },
+            {
+                name: 'Test Food 2',
+                calories: 400,
+                protein: 25,
+                carb: 50,
+                fat: 15,
+                price: 2000
+            }
+        ],
+        null,
+        "2025-05-06",
+        1500,
+        1600,
+        200,
+        100,
+        30);
 });
 
 describe('MenuSummarySvelte Component', () => {
@@ -32,19 +40,24 @@ describe('MenuSummarySvelte Component', () => {
 
     test('calculates and displays total cost correctly', () => {
         render(MenuSummary);
-        expect(screen.getByText(/3 500 Ft/)).toBeInTheDocument();
+        expect(screen.getByText(/1 500 Ft/)).toBeInTheDocument();
     });
 
     test('calculates and displays total calories correctly', () => {
         render(MenuSummary);
-        expect(screen.getByText(/700 calories/)).toBeInTheDocument();
+        expect(screen.getByText(/1 600 calories/)).toBeInTheDocument();
     });
 
     test('calculates and displays macronutrients correctly', () => {
         render(MenuSummary);
 
-        expect(screen.getByText(/45 g/i)).toBeInTheDocument();
-        expect(screen.getByText(/90 g/i)).toBeInTheDocument();
-        expect(screen.getByText(/25 g/i)).toBeInTheDocument();
+        expect(screen.getByText(/200 g/i)).toBeInTheDocument();
+        expect(screen.getByText(/100 g/i)).toBeInTheDocument();
+        expect(screen.getByText(/30 g/i)).toBeInTheDocument();
+    });
+
+    test('displays date properly', () => {
+        render(MenuSummary);
+        expect(screen.getByText(/2025. május 6., kedd/i)).toBeInTheDocument();
     });
 });

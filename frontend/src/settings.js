@@ -1,6 +1,6 @@
 const PROD_SETTINGS = {
     API: {
-        URL: "https://forktimize.xyz/api",
+        URL: import.meta.env.VITE_API_URL || "https://forktimize.xyz/api",
         ENDPOINT: {
             DATES: "dates",
             MENU: "menu",
@@ -22,5 +22,4 @@ const DEV_SETTINGS = {
 
 const isDev = import.meta.env.MODE === "development";
 export const SETTINGS = isDev ? DEV_SETTINGS : PROD_SETTINGS;
-console.log(SETTINGS);
 
