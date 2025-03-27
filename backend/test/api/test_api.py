@@ -10,7 +10,6 @@ from starlette.testclient import TestClient
 from database.db import get_session
 from main import app
 from model.food import Food
-from model.menu import Menu
 from routers.planner_routes import AppStatus
 
 
@@ -31,7 +30,6 @@ def client(session):
 
 
 def insert_test_food(session):
-    """Insert test data into the database before running API tests."""
     food_items = [
         Food(food_id=1, name="Grilled Chicken", calories=500, protein=50, carb=20, fat=10, price=1000,
              date=date(2025, 2, 24)),
@@ -65,18 +63,24 @@ def test_create_menu_endpoint(client, session: Session):
     response = client.post("/menu", json=menu_request)
 
     assert response.status_code == 200
+    data = response.json()
 
-    result = Menu(**response.json())
+    assert data["date"] == requested_date
+    assert len(data["foods"]) == 4
 
-    assert len(result.foods) == 4
-    assert result.total_price == 4000
-    assert result.total_calories == 2000
-    assert "Lencsefőzelék vagdalttal" not in [food.name for food in result.foods]
+    food_names = [f["name"] for f in data["foods"]]
+    assert "Lencsefőzelék vagdalttal" not in food_names
 
-    assert result.food_log_entry.chicken == 800
-    assert result.food_log_entry.oil == 16
-    assert result.food_log_entry.sugar == 80
-    assert result.date.strftime("%Y-%m-%d") == requested_date
+    food_log_entry = data["foodLogEntry"]
+    assert food_log_entry["chicken"] == 800
+    assert food_log_entry["oil"] == 16
+    assert food_log_entry["sugar"] == 80
+
+    assert data["totalPrice"] == 4000
+    assert data["totalCalories"] == 2000
+    assert data["totalProtein"] == 200
+    assert data["totalCarbs"] == 80
+    assert data["totalFat"] == 40
 
 
 @freeze_time("2025-02-23")
