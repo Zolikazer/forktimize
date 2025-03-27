@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import date
 import pytest
 
 from model.food import Food
@@ -17,7 +16,7 @@ def sample_food():
         carb=5,
         fat=3,
         price=500,
-        date=datetime.datetime(2025, 3, 7)
+        date=date(2025, 3, 7)
     )
 
 
@@ -104,7 +103,7 @@ def test_price_per_protein(sample_food):
         carb=10,
         fat=5,
         price=300,
-        date=datetime.datetime.now()
+        date=date.today()
     )
 
     menu_no_protein = Menu()
@@ -127,6 +126,7 @@ def test_menu_initializes_food_log_entry(sample_food):
 def test_menu_from_food_counts():
     apple_id = 1
     chicken_id = 2
+    menu_date = date.today()
     foods = [
         Food(food_id=apple_id, name="Apple", price=1.0, calories=50, protein=0.5, carb=14, fat=0.2),
         Food(food_id=chicken_id, name="Chicken", price=3.0, calories=200, protein=30, carb=0, fat=5),
@@ -136,7 +136,7 @@ def test_menu_from_food_counts():
         chicken_id: 1
     }
 
-    menu = Menu.from_food_counts(foods, food_counts)
+    menu = Menu.from_food_counts(foods, food_counts, menu_date)
 
     assert len(menu.foods) == 3
 
@@ -146,3 +146,4 @@ def test_menu_from_food_counts():
 
     food_ids = [f.food_id for f in menu.foods]
     assert set(food_ids).issubset({apple_id, chicken_id})
+    assert menu.date == menu_date

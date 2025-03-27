@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from database.db import get_session
@@ -9,7 +9,6 @@ from model.menu_request import MenuRequest
 from monitoring.logging import APP_LOGGER
 from optimizers.menu_optimizer import solve_menu_ilp
 from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
-from util import ONE_DAY
 
 
 class AppStatus:
@@ -36,7 +35,7 @@ def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(g
 
     food_counts = solve_menu_ilp(food_selection, menu_request.nutritional_constraints)
 
-    return Menu.from_food_counts(food_selection, food_counts)
+    return Menu.from_food_counts(food_selection, food_counts, menu_request.date)
 
 
 @planner.get("/health", tags=["Monitoring"])

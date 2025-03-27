@@ -51,8 +51,9 @@ def insert_test_food(session):
 def test_create_menu_endpoint(client, session: Session):
     insert_test_food(session)
 
+    requested_date = "2025-02-24"
     menu_request = {
-        "date": "2025-02-24",
+        "date": requested_date,
         "nutritional_constraints": {
             "min_calories": 1500,
             "max_calories": 2700,
@@ -75,6 +76,7 @@ def test_create_menu_endpoint(client, session: Session):
     assert result.food_log_entry.chicken == 800
     assert result.food_log_entry.oil == 16
     assert result.food_log_entry.sugar == 80
+    assert result.date.strftime("%Y-%m-%d") == requested_date
 
 
 @freeze_time("2025-02-23")

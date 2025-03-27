@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date as date_type
 from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -17,6 +18,7 @@ class Menu(BaseModel):
 
     foods: list[Food] = Field(default_factory=list)
     food_log_entry: FoodLogEntry = FoodLogEntry()
+    date: date_type = None
 
     def model_post_init(self, __context):
         self.food_log_entry = FoodLogEntry.from_macros(
@@ -71,11 +73,11 @@ class Menu(BaseModel):
         return 0 if self.total_protein == 0 else round(self.total_price / self.total_protein, 2)
 
     @staticmethod
-    def from_food_counts(foods: list[Food], food_counts: dict[int, int]) -> Menu:
+    def from_food_counts(foods: list[Food], food_counts: dict[int, int], menu_date: date_type) -> Menu:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
             for food_id, count in food_counts.items()
             for _ in range(count)
         ]
-        return Menu(foods=selected)
+        return Menu(foods=selected, date=menu_date)
