@@ -7,7 +7,7 @@ from database.db import get_session
 from model.menu import Menu
 from model.menu_request import MenuRequest
 from monitoring.logging import APP_LOGGER
-from optimizers.menu_optimizer import create_menu
+from optimizers.menu_optimizer import solve_menu_ilp
 from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
 from util import ONE_DAY
 
@@ -21,9 +21,8 @@ planner = APIRouter()
 
 
 @planner.get("/dates")
-def get_available_dates(response: Response, session: Session = Depends(get_session)) -> list[str]:
+def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     today = date.today()
-    response.headers["Cache-Control"] = f"public, max-age={ONE_DAY}"
 
     return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
 
@@ -35,9 +34,9 @@ def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(g
     if not food_selection:
         return Menu(foods=[])
 
-    menu = create_menu(food_selection, menu_request.nutritional_constraints)
+    food_counts = solve_menu_ilp(food_selection, menu_request.nutritional_constraints)
 
-    return menu
+    return Menu.from_food_counts(food_selection, food_counts)
 
 
 @planner.get("/health", tags=["Monitoring"])

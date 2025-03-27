@@ -122,3 +122,27 @@ def test_menu_initializes_food_log_entry(sample_food):
     assert menu.food_log_entry.chicken == 320
     assert menu.food_log_entry.sugar == 10
     assert menu.food_log_entry.oil == 0
+
+
+def test_menu_from_food_counts():
+    apple_id = 1
+    chicken_id = 2
+    foods = [
+        Food(food_id=apple_id, name="Apple", price=1.0, calories=50, protein=0.5, carb=14, fat=0.2),
+        Food(food_id=chicken_id, name="Chicken", price=3.0, calories=200, protein=30, carb=0, fat=5),
+    ]
+    food_counts = {
+        apple_id: 2,
+        chicken_id: 1
+    }
+
+    menu = Menu.from_food_counts(foods, food_counts)
+
+    assert len(menu.foods) == 3
+
+    names = [f.name for f in menu.foods]
+    assert names.count("Apple") == 2
+    assert names.count("Chicken") == 1
+
+    food_ids = [f.food_id for f in menu.foods]
+    assert set(food_ids).issubset({apple_id, chicken_id})

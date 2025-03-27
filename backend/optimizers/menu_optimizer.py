@@ -4,14 +4,13 @@ from typing import List
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
 
 from model.food import Food
-from model.menu import Menu
 from model.nutritional_constraints import NutritionalConstraints
 from monitoring.logging import APP_LOGGER
 from monitoring.performance import benchmark
 
 
 @benchmark
-def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> Menu:
+def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> dict[int, int]:
     problem = LpProblem("Menu_Creation_ILP", LpMinimize)
 
     x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
@@ -28,10 +27,13 @@ def create_menu(foods: List[Food], nutrition_constraints: NutritionalConstraints
 
     if status == "Optimal":
         APP_LOGGER.info(f"✅ Successfully created a menu in {duration:.4f} seconds.")
-        return _convert_result_to_menu(foods, x_vars)
-    else:
-        APP_LOGGER.info("Could not create menu. Status: %s", status)
-        return Menu()
+        return {
+            f.food_id: int(x_vars[f.food_id].varValue)
+            for f in foods if x_vars[f.food_id].varValue and x_vars[f.food_id].varValue > 0
+        }
+
+    APP_LOGGER.info("Could not create menu. Status: %s", status)
+    return {}
 
 
 def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: NutritionalConstraints, problem, x_vars: dict):
@@ -51,16 +53,6 @@ def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: Nutritio
             problem += total_nutrient >= min_val, f"Min{label}"
         if max_val is not None:
             problem += total_nutrient <= max_val, f"Max{label}"
-
-
-def _convert_result_to_menu(foods, x_vars) -> Menu:
-    menu = Menu()
-    chosen_foods = [f for f in foods if x_vars[f.food_id].varValue and int(x_vars[f.food_id].varValue) > 0]
-
-    for food in chosen_foods:
-        menu.add_foods([food] * int(x_vars[food.food_id].varValue))
-
-    return menu
 
 
 def _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars):

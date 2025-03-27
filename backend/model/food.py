@@ -1,6 +1,6 @@
 from datetime import date as datetime_date
 
-from pydantic import ConfigDict, NonNegativeInt
+from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
@@ -8,7 +8,7 @@ from sqlmodel import SQLModel, Field
 class Food(SQLModel, table=True):
     model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
 
-    food_id: int = Field(primary_key=True)
+    food_id: StrictInt = Field(primary_key=True)
     date: datetime_date = Field(primary_key=True, index=True)
     name: str = Field(index=True)
     calories: NonNegativeInt

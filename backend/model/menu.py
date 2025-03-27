@@ -69,3 +69,13 @@ class Menu(BaseModel):
     @property
     def price_per_protein(self) -> float:
         return 0 if self.total_protein == 0 else round(self.total_price / self.total_protein, 2)
+
+    @staticmethod
+    def from_food_counts(foods: list[Food], food_counts: dict[int, int]) -> Menu:
+        id_to_food = {f.food_id: f for f in foods}
+        selected = [
+            id_to_food[food_id]
+            for food_id, count in food_counts.items()
+            for _ in range(count)
+        ]
+        return Menu(foods=selected)
