@@ -1,10 +1,10 @@
 import {worker} from "./mocks/browser.js";
-import {SETTINGS} from "./settings.js";
+import {CONFIG} from "./config.js";
 
 console.log(import.meta.env.VITE_RUN_MOCK_BACKEND);
 
-if (SETTINGS.MODE === "development" && SETTINGS.RUN_MOCK_BACKEND === "true") {
+if (CONFIG.MODE === "development" && CONFIG.RUN_MOCK_BACKEND === "true") {
     console.log("Starting mock backend worker...");
-    console.log(SETTINGS.RUN_MOCK_BACKEND);
+    console.log(CONFIG.RUN_MOCK_BACKEND);
     await worker.start();
 }
