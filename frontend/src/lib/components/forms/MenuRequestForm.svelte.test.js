@@ -4,6 +4,7 @@ import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
 import {menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
+import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
 
 beforeEach(() => {
@@ -46,8 +47,6 @@ describe("MenuRequestForm Component", () => {
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
 
-        console.log(get(menuStore))
-
         expect(get(menuStore).foods).toEqual(mockFoods);
     });
 
@@ -62,11 +61,50 @@ describe("MenuRequestForm Component", () => {
 
         expect(button).not.toBeDisabled();
 
-        fireEvent.click(button);
+        await fireEvent.click(button);
 
         await waitFor(() => {
             expect(button).toBeDisabled();
         });
+    });
+
+    test('should set maxFoodRepeat to 1 when checkbox is unchecked', async () => {
+        render(MenuRequestForm);
+        const checkbox = screen.getByRole('checkbox');
+
+        await fireEvent.click(checkbox);
+
+        expect(get(menuRequestStore).maxFoodRepeat).toBe(1);
+    });
+
+    test('should maxFoodRepeat have a value of null if checkbox is checked ', async () => {
+        render(MenuRequestForm);
+
+        expect(get(menuRequestStore).maxFoodRepeat).toBe(null);
+    });
+
+    test("sends all params on the api", async () => {
+        const mockFoods = [{name: "Mocked Food", kcal: 500}];
+        const apiSpy = vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({
+            foods: mockFoods,
+            foodLogEntry: {chicken: 500, sugar: 200, oil: 10}
+        });
+
+        render(MenuRequestForm);
+
+        const select = screen.getByRole("combobox");
+        await fireEvent.change(select, {target: {value: "2025-03-10"}});
+
+        const button = screen.getByRole("button", {name: /Generate My Menu/i});
+        await fireEvent.click(button);
+
+        const callArgs = apiSpy.mock.calls[0][0];
+        expect(apiSpy).toHaveBeenCalled();
+        expect(callArgs).toHaveProperty("date");
+        expect(callArgs).toHaveProperty("foodBlacklist");
+        expect(callArgs).toHaveProperty("nutritionalConstraints");
+        expect(callArgs).toHaveProperty("maxFoodRepeat");
+
     });
 
 });

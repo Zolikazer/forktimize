@@ -1,5 +1,10 @@
 <script>
-    let uniqueFoodsOnly = false;
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+
+    let foodCanRepeat = true;
+    export let maxFoodRepeat = null;
+
+    $: maxFoodRepeat = foodCanRepeat ? null : 1;
 </script>
 
 <div class="field has-text-centered">
@@ -8,7 +13,7 @@
         <label class="checkbox is-large custom-green-checkbox">
             <input
                     type="checkbox"
-                    bind:checked={uniqueFoodsOnly}
+                    bind:checked={foodCanRepeat}
                     class="custom-checkbox"
             >
         </label>

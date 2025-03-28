@@ -1,6 +1,6 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
-    import {menuFormStore} from "$lib/stores/menuFormStore.js";
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
     const MAX_FOOD_LENGTH = 42;
 
@@ -12,7 +12,7 @@
     }
 
     function updateDislikedFoods(foodName) {
-        menuFormStore.addDislikedFood(foodName);
+        menuRequestStore.addDislikedFood(foodName);
     }
 
     function updateMenu(foodName) {

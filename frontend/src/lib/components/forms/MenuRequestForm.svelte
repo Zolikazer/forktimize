@@ -5,15 +5,14 @@
     import {MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
     import {getMenuPlan} from "$lib/api/foodPlannerClient.js";
     import {showError} from "$lib/stores/errorStore.js";
-    import {menuFormStore, selectedDateStore} from "$lib/stores/menuFormStore.js";
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
     import {get} from "svelte/store";
     import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
 
 
     async function generateMenu() {
         menuStore.setLoading();
-        const formState = get(menuFormStore);
-        selectedDateStore.set(formState.selectedDate);
+        const formState = get(menuRequestStore);
         const menuRequest = createMenuRequest(formState);
 
         try {
@@ -49,10 +48,11 @@
             nutritionalConstraints,
             date: formState.selectedDate,
             foodBlacklist: formState.dislikedFoods,
+            maxFoodRepeat: formState.maxFoodRepeat,
         };
     }
 
-    $: formData = $menuFormStore;
+    $: formData = $menuRequestStore;
 </script>
 
 <div class="box">
@@ -78,8 +78,8 @@
         <div class="column">
             <FoodBlacklist/>
         </div>
-        <div class="column">
-            <MaxFoodRepeat/>
+        <div class="column is-narrow">
+            <MaxFoodRepeat bind:maxFoodRepeat={$menuRequestStore.maxFoodRepeat} />
         </div>
     </div>
 

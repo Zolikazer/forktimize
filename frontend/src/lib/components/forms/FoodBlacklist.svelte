@@ -1,6 +1,6 @@
 <script>
     import {onMount} from "svelte";
-    import {menuFormStore} from "$lib/stores/menuFormStore.js";
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
     let newFood = "";
     let inputRef;
@@ -11,14 +11,14 @@
         const trimmedFood = newFood.trim();
 
         if (trimmedFood) {
-            menuFormStore.addDislikedFood(trimmedFood);
+            menuRequestStore.addDislikedFood(trimmedFood);
         }
 
         newFood = "";
     }
 
     function removeFoodFromBlacklist(food) {
-        menuFormStore.removeDislikedFood(food);
+        menuRequestStore.removeDislikedFood(food);
     }
 
     function addFoodIfUserClickedOutside(event) {
@@ -49,7 +49,7 @@
     </div>
 
     <div class="tags mt-2">
-        {#each $menuFormStore.dislikedFoods as food}
+        {#each $menuRequestStore.dislikedFoods as food}
             <span class="tag is-danger is-light" data-tooltip={food}>
                 {shortenText(food)}
                 <button class="delete is-small"

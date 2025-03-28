@@ -3,11 +3,11 @@ import FoodCard from '$lib/components/menu/food-plan/FoodCard.svelte';
 import {menuStore} from "$lib/stores/menuStore.js";
 import {beforeEach, describe, expect, test} from 'vitest';
 import {get} from "svelte/store";
-import {menuFormStore} from "$lib/stores/menuFormStore.js";
+import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
 beforeEach(() => {
     menuStore.reset();
-    menuFormStore.set({dislikedFoods: []})
+    menuRequestStore.set({dislikedFoods: []})
 });
 
 describe('FoodCard component', () => {
@@ -63,7 +63,7 @@ describe('FoodCard component', () => {
 
         await fireEvent.click(button);
 
-        expect(get(menuFormStore).dislikedFoods).toContain(mockFood.name);
+        expect(get(menuRequestStore).dislikedFoods).toContain(mockFood.name);
         expect(get(menuStore).foods).toHaveLength(0);
     });
 });

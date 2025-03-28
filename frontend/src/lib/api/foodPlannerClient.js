@@ -21,9 +21,9 @@ export const getDates = async () => {
     }
 };
 
-export const getMenuPlan = async (requestedMenuConstraints) => {
+export const getMenuPlan = async (menuRequestParams) => {
     try {
-        return await api.post(SETTINGS.API.ENDPOINT.MENU, {json: requestedMenuConstraints}).json();
+        return await api.post(SETTINGS.API.ENDPOINT.MENU, {json: menuRequestParams}).json();
     } catch (error) {
         console.error("❌ Failed to fetch menu:", error.message);
         throw error;

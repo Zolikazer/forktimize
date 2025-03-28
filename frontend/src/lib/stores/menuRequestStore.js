@@ -1,6 +1,6 @@
 import {writable} from 'svelte/store';
 
-function createMenuFormStore() {
+function createMenuRequestStore() {
     const {subscribe, set, update} = writable({
         macroConstraints: [
             {name: "Calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
@@ -9,7 +9,8 @@ function createMenuFormStore() {
             {name: "Fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
         ],
         selectedDate: null,
-        dislikedFoods: []
+        dislikedFoods: [],
+        maxFoodRepeat: null,
     });
 
     return {
@@ -42,6 +43,4 @@ function createMenuFormStore() {
     };
 }
 
-export const menuFormStore = createMenuFormStore();
-
-export const selectedDateStore = writable(null);
+export const menuRequestStore = createMenuRequestStore();
