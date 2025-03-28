@@ -47,6 +47,7 @@ test.describe('Menu Creator', () => {
         const menuItems = page.locator(".food-card");
         await expect(menuItems.first()).toBeVisible({ timeout: 5000 });
 
+
         const initialMenuItemCount = await menuItems.count();
 
         await menuCreatorPage.removeFoodFromMenu(page, menuItems.first());
@@ -71,5 +72,3 @@ test.describe('Menu Creator', () => {
         }).toPass({ timeout: 5000 });
     });
 });
-
-

@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
 import {menuStore} from '$lib/stores/menuStore.js';
-import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
+import MenuSummary from "$lib/components/menu/insights/summary/MenuSummary.svelte";
 
 beforeEach(() => {
     menuStore.setSuccess(

@@ -1,10 +1,10 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
-import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
+import * as FoodPlannerClient from "$lib/api/foodPlannerApi.js";
 import {menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
-import {menuRequestStore, createMenuRequestStore} from "$lib/stores/menuRequestStore.js";
+import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
 
 beforeEach(() => {

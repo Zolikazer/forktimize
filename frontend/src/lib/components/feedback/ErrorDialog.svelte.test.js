@@ -1,8 +1,7 @@
-import {fireEvent, render, screen} from "@testing-library/svelte";
+import {render, screen} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test} from "vitest";
 import {errorStore} from "$lib/stores/errorStore.js";
-import {get} from "svelte/store";
-import ErrorDialog from "$lib/components/help/ErrorDialog.svelte";
+import ErrorDialog from "$lib/components/feedback/ErrorDialog.svelte";
 
 beforeEach(() => {
     errorStore.set({show: false, message: ""});

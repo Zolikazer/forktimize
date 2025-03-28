@@ -1,5 +1,5 @@
-import {worker} from "./mocks/browser.js";
-import {CONFIG} from "./config.js";
+import {worker} from "./lib/mocks/browser.js";
+import {CONFIG} from "./lib/config/config.js";
 
 console.log(import.meta.env.VITE_RUN_MOCK_BACKEND);
 

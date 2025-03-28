@@ -1,7 +1,7 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
-    import MacroEquivalent from "$lib/components/menu/equivalent/MacroEquivalent.svelte";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
+    import MacroEquivalent from "$lib/components/menu/insights/food-log/MacroEquivalent.svelte";
 </script>
 
 <div class="card mt-4">

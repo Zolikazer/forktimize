@@ -1,11 +1,9 @@
 <script>
     import {onMount} from "svelte";
-    import {getDates} from "$lib/api/foodPlannerClient.js";
+    import {getDates} from "$lib/api/foodPlannerApi.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
     let dates = getDefaultAvailableDates();
-    menuRequestStore.setSelectedDate(dates[0])
-
     onMount(async () => {
         try {
             dates = await getDates();

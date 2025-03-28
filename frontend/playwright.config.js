@@ -8,6 +8,8 @@ export default defineConfig({
   use: {
     screenshot: "only-on-failure", // ✅ Automatically takes a screenshot on failure
     trace: "on-first-retry", // ✅ Enables tracing for failed tests
+    video: "on",
+    viewport: { width: 1280, height: 1600 }
   },
 
   testDir: 'e2e'

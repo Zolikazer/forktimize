@@ -1,7 +1,7 @@
 import {render, screen, fireEvent} from "@testing-library/svelte";
 import {expect, test, describe, vi, beforeEach} from "vitest";
+import * as FoodPlannerClient from "$lib/api/foodPlannerApi.js";
 import DateSelector from "$lib/components/forms/DateSelector.svelte";
-import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
 
 const mockDates = ["2025-03-10", "2025-03-11", "2025-03-12"];
 

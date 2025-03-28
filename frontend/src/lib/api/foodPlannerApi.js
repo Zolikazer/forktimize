@@ -1,5 +1,5 @@
-import {CONFIG} from "../../config.js";
 import ky from "ky";
+import {CONFIG} from "$lib/config/config.js";
 
 
 const api = ky.create({

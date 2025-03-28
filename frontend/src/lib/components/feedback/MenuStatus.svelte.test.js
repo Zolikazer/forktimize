@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, test} from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import {render, screen, waitFor} from '@testing-library/svelte';
 import {menuStore} from "$lib/stores/menuStore.js";
-import MenuStatus from "$lib/components/help/MenuStatus.svelte";
+import MenuStatus from "$lib/components/feedback/MenuStatus.svelte";
 
 beforeEach(() => {
     menuStore.reset()

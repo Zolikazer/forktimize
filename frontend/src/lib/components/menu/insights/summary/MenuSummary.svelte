@@ -1,8 +1,8 @@
 <script>
-    import MacroRatio from "$lib/components/menu/summary/MacroRatio.svelte";
-    import MacroStat from "$lib/components/menu/summary/MacroStat.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
+    import MacroStat from "$lib/components/menu/insights/summary/MacroStat.svelte";
+    import MacroRatio from "$lib/components/menu/insights/summary/MacroRatio.svelte";
 
 
     $: proteinKcals = $menuStore.totalProtein * 4;

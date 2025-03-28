@@ -3,7 +3,7 @@
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
-    import {getMenuPlan} from "$lib/api/foodPlannerClient.js";
+    import {getMenuPlan} from "$lib/api/foodPlannerApi.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
     import {get} from "svelte/store";

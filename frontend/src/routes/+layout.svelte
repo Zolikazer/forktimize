@@ -2,7 +2,7 @@
     import '../app.css';
     import Hero from "$lib/components/layout/Hero.svelte";
     import Footer from "$lib/components/layout/Footer.svelte";
-    import ErrorDialog from "$lib/components/help/ErrorDialog.svelte";
+    import ErrorDialog from "$lib/components/feedback/ErrorDialog.svelte";
 
     let {children} = $props();
 </script>

@@ -56,7 +56,7 @@
     .input-group {
         padding: 0.8rem;
         border-radius: 8px;
-        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
         text-align: center;
         font-size: 0.9rem;
         width: 200px;

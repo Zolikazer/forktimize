@@ -1,11 +1,11 @@
 <script>
-    import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
-    import Help from "$lib/components/help/Help.svelte";
-    import Menu from "$lib/components/menu/food-plan/Menu.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
-    import FoodLogEntry from "$lib/components/menu/food-log/FoodLogEntry.svelte";
     import {fade} from 'svelte/transition';
-    import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
+    import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
+    import Help from "$lib/components/feedback/Help.svelte";
+    import Menu from "$lib/components/menu/food-plan/Menu.svelte";
+    import MenuSummary from "$lib/components/menu/insights/summary/MenuSummary.svelte";
+    import FoodLogEntry from "$lib/components/menu/insights/food-log/FoodLogEntry.svelte";
 
     export let data = {dates: []};
 
