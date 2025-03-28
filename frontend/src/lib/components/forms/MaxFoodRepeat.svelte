@@ -1,6 +1,4 @@
 <script>
-    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
-
     let foodCanRepeat = true;
     export let maxFoodRepeat = null;
 

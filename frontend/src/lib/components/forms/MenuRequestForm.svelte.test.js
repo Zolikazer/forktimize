@@ -4,11 +4,12 @@ import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerClient.js";
 import {menuStore} from "$lib/stores/menuStore.js";
 import {get} from "svelte/store";
-import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+import {menuRequestStore, createMenuRequestStore} from "$lib/stores/menuRequestStore.js";
 
 
 beforeEach(() => {
-    menuStore.reset()
+    menuStore.reset();
+    menuRequestStore.reset();
 });
 
 
@@ -104,7 +105,21 @@ describe("MenuRequestForm Component", () => {
         expect(callArgs).toHaveProperty("foodBlacklist");
         expect(callArgs).toHaveProperty("nutritionalConstraints");
         expect(callArgs).toHaveProperty("maxFoodRepeat");
+    });
 
+    test('disables the generate button when at least one macro constraint is invalid', async () => {
+        menuRequestStore.set({
+            macroConstraints: [
+                {name: 'Protein', min: 200, max: 100, unit: 'g', emoji: '🍗'},
+                {name: 'Carbs', min: 100, max: 300, unit: 'g', emoji: '🍞'},
+            ]
+        })
+
+        render(MenuRequestForm);
+
+        const button = screen.getByRole('button', {name: /generate my menu/i});
+
+        expect(button).toBeDisabled();
     });
 
 });

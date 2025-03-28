@@ -4,14 +4,10 @@
     export let maxValue;
     export let unit = "";
     export let emoji = "";
-    export let isValid = true;
+    let isValid = true;
 
     function resetInvalidInput(value) {
         return isPositiveInteger(value) ? value : undefined;
-    }
-
-    function validateMinLowerThanMax() {
-        isValid = minValue === undefined || maxValue === undefined || maxValue > minValue;
     }
 
     $: isValid = minValue === undefined || maxValue === undefined || maxValue > minValue;
@@ -32,10 +28,8 @@
                  class:has-tooltip={!isValid}>
                 <input type="number"
                        bind:value={minValue}
-                       on:blur={() => {
-                       minValue = resetInvalidInput(minValue);
-                       validateMinLowerThanMax()
-                   }} class="input is-small has-text-centered is-rounded"
+                       on:blur={() => { minValue = resetInvalidInput(minValue)}}
+                       class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"
                        class:is-danger={!isValid}
                 >
@@ -47,10 +41,7 @@
                  class:has-tooltip={!isValid}>
                 <input type="number"
                        bind:value={maxValue}
-                       on:blur={() => {
-                       maxValue = resetInvalidInput(maxValue);
-                       validateMinLowerThanMax()
-                   }}
+                       on:blur={() => {maxValue = resetInvalidInput(maxValue) }}
                        class="input is-small has-text-centered is-rounded"
                        placeholder="Optional"
                        class:is-danger={!isValid}>

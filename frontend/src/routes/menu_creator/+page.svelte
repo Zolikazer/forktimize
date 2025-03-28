@@ -23,7 +23,7 @@
         </div>
 
         {#if $menuStore.foods && $menuStore.foods.length > 0}
-            <div class="columns is-centered" transition:fade={{ duration: 1000 }}>
+            <div class="columns is-centered" transition:fade={{ duration: 150 }}>
                 <div class="column">
                     <Menu/>
                 </div>

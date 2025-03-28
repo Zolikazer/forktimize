@@ -53,13 +53,18 @@
     }
 
     $: formData = $menuRequestStore;
+    $: allConstraintsValid = $menuRequestStore.macroConstraints.every(
+        ({ min, max }) => min == null || max == null || min < max
+    );
+
+
 </script>
 
 <div class="box">
     <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
 
     <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        {#each formData.macroConstraints as constraint (constraint.name)}
+        {#each formData.macroConstraints as constraint, index (constraint.name)}
             <MacroConstraint
                     bind:minValue={constraint.min}
                     bind:maxValue={constraint.max}
@@ -87,7 +92,7 @@
     <div class="has-text-centered">
         <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                 on:click={generateMenu}
-                disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS}>Generate My Menu 🍽️
+                disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS || !allConstraintsValid}>Generate My Menu 🍽️
         </button>
     </div>
 </div>
