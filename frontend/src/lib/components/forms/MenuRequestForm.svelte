@@ -7,6 +7,7 @@
     import {showError} from "$lib/stores/errorStore.js";
     import {menuFormStore, selectedDateStore} from "$lib/stores/menuFormStore.js";
     import {get} from "svelte/store";
+    import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
 
 
     async function generateMenu() {
@@ -74,9 +75,11 @@
         <div class="column">
             <DateSelector/>
         </div>
-
         <div class="column">
             <FoodBlacklist/>
+        </div>
+        <div class="column">
+            <MaxFoodRepeat/>
         </div>
     </div>
 
