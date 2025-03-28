@@ -4,6 +4,7 @@
     import Menu from "$lib/components/menu/food-plan/Menu.svelte";
     import {menuStore} from "$lib/stores/menuStore.js";
     import FoodLogEntry from "$lib/components/menu/food-log/FoodLogEntry.svelte";
+    import {fade} from 'svelte/transition';
     import MenuSummary from "$lib/components/menu/summary/MenuSummary.svelte";
 
     export let data = {dates: []};
@@ -22,7 +23,7 @@
         </div>
 
         {#if $menuStore.foods && $menuStore.foods.length > 0}
-            <div class="columns is-centered">
+            <div class="columns is-centered" transition:fade={{ duration: 1000 }}>
                 <div class="column">
                     <Menu/>
                 </div>

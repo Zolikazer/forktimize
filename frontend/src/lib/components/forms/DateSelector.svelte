@@ -10,6 +10,7 @@
         try {
             dates = await getDates();
             menuRequestStore.setSelectedDate(dates[0])
+
         } catch (err) {
         }
     });
@@ -17,7 +18,6 @@
     function getDefaultAvailableDates() {
         const generatedDates = [];
         let date = new Date();
-        date.setDate(date.getDate() + 1);
 
         while (generatedDates.length < 10) {
             date.setDate(date.getDate() + 1);
@@ -25,6 +25,7 @@
                 generatedDates.push(date.toISOString().split("T")[0]);
             }
         }
+
         return generatedDates;
     }
 

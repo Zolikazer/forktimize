@@ -1,5 +1,5 @@
 <script>
-    const footerText = "© 2025 Menu Maker Pro App created by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
+    const footerText = "© 2025 Forktimize App created by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
 </script>
 
 <footer class="footer footer-custom mt-5">
@@ -11,7 +11,6 @@
 <style>
     .footer-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e);
-        /*url("https://www.transparenttextures.com/patterns/food.png");*/
         background-blend-mode: overlay;
         padding: 1rem 1rem;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
