@@ -7,12 +7,10 @@ def test_valid_constraints():
         min_calories=1200,
         max_calories=2000,
         min_protein=50,
-        max_occurrences_per_food=10
     )
     assert constraints.min_calories == 1200
     assert constraints.max_calories == 2000
     assert constraints.min_protein == 50
-    assert constraints.max_occurrences_per_food == 10
 
 
 def test_invalid_constraints():
@@ -21,7 +19,6 @@ def test_invalid_constraints():
             min_calories=-100,
             max_calories=2000,
             min_protein=50,
-            max_items=10
         )
 
 

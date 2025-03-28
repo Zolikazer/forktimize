@@ -10,7 +10,8 @@ from monitoring.performance import benchmark
 
 
 @benchmark
-def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints) -> dict[int, int]:
+def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints,
+                   max_food_repeat: int = None) -> dict[int, int]:
     problem = LpProblem("Menu_Creation_ILP", LpMinimize)
 
     x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
@@ -18,7 +19,7 @@ def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstrai
 
     _add_nutrient_constraints(foods, nutrition_constraints, problem, x_vars)
 
-    _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars)
+    _add_max_food_repeat_constraint(foods, max_food_repeat, problem, x_vars)
 
     start_time = time.time()
     solver = PULP_CBC_CMD(msg=False)
@@ -33,6 +34,7 @@ def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstrai
         }
 
     APP_LOGGER.info("Could not create menu. Status: %s", status)
+
     return {}
 
 
@@ -55,8 +57,9 @@ def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: Nutritio
             problem += total_nutrient <= max_val, f"Max{label}"
 
 
-def _add_max_occurrence_per_food_constraint(foods, nutrition_constraints, problem, x_vars):
-    if nutrition_constraints.max_occurrences_per_food is not None:
+def _add_max_food_repeat_constraint(foods: list[Food], max_food_repeat: int, problem, x_vars):
+    if max_food_repeat is not None:
         for f in foods:
-            problem += (x_vars[f] <= nutrition_constraints.max_occurrences_per_food), f"MaxOccurEach_{f.food_id}"
+            problem += (x_vars[f.food_id] <= max_food_repeat), f"MaxRepeatEach_{f.food_id}"
+
     return problem

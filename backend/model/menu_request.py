@@ -1,4 +1,6 @@
-from pydantic import BaseModel, ConfigDict
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, PositiveInt
 from pydantic.alias_generators import to_camel
 from datetime import date as date_type
 
@@ -11,3 +13,4 @@ class MenuRequest(BaseModel):
     date: date_type
     nutritional_constraints: NutritionalConstraints
     food_blacklist: list[str] = []
+    max_food_repeat: Optional[PositiveInt] = None

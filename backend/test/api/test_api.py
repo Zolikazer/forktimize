@@ -83,6 +83,33 @@ def test_create_menu_endpoint(client, session: Session):
     assert data["totalFat"] == 40
 
 
+def test_create_menu_max_food_repeat(client, session: Session):
+    insert_test_food(session)
+
+    requested_date = "2025-02-24"
+    menu_request = {
+        "date": requested_date,
+        "nutritional_constraints": {
+            "min_calories": 1500,
+            "max_calories": 2700,
+            "min_protein": 200
+        },
+        "food_blacklist": ["Lencsefőzelék"],
+        "max_food_repeat": 1,
+    }
+
+    response = client.post("/menu", json=menu_request)
+
+    assert response.status_code == 200
+    data = response.json()
+
+    food_names = [f["name"] for f in data["foods"]]
+    name_counts = {name: food_names.count(name) for name in food_names}
+
+    for name, count in name_counts.items():
+        assert count == 1, f"Food '{name}' appears {count} times"
+
+
 @freeze_time("2025-02-23")
 def test_get_available_dates(client, session):
     insert_test_food(session)

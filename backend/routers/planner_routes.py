@@ -33,7 +33,8 @@ def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(g
     if not food_selection:
         return Menu(foods=[])
 
-    food_counts = solve_menu_ilp(food_selection, menu_request.nutritional_constraints)
+    food_counts = solve_menu_ilp(food_selection, menu_request.nutritional_constraints,
+                                 menu_request.max_food_repeat)
 
     return Menu.from_food_counts(food_selection, food_counts, menu_request.date)
 

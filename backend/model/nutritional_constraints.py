@@ -20,7 +20,6 @@ class NutritionalConstraints(BaseModel):
     max_carb: Optional[PositiveInt] = None
     min_fat: Optional[NonNegativeInt] = None
     max_fat: Optional[PositiveInt] = None
-    max_occurrences_per_food: Optional[PositiveInt] = None
 
     @model_validator(mode='after')
     def _validate_min_lower_than_max(self) -> Self:
