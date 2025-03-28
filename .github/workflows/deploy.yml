@@ -45,6 +45,14 @@ jobs:
           run: |
             npx playwright install --with-deps
             VITE_API_URL=http://localhost:8000/api npm run test:e2e
+        - name: Upload Playwright test results (only on failure)
+          working-directory: frontend
+          if: failure()
+          uses: actions/upload-artifact@v3
+          with:
+            name: playwright-artifacts
+            path: test-results/
+
 
   deploy-backend:
     runs-on: ubuntu-latest
