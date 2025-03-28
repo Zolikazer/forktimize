@@ -13,9 +13,6 @@ from model.food_log_entry import FoodLogEntry
 class Menu(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
 
-    CHICKEN_PROTEIN_RATIO: ClassVar[float] = 25.0
-    CHICKEN_FAT_RATIO: ClassVar[float] = 3.0
-
     foods: list[Food] = Field(default_factory=list)
     date: date_type = None
 
@@ -64,15 +61,15 @@ class Menu(BaseModel):
     def add_food(self, food: Food):
         self.foods.append(food)
 
-    @staticmethod
-    def from_food_counts(foods: list[Food], food_counts: dict[int, int], menu_date: date_type) -> Menu:
+    def add_foods(self, foods: list[Food]):
+        self.foods.extend(foods)
+
+    @classmethod
+    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: date_type) -> Menu:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
             for food_id, count in food_counts.items()
             for _ in range(count)
         ]
-        return Menu(foods=selected, date=menu_date)
-
-    def add_foods(self, foods: list[Food]):
-        self.foods.extend(foods)
+        return cls(foods=selected, date=menu_date)
