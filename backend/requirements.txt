@@ -52,3 +52,4 @@ websockets==15.0.1
 APScheduler~=3.11.0
 cachetools~=5.5.2
 pydantic-settings~=2.8.1
+alembic~=1.15.2
