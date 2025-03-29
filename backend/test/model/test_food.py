@@ -49,4 +49,3 @@ def test_kcal_per_protein():
     food_no_protein = Food(food_id=2, name="Zero Protein Food", calories=150, protein=0, carb=10, fat=5, price=300,
                            date=datetime.datetime.now())
     assert food_no_protein.kcal_per_protein == 0
-    # sanity-check

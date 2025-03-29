@@ -11,6 +11,7 @@ from database.db import get_session
 from main import app
 from model.food import Food, FoodProvider
 from routers.meal_planner import AppStatus
+from test.food_factory import make_food
 
 
 @pytest.fixture(name="session")
@@ -30,27 +31,21 @@ def client(session):
 
 
 def insert_test_food(session):
-    food_items = [
-        Food(food_id=1, name="Grilled Chicken", calories=500, protein=50, carb=20, fat=10, price=1000,
-             date=date(2025, 2, 24), food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=2, name="Salmon", calories=600, protein=55, carb=10, fat=25, price=1200, date=date(2025, 2, 24),
-             food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=3, name="Lencsefőzelék vagdalttal", calories=400, protein=20, carb=50, fat=10, price=800,
-             date=date(2025, 2, 24), food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=4, name="Steak", calories=800, protein=70, carb=5, fat=40, price=2000, date=date(2025, 2, 24),
-             food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=5, name="Pasta", calories=500, protein=15, carb=80, fat=5, price=800, date=date(2025, 2, 24),
-             food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=6, name="Cake", calories=500, protein=15, carb=80, fat=5, price=800, date=date(2025, 2, 25),
-             food_provider=FoodProvider.CITY_FOOD),
-        Food(food_id=6, name="Fish", calories=500, protein=15, carb=80, fat=5, price=800, date=date(2025, 2, 23),
-             food_provider=FoodProvider.CITY_FOOD),
 
-    ]
+    food_items = [make_food(calories=500, protein=50, carb=20, fat=10, price=1000),
+                  make_food(calories=600, protein=55, carb=10, fat=25, price=1200),
+                  make_food(name="Lencsefőzelék vagdalttal", calories=400, protein=20, carb=50, fat=10, price=800),
+                  make_food(calories=800, protein=70, carb=5, fat=40, price=2000),
+                  make_food(calories=500, protein=15, carb=80, fat=5, price=800),
+                  make_food(calories=500, protein=15, carb=80, fat=5, price=800, date=date(2025, 2, 25)),
+                  make_food(calories=500, protein=15, carb=80, fat=5, price=800, date=date(2025, 2, 23))
+                  ]
+
     session.add_all(food_items)
     session.commit()
 
 
+# @freeze_time("2025-02-24")
 def test_create_menu_endpoint(client, session: Session):
     insert_test_food(session)
 
