@@ -48,7 +48,7 @@ jobs:
 
         - name: Upload Playwright test results (only on failure)
           if: failure()
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             name: playwright-artifacts
             path: frontend/test-results/
