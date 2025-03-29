@@ -39,7 +39,7 @@ def apply_migrations():
     APP_LOGGER.info("Alembic migrations completed successfully.")
 
 
-def run_migrations_with_backup(db_path):
+def run_migrations_with_backup(db_path: str):
     db_file = Path(db_path)
 
     if not db_file.exists():
