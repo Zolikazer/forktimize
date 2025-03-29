@@ -3,9 +3,7 @@ from enum import Enum
 
 from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
-from sqlalchemy import Column
 from sqlmodel import SQLModel, Field
-from sqlalchemy import Enum as SAEnum  # <-- Crucial!
 
 
 class FoodProvider(str, Enum):
