@@ -1,29 +1,43 @@
 import os
 from pathlib import Path
 
-from pydantic.v1 import BaseSettings
+from pydantic import computed_field
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    ROOT_DIR: str = str(Path(__file__).parent.resolve())
-    DATA_DIR: str = f"{ROOT_DIR}/resources"
+    ROOT_DIR: Path = Path(__file__).parent.resolve()
+
     CITY_FOOD_API_URL: str = "https://ca.cityfood.hu"
     CITY_FOOD_API_FOOD_PATH: str = "api/v1/menu"
+
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
-    DATABASE_CONNECTION_STRING: str = f"sqlite:///{DATABASE_PATH}"
-    LOG_DIR: str = f"/var/log/forktimize"
+    LOG_DIR: str = "/var/log/forktimize"
+
     API_LOG_FILE: str = "api.log"
     JOB_LOG_FILE: str = "job.log"
     APP_LOG_FILE: str = "app.log"
     PERF_LOG_FILE: str = "perf.log"
 
+    @computed_field
+    @property
+    def DATABASE_CONNECTION_STRING(self) -> str:
+        return f"sqlite:///{self.DATABASE_PATH}"
+
+    @computed_field
+    @property
+    def DATA_DIR(self) -> str:
+        return f"{self.ROOT_DIR}/resources"
+
+    model_config = {
+        "env_file": f"{ROOT_DIR}/.env",
+        "env_file_encoding": "utf-8",
+    }
+
 
 class DevSettings(Settings):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.DATABASE_PATH: str = f"{self.ROOT_DIR}/foods.db"
-        self.DATABASE_CONNECTION_STRING: str = f"sqlite:///{self.DATABASE_PATH}"
-        self.LOG_DIR: str = f"{self.ROOT_DIR}/logs/"
+    DATABASE_PATH: str = f"{Settings().ROOT_DIR}/forktimize.db"
+    LOG_DIR: str = f"{Settings().ROOT_DIR}/logs"
 
 
 def get_settings() -> Settings:

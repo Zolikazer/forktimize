@@ -2,7 +2,7 @@ from datetime import date
 import pytest
 from sqlmodel import SQLModel, create_engine, Session
 from model.food import Food
-from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
+from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date, is_database_empty
 
 test_engine = create_engine("sqlite:///:memory:", echo=True)
 
@@ -22,7 +22,6 @@ def test_session(test_db):
 
 
 def test_get_unique_dates_after(test_session):
-    """Test that unique dates are correctly retrieved."""
     test_session.add_all([
         Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5),
         Food(food_id=2, date=date(2025, 3, 19), name="Beef", calories=300, protein=40, carb=3, fat=15, price=7),
@@ -60,3 +59,16 @@ def test_get_foods_for_given_date(test_session):
     foods = get_foods_for_given_date(test_session, date(2025, 3, 18), ["Beef", "Pizza"])
     assert len(foods) == 1
     assert {food.name for food in foods} == {"Chicken Salad"}
+
+
+def test_is_database_empty_when_no_food(test_session):
+    assert is_database_empty(test_session) is True
+
+
+def test_is_database_empty_when_food_exists(test_session):
+    test_session.add_all([
+        Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5),
+    ])
+
+    assert is_database_empty(test_session) is False
+

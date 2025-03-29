@@ -33,4 +33,4 @@ def get_foods_for_given_date(
 
 
 def is_database_empty(session: Session) -> bool:
-    return not session.query(Food).exists()
+    return session.query(Food).first() is None

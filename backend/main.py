@@ -41,7 +41,7 @@ def on_startup():
 
             scheduler.start()
         except Exception as e:
-            APP_LOGGER.info(f"Something fucked when starting upp the app {e}")
+            APP_LOGGER.error(f"Something fucked when starting upp the app {e}")
 
 
 @app.on_event("shutdown")

@@ -15,12 +15,13 @@
 
     function getDefaultAvailableDates() {
         const generatedDates = [];
-        let date = new Date();
+        let currentDate = new Date();
 
         while (generatedDates.length < 10) {
-            date.setDate(date.getDate() + 1);
-            if (date.getDay() !== 0) {
-                generatedDates.push(date.toISOString().split("T")[0]);
+            currentDate.setDate(currentDate.getDate() + 1);
+
+            if (currentDate.getDay() !== 0) {
+                generatedDates.push(currentDate.toISOString().split("T")[0]);
             }
         }
 
