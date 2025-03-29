@@ -6,10 +6,10 @@ export default defineConfig({
     port: 4173
   },
   use: {
-    screenshot: "only-on-failure", // ✅ Automatically takes a screenshot on failure
-    trace: "on-first-retry", // ✅ Enables tracing for failed tests
+    screenshot: "only-on-failure",
+    trace: "retain-on-failure", 
     video: "on",
-    viewport: { width: 1280, height: 1600 }
+    viewport: { width: 1280, height: 1600 },
   },
 
   testDir: 'e2e'

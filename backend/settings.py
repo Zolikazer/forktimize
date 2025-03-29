@@ -11,13 +11,14 @@ class Settings(BaseSettings):
     CITY_FOOD_API_URL: str = "https://ca.cityfood.hu"
     CITY_FOOD_API_FOOD_PATH: str = "api/v1/menu"
 
-    DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
     LOG_DIR: str = "/var/log/forktimize"
-
+    ENABLE_LOG_FLUSH: bool = False
     API_LOG_FILE: str = "api.log"
     JOB_LOG_FILE: str = "job.log"
     APP_LOG_FILE: str = "app.log"
     PERF_LOG_FILE: str = "perf.log"
+
+    DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
 
     @computed_field
     @property
