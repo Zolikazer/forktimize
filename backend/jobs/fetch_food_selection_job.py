@@ -1,5 +1,4 @@
 from datetime import datetime
-from pathlib import Path
 
 import requests
 from sqlmodel import Session
@@ -11,7 +10,6 @@ from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
 DATA_ENDPOINT = f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}"
-RESOURCES_DIR = Path(__file__).parent.parent.resolve() / SETTINGS.DATA_DIR
 CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
@@ -31,8 +29,7 @@ def fetch_and_store_cityfood_data(session: Session, weeks_to_fetch: int = 3):
 
 
 def _save_food_to_json(data, week):
-    RESOURCES_DIR.mkdir(parents=True, exist_ok=True)
-    filename = RESOURCES_DIR / f"city-response-week-{week}.json"
+    filename = SETTINGS.DATA_DIR / f"city-response-week-{week}.json"
     save_to_json(data, filename)
 
     JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
@@ -75,6 +72,8 @@ def _get_request_body(year: int, week: int) -> dict:
 
 
 if __name__ == "__main__":
+    SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
+
     init_db()
     with Session(engine) as session:
         fetch_and_store_cityfood_data(session)

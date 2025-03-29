@@ -9,6 +9,7 @@ from database.db import init_db, engine
 from jobs.job_scheduler import scheduler, run_fetch_job
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
+from settings import SETTINGS
 
 app = FastAPI(root_path="/api")
 app.add_middleware(LoggingMiddleware)
@@ -42,6 +43,8 @@ def on_startup():
             scheduler.start()
         except Exception as e:
             APP_LOGGER.error(f"Something fucked when starting upp the app {e}")
+
+        SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @app.on_event("shutdown")

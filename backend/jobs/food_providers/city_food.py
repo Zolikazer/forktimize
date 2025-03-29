@@ -15,8 +15,11 @@ class CityFoodProvider(FoodProviderStrategy):
     def fetch_foods_for(self, year: int, week: int) -> List[Food]:
         raw_data = self._fetch_food_selection_for(year, week)
         self._save_foods_to_json(raw_data, year, week)
+        foods = self._deserialize_food_items(raw_data)
 
-        return self._deserialize_food_items(raw_data)
+        JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from CityFood for week {week}, year {year}.")
+
+        return foods
 
     def get_name(self) -> FoodProvider:
         return FoodProvider.CITY_FOOD
@@ -38,11 +41,8 @@ class CityFoodProvider(FoodProviderStrategy):
                 "ignore_ingredients": []}
 
     def _save_foods_to_json(self, data: dict, year: int, week: int):
-        resources_dir = Path(__file__).parent.parent.resolve() / SETTINGS.DATA_DIR
-        resources_dir.mkdir(parents=True, exist_ok=True)
-
-        filename = resources_dir / f"city-response-week-{year}-{week}.json"
-        save_to_json(data, filename)
+        filename = SETTINGS.DATA_DIR / f"city-response-week-{year}-{week}.json"
+        save_to_json(data, SETTINGS.DATA_DIR / f"city-response-week-{year}-{week}.json")
 
         JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 

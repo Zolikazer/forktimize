@@ -27,8 +27,8 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def DATA_DIR(self) -> str:
-        return f"{self.ROOT_DIR}/resources"
+    def DATA_DIR(self) -> Path:
+        return self.ROOT_DIR / "resources"
 
     model_config = {
         "env_file": f"{ROOT_DIR}/.env",
