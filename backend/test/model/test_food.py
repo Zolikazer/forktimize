@@ -1,6 +1,6 @@
 import datetime
 
-from model.food import Food
+from model.food import Food, FoodProvider
 
 
 def test_food_creation():
@@ -42,7 +42,6 @@ def test_price_per_protein():
 
 
 def test_kcal_per_protein():
-    """Test kcal per protein calculation."""
     food = Food(food_id=1, name="Test", calories=200, protein=40, carb=5, fat=3, price=500,
                 date=datetime.datetime.now())
     assert food.kcal_per_protein == round(200 / 40, 2)
@@ -50,3 +49,4 @@ def test_kcal_per_protein():
     food_no_protein = Food(food_id=2, name="Zero Protein Food", calories=150, protein=0, carb=10, fat=5, price=300,
                            date=datetime.datetime.now())
     assert food_no_protein.kcal_per_protein == 0
+    # sanity-check

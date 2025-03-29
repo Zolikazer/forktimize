@@ -3,7 +3,7 @@ import pytest
 from sqlmodel import SQLModel, create_engine, Session
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty
-from model.food import Food
+from model.food import Food, FoodProvider
 
 test_engine = create_engine("sqlite:///:memory:", echo=True)
 
@@ -24,10 +24,14 @@ def test_session(test_db):
 
 def test_get_unique_dates_after(test_session):
     test_session.add_all([
-        Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5),
-        Food(food_id=2, date=date(2025, 3, 19), name="Beef", calories=300, protein=40, carb=3, fat=15, price=7),
-        Food(food_id=3, date=date(2025, 3, 19), name="Beef", calories=300, protein=40, carb=3, fat=15, price=7),
-        Food(food_id=4, date=date(2025, 3, 20), name="Fish", calories=250, protein=35, carb=2, fat=12, price=6),
+        Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5,
+             food_provider=FoodProvider.CITY_FOOD),
+        Food(food_id=2, date=date(2025, 3, 19), name="Beef", calories=300, protein=40, carb=3, fat=15, price=7,
+             food_provider=FoodProvider.CITY_FOOD),
+        Food(food_id=3, date=date(2025, 3, 19), name="Beef", calories=300, protein=40, carb=3, fat=15, price=7,
+             food_provider=FoodProvider.CITY_FOOD),
+        Food(food_id=4, date=date(2025, 3, 20), name="Fish", calories=250, protein=35, carb=2, fat=12, price=6,
+             food_provider=FoodProvider.CITY_FOOD),
     ])
     test_session.commit()
 
@@ -38,11 +42,13 @@ def test_get_unique_dates_after(test_session):
 def test_get_foods_for_given_date(test_session):
     test_session.add_all([
         Food(food_id=1, date=date(2025, 3, 18), name="Chicken Salad", calories=200, protein=30, carb=5, fat=10,
-             price=5),
-        Food(food_id=2, date=date(2025, 3, 18), name="Beef Steak", calories=300, protein=40, carb=3, fat=15, price=7),
+             price=5, food_provider=FoodProvider.CITY_FOOD),
+        Food(food_id=2, date=date(2025, 3, 18), name="Beef Steak", calories=300, protein=40, carb=3, fat=15, price=7,
+             food_provider=FoodProvider.CITY_FOOD),
         Food(food_id=3, date=date(2025, 3, 18), name="Vegetable Pizza", calories=400, protein=15, carb=50, fat=20,
-             price=8),
-        Food(food_id=4, date=date(2025, 3, 19), name="Salmon", calories=350, protein=45, carb=0, fat=18, price=10),
+             price=8, food_provider=FoodProvider.CITY_FOOD),
+        Food(food_id=4, date=date(2025, 3, 19), name="Salmon", calories=350, protein=45, carb=0, fat=18, price=10,
+             food_provider=FoodProvider.CITY_FOOD),
     ])
     test_session.commit()
 
@@ -68,8 +74,8 @@ def test_is_database_empty_when_no_food(test_session):
 
 def test_is_database_empty_when_food_exists(test_session):
     test_session.add_all([
-        Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5),
+        Food(food_id=1, date=date(2025, 3, 18), name="Chicken", calories=200, protein=30, carb=5, fat=10, price=5,
+             food_provider=FoodProvider.CITY_FOOD),
     ])
 
     assert is_database_empty(test_session) is False
-

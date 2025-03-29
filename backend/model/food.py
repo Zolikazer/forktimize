@@ -1,8 +1,16 @@
 from datetime import date as datetime_date
+from enum import Enum
 
 from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
+from sqlalchemy import Column
 from sqlmodel import SQLModel, Field
+from sqlalchemy import Enum as SAEnum  # <-- Crucial!
+
+
+class FoodProvider(str, Enum):
+    CITY_FOOD = "cityfood"
+    INTER_FOOD = "interfood"
 
 
 class Food(SQLModel, table=True):
@@ -10,6 +18,11 @@ class Food(SQLModel, table=True):
 
     food_id: StrictInt = Field(primary_key=True)
     date: datetime_date = Field(primary_key=True, index=True)
+    food_provider: FoodProvider = Field(
+            primary_key=True,
+            nullable=False,
+            index=True
+    )
     name: str = Field(index=True)
     calories: NonNegativeInt
     protein: NonNegativeInt

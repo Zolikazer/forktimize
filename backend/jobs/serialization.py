@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from model.food import Food
+from model.food import Food, FoodProvider
 
 
 def open_json(json_file: str) -> dict:
@@ -31,7 +31,8 @@ def deserialize_food_items(data: dict) -> list[Food]:
             carb=int(item['carb_portion_food_one']),
             fat=int(item['fat_portion_food_one']),
             price=item['price'],
-            date=datetime.strptime(item['date'], "%Y-%m-%d").date()
+            date=datetime.strptime(item['date'], "%Y-%m-%d").date(),
+            food_provider=FoodProvider.CITY_FOOD
         )
         for food_type in data['data'].values()
         for category in food_type['categories']
