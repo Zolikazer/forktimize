@@ -6,8 +6,8 @@ from requests import Response
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from data.serialization import open_json
 from jobs.fetch_food_selection_job import fetch_and_store_cityfood_data
+from jobs.serialization import open_json
 from model.food import Food
 from model.job_run import JobRun, JobStatus
 

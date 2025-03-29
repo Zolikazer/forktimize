@@ -4,8 +4,8 @@ from pathlib import Path
 import requests
 from sqlmodel import Session
 
-from data.serialization import save_to_json, serialize_food_items
 from database.db import init_db, engine
+from jobs.serialization import save_to_json, deserialize_food_items
 from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
@@ -39,7 +39,7 @@ def _save_food_to_json(data, week):
 
 
 def _save_food_to_db(session: Session, data: dict, week: int):
-    foods = serialize_food_items(data)
+    foods = deserialize_food_items(data)
 
     for food in foods:
         session.merge(food)

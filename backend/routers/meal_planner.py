@@ -3,12 +3,12 @@ from datetime import date
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
+from database.data_access import get_unique_dates_after, get_foods_for_given_date
 from database.db import get_session
 from model.menu import Menu
 from model.menu_request import MenuRequest
 from monitoring.logging import APP_LOGGER
 from optimizers.menu_optimizer import solve_menu_ilp
-from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date
 
 
 class AppStatus:
@@ -16,17 +16,17 @@ class AppStatus:
     UNHEALTHY = "UNHEALTHY"
 
 
-planner = APIRouter()
+meal_planner = APIRouter()
 
 
-@planner.get("/dates")
+@meal_planner.get("/dates")
 def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     today = date.today()
 
     return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
 
 
-@planner.post("/menu")
+@meal_planner.post("/menu")
 def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(get_session)) -> Menu:
     food_selection = get_foods_for_given_date(session, menu_request.date, menu_request.food_blacklist)
 
@@ -39,7 +39,7 @@ def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(g
     return Menu.from_food_counts(food_selection, food_counts, menu_request.date)
 
 
-@planner.get("/health", tags=["Monitoring"])
+@meal_planner.get("/health", tags=["Monitoring"])
 def health_check(session: Session = Depends(get_session)) -> dict:
     try:
         session.exec(select(1)).first()

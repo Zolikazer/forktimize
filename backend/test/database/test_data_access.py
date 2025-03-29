@@ -1,8 +1,9 @@
 from datetime import date
 import pytest
 from sqlmodel import SQLModel, create_engine, Session
+
+from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty
 from model.food import Food
-from repository.forktimize_repository import get_unique_dates_after, get_foods_for_given_date, is_database_empty
 
 test_engine = create_engine("sqlite:///:memory:", echo=True)
 

@@ -4,15 +4,15 @@ from fastapi import FastAPI
 from sqlmodel import Session
 from starlette.middleware.cors import CORSMiddleware
 
+from database.data_access import is_database_empty
 from database.db import init_db, engine
 from jobs.job_scheduler import scheduler, run_fetch_job
-from repository.forktimize_repository import is_database_empty
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
-from routers.planner_routes import planner
+from routers.meal_planner import meal_planner
 
 app = FastAPI(root_path="/api")
 app.add_middleware(LoggingMiddleware)
-app.include_router(planner)
+app.include_router(meal_planner)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

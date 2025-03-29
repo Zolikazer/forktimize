@@ -1,7 +1,8 @@
 import pytest
 from datetime import date
 from pathlib import Path
-from data.serialization import load_food_from_json
+
+from jobs.serialization import load_food_from_json
 
 
 @pytest.fixture

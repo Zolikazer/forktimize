@@ -10,7 +10,7 @@ from starlette.testclient import TestClient
 from database.db import get_session
 from main import app
 from model.food import Food
-from routers.planner_routes import AppStatus
+from routers.meal_planner import AppStatus
 
 
 @pytest.fixture(name="session")

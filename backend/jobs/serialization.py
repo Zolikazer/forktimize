@@ -18,10 +18,10 @@ def save_to_json(data: dict, path: str):
 def load_food_from_json(json_file: str) -> list[Food]:
     data = open_json(json_file)
 
-    return serialize_food_items(data)
+    return deserialize_food_items(data)
 
 
-def serialize_food_items(data: dict) -> list[Food]:
+def deserialize_food_items(data: dict) -> list[Food]:
     return [
         Food(
             food_id=item['id'],
