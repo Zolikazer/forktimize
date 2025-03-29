@@ -4,6 +4,8 @@
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
     let dates = getDefaultAvailableDates();
+    menuRequestStore.setSelectedDate(dates[0])
+
     onMount(async () => {
         try {
             dates = await getDates();

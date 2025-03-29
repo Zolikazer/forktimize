@@ -7,7 +7,7 @@ export default defineConfig({
   },
   use: {
     screenshot: "only-on-failure",
-    trace: "retain-on-failure", 
+    trace: "retain-on-failure",
     video: "on",
     viewport: { width: 1280, height: 1600 },
   },
