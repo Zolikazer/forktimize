@@ -8,6 +8,8 @@
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
     import {get} from "svelte/store";
     import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
+    import SectionHeader from "$lib/components/common/SectionHeader.svelte";
+    import FoodProviderSelector from "$lib/components/forms/FoodProviderSelector.svelte";
 
 
     async function generateMenu() {
@@ -54,49 +56,54 @@
 
     $: formData = $menuRequestStore;
     $: allConstraintsValid = $menuRequestStore.macroConstraints.every(
-        ({ min, max }) => min == null || max == null || min < max
+        ({min, max}) => min == null || max == null || min < max
     );
 
 
 </script>
 
-<div class="box">
-    <h2 class="title is-4 has-text-centered has-text-weight-bold pb-3 mb-4">Set Your Nutritional Goals</h2>
-
-    <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2">
-        {#each formData.macroConstraints as constraint, index (constraint.name)}
-            <MacroConstraint
-                    bind:minValue={constraint.min}
-                    bind:maxValue={constraint.max}
-                    bind:isValid={constraint.isValid}
-                    label={constraint.name}
-                    unit={constraint.unit}
-                    emoji={constraint.emoji}
-            />
-        {/each}
-    </div>
-
-    <div class="columns is-centered mt-3">
-        <div class="column">
-            <DateSelector/>
+<div class="card">
+    <SectionHeader title="Set Your Nutritional Goals" subTitle="Give us the requirements, we give you the plan!">
+        <div class="tags" slot="tags">
+            <FoodProviderSelector/>
         </div>
-        <div class="column">
-            <FoodBlacklist/>
+    </SectionHeader>
+    <div class="card-content">
+        <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2 mt-3">
+            {#each formData.macroConstraints as constraint, index (constraint.name)}
+                <MacroConstraint
+                        bind:minValue={constraint.min}
+                        bind:maxValue={constraint.max}
+                        bind:isValid={constraint.isValid}
+                        label={constraint.name}
+                        unit={constraint.unit}
+                        emoji={constraint.emoji}
+                />
+            {/each}
         </div>
-        <div class="column is-narrow">
-            <MaxFoodRepeat bind:maxFoodRepeat={$menuRequestStore.maxFoodRepeat} />
+
+        <div class="columns is-centered mt-3">
+            <div class="column">
+                <DateSelector/>
+            </div>
+            <div class="column">
+                <FoodBlacklist/>
+            </div>
+            <div class="column is-narrow">
+                <MaxFoodRepeat bind:maxFoodRepeat={$menuRequestStore.maxFoodRepeat}/>
+            </div>
         </div>
-    </div>
 
 
-    <div class="has-text-centered">
-        <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
-                on:click={generateMenu}
-                disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS || !allConstraintsValid}>Generate My Menu 🍽️
-        </button>
+        <div class="has-text-centered">
+            <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
+                    on:click={generateMenu}
+                    disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS || !allConstraintsValid}>Generate
+                My Menu 🍽️
+            </button>
+        </div>
     </div>
 </div>
-
 <style>
     .generate-button {
         font-size: 1rem;
