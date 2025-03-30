@@ -5,7 +5,7 @@ import pytest
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from jobs.fetch_food_selection_job import fetch_and_store_cityfood_data
+from jobs.fetch_food_selection_job import fetch_and_store_food_selection
 from jobs.serialization import open_json
 from model.food import Food, FoodProvider
 from model.job_run import JobRun, JobStatus
@@ -39,7 +39,7 @@ def test_fetch_and_store_food_data_success(mock_requests_post_success, test_sess
     strategy.fetch_foods_for.return_value = [make_food(), make_food(), make_food()]
     strategy.get_name.return_value = FoodProvider.CITY_FOOD
 
-    fetch_and_store_cityfood_data(test_session, strategy)
+    fetch_and_store_food_selection(test_session, strategy)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
@@ -54,7 +54,7 @@ def test_fetch_fails_and_marks_job_as_failed(test_session):
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
     strategy.get_name.return_value = FoodProvider.CITY_FOOD
 
-    fetch_and_store_cityfood_data(test_session, strategy)
+    fetch_and_store_food_selection(test_session, strategy)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"

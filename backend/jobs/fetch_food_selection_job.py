@@ -15,30 +15,30 @@ CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
 
-def fetch_and_store_cityfood_data(session: Session, strategy: FoodProviderStrategy, weeks_to_fetch: int = 3):
+def fetch_and_store_food_selection(session: Session, strategy: FoodProviderStrategy, weeks_to_fetch: int = 3):
     for week in range(CURRENT_WEEK, CURRENT_WEEK + weeks_to_fetch):
         try:
             foods = strategy.fetch_foods_for(CURRENT_YEAR, week)
-            _save_food_to_db(session, foods, week)
+            _save_food_to_db(session, foods, week, strategy.get_name())
 
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS, strategy.get_name())
-            JOB_LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for Week {week}.")
+            JOB_LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for {strategy.get_name()} Week {week}.")
         except Exception as e:
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE, strategy.get_name())
             JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
 
-def _save_food_to_db(session: Session, foods: list[Food], week: int):
+def _save_food_to_db(session: Session, foods: list[Food], week: int, provider: FoodProvider):
     for food in foods:
         session.merge(food)
 
     session.commit()
 
-    JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
+    JOB_LOGGER.info(f"✅ {provider} Week {week} food selection stored in the database.")
 
 
-def _track_job_run(session: Session, week: int, year: int, status: JobStatus, provider_name: FoodProvider) -> int:
-    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_provider=provider_name)
+def _track_job_run(session: Session, week: int, year: int, status: JobStatus, provider: FoodProvider) -> int:
+    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_provider=provider)
     session.add(job_run)
     session.commit()
     session.refresh(job_run)
@@ -52,4 +52,4 @@ if __name__ == "__main__":
 
     init_db()
     with Session(engine) as session:
-        fetch_and_store_cityfood_data(session, CityFoodProvider())
+        fetch_and_store_food_selection(session, CityFoodProvider())
