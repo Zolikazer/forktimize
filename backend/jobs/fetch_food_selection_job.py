@@ -5,7 +5,7 @@ from sqlmodel import Session
 from database.db import init_db, engine
 from jobs.food_providers.city_food import CityFoodProvider
 from jobs.food_providers.food_provider import FoodProviderStrategy
-from model.food import Food
+from model.food import Food, FoodProvider
 from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
@@ -21,10 +21,10 @@ def fetch_and_store_cityfood_data(session: Session, strategy: FoodProviderStrate
             foods = strategy.fetch_foods_for(CURRENT_YEAR, week)
             _save_food_to_db(session, foods, week)
 
-            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS)
+            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS, strategy.get_name())
             JOB_LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for Week {week}.")
         except Exception as e:
-            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE)
+            job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE, strategy.get_name())
             JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
 
@@ -37,8 +37,8 @@ def _save_food_to_db(session: Session, foods: list[Food], week: int):
     JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
-def _track_job_run(session: Session, week: int, year: int, status: JobStatus) -> int:
-    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now())
+def _track_job_run(session: Session, week: int, year: int, status: JobStatus, provider_name: FoodProvider) -> int:
+    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_provider=provider_name)
     session.add(job_run)
     session.commit()
     session.refresh(job_run)

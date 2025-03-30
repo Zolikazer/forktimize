@@ -7,7 +7,7 @@ from sqlmodel import select, SQLModel, Session
 
 from jobs.fetch_food_selection_job import fetch_and_store_cityfood_data
 from jobs.serialization import open_json
-from model.food import Food
+from model.food import Food, FoodProvider
 from model.job_run import JobRun, JobStatus
 from test.food_factory import make_food
 
@@ -37,11 +37,13 @@ def test_session():
 def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food(), make_food(), make_food()]
+    strategy.get_name.return_value = FoodProvider.CITY_FOOD
 
     fetch_and_store_cityfood_data(test_session, strategy)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
+    assert job_run.food_provider == FoodProvider.CITY_FOOD
 
     food_entries = test_session.exec(select(Food)).all()
     assert len(food_entries) == 3, "No food entries were inserted into the database!"
@@ -50,8 +52,10 @@ def test_fetch_and_store_food_data_success(mock_requests_post_success, test_sess
 def test_fetch_fails_and_marks_job_as_failed(test_session):
     strategy = MagicMock()
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
+    strategy.get_name.return_value = FoodProvider.CITY_FOOD
 
     fetch_and_store_cityfood_data(test_session, strategy)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
+    assert job_run.food_provider == FoodProvider.CITY_FOOD

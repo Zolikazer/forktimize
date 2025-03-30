@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from model.food import Food
+from model.food import Food, FoodProvider
 
 
 class FoodProviderStrategy(ABC):
@@ -11,5 +11,5 @@ class FoodProviderStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_name(self) -> str:
+    def get_name(self) -> FoodProvider:
         pass
