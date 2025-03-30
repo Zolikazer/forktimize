@@ -52,7 +52,7 @@ class InterCityFoodProvider(FoodProviderStrategy):
                 fat=int(item['fat_portion_food_one']),
                 price=item['price'],
                 date=datetime.strptime(item['date'], "%Y-%m-%d").date(),
-                food_provider=FoodProvider.CITY_FOOD
+                food_provider=self.get_name()
             )
             for food_type in data['data'].values()
             for category in food_type['categories']

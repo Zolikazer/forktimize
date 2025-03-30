@@ -10,9 +10,14 @@ from settings import SETTINGS
 
 scheduler = BackgroundScheduler()
 
+providers = [
+    InterCityFoodProvider(SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD),
+    InterCityFoodProvider(SETTINGS.INTER_FOOD_MENU_URL, FoodProvider.INTER_FOOD),
+]
+
 
 def run_fetch_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
     with Session(engine) as session:
-        fetch_and_store_food_selection(session, InterCityFoodProvider(
-            SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD))
+        for provider in providers:
+            fetch_and_store_food_selection(session, provider)

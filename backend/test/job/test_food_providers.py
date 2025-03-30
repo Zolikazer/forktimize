@@ -56,13 +56,16 @@ def test_inter_city_provider_fetch_foods_fetches_foods_cityfood_data(mock_reques
         with patch("jobs.food_providers.inter_city_food_provider.save_to_json"):
             foods = provider.fetch_foods_for(2025, 10)
             assert len(foods) > 0, "Expected food items but got none."
+            assert foods[0].food_provider == FoodProvider.CITY_FOOD
 
 
-def test_inter_city_provider_fetch_foods_fetches_foods_interfood_data(mock_requests_post_success, provider):
+def test_inter_city_provider_fetch_foods_fetches_foods_interfood_data(mock_requests_post_success):
+    provider = InterCityFoodProvider(TEST_API_ENDPOINT, FoodProvider.INTER_FOOD)
     with mock_requests_post_success("interfood-response-test.json"):
         with patch("jobs.food_providers.inter_city_food_provider.save_to_json"):
             foods = provider.fetch_foods_for(2025, 10)
             assert len(foods) > 0, "Expected food items but got none."
+            assert foods[0].food_provider == FoodProvider.INTER_FOOD
 
 
 def test_inter_city_provider_calls_correct_url(mock_requests_post_success, provider):

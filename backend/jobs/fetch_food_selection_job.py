@@ -50,7 +50,12 @@ def _track_job_run(session: Session, week: int, year: int, status: JobStatus, pr
 if __name__ == "__main__":
     SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
+    providers = [
+        InterCityFoodProvider(SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD),
+        InterCityFoodProvider(SETTINGS.INTER_FOOD_MENU_URL, FoodProvider.INTER_FOOD),
+    ]
+
     init_db()
     with Session(engine) as session:
-        fetch_and_store_food_selection(session, InterCityFoodProvider(
-            SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD))
+        for provider in providers:
+            fetch_and_store_food_selection(session, provider)
