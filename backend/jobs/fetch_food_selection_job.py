@@ -10,7 +10,6 @@ from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
-DATA_ENDPOINT = f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}"
 CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
@@ -54,4 +53,4 @@ if __name__ == "__main__":
     init_db()
     with Session(engine) as session:
         fetch_and_store_food_selection(session, InterCityFoodProvider(
-            f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}", FoodProvider.CITY_FOOD))
+            SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD))

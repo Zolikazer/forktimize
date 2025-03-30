@@ -6,10 +6,21 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    ROOT_DIR: Path = Path(__file__).parent.resolve()
+    PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
 
-    CITY_FOOD_API_URL: str = "https://ca.cityfood.hu"
-    CITY_FOOD_API_FOOD_PATH: str = "api/v1/menu"
+    CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
+    INTER_FOOD_API_BASE: str = "https://ia.interfood.hu"
+    INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
+
+    @computed_field
+    @property
+    def CITY_FOOD_MENU_URL(self) -> str:
+        return f"{self.CITY_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
+
+    @computed_field
+    @property
+    def INTER_FOOD_MENU_URL(self) -> str:
+        return f"{self.CITY_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     LOG_DIR: str = "/var/log/forktimize"
     ENABLE_LOG_FLUSH: bool = False
@@ -28,17 +39,17 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def DATA_DIR(self) -> Path:
-        return self.ROOT_DIR / "resources"
+        return self.PROJECT_ROOT_DIR / "resources"
 
     model_config = {
-        "env_file": f"{ROOT_DIR}/.env",
+        "env_file": f"{PROJECT_ROOT_DIR}/.env",
         "env_file_encoding": "utf-8",
     }
 
 
 class DevSettings(Settings):
-    DATABASE_PATH: str = f"{Settings().ROOT_DIR}/forktimize.db"
-    LOG_DIR: str = f"{Settings().ROOT_DIR}/logs"
+    DATABASE_PATH: str = f"{Settings().PROJECT_ROOT_DIR}/forktimize.db"
+    LOG_DIR: str = f"{Settings().PROJECT_ROOT_DIR}/logs"
 
 
 def get_settings() -> Settings:

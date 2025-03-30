@@ -15,4 +15,4 @@ def run_fetch_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
     with Session(engine) as session:
         fetch_and_store_food_selection(session, InterCityFoodProvider(
-            f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}", FoodProvider.CITY_FOOD))
+            SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD))
