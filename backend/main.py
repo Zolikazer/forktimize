@@ -12,8 +12,8 @@ from routers.meal_planner import meal_planner
 from settings import SETTINGS
 
 app = FastAPI(root_path="/api")
-app.add_middleware(LoggingMiddleware)
 app.include_router(meal_planner)
+app.add_middleware(LoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

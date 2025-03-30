@@ -1,5 +1,4 @@
 from datetime import datetime
-from pathlib import Path
 from typing import List
 
 import requests
@@ -32,17 +31,9 @@ class CityFoodProvider(FoodProviderStrategy):
 
         return data
 
-    def _get_request_body(self, year: int, week: int) -> dict:
-        return {"year": str(year), "week": str(week), "calorie": {"min": 0, "max": 9000},
-                "carb": {"min": 0, "max": 9000},
-                "protein": {"min": 0, "max": 9000}, "fat": {"min": 0, "max": 9000}, "price": {"min": 0, "max": 9000},
-                "favorites": False, "last_minute": False, "seek_labels": [], "ignore_labels": [],
-                "seek_ingredients": [],
-                "ignore_ingredients": []}
-
     def _save_foods_to_json(self, data: dict, year: int, week: int):
-        filename = SETTINGS.DATA_DIR / f"city-response-week-{year}-{week}.json"
-        save_to_json(data, SETTINGS.DATA_DIR / f"city-response-week-{year}-{week}.json")
+        filename = SETTINGS.DATA_DIR / f"{self.get_name()}-week-{year}-{week}.json"
+        save_to_json(data, filename)
 
         JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
@@ -63,3 +54,12 @@ class CityFoodProvider(FoodProviderStrategy):
             for category in food_type['categories']
             for item in category['items']
         ]
+
+    @staticmethod
+    def _get_request_body(year: int, week: int) -> dict:
+        return {"year": str(year), "week": str(week), "calorie": {"min": 0, "max": 9000},
+                "carb": {"min": 0, "max": 9000},
+                "protein": {"min": 0, "max": 9000}, "fat": {"min": 0, "max": 9000}, "price": {"min": 0, "max": 9000},
+                "favorites": False, "last_minute": False, "seek_labels": [], "ignore_labels": [],
+                "seek_ingredients": [],
+                "ignore_ingredients": []}

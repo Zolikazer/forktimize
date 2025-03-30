@@ -1,5 +1,5 @@
 import itertools
-from datetime import date as date_type
+from datetime import date as datetime_date
 from functools import partial
 
 from model.food import FoodProvider, Food
@@ -11,7 +11,7 @@ def make_food(
         food_id: int = None,
         name: str = None,
         food_provider: FoodProvider = FoodProvider.CITY_FOOD,
-        date: date_type = date_type(2025, 2,24),
+        date: datetime_date = datetime_date(2025, 2, 24),
         calories: int = 500,
         protein: int = 50,
         carb: int = 50,

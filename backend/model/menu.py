@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from datetime import date as date_type
-from typing import ClassVar
+from datetime import date as datetime_date
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.alias_generators import to_camel
@@ -14,7 +13,7 @@ class Menu(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
 
     foods: list[Food] = Field(default_factory=list)
-    date: date_type = None
+    date: datetime_date = None
 
     @computed_field
     @property
@@ -65,7 +64,7 @@ class Menu(BaseModel):
         self.foods.extend(foods)
 
     @classmethod
-    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: date_type) -> Menu:
+    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: datetime_date) -> Menu:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
