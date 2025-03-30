@@ -1,6 +1,11 @@
 <script>
+    import {getProviderLabel} from "$lib/constants/foodProviders.js";
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+
     export let title = "CityFood Meal Planner 🥗🍽️";
     export let subtitle = "Tervezz, Zabálj, Be Fit!";
+
+    $: title = `${getProviderLabel($menuRequestStore.foodProvider)} Meal Planner 🥗🍽️`;
 </script>
 
 
