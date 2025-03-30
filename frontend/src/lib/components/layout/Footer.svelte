@@ -1,5 +1,5 @@
 <script>
-    const footerText = "© 2025 Forktimize App created by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
+    const footerText = "© 2025 Forktimize App Vibe Coded by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
 </script>
 
 <footer class="footer footer-custom mt-5">
