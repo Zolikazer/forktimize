@@ -1,16 +1,18 @@
 import {writable} from 'svelte/store';
+import {FoodProvider} from "$lib/constants/foodProviders.js";
 
 function createMenuRequestStore() {
     const {subscribe, set, update} = writable({
+        selectedDate: null,
+        foodProvider: FoodProvider.CITY_FOOD.value,
+        dislikedFoods: [],
+        maxFoodRepeat: null,
         macroConstraints: [
             {name: "Calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
             {name: "Protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
             {name: "Carb", min: undefined, max: undefined, unit: "g", emoji: "🥖", isValid: true},
             {name: "Fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
         ],
-        selectedDate: null,
-        dislikedFoods: [],
-        maxFoodRepeat: null,
     });
 
     return {
@@ -50,6 +52,7 @@ function createMenuRequestStore() {
             selectedDate: null,
             dislikedFoods: [],
             maxFoodRepeat: null,
+            foodProvider: FoodProvider.CITY_FOOD.value,
         })
     };
 }

@@ -18,7 +18,7 @@ export const menuCreatorPage = {
     },
 
     selectDate: async (page, index) => {
-        const dateSelect = page.locator('select');
+        const dateSelect = page.getByLabel(/date/i);
         await dateSelect.selectOption({ index });
     },
 

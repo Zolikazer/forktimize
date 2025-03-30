@@ -1,15 +1,15 @@
 <script>
-    const providers = ["CityFood", "Interfood"];
-    let selected = "CityFood";
+    import {foodProviderList} from "$lib/constants/foodProviders.js";
+    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 </script>
 
 <div class="field tag is-light is-success bigger-tag is-flex is-justify-content-space-between is-align-items-center">
     <span>🧑‍🍳 Kitchen:</span>
     <div class="control is-light ml-1">
         <div class="select is-primary is-small styled-select">
-            <select bind:value={selected}>
-                {#each providers as provider}
-                    <option value={provider}>{provider}</option>
+            <select bind:value={$menuRequestStore.foodProvider}>
+                {#each foodProviderList as { label, value }}
+                    <option value={value}>{label}</option>
                 {/each}
             </select>
         </div>

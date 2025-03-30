@@ -42,8 +42,8 @@ describe("MenuRequestForm Component", () => {
 
         render(MenuRequestForm);
 
-        const select = screen.getByRole("combobox");
-        await fireEvent.change(select, {target: {value: "2025-03-10"}});
+        const dateSelect = screen.getByLabelText(/date/i);
+        await fireEvent.change(dateSelect, {target: {value: "2025-03-10"}});
 
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
@@ -93,8 +93,8 @@ describe("MenuRequestForm Component", () => {
 
         render(MenuRequestForm);
 
-        const select = screen.getByRole("combobox");
-        await fireEvent.change(select, {target: {value: "2025-03-10"}});
+        const dateSelect = screen.getByLabelText(/date/i);
+        await fireEvent.change(dateSelect, {target: {value: "2025-03-10"}});
 
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
@@ -105,6 +105,7 @@ describe("MenuRequestForm Component", () => {
         expect(callArgs).toHaveProperty("foodBlacklist");
         expect(callArgs).toHaveProperty("nutritionalConstraints");
         expect(callArgs).toHaveProperty("maxFoodRepeat");
+        expect(callArgs).toHaveProperty("foodProvider");
     });
 
     test('disables the generate button when at least one macro constraint is invalid', async () => {

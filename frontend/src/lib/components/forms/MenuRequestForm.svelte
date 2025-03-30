@@ -51,6 +51,7 @@
             date: formState.selectedDate,
             foodBlacklist: formState.dislikedFoods,
             maxFoodRepeat: formState.maxFoodRepeat,
+            foodProvider: formState.foodProvider,
         };
     }
 
