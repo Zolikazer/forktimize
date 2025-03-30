@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from jobs.food_providers.city_food import CityFoodProvider
+from jobs.food_providers.inter_city_food_provider import InterCityFoodProvider
 from jobs.food_providers.food_provider import FoodProviderStrategy
 from model.food import Food, FoodProvider
 from model.job_run import JobRun, JobStatus
@@ -19,22 +19,23 @@ def fetch_and_store_food_selection(session: Session, strategy: FoodProviderStrat
     for week in range(CURRENT_WEEK, CURRENT_WEEK + weeks_to_fetch):
         try:
             foods = strategy.fetch_foods_for(CURRENT_YEAR, week)
-            _save_food_to_db(session, foods, week, strategy.get_name())
+            _save_food_to_db(session, foods, week)
 
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS, strategy.get_name())
-            JOB_LOGGER.info(f"✅ Job ID={job_id}: Successfully fetched & stored data for {strategy.get_name()} Week {week}.")
+            JOB_LOGGER.info(
+                f"✅ Job ID={job_id}: Successfully fetched & stored data for {strategy.get_name()} Week {week}.")
         except Exception as e:
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.FAILURE, strategy.get_name())
             JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
 
-def _save_food_to_db(session: Session, foods: list[Food], week: int, provider: FoodProvider):
+def _save_food_to_db(session: Session, foods: list[Food], week: int):
     for food in foods:
         session.merge(food)
 
     session.commit()
 
-    JOB_LOGGER.info(f"✅ {provider} Week {week} food selection stored in the database.")
+    JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
 def _track_job_run(session: Session, week: int, year: int, status: JobStatus, provider: FoodProvider) -> int:
@@ -52,4 +53,5 @@ if __name__ == "__main__":
 
     init_db()
     with Session(engine) as session:
-        fetch_and_store_food_selection(session, CityFoodProvider())
+        fetch_and_store_food_selection(session, InterCityFoodProvider(
+            f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}", FoodProvider.CITY_FOOD))

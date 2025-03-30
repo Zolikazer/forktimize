@@ -3,8 +3,10 @@ from sqlmodel import Session
 
 from database.db import engine
 from jobs.fetch_food_selection_job import fetch_and_store_food_selection
-from jobs.food_providers.city_food import CityFoodProvider
+from jobs.food_providers.inter_city_food_provider import InterCityFoodProvider
+from model.food import FoodProvider
 from monitoring.logging import APP_LOGGER
+from settings import SETTINGS
 
 scheduler = BackgroundScheduler()
 
@@ -12,4 +14,5 @@ scheduler = BackgroundScheduler()
 def run_fetch_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
     with Session(engine) as session:
-        fetch_and_store_food_selection(session, CityFoodProvider())
+        fetch_and_store_food_selection(session, InterCityFoodProvider(
+            f"{SETTINGS.CITY_FOOD_API_URL}/{SETTINGS.CITY_FOOD_API_FOOD_PATH}", FoodProvider.CITY_FOOD))
