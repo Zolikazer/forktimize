@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def INTER_FOOD_MENU_URL(self) -> str:
-        return f"{self.CITY_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
+        return f"{self.INTER_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     LOG_DIR: str = "/var/log/forktimize"
     ENABLE_LOG_FLUSH: bool = False
