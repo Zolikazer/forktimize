@@ -1,7 +1,7 @@
 from datetime import date
 import pytest
 
-from model.food import Food
+from model.food import Food, FoodProvider
 from model.food_log_entry import FoodLogEntry
 from model.menu import Menu
 
@@ -136,7 +136,7 @@ def test_menu_from_food_counts():
         chicken_id: 1
     }
 
-    menu = Menu.from_food_counts(foods, food_counts, menu_date)
+    menu = Menu.from_food_counts(foods, food_counts, menu_date, FoodProvider.CITY_FOOD)
 
     assert len(menu.foods) == 3
 
@@ -147,3 +147,5 @@ def test_menu_from_food_counts():
     food_ids = [f.food_id for f in menu.foods]
     assert set(food_ids).issubset({apple_id, chicken_id})
     assert menu.date == menu_date
+    # assert menu.food_provider == FoodProvider.CITY_FOOD
+    menu = Menu(foods=foods, food_provider=FoodProvider.CITY_FOOD, date=menu_date)

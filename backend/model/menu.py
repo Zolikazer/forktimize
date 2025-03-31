@@ -5,15 +5,16 @@ from datetime import date as datetime_date
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.alias_generators import to_camel
 
-from model.food import Food
+from model.food import Food, FoodProvider
 from model.food_log_entry import FoodLogEntry
 
 
 class Menu(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
+    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
 
     foods: list[Food] = Field(default_factory=list)
     date: datetime_date = None
+    food_provider: FoodProvider = None
 
     @computed_field
     @property
@@ -64,11 +65,12 @@ class Menu(BaseModel):
         self.foods.extend(foods)
 
     @classmethod
-    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: datetime_date) -> Menu:
+    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: datetime_date,
+                         food_provider: FoodProvider) -> Menu:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
             for food_id, count in food_counts.items()
             for _ in range(count)
         ]
-        return cls(foods=selected, date=menu_date)
+        return cls(foods=selected, date=menu_date, food_provider=food_provider)

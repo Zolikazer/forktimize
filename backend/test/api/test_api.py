@@ -81,6 +81,7 @@ def test_create_menu_endpoint(client, session: Session):
     assert data["totalProtein"] == 200
     assert data["totalCarbs"] == 80
     assert data["totalFat"] == 40
+    assert data["foodProvider"] == "cityfood"
 
 
 def test_create_menu_max_food_repeat(client, session: Session):
