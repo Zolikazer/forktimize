@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, PositiveInt
 from pydantic.alias_generators import to_camel
 from datetime import date as datetime_date
 
+from model.food import FoodProvider
 from model.nutritional_constraints import NutritionalConstraints
 
 
@@ -14,3 +15,4 @@ class MenuRequest(BaseModel):
     nutritional_constraints: NutritionalConstraints
     food_blacklist: list[str] = []
     max_food_repeat: Optional[PositiveInt] = None
+    food_provider: FoodProvider

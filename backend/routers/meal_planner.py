@@ -28,7 +28,8 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
 
 @meal_planner.post("/menu")
 def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(get_session)) -> Menu:
-    food_selection = get_foods_for_given_date(session, menu_request.date, menu_request.food_blacklist)
+    food_selection = get_foods_for_given_date(session, menu_request.date, menu_request.food_provider,
+                                              menu_request.food_blacklist)
 
     if not food_selection:
         return Menu(foods=[])

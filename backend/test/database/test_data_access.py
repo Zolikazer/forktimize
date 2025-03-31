@@ -1,9 +1,10 @@
 from datetime import date
+
 import pytest
 from sqlmodel import SQLModel, create_engine, Session
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty
-from model.food import Food, FoodProvider
+from model.food import FoodProvider
 from test.food_factory import make_food
 
 test_engine = create_engine("sqlite:///:memory:", echo=True)
@@ -23,6 +24,46 @@ def test_session(test_db):
         session.rollback()
 
 
+@pytest.fixture
+def seeded_foods(test_session):
+    test_session.add_all([
+        make_food(food_id=1, date=date(2025, 3, 18)),
+        make_food(food_id=2, date=date(2025, 3, 18)),
+        make_food(food_id=3, date=date(2025, 3, 18)),
+        make_food(food_id=4, date=date(2025, 3, 19)),
+        make_food(food_id=5, date=date(2025, 3, 20), food_provider=FoodProvider.INTER_FOOD),
+    ])
+    test_session.commit()
+
+
+def test_returns_all_cityfood_for_date(test_session, seeded_foods):
+    foods = get_foods_for_given_date(test_session, date(2025, 3, 18), FoodProvider.CITY_FOOD)
+    assert len(foods) == 3
+    assert {f.name for f in foods} == {"Test Chicken 1", "Test Chicken 2", "Test Chicken 3"}
+
+
+def test_returns_empty_if_no_foods_for_provider(test_session, seeded_foods):
+    foods = get_foods_for_given_date(test_session, date(2025, 3, 20), FoodProvider.CITY_FOOD)
+    assert foods == []
+
+
+def test_returns_only_non_blacklisted_foods(test_session, seeded_foods):
+    foods = get_foods_for_given_date(
+        test_session,
+        date(2025, 3, 18),
+        FoodProvider.CITY_FOOD,
+        ["Test Chicken 1", "Test Chicken 2"]
+    )
+    assert len(foods) == 1
+    assert foods[0].name == "Test Chicken 3"
+
+
+def test_returns_foods_from_interfood(test_session, seeded_foods):
+    foods = get_foods_for_given_date(test_session, date(2025, 3, 20), FoodProvider.INTER_FOOD)
+    assert len(foods) == 1
+    assert foods[0].name == "Test Chicken 5"
+
+
 def test_get_unique_dates_after(test_session):
     test_session.add_all([
         make_food(date=date(2025, 3, 18)),
@@ -35,32 +76,6 @@ def test_get_unique_dates_after(test_session):
 
     result = get_unique_dates_after(test_session, date(2025, 3, 18))
     assert result == [date(2025, 3, 19), date(2025, 3, 20)]
-
-
-def test_get_foods_for_given_date(test_session):
-    test_session.add_all([
-        make_food(food_id=1, date=date(2025, 3, 18)),
-        make_food(food_id=2, date=date(2025, 3, 18)),
-        make_food(food_id=3, date=date(2025, 3, 18)),
-        make_food(food_id=4, date=date(2025, 3, 19)),
-    ])
-    test_session.commit()
-
-    foods = get_foods_for_given_date(test_session, date(2025, 3, 18))
-    assert len(foods) == 3
-    assert {food.name for food in foods} == {"Test Chicken 1", "Test Chicken 2", "Test Chicken 3"}
-
-    foods = get_foods_for_given_date(test_session, date(2025, 3, 18), ["Test Chicken 3"])
-    assert len(foods) == 2
-    assert {food.name for food in foods} == {"Test Chicken 1", "Test Chicken 2"}
-
-    foods = get_foods_for_given_date(test_session, date(2025, 3, 20))
-    assert len(foods) == 0
-
-    foods = get_foods_for_given_date(test_session, date(2025, 3, 18),
-                                     ["Test Chicken 1", "Test Chicken 2"])
-    assert len(foods) == 1
-    assert {food.name for food in foods} == {"Test Chicken 3"}
 
 
 def test_is_database_empty_when_no_food(test_session):

@@ -9,7 +9,7 @@ from starlette.testclient import TestClient
 
 from database.db import get_session
 from main import app
-from model.food import Food, FoodProvider
+from model.food import FoodProvider
 from routers.meal_planner import AppStatus
 from test.food_factory import make_food
 
@@ -31,7 +31,6 @@ def client(session):
 
 
 def insert_test_food(session):
-
     food_items = [make_food(calories=500, protein=50, carb=20, fat=10, price=1000),
                   make_food(calories=600, protein=55, carb=10, fat=25, price=1200),
                   make_food(name="Lencsefőzelék vagdalttal", calories=400, protein=20, carb=50, fat=10, price=800),
@@ -45,9 +44,9 @@ def insert_test_food(session):
     session.commit()
 
 
-# @freeze_time("2025-02-24")
 def test_create_menu_endpoint(client, session: Session):
     insert_test_food(session)
+    session.add(make_food(price=0, food_provider=FoodProvider.INTER_FOOD))
 
     requested_date = "2025-02-24"
     menu_request = {
@@ -57,7 +56,8 @@ def test_create_menu_endpoint(client, session: Session):
             "max_calories": 2700,
             "min_protein": 200
         },
-        "food_blacklist": ["Lencsefőzelék"]
+        "food_blacklist": ["Lencsefőzelék"],
+        "food_provider": "cityfood",
     }
 
     response = client.post("/menu", json=menu_request)
@@ -96,6 +96,7 @@ def test_create_menu_max_food_repeat(client, session: Session):
         },
         "food_blacklist": ["Lencsefőzelék"],
         "max_food_repeat": 1,
+        "food_provider": "cityfood",
     }
 
     response = client.post("/menu", json=menu_request)
