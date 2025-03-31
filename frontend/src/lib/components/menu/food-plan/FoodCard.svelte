@@ -1,6 +1,7 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+    import {FoodProvider} from "$lib/constants/foodProviders.js";
 
     const MAX_FOOD_LENGTH = 42;
 
@@ -29,9 +30,13 @@
 <div class="card food-card mx-auto is-flex is-flex-direction-column">
     <div class="card-image">
         <figure class="image is-16by9">
-            <img alt="Placeholder image"
-                 src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}
-            />
+            {#if $menuRequestStore.foodProvider === FoodProvider.CITY_FOOD.value}
+                <img alt="Placeholder image"
+                     src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
+            {:else if $menuRequestStore.foodProvider === FoodProvider.INTER_FOOD.value}
+                <img alt="Placeholder image"
+                     src={`https://ia.interfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
+            {/if}
         </figure>
     </div>
     <div class="card-content">
