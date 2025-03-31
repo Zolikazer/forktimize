@@ -20,6 +20,7 @@
         try {
             const generatedMenu = await getMenuPlan(menuRequest)
             if (generatedMenu.foods.length > 0) {
+                console.log(generatedMenu.foodProvider);
                 menuStore.setSuccess(
                     generatedMenu.foods,
                     generatedMenu.foodLogEntry,
@@ -28,7 +29,8 @@
                     generatedMenu.totalCalories,
                     generatedMenu.totalProtein,
                     generatedMenu.totalCarbs,
-                    generatedMenu.totalFat
+                    generatedMenu.totalFat,
+                    generatedMenu.foodProvider
                 )
             } else {
                 menuStore.setFailure()

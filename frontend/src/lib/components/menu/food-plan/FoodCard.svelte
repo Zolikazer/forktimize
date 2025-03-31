@@ -6,6 +6,7 @@
     const MAX_FOOD_LENGTH = 42;
 
     export let food;
+    console.log($menuStore)
 
     function removeFood(foodName) {
         updateDislikedFoods(foodName);
@@ -30,12 +31,15 @@
 <div class="card food-card mx-auto is-flex is-flex-direction-column">
     <div class="card-image">
         <figure class="image is-16by9">
-            {#if $menuRequestStore.foodProvider === FoodProvider.CITY_FOOD.value}
+            {#if $menuStore.foodProvider === FoodProvider.CITY_FOOD.value}
                 <img alt="Placeholder image"
                      src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
-            {:else if $menuRequestStore.foodProvider === FoodProvider.INTER_FOOD.value}
+            {:else if $menuStore.foodProvider === FoodProvider.INTER_FOOD.value}
                 <img alt="Placeholder image"
                      src={`https://ia.interfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
+            {:else}
+                <img alt="Placeholder image"
+                     src={`https://ia.interfood.hu/api/v1/i?menu_item_id=98529&width=425&height=425`}/>
             {/if}
         </figure>
     </div>

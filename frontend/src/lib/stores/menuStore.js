@@ -17,14 +17,15 @@ function createMenuStore() {
         totalProtein: null,
         totalCarbs: null,
         totalFat: null,
-        status: MenuGenerationStatus.NOT_STARTED
+        foodProvider: null,
+        status: MenuGenerationStatus.NOT_STARTED,
     });
 
     return {
         subscribe,
 
         setLoading: () => update(s => ({...s, status: MenuGenerationStatus.IN_PROGRESS})),
-        setSuccess: (foods, logEntry, date, totalPrice, totalCalories, totalProtein, totalCarbs, totalFat) => set({
+        setSuccess: (foods, logEntry, date, totalPrice, totalCalories, totalProtein, totalCarbs, totalFat, foodProvider) => set({
             foods: foods,
             foodLogEntry: logEntry,
             date: date,
@@ -33,6 +34,7 @@ function createMenuStore() {
             totalProtein: totalProtein,
             totalCarbs: totalCarbs,
             totalFat: totalFat,
+            foodProvider: foodProvider,
             status: MenuGenerationStatus.SUCCESS
         }),
         setFailure: () => update(s => ({...s, foods: null, status: MenuGenerationStatus.FAILURE})),
@@ -45,6 +47,7 @@ function createMenuStore() {
             totalProtein: null,
             totalCarbs: null,
             totalFat: null,
+            foodProvider: null,
             status: MenuGenerationStatus.NOT_STARTED
         }),
         removeFood: (foodName) =>
