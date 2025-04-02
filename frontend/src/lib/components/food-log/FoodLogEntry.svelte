@@ -11,21 +11,21 @@
     </SectionHeader>
     <div class="macro-summary p-4">
         <MacroEquivalent
-                emoji="🐔"
+                icon="chicken-breast.png"
                 label="Chicken Breast"
                 value={$mealPlanStore.foodLogEntry.chicken}
                 unit="g"
         />
 
         <MacroEquivalent
-                emoji="🍯"
+                icon="honey.png"
                 label="Sugar"
                 value={$mealPlanStore.foodLogEntry.sugar}
                 unit="g"
         />
 
         <MacroEquivalent
-                emoji="🫒"
+                icon="olive.png"
                 label="Olive Oil"
                 value={$mealPlanStore.foodLogEntry.oil}
                 unit="g"

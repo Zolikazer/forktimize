@@ -1,12 +1,18 @@
 <script>
-    export let emoji = "❓";
+    export let icon = "❓";
     export let label = "Nutrient";
     export let value = 0;
     export let unit = "g";
 </script>
 
 <div class="macro-box">
-    <span class="macro-emoji">{emoji}</span>
+<!--    <span class="macro-emoji">{emoji}</span>-->
+    <img alt={label}
+         src={icon}
+         width="50"
+         height="50"
+         class="has-radius-large"
+    />
     <h3>{label}</h3>
     <p class="has-text-weight-bold">{value} {unit}</p>
 </div>
