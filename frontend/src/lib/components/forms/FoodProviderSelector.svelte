@@ -1,5 +1,5 @@
 <script>
-    import {foodProviderList} from "$lib/constants/foodProviders.js";
+    import {foodProviderList} from "$lib/forktimize/foodProviders.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 </script>
 

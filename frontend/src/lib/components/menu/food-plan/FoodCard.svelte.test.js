@@ -34,11 +34,11 @@ describe('FoodCard component', () => {
 
         expect(screen.getByText(mockFood.name)).toBeInTheDocument();
         expect(screen.getByText(`${mockFood.price} Ft`)).toBeInTheDocument();
-        expect(screen.getByText(`🔥 ${mockFood.calories}`)).toBeInTheDocument();
-        expect(screen.getByText(`💪 ${mockFood.protein}`)).toBeInTheDocument();
-        expect(screen.getByText(`🥖 ${mockFood.carb}`)).toBeInTheDocument();
-        expect(screen.getByText(`🧈️ ${mockFood.fat}`)).toBeInTheDocument();
-        expect(screen.getByAltText(/Placeholder image/i)).toBeInTheDocument();
+        expect(screen.getByText(`${mockFood.calories}`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockFood.protein}g`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockFood.carb}g`)).toBeInTheDocument();
+        expect(screen.getByText(`${mockFood.fat}g`)).toBeInTheDocument();
+        expect(screen.getByAltText(mockFood.name)).toBeInTheDocument();
         expect(screen.getByText(/Nem szeretem/i)).toBeInTheDocument();
     });
 

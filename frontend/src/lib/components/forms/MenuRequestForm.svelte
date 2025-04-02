@@ -20,7 +20,6 @@
         try {
             const generatedMenu = await getMenuPlan(menuRequest)
             if (generatedMenu.foods.length > 0) {
-                console.log(generatedMenu.foodProvider);
                 menuStore.setSuccess(
                     generatedMenu.foods,
                     generatedMenu.foodLogEntry,

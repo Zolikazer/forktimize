@@ -1,7 +1,7 @@
 import { render, fireEvent, screen } from "@testing-library/svelte";
 import { get } from "svelte/store";
 import { menuRequestStore } from "$lib/stores/menuRequestStore";
-import {FoodProvider, foodProviderList} from "$lib/constants/foodProviders.js";
+import {FoodProvider, foodProviderList} from "$lib/forktimize/foodProviders.js";
 import FoodProviderSelector from "$lib/components/forms/FoodProviderSelector.svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 
