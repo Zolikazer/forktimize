@@ -1,10 +1,10 @@
 import {render, screen} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test} from "vitest";
-import Menu from "$lib/components/menu/meal-plan/Menu.svelte";
-import {menuStore} from "$lib/stores/menuStore.js";
+import MealPlan from "$lib/components/meal-plan/MealPlan.svelte";
+import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
 
 beforeEach(() => {
-    menuStore.setSuccess([
+    mealPlanStore.setSuccess([
         {
             name: "Test Food 1",
             calories: 300,
@@ -26,12 +26,12 @@ beforeEach(() => {
 
 describe("Menu Component", () => {
     test("renders title correctly", () => {
-        render(Menu);
+        render(MealPlan);
         expect(screen.getByText(/Your Food Plan/i)).toBeInTheDocument();
     });
 
     test("renders a FoodCard component for each item in the menu", () => {
-        const {container} = render(Menu);
+        const {container} = render(MealPlan);
         const foodComponents = container.querySelectorAll('.food-card');
         expect(foodComponents.length).toBe(2);
     });

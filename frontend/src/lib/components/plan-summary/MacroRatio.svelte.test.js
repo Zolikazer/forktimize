@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
 import {describe, expect, test} from 'vitest';
-import MacroRatio from "$lib/components/menu/insights/summary/MacroRatio.svelte";
+import MacroRatio from "$lib/components/plan-summary/MacroRatio.svelte";
 
 describe('MacroRatio Component', () => {
 

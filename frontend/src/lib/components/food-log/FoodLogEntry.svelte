@@ -1,7 +1,7 @@
 <script>
-    import {menuStore} from "$lib/stores/menuStore.js";
+    import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
-    import MacroEquivalent from "$lib/components/menu/insights/food-log/MacroEquivalent.svelte";
+    import MacroEquivalent from "$lib/components/food-log/MacroEquivalent.svelte";
 </script>
 
 <div class="card mt-4">
@@ -13,21 +13,21 @@
         <MacroEquivalent
                 emoji="🐔"
                 label="Chicken Breast"
-                value={$menuStore.foodLogEntry.chicken}
+                value={$mealPlanStore.foodLogEntry.chicken}
                 unit="g"
         />
 
         <MacroEquivalent
                 emoji="🍯"
                 label="Sugar"
-                value={$menuStore.foodLogEntry.sugar}
+                value={$mealPlanStore.foodLogEntry.sugar}
                 unit="g"
         />
 
         <MacroEquivalent
                 emoji="🫒"
                 label="Olive Oil"
-                value={$menuStore.foodLogEntry.oil}
+                value={$mealPlanStore.foodLogEntry.oil}
                 unit="g"
         />
 

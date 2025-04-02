@@ -1,14 +1,14 @@
 <script>
-    import {menuStore} from "$lib/stores/menuStore.js";
+    import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
     import {FoodProvider} from "$lib/utils/foodProviders.js";
-    import Macro from "$lib/components/menu/meal-plan/Macro.svelte";
+    import Macro from "$lib/components/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
 
     export let food;
 
     const maxFoodLength = 42;
-    $: imageSrc = getImageUrl(food.foodId, $menuStore.foodProvider);
+    $: imageSrc = getImageUrl(food.foodId, $mealPlanStore.foodProvider);
     const fallbackImageSrc = "fallback-food-image.png";
 
     let triedImageFallback = false;
@@ -23,7 +23,7 @@
     }
 
     function updateMenu(foodName) {
-        menuStore.removeFood(foodName);
+        mealPlanStore.removeFood(foodName);
     }
 
 
@@ -48,9 +48,9 @@
     }
 
     $: macroRatios = calculateMacroRatio({
-        protein: $menuStore.totalProtein,
-        carbs: $menuStore.totalCarbs,
-        fat: $menuStore.totalFat
+        protein: $mealPlanStore.totalProtein,
+        carbs: $mealPlanStore.totalCarbs,
+        fat: $mealPlanStore.totalFat
     });
 
     $: proteinRatio = macroRatios.proteinRatio;

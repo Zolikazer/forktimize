@@ -1,6 +1,6 @@
 import {expect} from '@playwright/test';
 
-export const menuCreatorPage = {
+export const mealPlanGeneratorPage = {
     goto: async (page) => await page.goto('/menu_creator'),
 
     addDislikedFood: async (page, food) => {

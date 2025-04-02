@@ -1,11 +1,11 @@
 <script>
-    import {menuStore} from "$lib/stores/menuStore.js";
+    import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {fade} from 'svelte/transition';
     import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
     import Help from "$lib/components/feedback/Help.svelte";
-    import Menu from "$lib/components/menu/meal-plan/Menu.svelte";
-    import MenuSummary from "$lib/components/menu/insights/summary/MenuSummary.svelte";
-    import FoodLogEntry from "$lib/components/menu/insights/food-log/FoodLogEntry.svelte";
+    import MealPlan from "$lib/components/meal-plan/MealPlan.svelte";
+    import MenuSummary from "$lib/components/plan-summary/MenuSummary.svelte";
+    import FoodLogEntry from "$lib/components/food-log/FoodLogEntry.svelte";
 
     export let data = {dates: []};
 
@@ -22,10 +22,10 @@
             </div>
         </div>
 
-        {#if $menuStore.foods && $menuStore.foods.length > 0}
+        {#if $mealPlanStore.foods && $mealPlanStore.foods.length > 0}
             <div class="columns is-centered" transition:fade={{ duration: 150 }}>
                 <div class="column">
-                    <Menu/>
+                    <MealPlan/>
                 </div>
                 <div class="column">
                     <MenuSummary/>

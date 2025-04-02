@@ -1,16 +1,16 @@
 import {beforeEach, describe, expect, test} from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import {render, screen, waitFor} from '@testing-library/svelte';
-import {menuStore} from "$lib/stores/menuStore.js";
+import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
 import MenuStatus from "$lib/components/feedback/MenuStatus.svelte";
 
 beforeEach(() => {
-    menuStore.reset()
+    mealPlanStore.reset()
 });
 
 describe("Menu status Component", () => {
     test("shows success message when menu is available", async () => {
-        menuStore.setSuccess();
+        mealPlanStore.setSuccess();
 
         render(MenuStatus);
 
@@ -24,7 +24,7 @@ describe("Menu status Component", () => {
     });
 
     test("shows in progress message when menu generation is in progress", async () => {
-        menuStore.setLoading();
+        mealPlanStore.setLoading();
 
         render(MenuStatus);
 
@@ -32,7 +32,7 @@ describe("Menu status Component", () => {
     });
 
     test("shows failure message when could not generate menu", async () => {
-        menuStore.setFailure();
+        mealPlanStore.setFailure();
 
         render(MenuStatus);
 
@@ -44,7 +44,7 @@ describe("Menu status Component", () => {
 
         expect(screen.getByText(/No menu generated yet/i)).toBeInTheDocument();
 
-        menuStore.setFailure();
+        mealPlanStore.setFailure();
 
         await waitFor(() =>
             expect(screen.getByText(/Sorry, we could not find a menu that meets your needs/i)

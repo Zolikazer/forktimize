@@ -1,10 +1,10 @@
 import {expect, test} from '@playwright/test';
-import {menuCreatorPage} from "./menuCreatorPage.js";
+import {mealPlanGeneratorPage} from "./mealPlanGeneratorPage.js";
 
 
 test.describe('Menu Creator', () => {
     test.beforeEach(async ({ page }) => {
-        await menuCreatorPage.goto(page);
+        await mealPlanGeneratorPage.goto(page);
     });
 
     test('initial state is correct', async ({ page }) => {
@@ -13,18 +13,18 @@ test.describe('Menu Creator', () => {
     });
 
     test('user can blacklist and remove foods', async ({ page }) => {
-        await menuCreatorPage.addDislikedFood(page, 'Broccoli');
-        await menuCreatorPage.addDislikedFood(page, 'Csoki');
+        await mealPlanGeneratorPage.addDislikedFood(page, 'Broccoli');
+        await mealPlanGeneratorPage.addDislikedFood(page, 'Csoki');
 
-        await expect(menuCreatorPage.getBlacklistedFoodTag(page, 'Csoki')).toBeVisible();
+        await expect(mealPlanGeneratorPage.getBlacklistedFoodTag(page, 'Csoki')).toBeVisible();
 
-        await menuCreatorPage.removeDislikedFood(page, 'Csoki');
-        await expect(menuCreatorPage.getBlacklistedFoodTag(page, 'Csoki')).not.toBeVisible();
+        await mealPlanGeneratorPage.removeDislikedFood(page, 'Csoki');
+        await expect(mealPlanGeneratorPage.getBlacklistedFoodTag(page, 'Csoki')).not.toBeVisible();
     });
 
     test('user can generate menu', async ({ page }) => {
-        await menuCreatorPage.selectDate(page, 1);
-        await menuCreatorPage.generateMenu(page);
+        await mealPlanGeneratorPage.selectDate(page, 1);
+        await mealPlanGeneratorPage.generateMenu(page);
 
         await expect(page.getByText("Your menu is ready.")).toBeVisible({ timeout: 5000 });
 
@@ -41,8 +41,8 @@ test.describe('Menu Creator', () => {
     });
 
     test('user can remove food from generated menu', async ({ page }) => {
-        await menuCreatorPage.selectDate(page, 1);
-        await menuCreatorPage.generateMenu(page);
+        await mealPlanGeneratorPage.selectDate(page, 1);
+        await mealPlanGeneratorPage.generateMenu(page);
 
         const menuItems = page.locator(".food-card");
         await expect(menuItems.first()).toBeVisible({ timeout: 5000 });
@@ -50,24 +50,24 @@ test.describe('Menu Creator', () => {
 
         const initialMenuItemCount = await menuItems.count();
 
-        await menuCreatorPage.removeFoodFromMenu(page, menuItems.first());
+        await mealPlanGeneratorPage.removeFoodFromMenu(page, menuItems.first());
 
         await expect(await menuItems.count()).toBeLessThan(initialMenuItemCount);
     });
 
     test('generates different menus for different days and constraints', async ({ page }) => {
-        await menuCreatorPage.goto(page);
+        await mealPlanGeneratorPage.goto(page);
 
-        await menuCreatorPage.selectDate(page, 0);
-        await menuCreatorPage.generateMenu(page);
-        const firstMenu = await menuCreatorPage.getMenuFoodNames(page);
+        await mealPlanGeneratorPage.selectDate(page, 0);
+        await mealPlanGeneratorPage.generateMenu(page);
+        const firstMenu = await mealPlanGeneratorPage.getMenuFoodNames(page);
 
-        await menuCreatorPage.selectDate(page, 1);
-        await menuCreatorPage.setMacroConstraint(page, 'Protein', { min: 200, max: 250 });
-        await menuCreatorPage.generateMenu(page);
+        await mealPlanGeneratorPage.selectDate(page, 1);
+        await mealPlanGeneratorPage.setMacroConstraint(page, 'Protein', { min: 200, max: 250 });
+        await mealPlanGeneratorPage.generateMenu(page);
 
         await expect(async () => {
-            const secondMenu = await menuCreatorPage.getMenuFoodNames(page);
+            const secondMenu = await mealPlanGeneratorPage.getMenuFoodNames(page);
             expect(secondMenu).not.toEqual(firstMenu);
         }).toPass({ timeout: 5000 });
     });

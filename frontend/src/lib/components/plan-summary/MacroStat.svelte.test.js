@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/svelte';
 import {describe, expect, test} from 'vitest';
-import MacroStat from "$lib/components/menu/insights/summary/MacroStat.svelte";
+import MacroStat from "$lib/components/plan-summary/MacroStat.svelte";
 
 
 describe('MacroStat Component', () => {

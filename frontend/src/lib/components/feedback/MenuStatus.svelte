@@ -1,18 +1,18 @@
 <script>
-    import {menuStore, MenuGenerationStatus} from "$lib/stores/menuStore.js";
+    import {mealPlanStore, MealPlanStatus} from "$lib/stores/mealPlanStore.js";
 
 </script>
 
-{#if $menuStore.status === MenuGenerationStatus.SUCCESS}
+{#if $mealPlanStore.status === MealPlanStatus.SUCCESS}
     <div class="notification is-success has-text-centered">
         <strong>Your menu is ready. ✅</strong>
     </div>
-{:else if $menuStore.status === MenuGenerationStatus.FAILURE}
+{:else if $mealPlanStore.status === MealPlanStatus.FAILURE}
     <div class="notification is-danger has-text-centered">
         Sorry, we could not find a menu that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
         👍
     </div>
-{:else if $menuStore.status === MenuGenerationStatus.IN_PROGRESS}
+{:else if $mealPlanStore.status === MealPlanStatus.IN_PROGRESS}
     <div class="notification is-primary has-text-centered">
         <span class="spinner"></span>
         <strong> Generating your menu... Please wait!</strong>

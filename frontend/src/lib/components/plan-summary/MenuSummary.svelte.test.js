@@ -1,10 +1,10 @@
 import {render, screen} from '@testing-library/svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
-import {menuStore} from '$lib/stores/menuStore.js';
-import MenuSummary from "$lib/components/menu/insights/summary/MenuSummary.svelte";
+import {mealPlanStore} from '$lib/stores/mealPlanStore.js';
+import MenuSummary from "$lib/components/plan-summary/MenuSummary.svelte";
 
 beforeEach(() => {
-    menuStore.setSuccess(
+    mealPlanStore.setSuccess(
         [
             {
                 name: 'Test Food 1',

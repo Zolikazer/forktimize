@@ -2,13 +2,13 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
 import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerApi.js";
-import {menuStore} from "$lib/stores/menuStore.js";
+import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
 import {get} from "svelte/store";
 import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
 
 beforeEach(() => {
-    menuStore.reset();
+    mealPlanStore.reset();
     menuRequestStore.reset();
 });
 
@@ -48,7 +48,7 @@ describe("MenuRequestForm Component", () => {
         const button = screen.getByRole("button", {name: /Generate My Menu/i});
         await fireEvent.click(button);
 
-        expect(get(menuStore).foods).toEqual(mockFoods);
+        expect(get(mealPlanStore).foods).toEqual(mockFoods);
     });
 
     test('disables button while fetching', async () => {

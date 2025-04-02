@@ -1,5 +1,5 @@
 import {render} from '@testing-library/svelte';
-import Macro from "$lib/components/menu/meal-plan/Macro.svelte";
+import Macro from "$lib/components/meal-plan/Macro.svelte";
 import {describe, expect, test} from "vitest";
 
 

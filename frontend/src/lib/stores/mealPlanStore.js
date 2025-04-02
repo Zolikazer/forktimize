@@ -1,13 +1,13 @@
 import {writable} from "svelte/store";
 
-export const MenuGenerationStatus = {
+export const MealPlanStatus = {
     NOT_STARTED: "notGenerated",
     IN_PROGRESS: "inProgress",
     SUCCESS: "success",
     FAILURE: "failure"
 };
 
-function createMenuStore() {
+function createMealPlanStore() {
     const {subscribe, set, update} = writable({
         foods: null,
         foodLogEntry: null,
@@ -18,13 +18,13 @@ function createMenuStore() {
         totalCarbs: null,
         totalFat: null,
         foodProvider: null,
-        status: MenuGenerationStatus.NOT_STARTED,
+        status: MealPlanStatus.NOT_STARTED,
     });
 
     return {
         subscribe,
 
-        setLoading: () => update(s => ({...s, status: MenuGenerationStatus.IN_PROGRESS})),
+        setLoading: () => update(s => ({...s, status: MealPlanStatus.IN_PROGRESS})),
         setSuccess: (foods, logEntry, date, totalPrice, totalCalories, totalProtein, totalCarbs, totalFat, foodProvider) => set({
             foods: foods,
             foodLogEntry: logEntry,
@@ -35,9 +35,9 @@ function createMenuStore() {
             totalCarbs: totalCarbs,
             totalFat: totalFat,
             foodProvider: foodProvider,
-            status: MenuGenerationStatus.SUCCESS
+            status: MealPlanStatus.SUCCESS
         }),
-        setFailure: () => update(s => ({...s, foods: null, status: MenuGenerationStatus.FAILURE})),
+        setFailure: () => update(s => ({...s, foods: null, status: MealPlanStatus.FAILURE})),
         reset: () => set({
             foods: null,
             foodLogEntry: null,
@@ -48,7 +48,7 @@ function createMenuStore() {
             totalCarbs: null,
             totalFat: null,
             foodProvider: null,
-            status: MenuGenerationStatus.NOT_STARTED
+            status: MealPlanStatus.NOT_STARTED
         }),
         removeFood: (foodName) =>
             update(state => ({
@@ -58,5 +58,5 @@ function createMenuStore() {
     };
 }
 
-export const menuStore = createMenuStore();
+export const mealPlanStore = createMealPlanStore();
 

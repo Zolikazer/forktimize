@@ -2,7 +2,7 @@
     import MacroConstraint from "./MacroConstraint.svelte";
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
-    import {MenuGenerationStatus, menuStore} from "$lib/stores/menuStore.js";
+    import {MealPlanStatus, mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {getMenuPlan} from "$lib/api/foodPlannerApi.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
@@ -13,14 +13,14 @@
 
 
     async function generateMenu() {
-        menuStore.setLoading();
+        mealPlanStore.setLoading();
         const formState = get(menuRequestStore);
         const menuRequest = createMenuRequest(formState);
 
         try {
             const generatedMenu = await getMenuPlan(menuRequest)
             if (generatedMenu.foods.length > 0) {
-                menuStore.setSuccess(
+                mealPlanStore.setSuccess(
                     generatedMenu.foods,
                     generatedMenu.foodLogEntry,
                     generatedMenu.date,
@@ -32,10 +32,10 @@
                     generatedMenu.foodProvider
                 )
             } else {
-                menuStore.setFailure()
+                mealPlanStore.setFailure()
             }
         } catch (error) {
-            menuStore.setFailure()
+            mealPlanStore.setFailure()
             showError(error.message);
         }
     }
@@ -100,7 +100,7 @@
         <div class="has-text-centered">
             <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                     on:click={generateMenu}
-                    disabled={$menuStore.status === MenuGenerationStatus.IN_PROGRESS || !allConstraintsValid}>Generate
+                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>Generate
                 My Menu 🍽️
             </button>
         </div>
