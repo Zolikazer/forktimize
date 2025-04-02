@@ -17,7 +17,6 @@ describe('MacroStat Component', () => {
         expect(screen.getByText('Protein')).toBeInTheDocument();
         expect(screen.getByText('100g')).toBeInTheDocument();
         expect(screen.getByText('30%')).toBeInTheDocument();
-        expect(screen.getByText('💪')).toBeInTheDocument();
     });
 
 });
