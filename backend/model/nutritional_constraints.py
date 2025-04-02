@@ -4,13 +4,14 @@ from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict, NonNeg
 from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
+from constants import PROTEIN_CALORIE, FAT_CALORIE, CARB_CALORIE
+
 
 class NutritionalConstraints(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
-
-    PROTEIN_CALORIE: ClassVar[int] = 4
-    CARB_CALORIE: ClassVar[int] = 4
-    FAT_CALORIE: ClassVar[int] = 9
+    model_config = ConfigDict(arbitrary_types_allowed=True,
+                              alias_generator=to_camel,
+                              populate_by_name=True,
+                              frozen=True)
 
     min_calories: Optional[NonNegativeInt] = None
     max_calories: Optional[PositiveInt] = None
@@ -45,22 +46,22 @@ class NutritionalConstraints(BaseModel):
         return self._max_carb_calories() + self._max_fat_calories() + self._max_protein_calories()
 
     def _max_protein_calories(self):
-        return self.max_protein * self.PROTEIN_CALORIE if self.max_protein else 0
+        return self.max_protein * PROTEIN_CALORIE if self.max_protein else 0
 
     def _max_fat_calories(self):
-        return self.max_fat * self.FAT_CALORIE if self.max_fat else 0
+        return self.max_fat * FAT_CALORIE if self.max_fat else 0
 
     def _max_carb_calories(self):
-        return self.max_carb * self.CARB_CALORIE if self.max_carb else 0
+        return self.max_carb * CARB_CALORIE if self.max_carb else 0
 
     def _total_min_macro_calories(self) -> int:
         return self._min_carbs_calories() + self._min_fat_calories() + self._min_protein_calories()
 
     def _min_protein_calories(self):
-        return self.min_protein * self.PROTEIN_CALORIE if self.min_protein else 0
+        return self.min_protein * PROTEIN_CALORIE if self.min_protein else 0
 
     def _min_fat_calories(self):
-        return self.min_fat * self.FAT_CALORIE if self.min_fat else 0
+        return self.min_fat * FAT_CALORIE if self.min_fat else 0
 
     def _min_carbs_calories(self):
-        return self.min_carb * self.CARB_CALORIE if self.min_carb else 0
+        return self.min_carb * CARB_CALORIE if self.min_carb else 0

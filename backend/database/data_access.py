@@ -6,7 +6,7 @@ from sqlmodel import select, col, Session, cast
 
 from model.food import Food, FoodProvider
 from monitoring.performance import benchmark
-from util import ONE_DAY
+from constants import ONE_DAY
 
 
 @benchmark

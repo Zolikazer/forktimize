@@ -1,8 +1,10 @@
 import time
 from typing import List
 
+from cachetools import TTLCache, cached
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
 
+from constants import ONE_DAY
 from model.food import Food
 from model.nutritional_constraints import NutritionalConstraints
 from monitoring.logging import APP_LOGGER
@@ -10,12 +12,13 @@ from monitoring.performance import benchmark
 
 
 @benchmark
+@cached(TTLCache(maxsize=50, ttl=ONE_DAY),
+        key=lambda foods, nutritional_constraints, max_food_repeat: (
+                tuple(foods), nutritional_constraints, max_food_repeat)
+        )
 def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints,
                         max_food_repeat: int = None) -> dict[int, int]:
-    problem = LpProblem("MealPlan_Generation_ILP", LpMinimize)
-
-    x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
-    problem += lpSum(x_vars[f.food_id] * f.price for f in foods), "TotalCost"
+    problem, x_vars = _create_price_minimization_problem(foods)
 
     _add_nutrient_constraints(foods, nutrition_constraints, problem, x_vars)
 
@@ -28,14 +31,26 @@ def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalCon
 
     if status == "Optimal":
         APP_LOGGER.info(f"✅ Successfully created a meal plan in {duration:.4f} seconds.")
-        return {
-            f.food_id: int(x_vars[f.food_id].varValue)
-            for f in foods if x_vars[f.food_id].varValue and x_vars[f.food_id].varValue > 0
-        }
+        return _get_food_counts(foods, x_vars)
 
     APP_LOGGER.info("Could not create meal plan. Status: %s", status)
 
     return {}
+
+
+def _get_food_counts(foods, x_vars):
+    return {
+        f.food_id: int(x_vars[f.food_id].varValue)
+        for f in foods if x_vars[f.food_id].varValue and x_vars[f.food_id].varValue > 0
+    }
+
+
+def _create_price_minimization_problem(foods):
+    problem = LpProblem("MealPlan_Generation_ILP", LpMinimize)
+    x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
+    problem += lpSum(x_vars[f.food_id] * f.price for f in foods), "TotalCost"
+
+    return problem, x_vars
 
 
 def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: NutritionalConstraints, problem, x_vars: dict):
