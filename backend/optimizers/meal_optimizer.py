@@ -20,9 +20,9 @@ def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalCon
                         max_food_repeat: int = None) -> dict[int, int]:
     problem, x_vars = _create_price_minimization_problem(foods)
 
-    _add_nutrient_constraints(foods, nutrition_constraints, problem, x_vars)
+    _add_nutrient_constraints_to_problem(foods, nutrition_constraints, problem, x_vars)
 
-    _add_max_food_repeat_constraint(foods, max_food_repeat, problem, x_vars)
+    _add_max_food_repeat_to_problem(foods, max_food_repeat, problem, x_vars)
 
     start_time = time.time()
     solver = PULP_CBC_CMD(msg=False)
@@ -45,7 +45,7 @@ def _get_food_counts(foods, x_vars):
     }
 
 
-def _create_price_minimization_problem(foods):
+def _create_price_minimization_problem(foods) -> [LpProblem, dict]:
     problem = LpProblem("MealPlan_Generation_ILP", LpMinimize)
     x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
     problem += lpSum(x_vars[f.food_id] * f.price for f in foods), "TotalCost"
@@ -53,7 +53,8 @@ def _create_price_minimization_problem(foods):
     return problem, x_vars
 
 
-def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: NutritionalConstraints, problem, x_vars: dict):
+def _add_nutrient_constraints_to_problem(foods: list[Food], nutrition_constraints: NutritionalConstraints, problem,
+                                         x_vars: dict):
     constraints = {
         "calories": "Calories",
         "protein": "Protein",
@@ -72,9 +73,7 @@ def _add_nutrient_constraints(foods: list[Food], nutrition_constraints: Nutritio
             problem += total_nutrient <= max_val, f"Max{label}"
 
 
-def _add_max_food_repeat_constraint(foods: list[Food], max_food_repeat: int, problem, x_vars):
+def _add_max_food_repeat_to_problem(foods: list[Food], max_food_repeat: int, problem, x_vars):
     if max_food_repeat is not None:
         for f in foods:
             problem += (x_vars[f.food_id] <= max_food_repeat), f"MaxRepeatEach_{f.food_id}"
-
-    return problem
