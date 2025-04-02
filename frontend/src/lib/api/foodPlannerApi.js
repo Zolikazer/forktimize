@@ -22,7 +22,7 @@ export const getDates = async () => {
 
 export const getMealPlan = async (mealPlanRequestParams) => {
     try {
-        return await api.post(CONFIG.API.ENDPOINT.MENU, {json: mealPlanRequestParams}).json();
+        return await api.post(CONFIG.API.ENDPOINT.MEAL_PLAN, {json: mealPlanRequestParams}).json();
     } catch (error) {
         console.error("❌ Failed to fetch meal plan:", error.message);
         throw error;

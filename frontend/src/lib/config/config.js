@@ -8,7 +8,7 @@ export const CONFIG = {
             : import.meta.env.VITE_API_URL || "https://forktimize.xyz/api",
         ENDPOINT: {
             DATES: "dates",
-            MENU: "menu",
+            MEAL_PLAN: "meal-plan",
         },
     },
     RUN_MOCK_BACKEND: isDev

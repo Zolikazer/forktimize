@@ -10,9 +10,9 @@ from monitoring.performance import benchmark
 
 
 @benchmark
-def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints,
-                   max_food_repeat: int = None) -> dict[int, int]:
-    problem = LpProblem("Menu_Creation_ILP", LpMinimize)
+def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints,
+                        max_food_repeat: int = None) -> dict[int, int]:
+    problem = LpProblem("MealPlan_Generation_ILP", LpMinimize)
 
     x_vars = {food.food_id: LpVariable(f"x_{food.food_id}", lowBound=0, cat=LpInteger) for food in foods}
     problem += lpSum(x_vars[f.food_id] * f.price for f in foods), "TotalCost"
@@ -27,13 +27,13 @@ def solve_menu_ilp(foods: List[Food], nutrition_constraints: NutritionalConstrai
     duration = time.time() - start_time
 
     if status == "Optimal":
-        APP_LOGGER.info(f"✅ Successfully created a menu in {duration:.4f} seconds.")
+        APP_LOGGER.info(f"✅ Successfully created a meal plan in {duration:.4f} seconds.")
         return {
             f.food_id: int(x_vars[f.food_id].varValue)
             for f in foods if x_vars[f.food_id].varValue and x_vars[f.food_id].varValue > 0
         }
 
-    APP_LOGGER.info("Could not create menu. Status: %s", status)
+    APP_LOGGER.info("Could not create meal plan. Status: %s", status)
 
     return {}
 

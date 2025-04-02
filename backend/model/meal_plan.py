@@ -9,7 +9,7 @@ from model.food import Food, FoodProvider
 from model.food_log_entry import FoodLogEntry
 
 
-class Menu(BaseModel):
+class MealPlan(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
 
     foods: list[Food] = Field(default_factory=list)
@@ -65,12 +65,12 @@ class Menu(BaseModel):
         self.foods.extend(foods)
 
     @classmethod
-    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], menu_date: datetime_date,
-                         food_provider: FoodProvider) -> Menu:
+    def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], plan_date: datetime_date,
+                         food_provider: FoodProvider) -> MealPlan:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
             for food_id, count in food_counts.items()
             for _ in range(count)
         ]
-        return cls(foods=selected, date=menu_date, food_provider=food_provider)
+        return cls(foods=selected, date=plan_date, food_provider=food_provider)

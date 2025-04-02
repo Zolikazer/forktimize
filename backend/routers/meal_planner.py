@@ -5,10 +5,10 @@ from sqlmodel import Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date
 from database.db import get_session
-from model.menu import Menu
-from model.menu_request import MenuRequest
+from model.meal_plan import MealPlan
+from model.meal_plan_request import MealPlanRequest
 from monitoring.logging import APP_LOGGER
-from optimizers.menu_optimizer import solve_menu_ilp
+from optimizers.meal_optimizer import solve_meal_plan_ilp
 
 
 class AppStatus:
@@ -26,20 +26,22 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
 
 
-@meal_planner.post("/menu")
-def create_menu_endpoint(menu_request: MenuRequest, session: Session = Depends(get_session)) -> Menu:
+@meal_planner.post("/meal-plan")
+def generate_meal_plan_endpoint(meal_plan_request: MealPlanRequest,
+                                session: Session = Depends(get_session)) -> MealPlan:
     food_selection = get_foods_for_given_date(session,
-                                              menu_request.date,
-                                              menu_request.food_provider,
-                                              menu_request.food_blacklist)
+                                              meal_plan_request.date,
+                                              meal_plan_request.food_provider,
+                                              meal_plan_request.food_blacklist)
 
     if not food_selection:
-        return Menu(foods=[])
+        return MealPlan(foods=[])
 
-    food_counts = solve_menu_ilp(food_selection, menu_request.nutritional_constraints,
-                                 menu_request.max_food_repeat)
+    food_counts = solve_meal_plan_ilp(food_selection, meal_plan_request.nutritional_constraints,
+                                      meal_plan_request.max_food_repeat)
 
-    return Menu.from_food_counts(food_selection, food_counts, menu_request.date, menu_request.food_provider)
+    return MealPlan.from_food_counts(food_selection, food_counts, meal_plan_request.date,
+                                     meal_plan_request.food_provider)
 
 
 @meal_planner.get("/health", tags=["Monitoring"])
