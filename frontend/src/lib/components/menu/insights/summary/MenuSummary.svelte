@@ -39,7 +39,7 @@
         <div class="columns is-mobile is-multiline is-justify-content-center mb-1">
             <div class="column is-one-third">
                 <MacroStat
-                        icon="💪"
+                        icon="protein.png"
                         label="Protein"
                         value={`${$menuStore.totalProtein} g`}
                         subValue={`${proteinRatio}%`}
@@ -49,7 +49,7 @@
 
             <div class="column is-one-third">
                 <MacroStat
-                        icon="🥖"
+                        icon="carb.png"
                         label="Carbs"
                         value={`${$menuStore.totalCarbs} g`}
                         subValue={`${carbRatio}%`}
@@ -59,7 +59,7 @@
 
             <div class="column is-one-third">
                 <MacroStat
-                        icon="🧈"
+                        icon="fat.png"
                         label="Fat"
                         value={`${$menuStore.totalFat} g`}
                         subValue={`${fatRatio}%`}

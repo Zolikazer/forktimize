@@ -8,7 +8,7 @@
 
 <div class="mb-2">
     <div class="is-flex is-align-items-center mb-1">
-        <span class="mr-1">💪</span>
+<!--        <span class="mr-1">💪</span>-->
         <span class="is-flex-grow-1 is-size-7">{macroName}</span>
         <span class="has-text-weight-bold is-size-7">{macroValue}g</span>
     </div>

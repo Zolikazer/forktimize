@@ -1,14 +1,21 @@
 <script>
-    export let icon = "❓";
-    export let label = "Label";
-    export let value = 0;
+    export let icon;
+    export let label;
+    export let value;
     export let subValue = null;
 </script>
 
 <div class="is-flex is-flex-direction-column is-align-items-center box macro-box">
-  <span class="icon is-medium mb-1 macro-emoji">
-    {icon}
-  </span>
+<!--  <span class="icon is-medium mb-1 macro-emoji">-->
+<!--    {icon}-->
+<!--  </span>-->
+
+    <img alt={label}
+         src={icon}
+         width="100"
+         height="100"
+         class="has-radius-large"
+    />
 
     <p class="is-size-8 has-text-grey has-text-weight-bold mb-0">{label}</p>
 

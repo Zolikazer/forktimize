@@ -1,15 +1,14 @@
 <script>
-    // Props
     export let emoji = "❓";
     export let label = "Nutrient";
     export let value = 0;
-    export let unit = "g"; // Default unit is grams
+    export let unit = "g";
 </script>
 
 <div class="macro-box">
     <span class="macro-emoji">{emoji}</span>
     <h3>{label}</h3>
-    <p>{value} {unit}</p>
+    <p class="has-text-weight-bold">{value} {unit}</p>
 </div>
 
 <style>
@@ -20,12 +19,12 @@
         padding: 1rem;
         text-align: center;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth animation */
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .macro-box:hover {
-        transform: translateY(-4px); /* Slight lift */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Deeper shadow */
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     .macro-box h3 {
