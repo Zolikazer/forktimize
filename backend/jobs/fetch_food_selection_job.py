@@ -5,6 +5,7 @@ from sqlmodel import Session
 from database.db import init_db, engine
 from jobs.food_providers.inter_city_food_provider import InterCityFoodProvider
 from jobs.food_providers.food_provider import FoodProviderStrategy
+from jobs.serialization import save_to_json
 from model.food import Food, FoodProvider
 from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
@@ -19,6 +20,9 @@ def fetch_and_store_food_selection(session: Session, strategy: FoodProviderStrat
         try:
             foods = strategy.fetch_foods_for(CURRENT_YEAR, week)
             _save_food_to_db(session, foods, week)
+
+            raw_data = strategy.get_raw_data(CURRENT_YEAR, week)
+            _save_foods_to_json(strategy.get_name().value, raw_data, CURRENT_YEAR, week)
 
             job_id = _track_job_run(session, week, CURRENT_YEAR, JobStatus.SUCCESS, strategy.get_name())
             JOB_LOGGER.info(
@@ -47,6 +51,13 @@ def _track_job_run(session: Session, week: int, year: int, status: JobStatus, pr
     return job_run.id
 
 
+def _save_foods_to_json(provider_name: str, data: dict, year: int, week: int):
+    filename = SETTINGS.DATA_DIR / f"{provider_name}-week-{year}-{week}.json"
+    save_to_json(data, filename)
+
+    JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
+
+
 if __name__ == "__main__":
     SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -56,6 +67,6 @@ if __name__ == "__main__":
     ]
 
     init_db()
-    with Session(engine) as session:
+    with Session(engine) as job_session:
         for provider in providers:
-            fetch_and_store_food_selection(session, provider)
+            fetch_and_store_food_selection(job_session, provider)

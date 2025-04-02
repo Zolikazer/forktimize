@@ -38,15 +38,18 @@ def test_fetch_and_store_food_data_success(mock_requests_post_success, test_sess
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food(), make_food(), make_food()]
     strategy.get_name.return_value = FoodProvider.CITY_FOOD
+    strategy.get_raw_data.return_value = {"bombardino": "crocodilo"}
 
-    fetch_and_store_food_selection(test_session, strategy)
+    with patch("jobs.fetch_food_selection_job.save_to_json") as mock_save_to_file:
+        fetch_and_store_food_selection(test_session, strategy)
+        mock_save_to_file.assert_called()
 
-    job_run = test_session.exec(select(JobRun)).first()
-    assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
-    assert job_run.food_provider == FoodProvider.CITY_FOOD
+        job_run = test_session.exec(select(JobRun)).first()
+        assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
+        assert job_run.food_provider == FoodProvider.CITY_FOOD
 
-    food_entries = test_session.exec(select(Food)).all()
-    assert len(food_entries) == 3, "No food entries were inserted into the database!"
+        food_entries = test_session.exec(select(Food)).all()
+        assert len(food_entries) == 3, "No food entries were inserted into the database!"
 
 
 def test_fetch_fails_and_marks_job_as_failed(test_session):

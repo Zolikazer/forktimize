@@ -13,3 +13,7 @@ class FoodProviderStrategy(ABC):
     @abstractmethod
     def get_name(self) -> FoodProvider:
         pass
+
+    @abstractmethod
+    def get_raw_data(self, year: int, week: int) -> dict:
+        pass

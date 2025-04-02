@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
 
 import pytest
 from requests import Response
@@ -44,40 +44,49 @@ def provider():
     return InterCityFoodProvider(TEST_API_ENDPOINT, FoodProvider.CITY_FOOD)
 
 
-def test_inter_city_provider_fetch_foods_result_saved_to_file(mock_requests_post_success, provider):
-    with mock_requests_post_success("city-response-test.json"):
-        with patch("jobs.food_providers.inter_city_food_provider.save_to_json") as mock_save_to_file:
-            provider.fetch_foods_for(2025, 10)
-            mock_save_to_file.assert_called()
-
-
 def test_inter_city_provider_fetch_foods_fetches_foods_cityfood_data(mock_requests_post_success, provider):
     with mock_requests_post_success("city-response-test.json"):
-        with patch("jobs.food_providers.inter_city_food_provider.save_to_json"):
-            foods = provider.fetch_foods_for(2025, 10)
-            assert len(foods) > 0, "Expected food items but got none."
-            assert foods[0].food_provider == FoodProvider.CITY_FOOD
+        foods = provider.fetch_foods_for(2025, 10)
+        assert len(foods) > 0, "Expected food items but got none."
+        assert foods[0].food_provider == FoodProvider.CITY_FOOD
 
 
 def test_inter_city_provider_fetch_foods_fetches_foods_interfood_data(mock_requests_post_success):
     provider = InterCityFoodProvider(TEST_API_ENDPOINT, FoodProvider.INTER_FOOD)
     with mock_requests_post_success("interfood-response-test.json"):
-        with patch("jobs.food_providers.inter_city_food_provider.save_to_json"):
-            foods = provider.fetch_foods_for(2025, 10)
-            assert len(foods) > 0, "Expected food items but got none."
-            assert foods[0].food_provider == FoodProvider.INTER_FOOD
+        foods = provider.fetch_foods_for(2025, 10)
+        assert len(foods) > 0, "Expected food items but got none."
+        assert foods[0].food_provider == FoodProvider.INTER_FOOD
 
 
 def test_inter_city_provider_calls_correct_url(mock_requests_post_success, provider):
     with mock_requests_post_success("city-response-test.json") as mock_post:
-        with patch("jobs.food_providers.inter_city_food_provider.save_to_json"):
-            provider.fetch_foods_for(2025, 10)
+        provider.fetch_foods_for(2025, 10)
 
-            mock_post.assert_called_once()
-            assert mock_post.call_args[0][0] == TEST_API_ENDPOINT, "Wrong URL was called!"
+        mock_post.assert_called_once()
+        assert mock_post.call_args[0][0] == TEST_API_ENDPOINT, "Wrong URL was called!"
 
 
 @pytest.mark.parametrize("provider_enum", [FoodProvider.CITY_FOOD, FoodProvider.INTER_FOOD])
 def test_inter_city_food_get_name(provider_enum):
     prov = InterCityFoodProvider("irrelevant-url", provider_enum)
     assert prov.get_name() == provider_enum
+
+
+@patch("jobs.food_providers.inter_city_food_provider.requests.post")
+def test_get_raw_data_makes_post_request(mock_post, provider):
+    expected_response = {"data": {"mock": "value"}}
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = expected_response
+    mock_post.return_value = mock_resp
+
+    result = provider.get_raw_data(2025, 14)
+
+    mock_post.assert_called_once()
+    assert result == expected_response
+    mock_post.assert_called_with(
+        TEST_API_ENDPOINT,
+        json=provider._get_request_body(2025, 14),
+        timeout=10
+    )

@@ -9,7 +9,8 @@ from model.nutritional_constraints import NutritionalConstraints
 
 
 class MealPlanRequest(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
+    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True,
+                              frozen=True)
 
     date: datetime_date
     nutritional_constraints: NutritionalConstraints
