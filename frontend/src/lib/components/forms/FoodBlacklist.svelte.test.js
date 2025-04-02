@@ -2,11 +2,11 @@ import {fireEvent, render, screen} from '@testing-library/svelte';
 import {get} from 'svelte/store';
 import FoodBlacklist from '$lib/components/forms/FoodBlacklist.svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
-import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
 
 
 beforeEach(() => {
-    menuRequestStore.set({selectedDate: null, macroConstraints: [], dislikedFoods: []});
+    mealPlanRequestStore.set({selectedDate: null, macroConstraints: [], dislikedFoods: []});
 });
 
 describe('FoodBlacklist component', () => {
@@ -24,20 +24,20 @@ describe('FoodBlacklist component', () => {
         await fireEvent.input(input, {target: {value: 'Broccoli'}});
         await fireEvent.keyDown(input, {key: 'Enter'});
 
-        console.log(menuRequestStore)
-        expect(get(menuRequestStore).dislikedFoods).toContain('Broccoli');
+        console.log(mealPlanRequestStore)
+        expect(get(mealPlanRequestStore).dislikedFoods).toContain('Broccoli');
         expect(input.value).toBe('');
     });
 
     test('removes a food from blacklist when clicking delete button', async () => {
-        menuRequestStore.addDislikedFood('Spinach');
-        console.log(get(menuRequestStore).dislikedFoods);
+        mealPlanRequestStore.addDislikedFood('Spinach');
+        console.log(get(mealPlanRequestStore).dislikedFoods);
         render(FoodBlacklist);
 
         const deleteButton = screen.getByRole("button");
         await fireEvent.click(deleteButton);
 
-        expect(get(menuRequestStore).dislikedFoods).not.toContain('Spinach');
+        expect(get(mealPlanRequestStore).dislikedFoods).not.toContain('Spinach');
     });
 
     test('does not add empty food names to the blacklist', async () => {
@@ -47,11 +47,11 @@ describe('FoodBlacklist component', () => {
         await fireEvent.input(input, {target: {value: '   '}});
         await fireEvent.keyDown(input, {key: 'Enter'});
 
-        expect(get(menuRequestStore).dislikedFoods.length).toBe(0);
+        expect(get(mealPlanRequestStore).dislikedFoods.length).toBe(0);
     });
 
     test('shortens long food names in the display', async () => {
-        menuRequestStore.addDislikedFood('VeryLongFoodNameThatShouldBeTruncated');
+        mealPlanRequestStore.addDislikedFood('VeryLongFoodNameThatShouldBeTruncated');
         render(FoodBlacklist);
 
         expect(screen.getByText('VeryLong...')).toBeInTheDocument();
@@ -64,6 +64,6 @@ describe('FoodBlacklist component', () => {
         await fireEvent.input(input, {target: {value: 'Kale'}});
         await fireEvent.click(document.body);
 
-        expect(get(menuRequestStore).dislikedFoods).toContain('Kale');
+        expect(get(mealPlanRequestStore).dislikedFoods).toContain('Kale');
     });
 });

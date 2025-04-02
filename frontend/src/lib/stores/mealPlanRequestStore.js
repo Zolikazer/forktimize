@@ -1,7 +1,7 @@
 import {writable} from 'svelte/store';
 import {FoodProvider} from "$lib/utils/foodProviders.js";
 
-function createMenuRequestStore() {
+function createMealPlanRequestStore() {
     const {subscribe, set, update} = writable({
         selectedDate: null,
         foodProvider: FoodProvider.CITY_FOOD.value,
@@ -57,4 +57,4 @@ function createMenuRequestStore() {
     };
 }
 
-export const menuRequestStore = createMenuRequestStore();
+export const mealPlanRequestStore = createMealPlanRequestStore();

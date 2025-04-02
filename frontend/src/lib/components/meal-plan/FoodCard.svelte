@@ -1,6 +1,6 @@
 <script>
     import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
-    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+    import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import {FoodProvider} from "$lib/utils/foodProviders.js";
     import Macro from "$lib/components/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
@@ -15,14 +15,14 @@
 
     function removeFood(foodName) {
         updateDislikedFoods(foodName);
-        updateMenu(foodName);
+        updateMealPlan(foodName);
     }
 
     function updateDislikedFoods(foodName) {
-        menuRequestStore.addDislikedFood(foodName);
+        mealPlanRequestStore.addDislikedFood(foodName);
     }
 
-    function updateMenu(foodName) {
+    function updateMealPlan(foodName) {
         mealPlanStore.removeFood(foodName);
     }
 

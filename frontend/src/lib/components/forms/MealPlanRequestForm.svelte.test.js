@@ -1,23 +1,23 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/svelte";
 import {beforeEach, describe, expect, test, vi} from "vitest";
-import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
+import MealPlanRequestForm from "$lib/components/forms/MealPlanRequestForm.svelte";
 import * as FoodPlannerClient from "$lib/api/foodPlannerApi.js";
 import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
 import {get} from "svelte/store";
-import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
 
 
 beforeEach(() => {
     mealPlanStore.reset();
-    menuRequestStore.reset();
+    mealPlanRequestStore.reset();
 });
 
 
 vi.mock("$lib/foodPlannerClient.js");
 
-describe("MenuRequestForm Component", () => {
+describe("MealPlanRequestForm Component", () => {
     test("renders all macro constraint inputs", () => {
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
         expect(screen.getByText(/Calories/i)).toBeInTheDocument();
         expect(screen.getByText(/Protein/i)).toBeInTheDocument();
@@ -26,39 +26,39 @@ describe("MenuRequestForm Component", () => {
     });
 
     test("renders date selector and food blacklist", () => {
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
         expect(screen.getByText(/Select a Date/i)).toBeInTheDocument();
         expect(screen.getByText(/Foods You Dislike/i)).toBeInTheDocument();
 
     });
 
-    test("generates menu when clicking 'Generate My Menu'", async () => {
+    test("generates meal plan when clicking 'Generate Meal Plan'", async () => {
         const mockFoods = [{name: "Mocked Food", kcal: 500}];
-        vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({
+        vi.spyOn(FoodPlannerClient, "getMealPlan").mockResolvedValue({
             foods: mockFoods,
             foodLogEntry: {chicken: 500, sugar: 200, oil: 10}
         });
 
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
         const dateSelect = screen.getByLabelText(/date/i);
         await fireEvent.change(dateSelect, {target: {value: "2025-03-10"}});
 
-        const button = screen.getByRole("button", {name: /Generate My Menu/i});
+        const button = screen.getByRole("button", {name: /Generate Meal Plan/i});
         await fireEvent.click(button);
 
         expect(get(mealPlanStore).foods).toEqual(mockFoods);
     });
 
     test('disables button while fetching', async () => {
-        const mockMenu = {foods: [], foodLogEntry: {chicken: 0, sugar: 0, oil: 0}};
+        const mockMealPlan = {foods: [], foodLogEntry: {chicken: 0, sugar: 0, oil: 0}};
 
-        const delayedResponse = new Promise(resolve => setTimeout(() => resolve(mockMenu), 200));
-        vi.spyOn(FoodPlannerClient, 'getMenuPlan').mockImplementation(() => delayedResponse);
+        const delayedResponse = new Promise(resolve => setTimeout(() => resolve(mockMealPlan), 200));
+        vi.spyOn(FoodPlannerClient, 'getMealPlan').mockImplementation(() => delayedResponse);
 
-        render(MenuRequestForm);
-        const button = screen.getByRole('button', {name: /Generate My Menu/i});
+        render(MealPlanRequestForm);
+        const button = screen.getByRole('button', {name: /Generate Meal Plan/i});
 
         expect(button).not.toBeDisabled();
 
@@ -70,33 +70,33 @@ describe("MenuRequestForm Component", () => {
     });
 
     test('should set maxFoodRepeat to 1 when checkbox is unchecked', async () => {
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
         const checkbox = screen.getByRole('checkbox');
 
         await fireEvent.click(checkbox);
 
-        expect(get(menuRequestStore).maxFoodRepeat).toBe(1);
+        expect(get(mealPlanRequestStore).maxFoodRepeat).toBe(1);
     });
 
     test('should maxFoodRepeat have a value of null if checkbox is checked ', async () => {
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
-        expect(get(menuRequestStore).maxFoodRepeat).toBe(null);
+        expect(get(mealPlanRequestStore).maxFoodRepeat).toBe(null);
     });
 
     test("sends all params on the api", async () => {
         const mockFoods = [{name: "Mocked Food", kcal: 500}];
-        const apiSpy = vi.spyOn(FoodPlannerClient, "getMenuPlan").mockResolvedValue({
+        const apiSpy = vi.spyOn(FoodPlannerClient, "getMealPlan").mockResolvedValue({
             foods: mockFoods,
             foodLogEntry: {chicken: 500, sugar: 200, oil: 10}
         });
 
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
         const dateSelect = screen.getByLabelText(/date/i);
         await fireEvent.change(dateSelect, {target: {value: "2025-03-10"}});
 
-        const button = screen.getByRole("button", {name: /Generate My Menu/i});
+        const button = screen.getByRole("button", {name: /Generate Meal Plan/i});
         await fireEvent.click(button);
 
         const callArgs = apiSpy.mock.calls[0][0];
@@ -109,16 +109,16 @@ describe("MenuRequestForm Component", () => {
     });
 
     test('disables the generate button when at least one macro constraint is invalid', async () => {
-        menuRequestStore.set({
+        mealPlanRequestStore.set({
             macroConstraints: [
                 {name: 'Protein', min: 200, max: 100, unit: 'g', emoji: '🍗'},
                 {name: 'Carbs', min: 100, max: 300, unit: 'g', emoji: '🍞'},
             ]
         })
 
-        render(MenuRequestForm);
+        render(MealPlanRequestForm);
 
-        const button = screen.getByRole('button', {name: /generate my menu/i});
+        const button = screen.getByRole('button', {name: /generate meal plan/i});
 
         expect(button).toBeDisabled();
     });

@@ -36,7 +36,7 @@
         <strong>
             <span class="icon has-tooltip-multiline">
                 <i class="fas fa-info-circle"></i>
-            </span>Your actual menu has many foods, but this format lets you log it quickly in your favourite fitness app using 3 basic ingredients that represent your macros.</strong>
+            </span>Your actual meal plan has many foods, but this format lets you log it quickly in your favourite fitness app using 3 basic ingredients that represent your macros.</strong>
     </div>
 </div>
 

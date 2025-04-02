@@ -7,6 +7,6 @@
         <li>🍽️ The system will generate a <strong>list of food</strong> that fit your requirements.</li>
         <li>🚫 If you have foods you dislike, <strong>add them to the "Do Not Like" field</strong> to filter them out.</li>
         <li>💰 The <strong>generator prioritizes minimizing price</strong> while still fitting your nutritional constraints.</li>
-        <li>⚠️ The <strong>more constraints you add, the harder it is</strong> to find a cheap menu.</li>
+        <li>⚠️ The <strong>more constraints you add, the harder it is</strong> to find a cheap meal plan.</li>
     </ul>
 </div>

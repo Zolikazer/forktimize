@@ -27,7 +27,7 @@ beforeEach(() => {
 describe("Menu Component", () => {
     test("renders title correctly", () => {
         render(MealPlan);
-        expect(screen.getByText(/Your Food Plan/i)).toBeInTheDocument();
+        expect(screen.getByText(/Your Meal Plan/i)).toBeInTheDocument();
     });
 
     test("renders a FoodCard component for each item in the menu", () => {

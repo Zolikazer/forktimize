@@ -7,9 +7,6 @@ export const handlers = [
     }),
 
     http.post('*/menu', () => {
-        // return HttpResponse.json({
-        //     foods: []});
-        // return HttpResponse(null, {status: 500});
         return HttpResponse.json({
             foods: [
                 {

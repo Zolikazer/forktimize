@@ -5,21 +5,21 @@
 
 {#if $mealPlanStore.status === MealPlanStatus.SUCCESS}
     <div class="notification is-success has-text-centered">
-        <strong>Your menu is ready. ✅</strong>
+        <strong>Your meal plan is ready. ✅</strong>
     </div>
 {:else if $mealPlanStore.status === MealPlanStatus.FAILURE}
     <div class="notification is-danger has-text-centered">
-        Sorry, we could not find a menu that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
+        Sorry, we could not find a meal plan that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
         👍
     </div>
 {:else if $mealPlanStore.status === MealPlanStatus.IN_PROGRESS}
     <div class="notification is-primary has-text-centered">
         <span class="spinner"></span>
-        <strong> Generating your menu... Please wait!</strong>
+        <strong> Generating your meal plan... Please wait!</strong>
     </div>
 {:else}
     <div class="notification is-primary has-text-centered">
-        No menu generated yet. Click <strong>"Generate My Menu"</strong> to get started! 🚀
+        No meal plan generated yet. Click <strong>"Generate Meal Plan"</strong> to get started! 🚀
     </div>
 {/if}
 

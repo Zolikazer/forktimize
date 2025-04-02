@@ -3,33 +3,33 @@
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {MealPlanStatus, mealPlanStore} from "$lib/stores/mealPlanStore.js";
-    import {getMenuPlan} from "$lib/api/foodPlannerApi.js";
+    import {getMealPlan} from "$lib/api/foodPlannerApi.js";
     import {showError} from "$lib/stores/errorStore.js";
-    import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
+    import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import {get} from "svelte/store";
     import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
     import FoodProviderSelector from "$lib/components/forms/FoodProviderSelector.svelte";
 
 
-    async function generateMenu() {
+    async function generateMealPlan() {
         mealPlanStore.setLoading();
-        const formState = get(menuRequestStore);
-        const menuRequest = createMenuRequest(formState);
+        const formState = get(mealPlanRequestStore);
+        const mealPlanRequest = createMealPlanRequest(formState);
 
         try {
-            const generatedMenu = await getMenuPlan(menuRequest)
-            if (generatedMenu.foods.length > 0) {
+            const mealPlan = await getMealPlan(mealPlanRequest)
+            if (mealPlan.foods.length > 0) {
                 mealPlanStore.setSuccess(
-                    generatedMenu.foods,
-                    generatedMenu.foodLogEntry,
-                    generatedMenu.date,
-                    generatedMenu.totalPrice,
-                    generatedMenu.totalCalories,
-                    generatedMenu.totalProtein,
-                    generatedMenu.totalCarbs,
-                    generatedMenu.totalFat,
-                    generatedMenu.foodProvider
+                    mealPlan.foods,
+                    mealPlan.foodLogEntry,
+                    mealPlan.date,
+                    mealPlan.totalPrice,
+                    mealPlan.totalCalories,
+                    mealPlan.totalProtein,
+                    mealPlan.totalCarbs,
+                    mealPlan.totalFat,
+                    mealPlan.foodProvider
                 )
             } else {
                 mealPlanStore.setFailure()
@@ -40,7 +40,7 @@
         }
     }
 
-    export function createMenuRequest(formState) {
+    export function createMealPlanRequest(formState) {
         const nutritionalConstraints = formState.macroConstraints.reduce((acc, constraint) => {
             acc[`min${constraint.name}`] = constraint.min;
             acc[`max${constraint.name}`] = constraint.max;
@@ -56,8 +56,8 @@
         };
     }
 
-    $: formData = $menuRequestStore;
-    $: allConstraintsValid = $menuRequestStore.macroConstraints.every(
+    $: formData = $mealPlanRequestStore;
+    $: allConstraintsValid = $mealPlanRequestStore.macroConstraints.every(
         ({min, max}) => min == null || max == null || min < max
     );
 
@@ -92,16 +92,16 @@
                 <FoodBlacklist/>
             </div>
             <div class="column is-narrow">
-                <MaxFoodRepeat bind:maxFoodRepeat={$menuRequestStore.maxFoodRepeat}/>
+                <MaxFoodRepeat bind:maxFoodRepeat={$mealPlanRequestStore.maxFoodRepeat}/>
             </div>
         </div>
 
 
         <div class="has-text-centered">
             <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
-                    on:click={generateMenu}
+                    on:click={generateMealPlan}
                     disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>Generate
-                My Menu 🍽️
+                Meal Plan 🍽️
             </button>
         </div>
     </div>

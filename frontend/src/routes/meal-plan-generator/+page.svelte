@@ -1,10 +1,10 @@
 <script>
     import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {fade} from 'svelte/transition';
-    import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
+    import MealPlanRequestForm from "$lib/components/forms/MealPlanRequestForm.svelte";
     import Help from "$lib/components/feedback/Help.svelte";
     import MealPlan from "$lib/components/meal-plan/MealPlan.svelte";
-    import MenuSummary from "$lib/components/plan-summary/MenuSummary.svelte";
+    import MealPlanSummary from "$lib/components/plan-summary/MealPlanSummary.svelte";
     import FoodLogEntry from "$lib/components/food-log/FoodLogEntry.svelte";
 
     export let data = {dates: []};
@@ -15,7 +15,7 @@
     <div class="container is-fluid">
         <div class="columns is-centered">
             <div class="column">
-                <MenuRequestForm dates={data.dates}/>
+                <MealPlanRequestForm dates={data.dates}/>
             </div>
             <div class="column">
                 <Help/>
@@ -28,7 +28,7 @@
                     <MealPlan/>
                 </div>
                 <div class="column">
-                    <MenuSummary/>
+                    <MealPlanSummary/>
                     <FoodLogEntry/>
                 </div>
             </div>

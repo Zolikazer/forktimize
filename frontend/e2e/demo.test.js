@@ -2,14 +2,14 @@ import {expect, test} from '@playwright/test';
 import {mealPlanGeneratorPage} from "./mealPlanGeneratorPage.js";
 
 
-test.describe('Menu Creator', () => {
+test.describe('Meal Plan Generator', () => {
     test.beforeEach(async ({ page }) => {
         await mealPlanGeneratorPage.goto(page);
     });
 
     test('initial state is correct', async ({ page }) => {
         await expect(page.getByText("Set Your Nutritional Goals")).toBeVisible();
-        await expect(page.getByText("No menu generated yet")).toBeVisible();
+        await expect(page.getByText("No meal plan generated yet")).toBeVisible();
     });
 
     test('user can blacklist and remove foods', async ({ page }) => {
@@ -22,16 +22,16 @@ test.describe('Menu Creator', () => {
         await expect(mealPlanGeneratorPage.getBlacklistedFoodTag(page, 'Csoki')).not.toBeVisible();
     });
 
-    test('user can generate menu', async ({ page }) => {
+    test('user can generate meal plan', async ({ page }) => {
         await mealPlanGeneratorPage.selectDate(page, 1);
-        await mealPlanGeneratorPage.generateMenu(page);
+        await mealPlanGeneratorPage.generateMealPlan(page);
 
-        await expect(page.getByText("Your menu is ready.")).toBeVisible({ timeout: 5000 });
+        await expect(page.getByText("Your meal plan is ready.")).toBeVisible({ timeout: 5000 });
 
-        const menuItems = page.locator(".food-card");
-        await expect(menuItems.first()).toBeVisible({ timeout: 5000 });
+        const mealPlanItems = page.locator(".food-card");
+        await expect(mealPlanItems.first()).toBeVisible({ timeout: 5000 });
 
-        await expect(page.locator(".card-header-title", { hasText: "Your Meal Plan" })).toBeVisible();
+        await expect(page.locator(".card-header-title", { hasText: "Your Meal Plan 🛵 Order these" })).toBeVisible();
         await expect(page.locator(".tag.is-success", { hasText: /🔥.*calories/i })).toBeVisible();
         await expect(page.locator(".tag.is-success", { hasText: /Ft/i })).toBeVisible();
 
@@ -40,35 +40,35 @@ test.describe('Menu Creator', () => {
         await expect(page.locator(".macro-box", { hasText: /Fat/i })).toBeVisible();
     });
 
-    test('user can remove food from generated menu', async ({ page }) => {
+    test('user can remove food from generated meal plan', async ({ page }) => {
         await mealPlanGeneratorPage.selectDate(page, 1);
-        await mealPlanGeneratorPage.generateMenu(page);
+        await mealPlanGeneratorPage.generateMealPlan(page);
 
-        const menuItems = page.locator(".food-card");
-        await expect(menuItems.first()).toBeVisible({ timeout: 5000 });
+        const mealPlanItems = page.locator(".food-card");
+        await expect(mealPlanItems.first()).toBeVisible({ timeout: 5000 });
 
 
-        const initialMenuItemCount = await menuItems.count();
+        const initialMealPlanItemCount = await mealPlanItems.count();
 
-        await mealPlanGeneratorPage.removeFoodFromMenu(page, menuItems.first());
+        await mealPlanGeneratorPage.removeFoodFromMealPlan(page, mealPlanItems.first());
 
-        await expect(await menuItems.count()).toBeLessThan(initialMenuItemCount);
+        await expect(await mealPlanItems.count()).toBeLessThan(initialMealPlanItemCount);
     });
 
-    test('generates different menus for different days and constraints', async ({ page }) => {
+    test('generates different meal plans for different days and constraints', async ({ page }) => {
         await mealPlanGeneratorPage.goto(page);
 
         await mealPlanGeneratorPage.selectDate(page, 0);
-        await mealPlanGeneratorPage.generateMenu(page);
-        const firstMenu = await mealPlanGeneratorPage.getMenuFoodNames(page);
+        await mealPlanGeneratorPage.generateMealPlan(page);
+        const firstMealPlan = await mealPlanGeneratorPage.getMealPlanFoodNames(page);
 
         await mealPlanGeneratorPage.selectDate(page, 1);
         await mealPlanGeneratorPage.setMacroConstraint(page, 'Protein', { min: 200, max: 250 });
-        await mealPlanGeneratorPage.generateMenu(page);
+        await mealPlanGeneratorPage.generateMealPlan(page);
 
         await expect(async () => {
-            const secondMenu = await mealPlanGeneratorPage.getMenuFoodNames(page);
-            expect(secondMenu).not.toEqual(firstMenu);
+            const secondMealPlan = await mealPlanGeneratorPage.getMealPlanFoodNames(page);
+            expect(secondMealPlan).not.toEqual(firstMealPlan);
         }).toPass({ timeout: 5000 });
     });
 });

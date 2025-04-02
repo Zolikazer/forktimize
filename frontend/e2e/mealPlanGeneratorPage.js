@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
 
 export const mealPlanGeneratorPage = {
-    goto: async (page) => await page.goto('/menu_creator'),
+    goto: async (page) => await page.goto('/meal-plan-generator'),
 
     addDislikedFood: async (page, food) => {
         const input = page.locator('input[placeholder="Type a food and press Enter"]');
@@ -22,17 +22,17 @@ export const mealPlanGeneratorPage = {
         await dateSelect.selectOption({ index });
     },
 
-    generateMenu: async (page) => {
-        const generateButton = page.getByRole('button', { name: 'Generate My Menu' });
+    generateMealPlan: async (page) => {
+        const generateButton = page.getByRole('button', { name: 'Generate Meal Plan' });
         await generateButton.click();
         await expect(page.locator('.food-card').first()).toBeVisible({ timeout: 5000 });
     },
 
-    removeFoodFromMenu: async (page, foodCardLocator) => {
+    removeFoodFromMealPlan: async (page, foodCardLocator) => {
         const removeButton = foodCardLocator.locator("button:has-text('🤮 Nem szeretem')");
         await removeButton.click();
     },
-    getMenuFoodNames: async (page) => {
+    getMealPlanFoodNames: async (page) => {
         return await page.locator('.food-card .food-name').allTextContents();
     },
     setMacroConstraint: async (page, label, { min, max }) => {

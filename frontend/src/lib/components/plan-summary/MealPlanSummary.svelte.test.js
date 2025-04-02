@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/svelte';
 import {beforeEach, describe, expect, test} from 'vitest';
 import {mealPlanStore} from '$lib/stores/mealPlanStore.js';
-import MenuSummary from "$lib/components/plan-summary/MenuSummary.svelte";
+import MealPlanSummary from "$lib/components/plan-summary/MealPlanSummary.svelte";
 
 beforeEach(() => {
     mealPlanStore.setSuccess(
@@ -32,24 +32,24 @@ beforeEach(() => {
         30);
 });
 
-describe('MenuSummarySvelte Component', () => {
+describe('MealPlanSummarySvelte Component', () => {
     test('renders title correctly', () => {
-        render(MenuSummary);
+        render(MealPlanSummary);
         expect(screen.getByText(/Meal Plan Summary/i)).toBeInTheDocument();
     });
 
     test('calculates and displays total cost correctly', () => {
-        render(MenuSummary);
+        render(MealPlanSummary);
         expect(screen.getByText(/1 500 Ft/)).toBeInTheDocument();
     });
 
     test('calculates and displays total calories correctly', () => {
-        render(MenuSummary);
+        render(MealPlanSummary);
         expect(screen.getByText(/1 600 calories/)).toBeInTheDocument();
     });
 
     test('calculates and displays macronutrients correctly', () => {
-        render(MenuSummary);
+        render(MealPlanSummary);
 
         expect(screen.getByText(/200 g/i)).toBeInTheDocument();
         expect(screen.getByText(/100 g/i)).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('MenuSummarySvelte Component', () => {
     });
 
     test('displays date properly', () => {
-        render(MenuSummary);
+        render(MealPlanSummary);
         expect(screen.getByText(/2025. május 6., kedd/i)).toBeInTheDocument();
     });
 });
