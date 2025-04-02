@@ -3,20 +3,18 @@
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
     import MacroStat from "$lib/components/menu/insights/summary/MacroStat.svelte";
     import MacroRatio from "$lib/components/menu/insights/summary/MacroRatio.svelte";
+    import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
 
 
-    $: proteinKcals = $menuStore.totalProtein * 4;
-    $: carbsKcals = $menuStore.totalCarbs * 4;
-    $: fatKcals = $menuStore.totalFat * 9;
-    $: totalMacroKcals = proteinKcals + carbsKcals + fatKcals;
+    $: macroRatios = calculateMacroRatio({
+        protein: $menuStore.totalProtein,
+        carbs: $menuStore.totalCarbs,
+        fat: $menuStore.totalFat
+    });
 
-    $: proteinPercentage =
-        totalMacroKcals > 0 ? ((proteinKcals / totalMacroKcals) * 100).toFixed(0) : 0;
-    $: carbsPercentage =
-        totalMacroKcals > 0 ? ((carbsKcals / totalMacroKcals) * 100).toFixed(0) : 0;
-    $: fatPercentage =
-        totalMacroKcals > 0 ? ((fatKcals / totalMacroKcals) * 100).toFixed(0) : 0;
-
+    $: proteinRatio = macroRatios.proteinRatio;
+    $: carbRatio = macroRatios.carbRatio;
+    $: fatRatio = macroRatios.fatRatio;
 
 </script>
 
@@ -44,7 +42,7 @@
                         icon="💪"
                         label="Protein"
                         value={`${$menuStore.totalProtein} g`}
-                        subValue={`${proteinPercentage}%`}
+                        subValue={`${proteinRatio}%`}
                         colorClass="danger"
                 />
             </div>
@@ -54,7 +52,7 @@
                         icon="🥖"
                         label="Carbs"
                         value={`${$menuStore.totalCarbs} g`}
-                        subValue={`${carbsPercentage}%`}
+                        subValue={`${carbRatio}%`}
                         colorClass="success"
                 />
             </div>
@@ -64,16 +62,16 @@
                         icon="🧈"
                         label="Fat"
                         value={`${$menuStore.totalFat} g`}
-                        subValue={`${fatPercentage}%`}
+                        subValue={`${fatRatio}%`}
                         colorClass="link"
                 />
             </div>
 
         </div>
         <MacroRatio
-                proteinPercentage={proteinPercentage}
-                carbsPercentage={carbsPercentage}
-                fatPercentage={fatPercentage}
+                proteinPercentage={proteinRatio}
+                carbsPercentage={carbRatio}
+                fatPercentage={fatRatio}
                 title="Macronutrient Ratio"
         />
 

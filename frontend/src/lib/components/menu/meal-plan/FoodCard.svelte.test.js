@@ -1,5 +1,5 @@
 import {fireEvent, render, screen} from '@testing-library/svelte';
-import FoodCard from '$lib/components/menu/food-plan/FoodCard.svelte';
+import FoodCard from '$lib/components/menu/meal-plan/FoodCard.svelte';
 import {menuStore} from "$lib/stores/menuStore.js";
 import {beforeEach, describe, expect, test} from 'vitest';
 import {get} from "svelte/store";

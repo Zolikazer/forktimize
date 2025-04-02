@@ -3,7 +3,7 @@
     import {fade} from 'svelte/transition';
     import MenuRequestForm from "$lib/components/forms/MenuRequestForm.svelte";
     import Help from "$lib/components/feedback/Help.svelte";
-    import Menu from "$lib/components/menu/food-plan/Menu.svelte";
+    import Menu from "$lib/components/menu/meal-plan/Menu.svelte";
     import MenuSummary from "$lib/components/menu/insights/summary/MenuSummary.svelte";
     import FoodLogEntry from "$lib/components/menu/insights/food-log/FoodLogEntry.svelte";
 

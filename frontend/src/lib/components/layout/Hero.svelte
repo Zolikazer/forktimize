@@ -1,5 +1,5 @@
 <script>
-    import {getProviderLabel} from "$lib/forktimize/foodProviders.js";
+    import {getProviderLabel} from "$lib/utils/foodProviders.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
 
     export let title = "CityFood Meal Planner 🥗🍽️";

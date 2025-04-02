@@ -1,5 +1,5 @@
 import {writable} from 'svelte/store';
-import {FoodProvider} from "$lib/forktimize/foodProviders.js";
+import {FoodProvider} from "$lib/utils/foodProviders.js";
 
 function createMenuRequestStore() {
     const {subscribe, set, update} = writable({

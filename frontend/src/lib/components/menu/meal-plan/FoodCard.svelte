@@ -1,7 +1,9 @@
 <script>
     import {menuStore} from "$lib/stores/menuStore.js";
     import {menuRequestStore} from "$lib/stores/menuRequestStore.js";
-    import {FoodProvider} from "$lib/forktimize/foodProviders.js";
+    import {FoodProvider} from "$lib/utils/foodProviders.js";
+    import Macro from "$lib/components/menu/meal-plan/Macro.svelte";
+    import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
 
     const MAX_FOOD_LENGTH = 42;
 
@@ -25,17 +27,15 @@
         return name.length > MAX_FOOD_LENGTH ? name.substring(0, MAX_FOOD_LENGTH) + "..." : name;
     }
 
-    $: proteinKcals = $menuStore.totalProtein * 4;
-    $: carbsKcals = $menuStore.totalCarbs * 4;
-    $: fatKcals = $menuStore.totalFat * 9;
-    $: totalMacroKcals = proteinKcals + carbsKcals + fatKcals;
+    $: macroRatios = calculateMacroRatio({
+        protein: $menuStore.totalProtein,
+        carbs: $menuStore.totalCarbs,
+        fat: $menuStore.totalFat
+    });
 
-    $: proteinPercentage =
-        totalMacroKcals > 0 ? ((proteinKcals / totalMacroKcals) * 100).toFixed(0) : 0;
-    $: carbsPercentage =
-        totalMacroKcals > 0 ? ((carbsKcals / totalMacroKcals) * 100).toFixed(0) : 0;
-    $: fatPercentage =
-        totalMacroKcals > 0 ? ((fatKcals / totalMacroKcals) * 100).toFixed(0) : 0;
+    $: proteinRatio = macroRatios.proteinRatio;
+    $: carbRatio = macroRatios.carbRatio;
+    $: fatRatio = macroRatios.fatRatio;
 
 
 </script>
@@ -72,38 +72,19 @@
             </div>
 
             <div class="is-flex-grow-1 ml-3 is-flex is-flex-direction-column is-justify-content-space-between">
-                <div class="mb-2">
-                    <div class="is-flex is-align-items-center mb-1">
-                        <span class="mr-1">💪</span>
-                        <span class="is-flex-grow-1 is-size-7">Fehérje</span>
-                        <span class="has-text-weight-bold is-size-7">{food.protein}g</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill has-background-info" style="width: {proteinPercentage}%"></div>
-                    </div>
-                </div>
+                <Macro macroName="Protein"
+                       macroValue={food.protein}
+                       macroRatio={proteinRatio}
+                       ratioColorClass="has-background-info"/>
+                <Macro macroName="Carbohydrate"
+                       macroValue={food.carb}
+                       macroRatio={carbRatio}
+                       ratioColorClass="has-background-danger"/>
+                <Macro macroName="Fat"
+                       macroValue={food.fat}
+                       macroRatio={fatRatio}
+                       ratioColorClass="has-background-warning"/>
 
-                <div class="mb-2">
-                    <div class="is-flex is-align-items-center mb-1">
-                        <span class="mr-1">🥖</span>
-                        <span class="is-flex-grow-1 is-size-7">Szénhidrát</span>
-                        <span class="has-text-weight-bold is-size-7">{food.carb}g</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill has-background-danger" style="width: {carbsPercentage}%"></div>
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    <div class="is-flex is-align-items-center mb-1">
-                        <span class="mr-1">🧈</span>
-                        <span class="is-flex-grow-1 is-size-7">Zsír</span>
-                        <span class="has-text-weight-bold is-size-7">{food.fat}g</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill has-background-warning" style="width: {fatPercentage}%"></div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -164,20 +145,6 @@
         overflow-wrap: break-word;
     }
 
-    .macro-container {
-        display: flex;
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .calories-display {
-        width: 70px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
     .calories-circle {
         width: 60px;
         height: 60px;
@@ -189,61 +156,5 @@
         justify-content: center;
         align-items: center;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .calories-value {
-        font-size: 1.1rem;
-        font-weight: bold;
-        line-height: 1;
-    }
-
-    .calories-unit {
-        font-size: 0.7rem;
-        opacity: 0.9;
-    }
-
-    .macro-details {
-        flex: 1;
-        margin-left: 0.75rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .macro-item {
-        margin-bottom: 0.5rem;
-    }
-
-    .macro-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.2rem;
-    }
-
-    .macro-icon {
-        margin-right: 0.3rem;
-        font-size: 0.9rem;
-    }
-
-    .macro-label {
-        flex: 1;
-        font-size: 0.8rem;
-    }
-
-    .macro-value {
-        font-weight: bold;
-        font-size: 0.8rem;
-    }
-
-    .progress-bar {
-        height: 6px;
-        background-color: #f0f0f0;
-        border-radius: 3px;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-        height: 100%;
-        border-radius: 3px;
     }
 </style>

@@ -1,5 +1,5 @@
 <script>
-    import FoodCard from "$lib/components/menu/food-plan/FoodCard.svelte";
+    import FoodCard from "$lib/components/menu/meal-plan/FoodCard.svelte";
     import { menuStore } from "$lib/stores/menuStore.js";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
 
