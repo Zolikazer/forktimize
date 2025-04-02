@@ -10,7 +10,7 @@ from starlette.testclient import TestClient
 from database.db import get_session
 from main import app
 from model.food import FoodProvider
-from routers.meal_planner import AppStatus
+from routers.meal_planner import AppStatus, meal_planner
 from test.food_factory import make_food
 
 
@@ -44,12 +44,12 @@ def insert_test_food(session):
     session.commit()
 
 
-def test_create_menu_endpoint(client, session: Session):
+def test_create_meal_plan_endpoint(client, session: Session):
     insert_test_food(session)
     session.add(make_food(price=0, food_provider=FoodProvider.INTER_FOOD))
 
     requested_date = "2025-02-24"
-    menu_request = {
+    meal_plan_request = {
         "date": requested_date,
         "nutritional_constraints": {
             "min_calories": 1500,
@@ -60,7 +60,7 @@ def test_create_menu_endpoint(client, session: Session):
         "food_provider": "cityfood",
     }
 
-    response = client.post("/menu", json=menu_request)
+    response = client.post("/meal-plan", json=meal_plan_request)
 
     assert response.status_code == 200
     data = response.json()
@@ -84,11 +84,11 @@ def test_create_menu_endpoint(client, session: Session):
     assert data["foodProvider"] == "cityfood"
 
 
-def test_create_menu_max_food_repeat(client, session: Session):
+def test_create_meal_plan_max_food_repeat(client, session: Session):
     insert_test_food(session)
 
     requested_date = "2025-02-24"
-    menu_request = {
+    meal_planner_request = {
         "date": requested_date,
         "nutritional_constraints": {
             "min_calories": 1500,
@@ -100,7 +100,7 @@ def test_create_menu_max_food_repeat(client, session: Session):
         "food_provider": "cityfood",
     }
 
-    response = client.post("/menu", json=menu_request)
+    response = client.post("/meal-plan", json=meal_planner_request)
 
     assert response.status_code == 200
     data = response.json()
