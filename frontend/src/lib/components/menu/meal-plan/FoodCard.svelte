@@ -5,9 +5,13 @@
     import Macro from "$lib/components/menu/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
 
-    const MAX_FOOD_LENGTH = 42;
-
     export let food;
+
+    const maxFoodLength = 42;
+    $: imageSrc = getImageUrl(food.foodId, $menuStore.foodProvider);
+    const fallbackImageSrc = "fallback-food-image.png";
+
+    let triedImageFallback = false;
 
     function removeFood(foodName) {
         updateDislikedFoods(foodName);
@@ -24,7 +28,23 @@
 
 
     function getShortenedName(name) {
-        return name.length > MAX_FOOD_LENGTH ? name.substring(0, MAX_FOOD_LENGTH) + "..." : name;
+        return name.length > maxFoodLength ? name.substring(0, maxFoodLength) + "..." : name;
+    }
+
+    function getImageUrl(foodId, provider) {
+        if (provider === FoodProvider.CITY_FOOD.value) {
+            return `https://ca.cityfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
+        } else if(provider === FoodProvider.INTER_FOOD.value) {
+            return `https://ia.interfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
+        }
+        return fallbackImageSrc;
+    }
+
+    function handleImageError() {
+        if (!triedImageFallback) {
+            imageSrc = fallbackImageSrc;
+            triedImageFallback = true;
+        }
     }
 
     $: macroRatios = calculateMacroRatio({
@@ -43,16 +63,10 @@
 <div class="card food-card mx-auto is-flex is-flex-direction-column">
     <div class="card-image">
         <figure class="image is-16by9">
-            {#if $menuStore.foodProvider === FoodProvider.CITY_FOOD.value}
-                <img alt={food.name}
-                     src={`https://ca.cityfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
-            {:else if $menuStore.foodProvider === FoodProvider.INTER_FOOD.value}
-                <img alt={food.name}
-                     src={`https://ia.interfood.hu/api/v1/i?menu_item_id=${food.foodId}&width=425&height=425`}/>
-            {:else}
-                <img alt={food.name}
-                     src={`https://ia.interfood.hu/api/v1/i?menu_item_id=98529&width=425&height=425`}/>
-            {/if}
+            <img alt={food.name}
+                 src={imageSrc}
+                 on:error={handleImageError}
+            />
         </figure>
     </div>
     <div class="card-content">
