@@ -1,14 +1,10 @@
 from datetime import date as datetime_date
-from enum import Enum
 
 from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
-
-class FoodProvider(str, Enum):
-    CITY_FOOD = "cityfood"
-    INTER_FOOD = "interfood"
+from jobs.food_providers.food_providers import FoodProvider
 
 
 class Food(SQLModel, table=True):

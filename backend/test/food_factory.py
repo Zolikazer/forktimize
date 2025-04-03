@@ -2,7 +2,8 @@ import itertools
 from datetime import date as datetime_date
 from functools import partial
 
-from model.food import FoodProvider, Food
+from model.food import Food
+from jobs.food_providers.food_providers import FoodProvider
 
 _food_id_counter = itertools.count(1)
 

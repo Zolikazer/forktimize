@@ -3,10 +3,11 @@ from datetime import datetime
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from jobs.food_providers.inter_city_food_provider import InterCityFoodProvider
-from jobs.food_providers.food_provider import FoodProviderStrategy
+from jobs.food_providers.inter_city_food_strategy import InterCityFoodProvider
+from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
+from jobs.food_providers.food_providers import FoodProvider
 from jobs.serialization import save_to_json
-from model.food import Food, FoodProvider
+from model.food import Food
 from model.job_run import JobRun, JobStatus
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS

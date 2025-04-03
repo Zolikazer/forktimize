@@ -5,9 +5,9 @@ from unittest.mock import patch, Mock, MagicMock
 import pytest
 from requests import Response
 
-from jobs.food_providers.inter_city_food_provider import InterCityFoodProvider
+from jobs.food_providers.inter_city_food_strategy import InterCityFoodProvider
 from jobs.serialization import open_json
-from model.food import FoodProvider
+from jobs.food_providers.food_providers import FoodProvider
 
 TEST_API_ENDPOINT = "https://fake.food.api"
 
@@ -73,8 +73,8 @@ def test_inter_city_food_get_name(provider_enum):
     assert prov.get_name() == provider_enum
 
 
-@patch("jobs.food_providers.inter_city_food_provider.requests.post")
-def test_get_raw_data_makes_post_request(mock_post, provider):
+@patch("jobs.food_providers.inter_city_food_strategy.requests.post")
+def test_get_raw_data_fetches_and_caches(mock_post, provider):
     expected_response = {"data": {"mock": "value"}}
     mock_resp = MagicMock()
     mock_resp.status_code = 200
@@ -83,10 +83,13 @@ def test_get_raw_data_makes_post_request(mock_post, provider):
 
     result = provider.get_raw_data(2025, 14)
 
-    mock_post.assert_called_once()
     assert result == expected_response
-    mock_post.assert_called_with(
+    mock_post.assert_called_once_with(
         TEST_API_ENDPOINT,
         json=provider._get_request_body(2025, 14),
         timeout=10
     )
+
+    result2 = provider.get_raw_data(2025, 14)
+    assert result2 == expected_response
+    assert mock_post.call_count == 1

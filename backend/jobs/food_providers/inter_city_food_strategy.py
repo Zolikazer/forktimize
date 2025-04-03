@@ -3,35 +3,38 @@ from typing import List
 
 import requests
 
-from jobs.food_providers.food_provider import FoodProviderStrategy
-from model.food import Food, FoodProvider
+from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
+from jobs.food_providers.food_providers import FoodProvider
+from model.food import Food
 from monitoring.logging import JOB_LOGGER
 
 
 class InterCityFoodProvider(FoodProviderStrategy):
 
     def __init__(self, api_endpoint: str, food_provider: FoodProvider):
-        self.api_endpoint = api_endpoint
-        self.food_provider = food_provider
-        self.raw_data = None
+        self._api_endpoint = api_endpoint
+        self._food_provider = food_provider
+        self._raw_data = {}
 
     def fetch_foods_for(self, year: int, week: int) -> List[Food]:
-        self.raw_data = self.get_raw_data(year, week)
-        foods = self._deserialize_food_items(self.raw_data)
+        data = self.get_raw_data(year, week)
+        self._raw_data[f"{year}{week}"] = data
+        foods = self._deserialize_food_items(data)
 
         JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from CityFood for week {week}, year {year}.")
 
         return foods
 
-    def get_name(self) -> FoodProvider:
-        return self.food_provider
-
     def get_raw_data(self, year: int, week: int) -> dict:
-        response = requests.post(self.api_endpoint, json=self._get_request_body(year, week), timeout=10)
-        response.raise_for_status()
-        data = response.json()
+        if self._raw_data.get(f"{year}{week}") is None:
+            response = requests.post(self._api_endpoint, json=self._get_request_body(year, week), timeout=10)
+            response.raise_for_status()
+            self._raw_data[f"{year}{week}"] = response.json()
 
-        return data
+        return self._raw_data[f"{year}{week}"]
+
+    def get_name(self) -> FoodProvider:
+        return self._food_provider
 
     def _deserialize_food_items(self, data: dict) -> list[Food]:
         return [

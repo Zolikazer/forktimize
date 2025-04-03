@@ -4,7 +4,7 @@ import pytest
 from sqlmodel import SQLModel, create_engine, Session
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty
-from model.food import FoodProvider
+from jobs.food_providers.food_providers import FoodProvider
 from test.food_factory import make_food
 
 test_engine = create_engine("sqlite:///:memory:", echo=True)

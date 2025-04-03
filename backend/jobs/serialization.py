@@ -4,6 +4,7 @@ import json
 def open_json(json_file: str) -> dict:
     with open(json_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
+
     return data
 
 

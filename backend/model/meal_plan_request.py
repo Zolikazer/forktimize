@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, PositiveInt
 from pydantic.alias_generators import to_camel
 from datetime import date as datetime_date
 
-from model.food import FoodProvider
+from jobs.food_providers.food_providers import FoodProvider
 from model.nutritional_constraints import NutritionalConstraints
 
 

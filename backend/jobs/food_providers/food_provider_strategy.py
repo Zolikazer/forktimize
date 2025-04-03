@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from model.food import Food, FoodProvider
+from jobs.food_providers.food_providers import FoodProvider
+from model.food import Food
 
 
 class FoodProviderStrategy(ABC):
