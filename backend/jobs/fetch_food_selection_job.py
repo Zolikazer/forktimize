@@ -55,14 +55,14 @@ def _track_job_run(session: Session, week: int, year: int, status: JobStatus, pr
 
 
 def _save_foods_to_json(provider_name: str, data: dict, year: int, week: int):
-    filename = SETTINGS.DATA_DIR / f"{provider_name}-week-{year}-{week}.json"
+    filename = SETTINGS.data_dir / f"{provider_name}-week-{year}-{week}.json"
     save_to_json(data, filename)
 
     JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
 
 if __name__ == "__main__":
-    SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
+    SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
 
     provider_strategies = [
         CityFoodStrategy(),

@@ -1,10 +1,11 @@
-from typing import Optional, ClassVar
+from typing import Optional
 
 from pydantic import BaseModel, model_validator, PositiveInt, ConfigDict, NonNegativeInt
 from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
 from constants import PROTEIN_CALORIE, FAT_CALORIE, CARB_CALORIE
+from error_handling.exceptions import MealPlanRequestException
 
 
 class NutritionalConstraints(BaseModel):
@@ -29,17 +30,17 @@ class NutritionalConstraints(BaseModel):
             max_val = getattr(self, f"max_{attr}")
 
             if min_val is not None and max_val is not None and min_val > max_val:
-                raise ValueError(f"min_{attr} must be less than or equal to max_{attr}")
+                raise MealPlanRequestException(f"min_{attr} must be less than or equal to max_{attr}",
+                                               "max_lower_than_min", attr)
 
         return self
 
     @model_validator(mode='after')
     def _validate_min_macro_constraints_consistent_with_calories(self) -> Self:
-        if self.min_calories and self._total_min_macro_calories() > self.min_calories:
-            raise ValueError("Total min macro calories exceed min_calories.")
+        if self.max_calories and self._total_min_macro_calories() > self.max_calories:
+            raise MealPlanRequestException("Total min macro calories exceed min_calories.", "macro_calories_conflict",
+                                           "min")
 
-        if self.max_calories and self._total_max_macro_calories() > self.max_calories:
-            raise ValueError("Total max macro calories exceed max_calories.")
         return self
 
     def _total_max_macro_calories(self) -> int:

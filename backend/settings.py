@@ -23,7 +23,6 @@ class Settings(BaseSettings):
         return f"{self.INTER_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     LOG_DIR: str = "/var/log/forktimize"
-    ENABLE_LOG_FLUSH: bool = False
     API_LOG_FILE: str = "api.log"
     JOB_LOG_FILE: str = "job.log"
     APP_LOG_FILE: str = "app.log"
@@ -33,12 +32,12 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def DATABASE_CONNECTION_STRING(self) -> str:
+    def database_connection_string(self) -> str:
         return f"sqlite:///{self.DATABASE_PATH}"
 
     @computed_field
     @property
-    def DATA_DIR(self) -> Path:
+    def data_dir(self) -> Path:
         return self.PROJECT_ROOT_DIR / "resources"
 
     model_config = {

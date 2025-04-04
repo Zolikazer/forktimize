@@ -44,7 +44,7 @@ def on_startup():
         except Exception as e:
             APP_LOGGER.error(f"Something fucked when starting upp the app {e}")
 
-        SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
+        SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
 
 
 @app.on_event("shutdown")
