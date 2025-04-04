@@ -5,4 +5,4 @@ from settings import SETTINGS
 
 class InterFoodStrategy(InterCityFoodStrategy):
     def __init__(self):
-        super().__init__(SETTINGS.INTER_FOOD_MENU_URL, FoodProvider.INTER_FOOD)
+        super().__init__(SETTINGS.inter_food_menu_url, FoodProvider.INTER_FOOD)

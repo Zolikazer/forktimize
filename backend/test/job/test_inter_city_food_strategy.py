@@ -41,8 +41,8 @@ def test_inter_city_provider_fetch_foods_fetches_foods(mock_requests_post_succes
 
 
 @pytest.mark.parametrize("strategy, expected_url, response_file", [
-    (CityFoodStrategy(), SETTINGS.CITY_FOOD_MENU_URL, "city-response-test.json"),
-    (InterFoodStrategy(), SETTINGS.INTER_FOOD_MENU_URL, "interfood-response-test.json"),
+    (CityFoodStrategy(), SETTINGS.city_food_menu_url, "city-response-test.json"),
+    (InterFoodStrategy(), SETTINGS.inter_food_menu_url, "interfood-response-test.json"),
 ])
 def test_inter_city_strategy_calls_correct_url(
         mock_requests_post_success,
@@ -68,8 +68,8 @@ def test_strategy_get_name(strategy_cls, expected_provider):
 
 
 @pytest.mark.parametrize("strategy, expected_url", [
-    (CityFoodStrategy(), SETTINGS.CITY_FOOD_MENU_URL),
-    (InterFoodStrategy(), SETTINGS.INTER_FOOD_MENU_URL),
+    (CityFoodStrategy(), SETTINGS.city_food_menu_url),
+    (InterFoodStrategy(), SETTINGS.inter_food_menu_url),
 ])
 @patch("jobs.food_providers.inter_city_food_strategy.requests.post")
 def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
