@@ -29,7 +29,7 @@ export const mealPlanGeneratorPage = {
     },
 
     removeFoodFromMealPlan: async (page, foodCardLocator) => {
-        const removeButton = foodCardLocator.locator("button:has-text('🤮 Nem szeretem')");
+        const removeButton = foodCardLocator.locator("button:has-text('🚫 Nem szeretem')");
         await removeButton.click();
     },
     getMealPlanFoodNames: async (page) => {

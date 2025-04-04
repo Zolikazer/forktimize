@@ -32,7 +32,7 @@ test.describe('Meal Plan Generator', () => {
         await expect(mealPlanItems.first()).toBeVisible({ timeout: 5000 });
 
         await expect(page.locator(".card-header-title", { hasText: "Your Meal Plan 🛵 Order these" })).toBeVisible();
-        await expect(page.locator(".tag.is-success", { hasText: /🔥.*calories/i })).toBeVisible();
+        await expect(page.locator(".tag.is-success", { hasText: /calories/i })).toBeVisible();
         await expect(page.locator(".tag.is-success", { hasText: /Ft/i })).toBeVisible();
 
         await expect(page.locator(".macro-box", { hasText: /Protein/i })).toBeVisible();
