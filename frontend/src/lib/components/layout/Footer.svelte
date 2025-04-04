@@ -1,10 +1,27 @@
 <script>
-    const footerText = "© 2025 Forktimize App Vibe Coded by Zoltán Spagina and ChatGPT 👨‍💻👊🤖";
+    const emailUser = "spagina.zoltan";
+    const emailDomain = "gmail.com";
+    const email = `${emailUser}@${emailDomain}`;
 </script>
 
 <footer class="footer footer-custom mt-5">
     <div class="container">
-        <p class="has-text-centered is-size-6 has-text-weight-bold footer-text">{footerText}</p>
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <p class="is-size-6 has-text-weight-bold footer-text">
+                        © 2025 Forktimize App Vibe Coded by Zoltán Spagina and ChatGPT 👨‍💻👊🤖
+                    </p>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <p class="is-size-6 footer-text has-text-weight-bold">
+                        Contact me at: <a href={`mailto:${email}`} class="has-text-weight-bold has-text-link no-shadow">{email}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
 
@@ -24,5 +41,9 @@
 
     .footer-text:hover {
         transform: scale(1.05);
+    }
+
+    .no-shadow {
+        text-shadow: none !important;
     }
 </style>
