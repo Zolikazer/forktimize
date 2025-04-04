@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List
 
@@ -9,8 +10,9 @@ from model.food import Food
 from monitoring.logging import JOB_LOGGER
 
 
-class InterCityFoodProvider(FoodProviderStrategy):
+class InterCityFoodStrategy(FoodProviderStrategy, ABC):
 
+    @abstractmethod
     def __init__(self, api_endpoint: str, food_provider: FoodProvider):
         self._api_endpoint = api_endpoint
         self._food_provider = food_provider

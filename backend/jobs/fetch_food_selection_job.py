@@ -3,9 +3,11 @@ from datetime import datetime
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from jobs.food_providers.inter_city_food_strategy import InterCityFoodProvider
+from jobs.food_providers.city_food_strategy import CityFoodStrategy
+from jobs.food_providers.inter_city_food_strategy import InterCityFoodStrategy
 from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
 from jobs.food_providers.food_providers import FoodProvider
+from jobs.food_providers.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import save_to_json
 from model.food import Food
 from model.job_run import JobRun, JobStatus
@@ -62,12 +64,12 @@ def _save_foods_to_json(provider_name: str, data: dict, year: int, week: int):
 if __name__ == "__main__":
     SETTINGS.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    providers = [
-        InterCityFoodProvider(SETTINGS.CITY_FOOD_MENU_URL, FoodProvider.CITY_FOOD),
-        InterCityFoodProvider(SETTINGS.INTER_FOOD_MENU_URL, FoodProvider.INTER_FOOD),
+    provider_strategies = [
+        CityFoodStrategy(),
+        InterFoodStrategy(),
     ]
 
     init_db()
     with Session(engine) as job_session:
-        for provider in providers:
+        for provider in provider_strategies:
             fetch_and_store_food_selection(job_session, provider)

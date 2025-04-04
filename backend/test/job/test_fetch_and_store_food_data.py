@@ -1,27 +1,14 @@
-from pathlib import Path
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, MagicMock
 
 import pytest
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
 from jobs.fetch_food_selection_job import fetch_and_store_food_selection
-from jobs.serialization import open_json
-from model.food import Food
 from jobs.food_providers.food_providers import FoodProvider
+from model.food import Food
 from model.job_run import JobRun, JobStatus
 from test.food_factory import make_food
-
-
-@pytest.fixture
-def mock_requests_post_success():
-    with patch("requests.post") as mock_post:
-        mock_response = Mock()
-        mock_response.json.return_value = open_json(
-            str(Path(__file__).parent.parent.resolve() / "resources/city-response-test.json"))
-        mock_response.status_code = 200
-        mock_post.return_value = mock_response
-        yield mock_post
 
 
 @pytest.fixture(scope="function")
@@ -35,7 +22,7 @@ def test_session():
         yield session
 
 
-def test_fetch_and_store_food_data_success(mock_requests_post_success, test_session):
+def test_fetch_and_store_food_data_success(test_session):
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food(), make_food(), make_food()]
     strategy.get_name.return_value = FoodProvider.CITY_FOOD
