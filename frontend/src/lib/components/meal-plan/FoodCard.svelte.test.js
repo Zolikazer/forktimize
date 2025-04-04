@@ -57,7 +57,14 @@ describe('FoodCard component', () => {
     });
 
     test('removes food when button is clicked', async () => {
-        mealPlanStore.setSuccess([mockFood])
+        mealPlanStore.setSuccess([mockFood],
+            null,
+            null,
+            mockFood.price,
+            mockFood.calories,
+            mockFood.protein,
+            mockFood.carb,
+            mockFood.fat)
         render(FoodCard, {food: mockFood});
         const button = screen.getByText(/Nem szeretem/i);
 
@@ -65,5 +72,46 @@ describe('FoodCard component', () => {
 
         expect(get(mealPlanRequestStore).dislikedFoods).toContain(mockFood.name);
         expect(get(mealPlanStore).foods).toHaveLength(0);
+        expect(get(mealPlanStore).totalPrice).toBe(0);
+        expect(get(mealPlanStore).totalCalories).toBe(0);
+        expect(get(mealPlanStore).totalProtein).toBe(0);
+        expect(get(mealPlanStore).totalCarbs).toBe(0);
+        expect(get(mealPlanStore).totalFat).toBe(0);
     });
+
+    test('removes all foods with matching name when button is clicked', async () => {
+        const duplicateFood1 = { ...mockFood, id: 1, name: "Test Food" };
+        const duplicateFood2 = { ...mockFood, id: 2, name: "Test Food" };
+
+        const totalPrice = duplicateFood1.price + duplicateFood2.price;
+        const totalCalories = duplicateFood1.calories + duplicateFood2.calories;
+        const totalProtein = duplicateFood1.protein + duplicateFood2.protein;
+        const totalCarbs = duplicateFood1.carb + duplicateFood2.carb;
+        const totalFat = duplicateFood1.fat + duplicateFood2.fat;
+
+        mealPlanStore.setSuccess(
+            [duplicateFood1, duplicateFood2],
+            null,
+            null,
+            totalPrice,
+            totalCalories,
+            totalProtein,
+            totalCarbs,
+            totalFat
+        );
+
+        render(FoodCard, { food: duplicateFood1 });
+
+        const button = screen.getByText(/Nem szeretem/i);
+        await fireEvent.click(button);
+
+        expect(get(mealPlanRequestStore).dislikedFoods).toContain(duplicateFood1.name);
+        expect(get(mealPlanStore).foods).toHaveLength(0);
+        expect(get(mealPlanStore).totalPrice).toBe(0);
+        expect(get(mealPlanStore).totalCalories).toBe(0);
+        expect(get(mealPlanStore).totalProtein).toBe(0);
+        expect(get(mealPlanStore).totalCarbs).toBe(0);
+        expect(get(mealPlanStore).totalFat).toBe(0);
+    });
+
 });

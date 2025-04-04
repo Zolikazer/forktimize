@@ -51,10 +51,31 @@ function createMealPlanStore() {
             status: MealPlanStatus.NOT_STARTED
         }),
         removeFood: (foodName) =>
-            update(state => ({
-                ...state,
-                foods: state.foods.filter(food => food.name !== foodName)
-            }))
+            update(state => {
+                const foodsToRemove = state.foods.filter(food => food.name === foodName);
+
+                const totalToSubtract = foodsToRemove.reduce(
+                    (acc, food) => ({
+                        price: acc.price + food.price,
+                        calories: acc.calories + food.calories,
+                        protein: acc.protein + food.protein,
+                        carbs: acc.carbs + food.carb,
+                        fat: acc.fat + food.fat,
+                    }),
+                    { price: 0, calories: 0, protein: 0, carbs: 0, fat: 0 }
+                );
+
+
+                return {
+                    ...state,
+                    totalPrice: state.totalPrice - totalToSubtract.price,
+                    totalCalories: state.totalCalories - totalToSubtract.calories,
+                    totalProtein: state.totalProtein - totalToSubtract.protein,
+                    totalCarbs: state.totalCarbs - totalToSubtract.carbs,
+                    totalFat: state.totalFat - totalToSubtract.fat,
+                    foods: state.foods.filter(food => food.name !== foodName),
+                };
+            })
     };
 }
 
