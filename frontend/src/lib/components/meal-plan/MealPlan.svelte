@@ -8,7 +8,7 @@
 <div class="card">
     <SectionHeader title="Your Meal Plan" subTitle={`🛵 Order these from ${getProviderLabel($mealPlanStore.foodProvider)}`}>
             <span slot="tags" class="tag is-light is-success bigger-tag">
-      🍱 {$mealPlanStore.foods.length} items
+      <img src="meal-plan.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.foods.length} items
     </span>
     </SectionHeader>
     <div class="is-flex is-flex-wrap-wrap mt-5 p-3">

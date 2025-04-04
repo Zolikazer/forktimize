@@ -103,7 +103,7 @@
         </div>
     </div>
     <button class="button is-danger is-light mt-auto mb-3 custom-button" on:click={() => removeFood(food.name)}>
-        🤮 Nem szeretem
+        🚫 Nem szeretem
     </button>
 </div>
 

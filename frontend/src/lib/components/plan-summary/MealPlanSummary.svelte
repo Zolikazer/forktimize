@@ -27,10 +27,10 @@
         })}>
         <div class="tags" slot="tags">
             <span class="tag is-success is-light bigger-tag">
-                💸 {$mealPlanStore.totalPrice.toLocaleString("fr-FR")} Ft
+                <img src="money.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalPrice.toLocaleString("fr-FR")} Ft
               </span>
             <span class="tag is-success is-light bigger-tag">
-                🔥 {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} calories
+                <img src="calorie.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} calories
               </span>
         </div>
     </SectionHeader>
