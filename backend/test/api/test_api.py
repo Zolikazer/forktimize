@@ -143,3 +143,26 @@ def test_health_check_unhealthy(client):
         "status": AppStatus.UNHEALTHY,
         "database": "error"
     }
+
+
+def test_invalid_meal_plan_reqeust(client):
+    requested_date = "2025-02-24"
+    meal_planner_request = {
+        "date": requested_date,
+        "nutritional_constraints": {
+            "min_calories": 1500,
+            "max_calories": 2700,
+            "min_protein": 9999
+        },
+        "food_blacklist": ["Lencsefőzelék"],
+        "max_food_repeat": 1,
+        "food_provider": "cityfood",
+    }
+
+    response = client.post("/meal-plan", json=meal_planner_request)
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "code": "macro_calories_conflict",
+        "message": "Total min macro calories exceed min_calories."
+    }

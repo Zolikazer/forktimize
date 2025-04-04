@@ -3,9 +3,12 @@ import os
 from fastapi import FastAPI
 from sqlmodel import Session
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from database.data_access import is_database_empty
 from database.db import init_db, engine
+from error_handling.exceptions import MealPlanRequestException
 from jobs.job_scheduler import scheduler, run_fetch_job
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
@@ -22,6 +25,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.exception_handler(MealPlanRequestException)
+async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "code": exc.error_code,
+            "message": exc.message
+        }
+    )
 
 @app.on_event("startup")
 def on_startup():
