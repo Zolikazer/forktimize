@@ -1,20 +1,22 @@
 <script>
     import {getVendorLabel} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
+    import LanguageSelector from "$lib/components/layout/LanguageSelector.svelte";
 
     export let title = "CityFood Meal Planner 🥗🍽️";
     export let subtitle = "Tervezz, Zabálj, Be Fit!";
 
     $: title = `${getVendorLabel($mealPlanRequestStore.foodVendor)} Meal Planner 🥗🍽️`;
+
 </script>
 
 
 <section class="hero hero-custom">
     <div class="has-text-centered hero-content py-1">
         <div class="container">
+            <LanguageSelector/>
             <h1 class="title title-animated is-size-2 has-text-weight-bold mb-2">{title}</h1>
             <p class="subtitle hero-subtitle is-size-4 mb-4">{subtitle}</p>
-            <!--            <button class="button hero-button">Get Started 🚀</button>-->
         </div>
     </div>
 </section>
@@ -39,23 +41,6 @@
         transform: scale(1.1);
     }
 
-    .hero-button {
-        background: white;
-        color: #00d1b2;
-        font-size: 1.1rem;
-        font-weight: bold;
-        padding: 0.75rem 1.5rem;
-        border-radius: 50px;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .hero-button:hover {
-        background: #f0fdfa;
-        transform: scale(1.05);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
-
     .hero-content {
         animation: floatUp 2s ease-in-out infinite alternate;
     }
@@ -68,4 +53,6 @@
             transform: translateY(-5px);
         }
     }
+
+
 </style>
