@@ -4,9 +4,8 @@ from sqlmodel import Session
 
 from database.db import init_db, engine
 from jobs.food_providers.city_food_strategy import CityFoodStrategy
-from jobs.food_providers.inter_city_food_strategy import InterCityFoodStrategy
 from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from jobs.food_providers.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import save_to_json
 from model.food import Food

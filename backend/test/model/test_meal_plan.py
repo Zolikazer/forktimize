@@ -1,10 +1,9 @@
 from datetime import date
-from pydoc import plain
 
 import pytest
 
 from model.food import Food
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from model.food_log_entry import FoodLogEntry
 from model.meal_plan import MealPlan
 

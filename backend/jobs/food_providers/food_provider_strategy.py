@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from model.food import Food
 
 

@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.alias_generators import to_camel
 
 from model.food import Food
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from model.food_log_entry import FoodLogEntry
 
 

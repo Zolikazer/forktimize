@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
 from jobs.fetch_food_selection_job import fetch_and_store_food_selection
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from model.food import Food
 from model.job_run import JobRun, JobStatus
 from test.food_factory import make_food

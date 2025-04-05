@@ -6,7 +6,7 @@ import pytest
 from requests import Response
 
 from jobs.food_providers.city_food_strategy import CityFoodStrategy
-from jobs.food_providers.food_providers import FoodProvider
+from model.food_providers import FoodProvider
 from jobs.food_providers.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import open_json
 from settings import SETTINGS
