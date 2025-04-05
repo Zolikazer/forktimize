@@ -108,7 +108,6 @@
 </div>
 <style>
     .generate-button {
-        font-size: 1rem;
         background: #00d1b2;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease-in-out;

@@ -1,8 +1,7 @@
 <script>
-    export let proteinPercentage = 0;
-    export let carbsPercentage = 0;
-    export let fatPercentage = 0;
-    export let title = "Macronutrient Ratio";
+    export let proteinPercentage;
+    export let carbsPercentage;
+    export let fatPercentage;
 </script>
 <div class="mb-2">
     <p class="is-size-7 has-text-grey has-text-weight-semibold mb-2">

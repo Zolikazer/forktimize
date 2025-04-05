@@ -10,10 +10,10 @@
 
 
 <section class="hero hero-custom">
-    <div class="hero-body has-text-centered hero-content">
+    <div class="has-text-centered hero-content py-1">
         <div class="container">
-            <h1 class="title hero-title title-animated">{title}</h1>
-            <p class="subtitle hero-subtitle">{subtitle}</p>
+            <h1 class="title title-animated is-size-2 has-text-weight-bold mb-2">{title}</h1>
+            <p class="subtitle hero-subtitle is-size-4 mb-4">{subtitle}</p>
             <!--            <button class="button hero-button">Get Started 🚀</button>-->
         </div>
     </div>
@@ -23,28 +23,13 @@
     .hero-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e),
         url("/food.png");
-        background-blend-mode: overlay; /* Blends the gradient & pattern */;
-        padding: 1.5rem 1rem; /* Reduced padding */
+        background-blend-mode: overlay;
+        padding: 1.5rem 1rem;
         color: white;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
         animation: floatUpDown 3s ease-in-out infinite alternate;
     }
-    .hero-body {
-        padding: 1.15rem 0; /* Less vertical spacing */
-    }
 
-    .hero-title {
-        font-size: 2.5rem; /* Keep large text */
-        font-weight: bold;
-        margin-bottom: 0.5rem; /* Reduce space below title */
-    }
-
-    .hero-subtitle {
-        font-size: 1.4rem; /* Keep subtitle large */
-        margin-bottom: 1rem; /* Reduce space below subtitle */
-    }
-
-    /* Fun text bounce effect */
     .title-animated {
         display: inline-block;
         transition: transform 0.3s ease-in-out;

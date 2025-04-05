@@ -60,7 +60,7 @@
 
 </script>
 
-<div class="card food-card mx-auto is-flex is-flex-direction-column">
+<div class="card food-card mx-auto is-flex is-flex-direction-column has-radius-large">
     <div class="card-image">
         <figure class="image is-16by9">
             <img alt={food.name}
@@ -71,8 +71,8 @@
     </div>
     <div class="card-content">
         <div class="media mb-1">
-            <div class="media-content">
-                <p class="title is-6 food-name" data-tooltip={food.name}>{getShortenedName(food.name)}</p>
+            <div class="media-content m-0">
+                <p class="title food-name is-6 is-inline-block is-relative is-clickable" data-tooltip={food.name}>{getShortenedName(food.name)}</p>
                 <p class="subtitle is-7">{food.price} Ft</p>
             </div>
         </div>
@@ -110,7 +110,6 @@
 <style>
     .food-card {
         width: 30%;
-        border-radius: 12px;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease-in-out;
         min-width: 200px;
@@ -120,20 +119,10 @@
         transform: scale(1.03);
     }
 
-    .media-content p {
-        margin: 0;
-    }
-
     .custom-button {
         width: auto;
         min-width: 150px;
         align-self: center;
-    }
-
-    .food-name {
-        cursor: pointer;
-        position: relative;
-        display: inline-block;
     }
 
     .food-name:hover::after {

@@ -42,11 +42,4 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
-
-    .macro-emoji {
-        font-size: 1.5rem;
-        display: block;
-        margin-bottom: 0.3rem;
-    }
-
 </style>

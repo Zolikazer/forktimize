@@ -38,8 +38,8 @@
 </script>
 
 <div class="field">
-    <label class="label">Foods You Dislike 🚫</label>
-    <div class="control" bind:this={inputRef}>
+    <label class="label" for="food-blacklist">Foods You Dislike 🚫</label>
+    <div id="food-blacklist" class="control" bind:this={inputRef}>
         <input
                 type="text"
                 bind:value={newFood}
@@ -50,7 +50,9 @@
 
     <div class="tags mt-2">
         {#each $mealPlanRequestStore.dislikedFoods as food}
-            <span class="tag is-danger is-light" data-tooltip={food}>
+            <span class="tag is-danger is-light"
+                  data-tooltip={food}
+            >
                 {shortenText(food)}
                 <button class="delete is-small"
                         on:click={() => removeFoodFromBlacklist(food)}

@@ -29,11 +29,11 @@
         width: 1.4em;
         height: 1.4em;
         border: 5px solid #ddd;
-        border-top: 3px solid #007bff; /* Blue spinner */
+        border-top: 3px solid #007bff;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        vertical-align: middle; /* ✅ Aligns with text */
-        margin-right: 8px; /* ✅ Adds space between spinner and text */
+        vertical-align: middle;
+        margin-right: 8px;
     }
 
     @keyframes spin {
