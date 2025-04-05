@@ -105,7 +105,7 @@ describe("MealPlanRequestForm Component", () => {
         expect(callArgs).toHaveProperty("foodBlacklist");
         expect(callArgs).toHaveProperty("nutritionalConstraints");
         expect(callArgs).toHaveProperty("maxFoodRepeat");
-        expect(callArgs).toHaveProperty("foodProvider");
+        expect(callArgs).toHaveProperty("foodVendor");
     });
 
     test('disables the generate button when at least one macro constraint is invalid', async () => {

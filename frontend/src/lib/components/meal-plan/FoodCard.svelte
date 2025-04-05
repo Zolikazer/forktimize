@@ -1,14 +1,14 @@
 <script>
     import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
-    import {FoodProvider} from "$lib/utils/foodProviders.js";
+    import {FoodVendor} from "$lib/utils/foodVendors.js";
     import Macro from "$lib/components/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
 
     export let food;
 
     const maxFoodLength = 42;
-    $: imageSrc = getImageUrl(food.foodId, $mealPlanStore.foodProvider);
+    $: imageSrc = getImageUrl(food.foodId, $mealPlanStore.foodVendor);
     const fallbackImageSrc = "fallback-food-image.png";
 
     let triedImageFallback = false;
@@ -31,10 +31,10 @@
         return name.length > maxFoodLength ? name.substring(0, maxFoodLength) + "..." : name;
     }
 
-    function getImageUrl(foodId, provider) {
-        if (provider === FoodProvider.CITY_FOOD.value) {
+    function getImageUrl(foodId, vendor) {
+        if (vendor === FoodVendor.CITY_FOOD.value) {
             return `https://ca.cityfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
-        } else if(provider === FoodProvider.INTER_FOOD.value) {
+        } else if(vendor === FoodVendor.INTER_FOOD.value) {
             return `https://ia.interfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
         }
         return fallbackImageSrc;

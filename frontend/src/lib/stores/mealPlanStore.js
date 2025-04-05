@@ -17,7 +17,7 @@ function createMealPlanStore() {
         totalProtein: null,
         totalCarbs: null,
         totalFat: null,
-        foodProvider: null,
+        foodVendor: null,
         status: MealPlanStatus.NOT_STARTED,
     });
 
@@ -25,7 +25,7 @@ function createMealPlanStore() {
         subscribe,
 
         setLoading: () => update(s => ({...s, status: MealPlanStatus.IN_PROGRESS})),
-        setSuccess: (foods, logEntry, date, totalPrice, totalCalories, totalProtein, totalCarbs, totalFat, foodProvider) => set({
+        setSuccess: (foods, logEntry, date, totalPrice, totalCalories, totalProtein, totalCarbs, totalFat, foodVendor) => set({
             foods: foods,
             foodLogEntry: logEntry,
             date: date,
@@ -34,7 +34,7 @@ function createMealPlanStore() {
             totalProtein: totalProtein,
             totalCarbs: totalCarbs,
             totalFat: totalFat,
-            foodProvider: foodProvider,
+            foodVendor: foodVendor,
             status: MealPlanStatus.SUCCESS
         }),
         setFailure: () => update(s => ({...s, foods: null, status: MealPlanStatus.FAILURE})),
@@ -47,7 +47,7 @@ function createMealPlanStore() {
             totalProtein: null,
             totalCarbs: null,
             totalFat: null,
-            foodProvider: null,
+            foodVendor: null,
             status: MealPlanStatus.NOT_STARTED
         }),
         removeFood: (foodName) =>

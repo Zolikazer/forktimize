@@ -1,10 +1,10 @@
 import {writable} from 'svelte/store';
-import {FoodProvider} from "$lib/utils/foodProviders.js";
+import {FoodVendor} from "$lib/utils/foodVendors.js";
 
 function createMealPlanRequestStore() {
     const {subscribe, set, update} = writable({
         selectedDate: null,
-        foodProvider: FoodProvider.CITY_FOOD.value,
+        foodVendor: FoodVendor.CITY_FOOD.value,
         dislikedFoods: [],
         maxFoodRepeat: null,
         macroConstraints: [
@@ -52,7 +52,7 @@ function createMealPlanRequestStore() {
             selectedDate: null,
             dislikedFoods: [],
             maxFoodRepeat: null,
-            foodProvider: FoodProvider.CITY_FOOD.value,
+            foodVendor: FoodVendor.CITY_FOOD.value,
         })
     };
 }

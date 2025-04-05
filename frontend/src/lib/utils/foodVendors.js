@@ -1,11 +1,11 @@
-export const FoodProvider = {
+export const FoodVendor = {
     CITY_FOOD: {label: "Cityfood", value: "cityfood"},
     INTER_FOOD: {label: "Interfood", value: "interfood"},
 };
-export const foodProviderList = Object.values(FoodProvider);
+export const foodVendorList = Object.values(FoodVendor);
 
-export function getProviderLabel(value) {
-    const match = foodProviderList.find(
+export function getVendorLabel(value) {
+    const match = foodVendorList.find(
         (entry) => entry?.value === value
     );
     return match?.label ?? "Unknown";

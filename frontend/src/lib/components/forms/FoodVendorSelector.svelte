@@ -1,5 +1,5 @@
 <script>
-    import {foodProviderList} from "$lib/utils/foodProviders.js";
+    import {foodVendorList} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
 </script>
 
@@ -7,8 +7,8 @@
     <span>🧑‍🍳 Kitchen:</span>
     <div class="control is-light ml-1">
         <div class="select is-primary is-small styled-select">
-            <select bind:value={$mealPlanRequestStore.foodProvider}>
-                {#each foodProviderList as { label, value }}
+            <select bind:value={$mealPlanRequestStore.foodVendor}>
+                {#each foodVendorList as { label, value }}
                     <option value={value}>{label}</option>
                 {/each}
             </select>

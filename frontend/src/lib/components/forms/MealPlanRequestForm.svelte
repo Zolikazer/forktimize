@@ -9,7 +9,7 @@
     import {get} from "svelte/store";
     import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
-    import FoodProviderSelector from "$lib/components/forms/FoodProviderSelector.svelte";
+    import FoodVendorSelector from "$lib/components/forms/FoodVendorSelector.svelte";
 
 
     async function generateMealPlan() {
@@ -29,7 +29,7 @@
                     mealPlan.totalProtein,
                     mealPlan.totalCarbs,
                     mealPlan.totalFat,
-                    mealPlan.foodProvider
+                    mealPlan.foodVendor
                 )
             } else {
                 mealPlanStore.setFailure()
@@ -52,7 +52,7 @@
             date: formState.selectedDate,
             foodBlacklist: formState.dislikedFoods,
             maxFoodRepeat: formState.maxFoodRepeat,
-            foodProvider: formState.foodProvider,
+            foodVendor: formState.foodVendor,
         };
     }
 
@@ -67,7 +67,7 @@
 <div class="card">
     <SectionHeader title="Set Your Nutritional Goals" subTitle="Give us the requirements, we give you the plan!">
         <div class="tags" slot="tags">
-            <FoodProviderSelector/>
+            <FoodVendorSelector/>
         </div>
     </SectionHeader>
     <div class="card-content">
