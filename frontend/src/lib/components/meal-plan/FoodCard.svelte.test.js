@@ -39,7 +39,7 @@ describe('FoodCard component', () => {
         expect(screen.getByText(`${mockFood.carb}g`)).toBeInTheDocument();
         expect(screen.getByText(`${mockFood.fat}g`)).toBeInTheDocument();
         expect(screen.getByAltText(mockFood.name)).toBeInTheDocument();
-        expect(screen.getByText(/Nem szeretem/i)).toBeInTheDocument();
+        expect(screen.getByText(/Don't like/i)).toBeInTheDocument();
     });
 
     test('truncates long food names', () => {
@@ -66,7 +66,7 @@ describe('FoodCard component', () => {
             mockFood.carb,
             mockFood.fat)
         render(FoodCard, {food: mockFood});
-        const button = screen.getByText(/Nem szeretem/i);
+        const button = screen.getByText(/Don't like/i);
 
         await fireEvent.click(button);
 
@@ -102,7 +102,7 @@ describe('FoodCard component', () => {
 
         render(FoodCard, { food: duplicateFood1 });
 
-        const button = screen.getByText(/Nem szeretem/i);
+        const button = screen.getByText(/Don't like/i);
         await fireEvent.click(button);
 
         expect(get(mealPlanRequestStore).dislikedFoods).toContain(duplicateFood1.name);
