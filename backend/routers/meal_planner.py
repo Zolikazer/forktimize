@@ -31,7 +31,7 @@ def generate_meal_plan_endpoint(meal_plan_request: MealPlanRequest,
                                 session: Session = Depends(get_session)) -> MealPlan:
     food_selection = get_foods_for_given_date(session,
                                               meal_plan_request.date,
-                                              meal_plan_request.food_provider,
+                                              meal_plan_request.food_vendor,
                                               meal_plan_request.food_blacklist)
 
     if not food_selection:
@@ -41,7 +41,7 @@ def generate_meal_plan_endpoint(meal_plan_request: MealPlanRequest,
                                       meal_plan_request.max_food_repeat)
 
     return MealPlan.from_food_counts(food_selection, food_counts, meal_plan_request.date,
-                                     meal_plan_request.food_provider)
+                                     meal_plan_request.food_vendor)
 
 
 @meal_planner.get("/health", tags=["Monitoring"])

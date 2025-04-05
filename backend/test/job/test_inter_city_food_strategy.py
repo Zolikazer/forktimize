@@ -5,9 +5,9 @@ from unittest.mock import patch, Mock, MagicMock
 import pytest
 from requests import Response
 
-from jobs.food_providers.city_food_strategy import CityFoodStrategy
-from model.food_providers import FoodProvider
-from jobs.food_providers.inter_food_strategy import InterFoodStrategy
+from jobs.food_vendors_strategies.city_food_strategy import CityFoodStrategy
+from model.food_vendors import FoodVendor
+from jobs.food_vendors_strategies.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import open_json
 from settings import SETTINGS
 
@@ -28,16 +28,16 @@ def mock_requests_post_success():
     return _mock
 
 
-@pytest.mark.parametrize("strategy, response_file, expected_provider", [
-    (CityFoodStrategy(), "city-response-test.json", FoodProvider.CITY_FOOD),
-    (InterFoodStrategy(), "interfood-response-test.json", FoodProvider.INTER_FOOD),
+@pytest.mark.parametrize("strategy, response_file, expected_vendor", [
+    (CityFoodStrategy(), "city-response-test.json", FoodVendor.CITY_FOOD),
+    (InterFoodStrategy(), "interfood-response-test.json", FoodVendor.INTER_FOOD),
 ])
-def test_inter_city_provider_fetch_foods_fetches_foods(mock_requests_post_success, strategy, response_file,
-                                                       expected_provider):
+def test_inter_city_vendor_fetch_foods_fetches_foods(mock_requests_post_success, strategy, response_file,
+                                                       expected_vendor):
     with mock_requests_post_success(response_file):
         foods = strategy.fetch_foods_for(2025, 10)
         assert len(foods) > 0, "Expected food items but got none."
-        assert foods[0].food_provider == expected_provider
+        assert foods[0].food_vendor == expected_vendor
 
 
 @pytest.mark.parametrize("strategy, expected_url, response_file", [
@@ -58,20 +58,20 @@ def test_inter_city_strategy_calls_correct_url(
         assert actual_url == expected_url, f"Expected URL {expected_url}, but got {actual_url}!"
 
 
-@pytest.mark.parametrize("strategy_cls, expected_provider", [
-    (CityFoodStrategy, FoodProvider.CITY_FOOD),
-    (InterFoodStrategy, FoodProvider.INTER_FOOD),
+@pytest.mark.parametrize("strategy_cls, expected_vendor", [
+    (CityFoodStrategy, FoodVendor.CITY_FOOD),
+    (InterFoodStrategy, FoodVendor.INTER_FOOD),
 ])
-def test_strategy_get_name(strategy_cls, expected_provider):
+def test_strategy_get_name(strategy_cls, expected_vendor):
     strategy = strategy_cls()
-    assert strategy.get_name() == expected_provider
+    assert strategy.get_name() == expected_vendor
 
 
 @pytest.mark.parametrize("strategy, expected_url", [
     (CityFoodStrategy(), SETTINGS.city_food_menu_url),
     (InterFoodStrategy(), SETTINGS.inter_food_menu_url),
 ])
-@patch("jobs.food_providers.inter_city_food_strategy.requests.post")
+@patch("jobs.food_vendors_strategies.inter_city_food_strategy.requests.post")
 def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
     expected_response = {"data": {"mock": "value"}}
 

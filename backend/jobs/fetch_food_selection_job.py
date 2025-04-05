@@ -3,10 +3,10 @@ from datetime import datetime
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from jobs.food_providers.city_food_strategy import CityFoodStrategy
-from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
-from model.food_providers import FoodProvider
-from jobs.food_providers.inter_food_strategy import InterFoodStrategy
+from jobs.food_vendors_strategies.city_food_strategy import CityFoodStrategy
+from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
+from model.food_vendors import FoodVendor
+from jobs.food_vendors_strategies.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import save_to_json
 from model.food import Food
 from model.job_run import JobRun, JobStatus
@@ -17,7 +17,7 @@ CURRENT_WEEK = datetime.now().isocalendar()[1]
 CURRENT_YEAR = datetime.now().year
 
 
-def fetch_and_store_food_selection(session: Session, strategy: FoodProviderStrategy, weeks_to_fetch: int = 3):
+def fetch_and_store_food_selection(session: Session, strategy: FoodVendorStrategy, weeks_to_fetch: int = 3):
     for week in range(CURRENT_WEEK, CURRENT_WEEK + weeks_to_fetch):
         try:
             foods = strategy.fetch_foods_for(CURRENT_YEAR, week)
@@ -43,8 +43,8 @@ def _save_food_to_db(session: Session, foods: list[Food], week: int):
     JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
 
-def _track_job_run(session: Session, week: int, year: int, status: JobStatus, provider: FoodProvider) -> int:
-    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_provider=provider)
+def _track_job_run(session: Session, week: int, year: int, status: JobStatus, vendor: FoodVendor) -> int:
+    job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor)
     session.add(job_run)
     session.commit()
     session.refresh(job_run)
@@ -53,8 +53,8 @@ def _track_job_run(session: Session, week: int, year: int, status: JobStatus, pr
     return job_run.id
 
 
-def _save_foods_to_json(provider_name: str, data: dict, year: int, week: int):
-    filename = SETTINGS.data_dir / f"{provider_name}-week-{year}-{week}.json"
+def _save_foods_to_json(vendor_name: str, data: dict, year: int, week: int):
+    filename = SETTINGS.data_dir / f"{vendor_name}-week-{year}-{week}.json"
     save_to_json(data, filename)
 
     JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
@@ -63,12 +63,12 @@ def _save_foods_to_json(provider_name: str, data: dict, year: int, week: int):
 if __name__ == "__main__":
     SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
 
-    provider_strategies = [
+    vendor_strategies = [
         CityFoodStrategy(),
         InterFoodStrategy(),
     ]
 
     init_db()
     with Session(engine) as job_session:
-        for provider in provider_strategies:
-            fetch_and_store_food_selection(job_session, provider)
+        for vendor in vendor_strategies:
+            fetch_and_store_food_selection(job_session, vendor)

@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 
 from model.food import Food
-from model.food_providers import FoodProvider
+from model.food_vendors import FoodVendor
 from model.food_log_entry import FoodLogEntry
 from model.meal_plan import MealPlan
 
@@ -138,7 +138,7 @@ def test_meal_plan_from_food_counts():
         chicken_id: 1
     }
 
-    meal_plan = MealPlan.from_food_counts(foods, food_counts, plan_date, FoodProvider.CITY_FOOD)
+    meal_plan = MealPlan.from_food_counts(foods, food_counts, plan_date, FoodVendor.CITY_FOOD)
 
     assert len(meal_plan.foods) == 3
 

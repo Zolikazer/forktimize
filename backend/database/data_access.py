@@ -5,7 +5,7 @@ from sqlalchemy import String
 from sqlmodel import select, col, Session, cast
 
 from model.food import Food
-from model.food_providers import FoodProvider
+from model.food_vendors import FoodVendor
 from monitoring.performance import benchmark
 from constants import ONE_DAY
 
@@ -20,17 +20,17 @@ def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
 
 @benchmark
 @cached(TTLCache(maxsize=100, ttl=ONE_DAY),
-        key=lambda session, target_date, food_provider, food_blacklist=None:
-        (target_date, food_provider, tuple(food_blacklist or ())))
+        key=lambda session, target_date, food_vendor, food_blacklist=None:
+        (target_date, food_vendor, tuple(food_blacklist or ())))
 def get_foods_for_given_date(
         session: Session,
         food_date: date,
-        food_provider: FoodProvider,
+        food_vendor: FoodVendor,
         food_blacklist: list[str] = None,
 ) -> list[Food]:
     statement = (select(Food)
                  .where(Food.date == food_date)
-                 .where(Food.food_provider == food_provider))
+                 .where(Food.food_vendor == food_vendor))
     for blacklisted in (food_blacklist or []):
         statement = statement.where(cast(Food.name, String).not_like(f"%{blacklisted}%"))
 

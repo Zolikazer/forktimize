@@ -4,7 +4,7 @@ from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
-from model.food_providers import FoodProvider
+from model.food_vendors import FoodVendor
 
 
 class Food(SQLModel, table=True):
@@ -12,7 +12,7 @@ class Food(SQLModel, table=True):
 
     food_id: StrictInt = Field(primary_key=True)
     date: datetime_date = Field(primary_key=True, index=True)
-    food_provider: FoodProvider = Field(
+    food_vendor: FoodVendor = Field(
         primary_key=True,
         nullable=False,
         index=True
@@ -37,13 +37,13 @@ class Food(SQLModel, table=True):
         return 0 if self.protein == 0 else round(self.calories / self.protein, 2)
 
     def __hash__(self):
-        return hash((self.food_id, self.date, self.food_provider))
+        return hash((self.food_id, self.date, self.food_vendor))
 
     def __eq__(self, other):
         if not isinstance(other, Food):
             return NotImplemented
         return (
-            self.food_id == other.food_id and
-            self.date == other.date and
-            self.food_provider == other.food_provider
+                self.food_id == other.food_id and
+                self.date == other.date and
+                self.food_vendor == other.food_vendor
         )

@@ -4,18 +4,18 @@ from typing import List
 
 import requests
 
-from jobs.food_providers.food_provider_strategy import FoodProviderStrategy
-from model.food_providers import FoodProvider
+from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
+from model.food_vendors import FoodVendor
 from model.food import Food
 from monitoring.logging import JOB_LOGGER
 
 
-class InterCityFoodStrategy(FoodProviderStrategy, ABC):
+class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
     @abstractmethod
-    def __init__(self, api_endpoint: str, food_provider: FoodProvider):
+    def __init__(self, api_endpoint: str, food_vendor: FoodVendor):
         self._api_endpoint = api_endpoint
-        self._food_provider = food_provider
+        self._food_vendor = food_vendor
         self._raw_data = {}
 
     def fetch_foods_for(self, year: int, week: int) -> List[Food]:
@@ -35,8 +35,8 @@ class InterCityFoodStrategy(FoodProviderStrategy, ABC):
 
         return self._raw_data[f"{year}{week}"]
 
-    def get_name(self) -> FoodProvider:
-        return self._food_provider
+    def get_name(self) -> FoodVendor:
+        return self._food_vendor
 
     def _deserialize_food_items(self, data: dict) -> list[Food]:
         return [
@@ -49,7 +49,7 @@ class InterCityFoodStrategy(FoodProviderStrategy, ABC):
                 fat=int(item['fat_portion_food_one']),
                 price=item['price'],
                 date=datetime.strptime(item['date'], "%Y-%m-%d").date(),
-                food_provider=self.get_name()
+                food_vendor=self.get_name()
             )
             for food_type in data['data'].values()
             for category in food_type['categories']

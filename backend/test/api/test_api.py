@@ -8,7 +8,7 @@ from sqlmodel import SQLModel, Session
 from starlette.testclient import TestClient
 
 from database.db import get_session
-from model.food_providers import FoodProvider
+from model.food_vendors import FoodVendor
 from main import app
 from routers.meal_planner import AppStatus
 from test.food_factory import make_food
@@ -46,7 +46,7 @@ def insert_test_food(session):
 
 def test_create_meal_plan_endpoint(client, session: Session):
     insert_test_food(session)
-    session.add(make_food(price=0, food_provider=FoodProvider.INTER_FOOD))
+    session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
 
     requested_date = "2025-02-24"
     meal_plan_request = {
@@ -57,7 +57,7 @@ def test_create_meal_plan_endpoint(client, session: Session):
             "min_protein": 200
         },
         "food_blacklist": ["Lencsefőzelék"],
-        "food_provider": "cityfood",
+        "food_vendor": "cityfood",
     }
 
     response = client.post("/meal-plan", json=meal_plan_request)
@@ -81,7 +81,7 @@ def test_create_meal_plan_endpoint(client, session: Session):
     assert data["totalProtein"] == 200
     assert data["totalCarbs"] == 80
     assert data["totalFat"] == 40
-    assert data["foodProvider"] == "cityfood"
+    assert data["foodVendor"] == "cityfood"
 
 
 def test_create_meal_plan_max_food_repeat(client, session: Session):
@@ -97,7 +97,7 @@ def test_create_meal_plan_max_food_repeat(client, session: Session):
         },
         "food_blacklist": ["Lencsefőzelék"],
         "max_food_repeat": 1,
-        "food_provider": "cityfood",
+        "food_vendor": "cityfood",
     }
 
     response = client.post("/meal-plan", json=meal_planner_request)
@@ -156,7 +156,7 @@ def test_invalid_meal_plan_reqeust(client):
         },
         "food_blacklist": ["Lencsefőzelék"],
         "max_food_repeat": 1,
-        "food_provider": "cityfood",
+        "food_vendor": "cityfood",
     }
 
     response = client.post("/meal-plan", json=meal_planner_request)

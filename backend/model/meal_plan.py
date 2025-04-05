@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.alias_generators import to_camel
 
 from model.food import Food
-from model.food_providers import FoodProvider
+from model.food_vendors import FoodVendor
 from model.food_log_entry import FoodLogEntry
 
 
@@ -15,7 +15,7 @@ class MealPlan(BaseModel):
 
     foods: list[Food] = Field(default_factory=list)
     date: datetime_date = None
-    food_provider: FoodProvider = None
+    food_vendor: FoodVendor = None
 
     @computed_field
     @property
@@ -67,11 +67,11 @@ class MealPlan(BaseModel):
 
     @classmethod
     def from_food_counts(cls, foods: list[Food], food_counts: dict[int, int], plan_date: datetime_date,
-                         food_provider: FoodProvider) -> MealPlan:
+                         food_vendor: FoodVendor) -> MealPlan:
         id_to_food = {f.food_id: f for f in foods}
         selected = [
             id_to_food[food_id]
             for food_id, count in food_counts.items()
             for _ in range(count)
         ]
-        return cls(foods=selected, date=plan_date, food_provider=food_provider)
+        return cls(foods=selected, date=plan_date, food_vendor=food_vendor)
