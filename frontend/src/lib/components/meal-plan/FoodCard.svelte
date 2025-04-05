@@ -4,6 +4,8 @@
     import {FoodVendor} from "$lib/utils/foodVendors.js";
     import Macro from "$lib/components/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
+    import {t} from "$lib/stores/localeStore.js";
+
 
     export let food;
 
@@ -86,15 +88,15 @@
             </div>
 
             <div class="is-flex-grow-1 ml-3 is-flex is-flex-direction-column is-justify-content-space-between">
-                <Macro macroName="Protein"
+                <Macro macroName={$t.macro.protein()}
                        macroValue={food.protein}
                        macroRatio={proteinRatio}
                        ratioColorClass="has-background-info"/>
-                <Macro macroName="Carbohydrate"
+                <Macro macroName={$t.macro.carbohydrate()}
                        macroValue={food.carb}
                        macroRatio={carbRatio}
                        ratioColorClass="has-background-danger"/>
-                <Macro macroName="Fat"
+                <Macro macroName={$t.macro.fat()}
                        macroValue={food.fat}
                        macroRatio={fatRatio}
                        ratioColorClass="has-background-warning"/>
@@ -103,7 +105,7 @@
         </div>
     </div>
     <button class="button is-danger is-light mt-auto mb-3 custom-button" on:click={() => removeFood(food.name)}>
-        🚫 Nem szeretem
+        🚫 {$t.mealPlan.dontLike()}
     </button>
 </div>
 

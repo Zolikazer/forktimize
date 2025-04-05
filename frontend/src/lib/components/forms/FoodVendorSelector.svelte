@@ -1,10 +1,12 @@
 <script>
     import {foodVendorList} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
+    import {t} from "$lib/stores/localeStore.js";
+
 </script>
 
 <div class="field tag is-light is-success bigger-tag is-flex is-justify-content-space-between is-align-items-center">
-    <span>🧑‍🍳 Kitchen:</span>
+    <span>🧑‍🍳 {$t.requestForm.kitchen()}:</span>
 
     <div class="control is-light ml-1">
         <div class="select is-primary is-small styled-select">

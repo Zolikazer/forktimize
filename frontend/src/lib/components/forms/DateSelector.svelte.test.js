@@ -16,7 +16,7 @@ describe("DateSelector", () => {
         render(DateSelector);
         await screen.findByText(/2025-03-10/i);
 
-        const select = screen.getByLabelText(/Select a Date/i);
+        const select = screen.getByLabelText(/Select Date/i);
         expect(select).toBeInTheDocument();
 
         mockDates.forEach((date) => {
@@ -48,7 +48,7 @@ describe("DateSelector", () => {
         render(DateSelector);
         vi.spyOn(FoodPlannerClient, "getDates").mockRejectedValue(new Error("API request failed"));
 
-        const select = screen.getByLabelText(/Select a Date/i);
+        const select = screen.getByLabelText(/Select Date/i);
         expect(select).toBeInTheDocument();
         expect(select.children.length).toBe(10);
     });

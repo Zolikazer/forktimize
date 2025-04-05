@@ -1,10 +1,12 @@
 <script>
+    import {localeStore} from "$lib/stores/localeStore.js";
+
     const languages = [
         {code: 'hu', name: 'Magyar', flag: '🇭🇺'},
         {code: 'en', name: 'English', flag: '🇬🇧'},
     ];
 
-    let currentLanguage = languages[0];
+    $: currentLanguage = languages.find((language) => language.code === $localeStore);
     let isLanguageMenuOpen = false;
 
     function toggleLanguageMenu() {
@@ -16,8 +18,9 @@
     }
 
     function changeLanguage(lang) {
-        currentLanguage = lang;
+        currentLanguage = lang.code;
         isLanguageMenuOpen = false;
+        localeStore.set(lang.code)
     }
 
     function doNothing() {
@@ -34,7 +37,7 @@
             <span class="current-language">
                 {currentLanguage.flag} {currentLanguage.code.toUpperCase()}
             </span>
-            <span class="dropdown-icon">▼</span>
+        <span class="dropdown-icon">▼</span>
 
         {#if isLanguageMenuOpen}
             <div role="button" tabindex="0" on:keydown={doNothing()} class="language-dropdown" on:click|stopPropagation>

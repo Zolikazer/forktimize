@@ -10,6 +10,7 @@
     import MaxFoodRepeat from "$lib/components/forms/MaxFoodRepeat.svelte";
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
     import FoodVendorSelector from "$lib/components/forms/FoodVendorSelector.svelte";
+    import {t} from '$lib/stores/localeStore.js';
 
 
     async function generateMealPlan() {
@@ -61,8 +62,8 @@
 
     export function createMealPlanRequest(formState) {
         const nutritionalConstraints = formState.macroConstraints.reduce((acc, constraint) => {
-            acc[`min${constraint.name}`] = constraint.min;
-            acc[`max${constraint.name}`] = constraint.max;
+            acc[`min${capitalizeFirstLetter(constraint.name)}`] = constraint.min;
+            acc[`max${capitalizeFirstLetter(constraint.name)}`] = constraint.max;
             return acc;
         }, {});
 
@@ -75,6 +76,10 @@
         };
     }
 
+    function capitalizeFirstLetter(word) {
+        return  word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
     $: formData = $mealPlanRequestStore;
     $: allConstraintsValid = $mealPlanRequestStore.macroConstraints.every(
         ({min, max}) => min == null || max == null || min < max
@@ -84,10 +89,10 @@
 </script>
 
 <div class="card">
-    <SectionHeader title="Set Your Nutritional Goals" subTitle="Give us the requirements, we give you the plan!">
-        <div class="tags" slot="tags">
-            <FoodVendorSelector/>
-        </div>
+    <SectionHeader title={$t.requestForm.setYourGoals()} subTitle={$t.requestForm.setYourGoalSub()}>
+    <div class="tags" slot="tags">
+        <FoodVendorSelector/>
+    </div>
     </SectionHeader>
     <div class="card-content">
         <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2 mt-3">
@@ -96,7 +101,7 @@
                         bind:minValue={constraint.min}
                         bind:maxValue={constraint.max}
                         bind:isValid={constraint.isValid}
-                        label={constraint.name}
+                        label={$t.macro[constraint.name]()}
                         unit={constraint.unit}
                         emoji={constraint.emoji}
                 />
@@ -119,8 +124,7 @@
         <div class="has-text-centered">
             <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                     on:click={generateMealPlan}
-                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>Generate
-                Meal Plan 🍽️
+                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>{$t.requestForm.generateMeal()} 🍽️
             </button>
         </div>
     </div>

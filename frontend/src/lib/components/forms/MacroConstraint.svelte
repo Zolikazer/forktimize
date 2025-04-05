@@ -1,4 +1,6 @@
 <script>
+    import {t} from '$lib/stores/localeStore.js';
+
     export let label;
     export let minValue;
     export let maxValue;
@@ -32,7 +34,7 @@
                         bind:value={minValue}
                         on:blur={() => { minValue = resetInvalidInput(minValue)}}
                         class="input is-small has-text-centered is-rounded"
-                        placeholder="Optional"
+                        placeholder={$t.requestForm.optional()}
                         class:is-danger={!isValid}
                 >
             </div>
@@ -47,7 +49,7 @@
                        bind:value={maxValue}
                        on:blur={() => {maxValue = resetInvalidInput(maxValue) }}
                        class="input is-small has-text-centered is-rounded"
-                       placeholder="Optional"
+                       placeholder={$t.requestForm.optional()}
                        class:is-danger={!isValid}>
             </div>
 

@@ -29,8 +29,8 @@ describe("MealPlanRequestForm Component", () => {
     test("renders date selector and food blacklist", () => {
         render(MealPlanRequestForm);
 
-        expect(screen.getByText(/Select a Date/i)).toBeInTheDocument();
-        expect(screen.getByText(/Foods You Dislike/i)).toBeInTheDocument();
+        expect(screen.getByText(/Select Date/i)).toBeInTheDocument();
+        expect(screen.getByText(/Disliked food/i)).toBeInTheDocument();
 
     });
 
@@ -112,8 +112,8 @@ describe("MealPlanRequestForm Component", () => {
     test('disables the generate button when at least one macro constraint is invalid', async () => {
         mealPlanRequestStore.set({
             macroConstraints: [
-                {name: 'Protein', min: 200, max: 100, unit: 'g', emoji: '🍗'},
-                {name: 'Carbs', min: 100, max: 300, unit: 'g', emoji: '🍞'},
+                {name: 'protein', min: 200, max: 100, unit: 'g', emoji: '🍗'},
+                {name: 'carb', min: 100, max: 300, unit: 'g', emoji: '🍞'},
             ]
         })
 

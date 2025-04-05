@@ -1,4 +1,6 @@
 <script>
+    import {t} from '$lib/stores/localeStore.js';
+
     let foodCanRepeat = true;
     export let maxFoodRepeat = null;
 
@@ -6,7 +8,7 @@
 </script>
 
 <div class="field has-text-centered">
-    <p class="label mb-2">Can a Food Repeat?</p>
+    <p class="label mb-2">{$t.requestForm.canFoodRepeat()}?</p>
     <div class="is-flex is-justify-content-center is-align-content-center">
         <label class="checkbox is-large green-checkbox">
             <input

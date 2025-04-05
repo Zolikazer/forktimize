@@ -13,7 +13,7 @@ describe('FoodBlacklist component', () => {
     test('renders the component with empty blacklist', () => {
         render(FoodBlacklist);
 
-        expect(screen.getByText(/Foods You Dislike/i)).toBeInTheDocument();
+        expect(screen.getByText(/Disliked Foods/i)).toBeInTheDocument();
         expect(screen.queryAllByText(/\w+/).length).toBe(1);
     });
 

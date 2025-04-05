@@ -8,10 +8,10 @@ function createMealPlanRequestStore() {
         dislikedFoods: [],
         maxFoodRepeat: null,
         macroConstraints: [
-            {name: "Calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
-            {name: "Protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
-            {name: "Carb", min: undefined, max: undefined, unit: "g", emoji: "🍞", isValid: true},
-            {name: "Fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
+            {name: "calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
+            {name: "protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
+            {name: "carb", min: undefined, max: undefined, unit: "g", emoji: "🍞", isValid: true},
+            {name: "fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
         ],
     });
 
@@ -44,10 +44,10 @@ function createMealPlanRequestStore() {
         },
         reset: () => set({
             macroConstraints: [
-                {name: "Calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
-                {name: "Protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
-                {name: "Carb", min: undefined, max: undefined, unit: "g", emoji: "🥖", isValid: true},
-                {name: "Fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
+                {name: "calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
+                {name: "protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
+                {name: "carb", min: undefined, max: undefined, unit: "g", emoji: "🥖", isValid: true},
+                {name: "fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
             ],
             selectedDate: null,
             dislikedFoods: [],

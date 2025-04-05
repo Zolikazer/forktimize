@@ -16,7 +16,7 @@ export const getDates = async () => {
         return await api.get(CONFIG.API.ENDPOINT.DATES).json();
     } catch (error) {
         console.error("❌ Failed to fetch dates:", error.message);
-        return [];
+        throw error;
     }
 };
 

@@ -1,6 +1,7 @@
 <script>
     import {onMount} from "svelte";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
+    import {t} from '$lib/stores/localeStore.js';
 
     let newFood = "";
     let inputRef;
@@ -38,14 +39,14 @@
 </script>
 
 <div class="field">
-    <label class="label" for="food-blacklist">Foods You Dislike 🚫</label>
+    <label class="label" for="food-blacklist">{$t.requestForm.dislikedFoods()} 🚫</label>
     <div id="food-blacklist" class="control" bind:this={inputRef}>
         <input
                 type="text"
                 bind:value={newFood}
                 on:keydown={(e) => e.key === 'Enter' && blacklistFood()}
                 class="input"
-                placeholder="Type a food and press Enter">
+                placeholder={$t.requestForm.typeFoodEnter()}>
     </div>
 
     <div class="tags mt-2">

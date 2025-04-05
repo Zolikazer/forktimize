@@ -2,11 +2,12 @@
     import {getVendorLabel} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import LanguageSelector from "$lib/components/layout/LanguageSelector.svelte";
+    import {t} from '$lib/stores/localeStore.js';
 
-    export let title = "CityFood Meal Planner 🥗🍽️";
-    export let subtitle = "Tervezz, Zabálj, Be Fit!";
+    let title;
+    let subtitle = "Tervezz, Zabálj, Be Fit!";
 
-    $: title = `${getVendorLabel($mealPlanRequestStore.foodVendor)} Meal Planner 🥗🍽️`;
+    $: title = `${$t.hero.title({vendor: getVendorLabel($mealPlanRequestStore.foodVendor)})} 🥗🍽️`;
 
 </script>
 
@@ -16,7 +17,7 @@
         <div class="container">
             <LanguageSelector/>
             <h1 class="title title-animated is-size-2 has-text-weight-bold mb-2">{title}</h1>
-            <p class="subtitle hero-subtitle is-size-4 mb-4">{subtitle}</p>
+            <p class="subtitle hero-subtitle is-size-4 mb-4">{$t.hero.subtitle()}</p>
         </div>
     </div>
 </section>
