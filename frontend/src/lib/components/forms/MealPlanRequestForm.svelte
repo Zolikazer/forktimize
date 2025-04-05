@@ -36,8 +36,27 @@
             }
         } catch (error) {
             mealPlanStore.setFailure()
-            showError(error.message);
+            await handleMealPlanError(error);
         }
+    }
+
+    async function handleMealPlanError(error) {
+        try {
+            const errorData = await error.response.json();
+            switch (errorData.code) {
+                case "macro_calories_conflict":
+                    showError("The total calorie content of minimum macros exceeds max calories.");
+                    break;
+                case "max_lower_than_min":
+                    showError(`The minimum value of ${errorData.field} should be less than the maximum.`);
+                    break;
+                default:
+                    showError("Something went wrong. Please try again later.")
+            }
+        } catch (e) {
+            showError("Something went wrong.")
+        }
+
     }
 
     export function createMealPlanRequest(formState) {

@@ -13,7 +13,7 @@
             <section class="modal-card-body">
                 <div class="notification is-danger has-text-centered">
                     <p><strong> {$errorStore.message}</strong></p>
-                    <p>Try again later! ⚠️</p>
+                    <p>Please try again! ⚠️</p>
                 </div>
             </section>
             <footer class="modal-card-foot">

@@ -19,6 +19,6 @@ describe("ErrorDialog Component", () => {
 
         expect(screen.getByText(/Error 😱/)).toBeInTheDocument();
         expect(screen.getByText("Something went wrong!")).toBeInTheDocument();
-        expect(screen.getByText(/Try again later!/)).toBeInTheDocument();
+        expect(screen.getByText(/Please try again!/)).toBeInTheDocument();
     });
 });

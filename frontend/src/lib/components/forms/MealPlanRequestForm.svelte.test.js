@@ -5,6 +5,7 @@ import * as FoodPlannerClient from "$lib/api/foodPlannerApi.js";
 import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
 import {get} from "svelte/store";
 import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
+import {errorStore} from "$lib/stores/errorStore.js";
 
 
 beforeEach(() => {
@@ -122,5 +123,29 @@ describe("MealPlanRequestForm Component", () => {
 
         expect(button).toBeDisabled();
     });
+
+    test("on failure shows error message", async () => {
+        const mockError = {
+            response: {
+                json: vi.fn().mockResolvedValue({
+                    code: 'macro_calories_conflict',
+                })
+            }
+        };
+        vi.spyOn(FoodPlannerClient, "getMealPlan").mockRejectedValue(mockError);
+
+        render(MealPlanRequestForm);
+
+        const dateSelect = screen.getByLabelText(/date/i);
+        await fireEvent.change(dateSelect, {target: {value: "2025-03-10"}});
+
+        const button = screen.getByRole("button", {name: /Generate Meal Plan/i});
+        await fireEvent.click(button);
+
+        expect(get(errorStore).show).toBe(true);
+        expect(get(errorStore).message).toBe("The total calorie content of minimum macros exceeds max calories.");
+
+    });
+
 
 });

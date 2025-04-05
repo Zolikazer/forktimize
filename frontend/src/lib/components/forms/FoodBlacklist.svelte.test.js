@@ -24,14 +24,12 @@ describe('FoodBlacklist component', () => {
         await fireEvent.input(input, {target: {value: 'Broccoli'}});
         await fireEvent.keyDown(input, {key: 'Enter'});
 
-        console.log(mealPlanRequestStore)
         expect(get(mealPlanRequestStore).dislikedFoods).toContain('Broccoli');
         expect(input.value).toBe('');
     });
 
     test('removes a food from blacklist when clicking delete button', async () => {
         mealPlanRequestStore.addDislikedFood('Spinach');
-        console.log(get(mealPlanRequestStore).dislikedFoods);
         render(FoodBlacklist);
 
         const deleteButton = screen.getByRole("button");
