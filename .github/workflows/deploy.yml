@@ -45,9 +45,12 @@ jobs:
 
         - name: 🚀 Run e2e tests
           working-directory: frontend
+          env:
+            VITE_API_URL: http://localhost:8000/api
+            VITE_DEFAULT_LOCALE: en
           run: |
             npx playwright install --with-deps
-            VITE_API_URL=http://localhost:8000/api npm run test:e2e
+            npm run test:e2e
 
         - name: Upload Playwright test results (only on failure)
           if: failure()
