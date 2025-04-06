@@ -36,7 +36,7 @@ test.describe('Meal Plan Generator', () => {
         await expect(page.locator(".tag.is-success", { hasText: /Ft/i })).toBeVisible();
 
         await expect(page.locator(".macro-box", { hasText: /Protein/i })).toBeVisible();
-        await expect(page.locator(".macro-box", { hasText: /Carbs/i })).toBeVisible();
+        await expect(page.locator(".macro-box", { hasText: /Carb/i })).toBeVisible();
         await expect(page.locator(".macro-box", { hasText: /Fat/i })).toBeVisible();
     });
 

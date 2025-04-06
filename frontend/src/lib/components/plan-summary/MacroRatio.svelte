@@ -1,5 +1,5 @@
 <script>
-    import {t, localeStore} from '$lib/stores/localeStore.js';
+    import {t} from '$lib/stores/localeStore.js';
 
     export let proteinPercentage;
     export let carbsPercentage;

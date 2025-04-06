@@ -48,6 +48,18 @@ export const translations = {
         summary: {
             title: () => "Your Meal Plan Summary",
             macroRatio: () => "Macronutrient Ratio",
+        },
+        foodLog: {
+            title: () => "Macro Equivalents",
+            subtitle: () => "Trackable Format",
+            mfpReady: () => "Food Logging Ready",
+            chickenBreast: () => "Chicken Breast",
+            sugar: () => "Sugar",
+            oliveOil: () => "Olive Oil",
+            explanation: () => "Your actual meal plan has many foods, but this format lets you log it quickly in your favourite fitness app using 3 basic ingredients that represent your macros.",
+        },
+        footer: {
+            contact: () => "Contact me at:",
         }
 
     },
@@ -102,6 +114,18 @@ export const translations = {
         summary: {
             title: () => "Az étrended összefoglalása",
             macroRatio: () => "Makrotápanyag arány",
+        },
+        foodLog: {
+            title: () => "Makró Ekvivalens",
+            subtitle: () => "Naplózható formátum",
+            mfpReady: () => "Ételnapló kompatibilis",
+            chickenBreast: () => "Csirkemell",
+            sugar: () => "Cukor",
+            oliveOil: () => "Olívaolaj",
+            explanation: () => "Az étrended sok különböző ételből áll, de ez a formátum lehetővé teszi, hogy gyorsan naplózd kedvenc fitness alkalmazásodba 3 alap összetevő segítségével, amelyek a makróidat képviselik.",
+        },
+        footer: {
+            contact: () => "Kapcsolatfelvétel:",
         }
 
     },

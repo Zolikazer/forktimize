@@ -1,4 +1,6 @@
 <script>
+    import {t} from '$lib/stores/localeStore.js';
+
     const emailUser = "spagina.zoltan";
     const emailDomain = "gmail.com";
     const email = `${emailUser}@${emailDomain}`;
@@ -17,7 +19,7 @@
             <div class="level-right">
                 <div class="level-item">
                     <p class="is-size-6 footer-text has-text-weight-bold">
-                        Contact me at: <a href={`mailto:${email}`} class="has-text-weight-bold has-text-link no-shadow">{email}</a>
+                        {$t.footer.contact()} <a href={`mailto:${email}`} class="has-text-weight-bold has-text-link no-shadow">{email}</a>
                     </p>
                 </div>
             </div>
