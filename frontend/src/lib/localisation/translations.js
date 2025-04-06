@@ -17,6 +17,7 @@ export const translations = {
         },
         macro: {
             calories: () => "Calories",
+            caloriesSmall: () => "calories",
             protein: () => "Protein",
             carb: () => "Carb",
             carbohydrate: () => "Carbohydrate",
@@ -44,6 +45,10 @@ export const translations = {
             minimizePrice: () => "The <strong>generator prioritizes minimizing price</strong> while still fitting your nutritional constraints.",
             lessConstraintBetter: () => "The <strong>more constraints you add, the harder it is</strong> to find a cheap meal plan"
         },
+        summary: {
+            title: () => "Your Meal Plan Summary",
+            macroRatio: () => "Macronutrient Ratio",
+        }
 
     },
     hu: {
@@ -64,6 +69,7 @@ export const translations = {
         },
         macro: {
             calories: () => "Kalória",
+            caloriesSmall: () => "kalória",
             protein: () => "Fehérje",
             carb: () => "Szénhidrát",
             carbohydrate: () => "Szénhidrát",
@@ -92,6 +98,10 @@ export const translations = {
             addDislikedFood: () => `Ha van olyan étel, amit nem szeretsz, <strong>add hozzá a „Nem szeretem” mezőhöz</strong>, hogy kizárjuk őket.`,
             minimizePrice: () => `A <strong>generátor előnyben részesíti az olcsóbb kombinációkat</strong>, miközben figyelembe veszi a megadott célokat.`,
             lessConstraintBetter: () => `Minél <strong>több megkötést adsz meg, annál nehezebb</strong> egy olcsó étrendet találni.`
+        },
+        summary: {
+            title: () => "Az étrended összefoglalása",
+            macroRatio: () => "Makrotápanyag arány",
         }
 
     },

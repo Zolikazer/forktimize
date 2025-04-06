@@ -58,6 +58,6 @@ describe('MealPlanSummarySvelte Component', () => {
 
     test('displays date properly', () => {
         render(MealPlanSummary);
-        expect(screen.getByText(/2025. május 6., kedd/i)).toBeInTheDocument();
+        expect(screen.getByText(/Tuesday, May 6, 2025/i)).toBeInTheDocument();
     });
 });

@@ -18,7 +18,7 @@ describe('MacroRatio Component', () => {
         expect(screen.getByText(/15%/i)).toBeInTheDocument();
 
         expect(screen.getByText(/Protein/i)).toBeInTheDocument();
-        expect(screen.getByText(/Carbs/i)).toBeInTheDocument();
+        expect(screen.getByText(/Carb/i)).toBeInTheDocument();
         expect(screen.getByText(/Fat/i)).toBeInTheDocument();
     });
 

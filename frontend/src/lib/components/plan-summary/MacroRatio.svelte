@@ -1,11 +1,13 @@
 <script>
+    import {t, localeStore} from '$lib/stores/localeStore.js';
+
     export let proteinPercentage;
     export let carbsPercentage;
     export let fatPercentage;
 </script>
 <div class="mb-2">
     <p class="is-size-7 has-text-grey has-text-weight-semibold mb-2">
-        Macronutrient Ratio
+        {$t.summary.macroRatio()}
     </p>
     <div class="macro-ratio-bar">
         <div
@@ -32,15 +34,15 @@
     <div class="is-flex is-gap-1 mt-2 is-size-7 has-text-grey">
         <div class="is-flex is-align-items-center">
             <div class="legend-dot has-background-info"></div>
-            <span>Protein</span>
+            <span>{$t.macro.protein()}</span>
         </div>
         <div class="is-flex is-align-items-center">
             <div class="legend-dot has-background-danger"></div>
-            <span>Carbs</span>
+            <span>{$t.macro.carb()}</span>
         </div>
         <div class="is-flex is-align-items-center">
             <div class="legend-dot has-background-warning"></div>
-            <span>Fat</span>
+            <span>{$t.macro.fat()}</span>
         </div>
     </div>
 </div>

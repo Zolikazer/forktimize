@@ -4,7 +4,7 @@
     import MacroStat from "$lib/components/plan-summary/MacroStat.svelte";
     import MacroRatio from "$lib/components/plan-summary/MacroRatio.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
-
+    import {t, localeStore} from '$lib/stores/localeStore.js';
 
     $: macroRatios = calculateMacroRatio({
         protein: $mealPlanStore.totalProtein,
@@ -19,7 +19,7 @@
 </script>
 
 <div class="card">
-    <SectionHeader title="Your Meal Plan Summary" subTitle={"📅" + new Date($mealPlanStore.date).toLocaleDateString("hu-HU", {
+    <SectionHeader title={$t.summary.title()} subTitle={"📅" + new Date($mealPlanStore.date).toLocaleDateString($localeStore, {
             weekday: "long",
             month: "long",
             day: "numeric",
@@ -30,7 +30,7 @@
                 <img src="money.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalPrice.toLocaleString("fr-FR")} Ft
               </span>
             <span class="tag is-success is-light bigger-tag">
-                <img src="calorie.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} calories
+                <img src="calorie.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} {$t.macro.caloriesSmall()}
               </span>
         </div>
     </SectionHeader>
@@ -40,7 +40,7 @@
             <div class="column is-one-third">
                 <MacroStat
                         icon="protein.png"
-                        label="Protein"
+                        label={$t.macro.protein()}
                         value={`${$mealPlanStore.totalProtein} g`}
                         subValue={`${proteinRatio}%`}
                         colorClass="danger"
@@ -50,7 +50,7 @@
             <div class="column is-one-third">
                 <MacroStat
                         icon="carb.png"
-                        label="Carbs"
+                        label={$t.macro.carb()}
                         value={`${$mealPlanStore.totalCarbs} g`}
                         subValue={`${carbRatio}%`}
                         colorClass="success"
@@ -60,7 +60,7 @@
             <div class="column is-one-third">
                 <MacroStat
                         icon="fat.png"
-                        label="Fat"
+                        label={$t.macro.fat()}
                         value={`${$mealPlanStore.totalFat} g`}
                         subValue={`${fatRatio}%`}
                         colorClass="link"
@@ -72,7 +72,6 @@
                 proteinPercentage={proteinRatio}
                 carbsPercentage={carbRatio}
                 fatPercentage={fatRatio}
-                title="Macronutrient Ratio"
         />
 
     </div>
