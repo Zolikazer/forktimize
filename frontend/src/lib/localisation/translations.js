@@ -33,7 +33,17 @@ export const translations = {
             inProgress: () => "Generating your meal plan... Please wait!",
             failed: () => `Sorry, we could not find a meal plan that meets your needs. 😔 <strong>Adjust your input and try again!</strong>`,
             notStarted: () => `No meal plan generated yet. Click <strong>"Generate Meal Plan"</strong> to get started!`,
-        }
+        },
+        instructions: {
+            needHelp: () => "Need help?",
+            addGoals: () => "Add your <strong>nutritional goals</strong> (calories, protein, carbs, fats).",
+            enterMinMax: () => "You only need to enter either the <strong>minimum or maximum</strong> values.",
+            selectDay: () => "<strong>Select a day</strong> for which you want to order.",
+            appGenerate: () => "The app will generate a <strong>meal plan</strong> that fit your requirements.",
+            addDislikedFood: () => 'If you have foods you dislike, <strong>add them to the "Foods You dislike" field</strong> to filter them out.',
+            minimizePrice: () => "The <strong>generator prioritizes minimizing price</strong> while still fitting your nutritional constraints.",
+            lessConstraintBetter: () => "The <strong>more constraints you add, the harder it is</strong> to find a cheap meal plan"
+        },
 
     },
     hu: {
@@ -72,6 +82,16 @@ export const translations = {
                 `Sajnáljuk, nem találtunk olyan étrendet, ami megfelelne az igényeidnek. 😔 <strong>Próbáld újra más beállításokkal!</strong>`,
             notStarted: () =>
                 `Még nincs étrend generálva. Kattints a <strong>„Étrend generálása”</strong> gombra a kezdéshez!`,
+        },
+        instructions: {
+            needHelp: () => "Kell segítség?",
+            addGoals: () => `Add meg a <strong>táplálkozási céljaidat</strong> (kalória, fehérje, szénhidrát, zsír).`,
+            enterMinMax: () => `Elég csak a <strong>minimum vagy maximum</strong> értéket megadni.`,
+            selectDay: () => `<strong>Válaszd ki a napot</strong>, amelyre rendelni szeretnél.`,
+            appGenerate: () => `Az alkalmazás egy <strong>étrendet generál</strong>, ami megfelel az igényeidnek.`,
+            addDislikedFood: () => `Ha van olyan étel, amit nem szeretsz, <strong>add hozzá a „Nem szeretem” mezőhöz</strong>, hogy kizárjuk őket.`,
+            minimizePrice: () => `A <strong>generátor előnyben részesíti az olcsóbb kombinációkat</strong>, miközben figyelembe veszi a megadott célokat.`,
+            lessConstraintBetter: () => `Minél <strong>több megkötést adsz meg, annál nehezebb</strong> egy olcsó étrendet találni.`
         }
 
     },
