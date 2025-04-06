@@ -21,9 +21,7 @@ meal_planner = APIRouter()
 
 @meal_planner.get("/dates")
 def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
-    today = date.today()
-
-    return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, today)])
+    return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, date.today())])
 
 
 @meal_planner.post("/meal-plan")
