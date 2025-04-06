@@ -1,6 +1,8 @@
 <script>
     import {localeStore} from "$lib/stores/localeStore.js";
 
+    export let floating = false;
+
     const languages = [
         {code: 'hu', name: 'Magyar', flag: '🇭🇺'},
         {code: 'en', name: 'English', flag: '🇬🇧'},
@@ -30,7 +32,7 @@
 
 <svelte:window on:click={closeLanguageMenu}/>
 
-<div class="language-selector-container">
+<div class:language-selector-container-floating={floating} class:language-selector-container={!floating}>
     <div role="button" tabindex="0" class="language-selector"
          on:click|stopPropagation={toggleLanguageMenu}
          on:keydown={doNothing()}>
@@ -58,11 +60,16 @@
 
 
 <style>
-    .language-selector-container {
+    .language-selector-container-floating {
         position: absolute;
         top: 0;
         right: 0;
         z-index: 10;
+    }
+
+    .language-selector-container {
+        position: relative;
+        display: inline-block;
     }
 
     .language-selector {
@@ -161,7 +168,7 @@
     }
 
     @media screen and (max-width: 768px) {
-        .language-selector-container {
+        .language-selector-container-floating {
             top: 5px;
             right: 10px;
         }

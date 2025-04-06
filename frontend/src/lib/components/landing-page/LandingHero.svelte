@@ -7,7 +7,7 @@
         <div class="container">
             <div class="columns is-vcentered">
                 <div class="column is-8">
-                    <h1 class="title is-4">
+                    <h1 class="title is-3">
                         Forktimize: Étrend tervezés CityFood és InterFood ételeiből
                     </h1>
                     <!--                    <h2 class="subtitle">-->

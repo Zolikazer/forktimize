@@ -14,7 +14,7 @@
 <section class="hero hero-custom">
     <div class="has-text-centered hero-content py-1">
         <div class="container">
-            <LanguageSelector/>
+            <LanguageSelector floating={true}/>
             <h1 class="title title-animated is-size-2 has-text-weight-bold mb-2">{title}</h1>
             <p class="subtitle hero-subtitle is-size-4 mb-4">{$t.hero.subtitle()}</p>
         </div>
