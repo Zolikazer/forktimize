@@ -1,4 +1,6 @@
 <script>
+    import {t} from '$lib/stores/localeStore.js';
+
     let showModal = false;
 </script>
 
@@ -8,25 +10,20 @@
             <div class="columns is-vcentered">
                 <div class="column is-8">
                     <h1 class="title is-3">
-                        Forktimize: Étrend tervezés CityFood és InterFood ételeiből
+                        Forktimize: {$t.landingPage.hero.title()}
                     </h1>
                     <!--                    <h2 class="subtitle">-->
                     <!--                        Your macros. Their food. We do the math.-->
                     <!--                    </h2>-->
                     <p class="subtitle is-6">
-                        If you want to hit your macros but don’t want to cook,
-                        Forktimize creates a daily meal plan using foods from <strong>CityFood or InterFood</strong> —
-                        based on your nutrition goals.
+                        {@html $t.landingPage.hero.subtitle()}
                     </p>
-                    <p>If you like the plan, you can order it directly from their website.</p>
+                    <p>{$t.landingPage.hero.orderIfYouLikeIt()}</p>
                     <a href="/meal-plan-generator" class="button is-primary is-rounded mt-2 shadow-text">
-                        Fork me a meal plan
+                        {$t.landingPage.hero.forkPlan()}
                     </a>
                     <p class="subtitle is-7 mt-2">
-                        <strong>Disclaimer:</strong> Forktimize is an independent tool and is not affiliated with,
-                        endorsed by, or officially connected to CityFood or InterFood.
-                        All product names, trademarks, and registered trademarks are property of their respective
-                        owners.
+                        {@html $t.landingPage.hero.disclaimer()}
                     </p>
                 </div>
                 <div class="column is-4">

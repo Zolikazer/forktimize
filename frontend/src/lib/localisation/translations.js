@@ -60,6 +60,23 @@ export const translations = {
         },
         footer: {
             contact: () => "Contact me at:",
+        },
+        landingPage: {
+            navbar: {
+                slogen: () => "Your macros. Their food. We do the math.",
+                howItWorks: () => "How It Works",
+                about: () => "About",
+            },
+            hero: {
+                title: () => "Plan your diet with meals from CityFood and InterFood",
+                subtitle: () => "If you want to hit your macros but don’t want to cook, " +
+                    "Forktimize creates a daily meal plan using foods from CityFood or InterFood — based on your nutrition goals.",
+                orderIfYouLikeIt: () => "If you like the plan, you can order it directly from their website.",
+                forkPlan: () => "Fork me a meal plan",
+                disclaimer: () => "<strong>Disclaimer:</strong> Forktimize is an independent tool and is not affiliated " +
+                    "with endorsed by, or officially connected to CityFood or InterFood. " +
+                    "All product names, trademarks, and registered trademarks are property of their respective owners.",
+            }
         }
 
     },
@@ -126,6 +143,23 @@ export const translations = {
         },
         footer: {
             contact: () => "Kapcsolatfelvétel:",
+        },
+        landingPage: {
+            navbar: {
+                slogen: () => "A te makród. Az ő kajájuk. Mi számolunk.",
+                howItWorks: () => "Hogyan működik?",
+                about: () => "Rólunk",
+            },
+            hero: {
+                title: () => "Étrend tervezés CityFood és InterFood ételeiből",
+                subtitle: () => "Ha szeretnéd elérni a makró céljaidat, de nincs kedved főzni, " +
+                    "a Forktimize napi étrendet készít neked a <strong>CityFood vagy InterFood</strong> kínálatából – a táplálkozási céljaid alapján.",
+                orderIfYouLikeIt: () => "Ha tetszik a terv, az ételt közvetlenül megrendelheted a szolgáltató oldalán.",
+                forkPlan: () => "Tervezd meg az étrendem!",
+                disclaimer: () => "<strong>Figyelem:</strong> A Forktimize egy független eszköz, " +
+                    "nincs kapcsolatban, sem hivatalos együttműködésben a CityFood vagy InterFood cégekkel. " +
+                    "Minden terméknév, védjegy és bejegyzett márkanév a tulajdonosát illeti.",
+            }
         }
 
     },
