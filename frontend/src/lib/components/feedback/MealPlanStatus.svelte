@@ -1,25 +1,26 @@
 <script>
     import {mealPlanStore, MealPlanStatus} from "$lib/stores/mealPlanStore.js";
+    import {t} from '$lib/stores/localeStore.js';
 
 </script>
 
 {#if $mealPlanStore.status === MealPlanStatus.SUCCESS}
     <div class="notification is-success has-text-centered">
-        <strong>Your meal plan is ready. ✅</strong>
+        <strong>{$t.feedback.ready()} ✅</strong>
     </div>
 {:else if $mealPlanStore.status === MealPlanStatus.FAILURE}
     <div class="notification is-danger has-text-centered">
-        Sorry, we could not find a meal plan that meets your needs. 😔 <strong>Adjust your input and try again!</strong>
+        {@html $t.feedback.failed()}
         👍
     </div>
 {:else if $mealPlanStore.status === MealPlanStatus.IN_PROGRESS}
     <div class="notification is-primary has-text-centered">
         <span class="spinner"></span>
-        <strong> Generating your meal plan... Please wait!</strong>
+        <strong>{$t.feedback.inProgress()}</strong>
     </div>
 {:else}
     <div class="notification is-primary has-text-centered">
-        No meal plan generated yet. Click <strong>"Generate Meal Plan"</strong> to get started! 🚀
+        {@html $t.feedback.notStarted()} 🚀
     </div>
 {/if}
 

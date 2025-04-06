@@ -28,6 +28,12 @@ export const translations = {
             items: () => "items",
             dontLike: () => "Don't Like",
         },
+        feedback: {
+            ready: () => "Your meal plan is ready.",
+            inProgress: () => "Generating your meal plan... Please wait!",
+            failed: () => `Sorry, we could not find a meal plan that meets your needs. 😔 <strong>Adjust your input and try again!</strong>`,
+            notStarted: () => `No meal plan generated yet. Click <strong>"Generate Meal Plan"</strong> to get started!`,
+        }
 
     },
     hu: {
@@ -59,6 +65,14 @@ export const translations = {
             items: () => "étel",
             dontLike: () => "Nem szeretem",
         },
+        feedback: {
+            ready: () => "Az étrended elkészült.",
+            inProgress: () => "Étrend generálása folyamatban... Kérlek, várj!",
+            failed: () =>
+                `Sajnáljuk, nem találtunk olyan étrendet, ami megfelelne az igényeidnek. 😔 <strong>Próbáld újra más beállításokkal!</strong>`,
+            notStarted: () =>
+                `Még nincs étrend generálva. Kattints a <strong>„Étrend generálása”</strong> gombra a kezdéshez!`,
+        }
 
     },
 };

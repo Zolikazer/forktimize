@@ -5,7 +5,6 @@
     import {t} from '$lib/stores/localeStore.js';
 
     let title;
-    let subtitle = "Tervezz, Zabálj, Be Fit!";
 
     $: title = `${$t.hero.title({vendor: getVendorLabel($mealPlanRequestStore.foodVendor)})} 🥗🍽️`;
 
@@ -54,6 +53,4 @@
             transform: translateY(-5px);
         }
     }
-
-
 </style>

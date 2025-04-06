@@ -3,9 +3,10 @@ const isDev = import.meta.env.MODE !== "production";
 export const CONFIG = {
     MODE: isDev ? "development" : "production",
     API: {
-        URL: import.meta.env.VITE_API_URL ?? (isDev
-            ? "http://localhost:8000/api"
-            : "https://forktimize.xyz/api"),
+        URL: import.meta.env.VITE_API_URL ?? (
+            isDev
+                ? "http://localhost:8000/api"
+                : "https://forktimize.xyz/api"),
         ENDPOINT: {
             DATES: "dates",
             MEAL_PLAN: "meal-plan",
