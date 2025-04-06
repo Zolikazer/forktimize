@@ -39,7 +39,6 @@ async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException)
 
 @app.on_event("startup")
 def on_startup():
-    os.makedirs(SETTINGS.LOG_DIR, exist_ok=True)
     SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
 
     with Session(engine) as session:

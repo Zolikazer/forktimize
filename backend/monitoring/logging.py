@@ -10,6 +10,8 @@ from settings import SETTINGS
 
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 
+os.makedirs(SETTINGS.LOG_DIR, exist_ok=True)
+
 
 def _create_logger(name: str, filename: str):
     logger = logging.getLogger(f"forktimize.{name}")
