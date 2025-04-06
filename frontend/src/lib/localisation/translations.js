@@ -76,8 +76,47 @@ export const translations = {
                 disclaimer: () => "<strong>Disclaimer:</strong> Forktimize is an independent tool and is not affiliated " +
                     "with endorsed by, or officially connected to CityFood or InterFood. " +
                     "All product names, trademarks, and registered trademarks are property of their respective owners.",
+            },
+            howItWorks: {
+                howItWorks: () => "Here’s how Forktimize works",
+                chooseVendor: () => "<strong>1. Choose Food Vendor</strong><br>Select your favourite food vendor <strong>(Cityfood/Interfood)</strong>",
+                setDate: () => "<strong>2. Set Date</strong><br>When do you need meals?",
+                setMacros: () => "<strong>3. Set Macros</strong><br>What is your range for macros?",
+                getPlan: () => "<strong>4. Get Plan</strong><br> Receive a meal plan that fits your goals and minimizes cost",
+                orderFood: () => "<strong>5. Order Food</strong><br>Order food directly from the vendor's website"
+            },
+            cta: {
+                getMealPlan: () => "Get your meal plan",
+            },
+            about: {
+                about: () => "About Forktimize",
+                whatIsThisTitle: () => "What’s This?",
+                whatIsThisText: () => "Forktimize is a simple tool that builds a daily meal plan using food from online food vendors like " +
+                    "<strong>CityFood</strong> and <strong>InterFood.</strong>",
+                youTellIt: {
+                    title: () => "You tell it:",
+                    goal: () => "• Your calorie and macro goals (protein, carbs, fat)",
+                    vendor: () => "• Which vendor you want to order from",
+                    date: () => "• What day you're ordering for",
+                    explanation: () => "It goes through the full menu and finds a combination of meals that " +
+                        "matches your targets as closely as possible — and keeps the cost low as possible."
+                },
+                whyBother: {
+                    title: () => "Why Bother?",
+                    lotOptions: () => "Food vendors have tons of options. If you're trying to hit specific " +
+                        "macros, building a good meal plan manually can take a lot of time, guessing, and math.",
+                    itSolves: () => "Forktimize figures it out for you — instantly. So if you’re trying to " +
+                        "stay in shape, cut, bulk, or just want a reasonable meal plan without cooking, this might help."
+                },
+                whoMade: {
+                    this: () => "Who Made This?",
+                    me: () => "Just some dev who wanted to have more time live life instead of spending hours " +
+                        "planning, grocery shopping and cooking.",
+                    free: () => "It’s not a product. It’s not trying to sell you anything. It’s just a free " +
+                        "tool that does one thing well. Enjoy.",
+                }
             }
-        }
+        },
 
     },
     hu: {
@@ -159,8 +198,46 @@ export const translations = {
                 disclaimer: () => "<strong>Figyelem:</strong> A Forktimize egy független eszköz, " +
                     "nincs kapcsolatban, sem hivatalos együttműködésben a CityFood vagy InterFood cégekkel. " +
                     "Minden terméknév, védjegy és bejegyzett márkanév a tulajdonosát illeti.",
+            },
+            howItWorks: {
+                howItWorks: () => "Így működik a Forktimize",
+                chooseVendor: () => "<strong>1. Válassz szolgáltató</strong><br>Válaszd ki a kedvenc szolgáltatód <strong>(CityFood/InterFood)</strong>",
+                setDate: () => "<strong>2. Válassz dátumot</strong><br>Melyik napra szeretnél ételt rendelni?",
+                setMacros: () => "<strong>3. Állítsd be a makrókat</strong><br>Milyen tartományban legyenek a makróid?",
+                getPlan: () => "<strong>4. Kapj étrendet</strong><br>Ami megfelel a céjaidnak minimális költséggel",
+                orderFood: () => "<strong>5. Rendeld meg az ételt</strong><br>Rendeld meg közvetlenül a szolgáltató weboldalán"
+            },
+            cta: {
+                getMealPlan: () => "Kérem az étrendet",
+            },
+            about: {
+                about: () => "Rólunk",
+                whatIsThisTitle: () => "Mi ez?",
+                whatIsThisText: () => "A Forktimize egy egyszerű eszköz, amely napi étrendet állít össze online ételszolgáltatók, például a <strong>CityFood</strong> és <strong>InterFood</strong> kínálatából.",
+
+                youTellIt: {
+                    title: () => "Amit megadsz:",
+                    goal: () => "A kalória- és makró céljaid (fehérje, szénhidrát, zsír)",
+                    vendor: () => "Melyik szolgáltatótól szeretnél rendelni",
+                    date: () => "Melyik napra szeretnél rendelni",
+                    explanation: () => "Végigmegy az egész étlapon, és olyan ételkombinációt keres, amely a lehető legjobban illeszkedik a céljaidhoz – és a lehető legolcsóbb.",
+                },
+
+                whyBother: {
+                    title: () => "Miért jó ez?",
+                    lotOptions: () => "Az ételszolgáltatóknál rengeteg opció van. Ha konkrét makrókat akarsz elérni, egy jó étrend összeállítása sok időt, találgatást és matekot igényel.",
+                    itSolves: () => "A Forktimize ezt megoldja helyetted – azonnal. Szóval ha formában akarsz maradni, fogyni, tömegelni, vagy csak főzés nélkül szeretnél ésszerű étrendet, akkor ez segíthet.",
+                },
+
+                whoMade: {
+                    this: () => "Ki készítette?",
+                    me: () => "Egy fejlesztő, akik inkább élni akarta az életet, mintsem órákat tölteni étrendtervezéssel, bevásárlással és főzéssel.",
+                    free: () => "Ez nem termék. Nem akar eladni semmit. Ez csak egy ingyenes eszköz, ami egy dolgot jól csinál. Használd egészséggel!",
+                }
             }
-        }
+
+        },
+
 
     },
 };
