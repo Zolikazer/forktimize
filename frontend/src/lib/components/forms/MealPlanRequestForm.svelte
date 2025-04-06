@@ -46,16 +46,16 @@
             const errorData = await error.response.json();
             switch (errorData.code) {
                 case "macro_calories_conflict":
-                    showError("The total calorie content of minimum macros exceeds max calories.");
+                    showError($t.error.macroCalorieConflict());
                     break;
                 case "max_lower_than_min":
-                    showError(`The minimum value of ${errorData.field} should be less than the maximum.`);
+                    showError($t.error.maxLowerThanMin(errorData.field));
                     break;
                 default:
-                    showError("Something went wrong. Please try again later.")
+                    showError($t.error.something());
             }
         } catch (e) {
-            showError("Something went wrong.")
+            showError($t.error.something())
         }
 
     }

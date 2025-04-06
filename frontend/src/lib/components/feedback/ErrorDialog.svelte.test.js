@@ -17,7 +17,7 @@ describe("ErrorDialog Component", () => {
         errorStore.set({show: true, message: "Something went wrong!"});
         render(ErrorDialog);
 
-        expect(screen.getByText(/Error 😱/)).toBeInTheDocument();
+        expect(screen.getByText(/We ran into a problem/)).toBeInTheDocument();
         expect(screen.getByText("Something went wrong!")).toBeInTheDocument();
         expect(screen.getByText(/Please try again!/)).toBeInTheDocument();
     });

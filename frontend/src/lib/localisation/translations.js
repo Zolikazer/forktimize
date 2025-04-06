@@ -117,7 +117,14 @@ export const translations = {
                 }
             }
         },
-
+        error: {
+            title: () => "We ran into a problem",
+            tryAgain: () => "Please try again!",
+            close: () => "Close",
+            macroCalorieConflict: () => "The total calorie content of minimum macros exceeds max calories.",
+            maxLowerThanMin: ({field}) => `The minimum value of ${field} should be less than the maximum.`,
+            something: () => "Something went wrong.",
+        }
     },
     hu: {
         hero: {
@@ -237,7 +244,14 @@ export const translations = {
             }
 
         },
-
+        error: {
+            title: () => "Valami probléma történt",
+            tryAgain: () => "Kérlek, próbáld újra!",
+            close: () => "Bezárás",
+            macroCalorieConflict: () => "A minimális makrók összesített kalóriatartalma meghaladja a megadott maximumot.",
+            maxLowerThanMin: ({ field }) => `A(z) ${field} minimális értékének kisebbnek kell lennie, mint a maximális.`,
+            something: () => "Valami hiba történt.",
+        }
 
     },
 };
