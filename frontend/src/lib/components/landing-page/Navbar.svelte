@@ -3,7 +3,7 @@
         <div class="navbar-brand">
             <a class="navbar-item shadow-text is-size-5 has" href="/">
                 <i class="fas fa-utensils mr-2"></i>
-                <span>Forktimize</span>
+                <span><strong>Forktimize</strong> - Your macros. Their food. We do the math.</span>
             </a>
         </div>
         <div class="navbar-end">

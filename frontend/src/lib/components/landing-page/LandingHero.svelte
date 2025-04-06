@@ -7,10 +7,13 @@
         <div class="container">
             <div class="columns is-vcentered">
                 <div class="column is-8">
-                    <h1 class="title is-3">
-                        Forktimize: Your macros. Their food. We do the math.
+                    <h1 class="title is-4">
+                        Forktimize: Étrend tervezés CityFood és InterFood ételeiből
                     </h1>
-                    <p class="subtitle is-5">
+                    <!--                    <h2 class="subtitle">-->
+                    <!--                        Your macros. Their food. We do the math.-->
+                    <!--                    </h2>-->
+                    <p class="subtitle is-6">
                         If you want to hit your macros but don’t want to cook,
                         Forktimize creates a daily meal plan using foods from <strong>CityFood or InterFood</strong> —
                         based on your nutrition goals.
@@ -29,7 +32,9 @@
                 <div class="column is-4">
                     <figure class="image is-3by2">
                         <button on:click={() => showModal = true} style="cursor: zoom-in;">
-                            <img src="forktimize-preview.png" alt="Forktimize preview" class="has-radius-small"/>
+                            <img src="forktimize-preview.png"
+                                 alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
+                                 class="has-radius-small"/>
                         </button>
                     </figure>
                 </div>
@@ -41,7 +46,7 @@
                             <figure class="image">
                                 <img
                                         src="forktimize-preview.png"
-                                        alt="Preview full"
+                                        alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
                                         class="has-radius-small"
                                         style="height: 95vh; width: 100vh"
                                 />
