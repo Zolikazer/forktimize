@@ -30,7 +30,7 @@ def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalCon
     duration = time.time() - start_time
 
     if status == "Optimal":
-        APP_LOGGER.info(f"✅ Successfully created a meal plan in {duration:.4f} seconds.")
+        APP_LOGGER.info(f"✅ Successfully created a meal plan in {duration * 1000:.2f} ms.")
         return _get_food_counts(foods, x_vars)
 
     APP_LOGGER.info("Could not create meal plan. Status: %s", status)

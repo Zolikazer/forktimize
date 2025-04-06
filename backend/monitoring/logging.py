@@ -52,6 +52,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         process_time = time.time() - start_time
-        API_LOGGER.info(f"📤 Response: {response.status_code} |Time: {process_time:.2f}s")
+        API_LOGGER.info(f"📤 Response: {response.status_code} |Time: {process_time * 1000:.2f} ms")
 
         return response
