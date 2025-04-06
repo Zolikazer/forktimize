@@ -15,6 +15,7 @@ from constants import ONE_DAY
         key=lambda session, target_date: target_date)
 def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
     statement = select(col(Food.date)).distinct().where(Food.date > target_date)
+
     return list(session.exec(statement).all())
 
 

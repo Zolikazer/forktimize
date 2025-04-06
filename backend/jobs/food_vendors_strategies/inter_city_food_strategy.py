@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import List
 
 import requests
 
 from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
-from model.food_vendors import FoodVendor
 from model.food import Food
+from model.food_vendors import FoodVendor
 from monitoring.logging import JOB_LOGGER
 
 
@@ -18,9 +17,8 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
         self._food_vendor = food_vendor
         self._raw_data = {}
 
-    def fetch_foods_for(self, year: int, week: int) -> List[Food]:
+    def fetch_foods_for(self, year: int, week: int) -> list[Food]:
         data = self.get_raw_data(year, week)
-        self._raw_data[f"{year}{week}"] = data
         foods = self._deserialize_food_items(data)
 
         JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from CityFood for week {week}, year {year}.")
