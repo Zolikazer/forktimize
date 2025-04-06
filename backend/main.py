@@ -36,8 +36,12 @@ async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException)
         }
     )
 
+
 @app.on_event("startup")
 def on_startup():
+    os.makedirs(SETTINGS.LOG_DIR, exist_ok=True)
+    SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
+
     with Session(engine) as session:
         APP_LOGGER.info("🚀 Starting up...")
         APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
@@ -56,9 +60,6 @@ def on_startup():
             scheduler.start()
         except Exception as e:
             APP_LOGGER.error(f"Something fucked when starting upp the app {e}")
-
-        os.makedirs(SETTINGS.LOG_DIR, exist_ok=True)
-        SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
 
 
 @app.on_event("shutdown")
