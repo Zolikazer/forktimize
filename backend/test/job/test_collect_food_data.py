@@ -5,10 +5,10 @@ from freezegun import freeze_time
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from jobs.collect_food_data import collect_food_data
+from jobs.collect_food_data_job import CollectFoodDataJob
 from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
-from model.food_vendors import FoodVendor
 from model.food import Food
+from model.food_vendors import FoodVendor
 from model.job_run import JobRun, JobStatus
 from test.food_factory import make_food
 
@@ -48,25 +48,25 @@ def dummy_strategies() -> list[FoodVendorStrategy]:
     ]
 
 
-@patch("jobs.collect_food_data.save_to_json", autospec=True)
+@patch("jobs.collect_food_data_job.save_to_json", autospec=True)
 def test_collect_food_data_saves_foods_to_db(_, test_session, dummy_strategies):
-    collect_food_data(test_session, dummy_strategies, 2, 0)
+    CollectFoodDataJob(test_session, dummy_strategies, 2, 0).run()
 
     food_entries = test_session.exec(select(Food)).all()
     assert len(food_entries) == 5, "No food entries were inserted into the database!"
 
 
 def test_collect_food_data_saves_data(test_session, dummy_strategies):
-    with patch("jobs.collect_food_data.save_to_json") as mock_save_to_file:
-        collect_food_data(test_session, dummy_strategies, 2, 0)
+    with patch("jobs.collect_food_data_job.save_to_json") as mock_save_to_file:
+        CollectFoodDataJob(test_session, dummy_strategies, 2, 0).run()
         mock_save_to_file.assert_called()
         assert mock_save_to_file.call_count == 4
 
 
-@patch("jobs.collect_food_data.save_to_json", autospec=True)
+@patch("jobs.collect_food_data_job.save_to_json", autospec=True)
 @freeze_time("2025-01-01")
 def test_collect_food_data_track_successful_job_runs(_, test_session, dummy_strategies):
-    collect_food_data(test_session, dummy_strategies, 2, 0)
+    CollectFoodDataJob(test_session, dummy_strategies, 2, 0).run()
 
     expected = {
         (FoodVendor.CITY_FOOD, 1),
@@ -85,8 +85,7 @@ def test_fetch_fails_and_marks_job_as_failed(test_session):
     strategy = MagicMock()
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
     strategy.get_name.return_value = FoodVendor.CITY_FOOD
-
-    collect_food_data(test_session, [strategy], 1, 0)
+    CollectFoodDataJob(test_session, [strategy], 2, 0).run()
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"

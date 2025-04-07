@@ -9,11 +9,10 @@ from starlette.responses import JSONResponse
 from database.data_access import is_database_empty
 from database.db import init_db, engine
 from error_handling.exceptions import MealPlanRequestException
-from jobs.collect_food_data import run_collect_food_data_job
+from jobs.collect_food_data_job import run_collect_food_data_job
 from jobs.job_scheduler import SCHEDULER
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
-from settings import SETTINGS
 
 app = FastAPI(root_path="/api")
 app.include_router(meal_planner)
@@ -40,8 +39,6 @@ async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException)
 
 @app.on_event("startup")
 def on_startup():
-    SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
-
     with Session(engine) as session:
         APP_LOGGER.info("🚀 Starting up...")
         APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
