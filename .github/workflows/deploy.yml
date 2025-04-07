@@ -39,6 +39,9 @@ jobs:
 
         - name: 🚀 Start FastAPI backend
           working-directory: backend
+          env:
+            FETCH_IMAGES: false
+            WEEKS_TO_FETCH: 1
           run: |
             uvicorn main:app > $LOG_DIR/all.log 2>&1 &
             sleep 5

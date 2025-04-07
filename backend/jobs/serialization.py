@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 
 def open_json(json_file: str) -> dict:
@@ -8,6 +9,11 @@ def open_json(json_file: str) -> dict:
     return data
 
 
-def save_to_json(data: dict, path: str):
+def save_to_json(data: dict, path: str | Path):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
+
+
+def save_image(content: bytes, path: str | Path):
+    with open(path, "wb") as f:
+        f.write(content)

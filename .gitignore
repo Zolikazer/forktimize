@@ -29,7 +29,9 @@ backend/**/*.pyc
 backend/**/*.pyo
 backend/**/*.pyd
 backend/*.sqlite3
-backend/resources/city-response*
+backend/resources/city*
+backend/resources/inter*
+backend/images
 backend/logs
 *.db
 debug.png

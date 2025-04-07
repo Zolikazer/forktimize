@@ -9,7 +9,7 @@ from sqlmodel import Session
 from database.db import init_db, engine
 from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
 from jobs.food_vendors_strategies.vendor_strategies import VENDOR_STRATEGIES
-from jobs.serialization import save_to_json
+from jobs.serialization import save_to_json, save_image
 from model.food import Food
 from model.food_vendors import FoodVendor
 from model.job_run import JobStatus, JobRun
@@ -126,8 +126,7 @@ class CollectFoodDataJob:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
 
-            with open(save_path, "wb") as f:
-                f.write(response.content)
+            save_image(response.content, save_path)
 
             JOB_LOGGER.info(f"✅ Saved image: {save_path}")
         except Exception as e:
