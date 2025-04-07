@@ -9,6 +9,7 @@ services:
       - /var/lib/forktimize:/var/lib/forktimize
       - /var/log/forktimize:/var/log/forktimize
       - /opt/forktimize/backend:/app
+      - /var/www/forktimize/images:/var/www/forktimize/images
     ports:
       - "8000:8000"
   
