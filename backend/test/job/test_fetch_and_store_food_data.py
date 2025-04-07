@@ -1,10 +1,12 @@
 from unittest.mock import patch, MagicMock
 
 import pytest
+from freezegun import freeze_time
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from jobs.fetch_food_selection_job import fetch_and_store_food_selection
+from jobs.collect_food_data import collect_food_data
+from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
 from model.food_vendors import FoodVendor
 from model.food import Food
 from model.job_run import JobRun, JobStatus
@@ -22,22 +24,61 @@ def test_session():
         yield session
 
 
-def test_fetch_and_store_food_data_success(test_session):
+@pytest.fixture(scope="function")
+def dummy_strategy():
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food(), make_food(), make_food()]
     strategy.get_name.return_value = FoodVendor.CITY_FOOD
     strategy.get_raw_data.return_value = {"bombardino": "crocodilo"}
 
-    with patch("jobs.fetch_food_selection_job.save_to_json") as mock_save_to_file:
-        fetch_and_store_food_selection(test_session, strategy)
+
+@pytest.fixture
+def dummy_strategies() -> list[FoodVendorStrategy]:
+    def make_strategy(vendor_name: FoodVendor, foods: list[Food]) -> FoodVendorStrategy:
+        strategy = MagicMock(spec=FoodVendorStrategy)
+        strategy.get_name.return_value = vendor_name
+        strategy.fetch_foods_for.return_value = foods
+        strategy.get_raw_data.return_value = {"something": "something"}
+
+        return strategy
+
+    return [
+        make_strategy(FoodVendor.CITY_FOOD, [make_food(), make_food(), make_food()]),
+        make_strategy(FoodVendor.INTER_FOOD, [make_food(), make_food()]),
+    ]
+
+
+@patch("jobs.collect_food_data.save_to_json", autospec=True)
+def test_collect_food_data_saves_foods_to_db(_, test_session, dummy_strategies):
+    collect_food_data(test_session, dummy_strategies, 2, 0)
+
+    food_entries = test_session.exec(select(Food)).all()
+    assert len(food_entries) == 5, "No food entries were inserted into the database!"
+
+
+def test_collect_food_data_saves_data(test_session, dummy_strategies):
+    with patch("jobs.collect_food_data.save_to_json") as mock_save_to_file:
+        collect_food_data(test_session, dummy_strategies, 2, 0)
         mock_save_to_file.assert_called()
+        assert mock_save_to_file.call_count == 4
 
-        job_run = test_session.exec(select(JobRun)).first()
-        assert job_run.status == JobStatus.SUCCESS, "JobRun with SUCCESS not found!"
-        assert job_run.food_vendor == FoodVendor.CITY_FOOD
 
-        food_entries = test_session.exec(select(Food)).all()
-        assert len(food_entries) == 3, "No food entries were inserted into the database!"
+@patch("jobs.collect_food_data.save_to_json", autospec=True)
+@freeze_time("2025-01-01")
+def test_collect_food_data_track_successful_job_runs(_, test_session, dummy_strategies):
+    collect_food_data(test_session, dummy_strategies, 2, 0)
+
+    expected = {
+        (FoodVendor.CITY_FOOD, 1),
+        (FoodVendor.CITY_FOOD, 2),
+        (FoodVendor.INTER_FOOD, 1),
+        (FoodVendor.INTER_FOOD, 2),
+    }
+
+    job_runs = test_session.exec(select(JobRun)).all()
+    actual = {(j.food_vendor, j.week) for j in job_runs}
+
+    assert actual == expected
 
 
 def test_fetch_fails_and_marks_job_as_failed(test_session):
@@ -45,7 +86,7 @@ def test_fetch_fails_and_marks_job_as_failed(test_session):
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
     strategy.get_name.return_value = FoodVendor.CITY_FOOD
 
-    fetch_and_store_food_selection(test_session, strategy)
+    collect_food_data(test_session, [strategy], 1, 0)
 
     job_run = test_session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
