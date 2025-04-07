@@ -42,10 +42,9 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         start_time = time.time()
         body = await request.body()
         user_agent = request.headers.get("user-agent", "Unknown")
-        ip_address = request.client.host if request.client else "Unknown"
 
         API_LOGGER.info(f"📥 Incoming request: {request.method} {request.url} | "
-                        f"IP: {ip_address} | "
+                        f"IP: {get_real_ip(request)} | "
                         f"User-Agent: {user_agent} | "
                         f"Body: {body.decode()}")
 
@@ -55,3 +54,9 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         API_LOGGER.info(f"📤 Response: {response.status_code} |Time: {process_time * 1000:.2f} ms")
 
         return response
+
+def get_real_ip(request: Request) -> str:
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    return request.client.host if request.client else "Unknown"
