@@ -1,3 +1,4 @@
+import random
 import time
 from datetime import datetime
 from pathlib import Path
@@ -13,9 +14,11 @@ from model.food import Food
 from model.food_vendors import FoodVendor
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
+from monitoring.performance import benchmark
 from settings import SETTINGS
 
 
+@benchmark
 def run_collect_food_data_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
     with Session(engine) as session:
@@ -23,6 +26,12 @@ def run_collect_food_data_job():
 
 
 class CollectFoodDataJob:
+    FORKTIMIZE_HEADERS = {
+                "User-Agent": "ForktimizeBot/1.0 (+https://forktimize.xyz/bot-info)",
+                "From": "spagina.zoltan@gmail.com",
+                "X-Forktimize-Purpose": "Meal planning helper, not scraping for resale or spam. Contact: forktimize.xyz"
+            }
+
     def __init__(self,
                  session: Session,
                  strategies: list[FoodVendorStrategy],
@@ -31,32 +40,32 @@ class CollectFoodDataJob:
                  fetch_images: bool = SETTINGS.FETCH_IMAGES,
                  image_dir: Path = SETTINGS.food_image_dir,
                  data_dir: Path = SETTINGS.data_dir):
-        self.session = session
-        self.strategies = strategies
-        self.weeks_to_fetch = weeks_to_fetch
-        self.delay = delay
-        self.fetch_images = fetch_images
-        self.image_dir = image_dir
-        self.data_dir = data_dir
+        self._session = session
+        self._strategies = strategies
+        self._weeks_to_fetch = weeks_to_fetch
+        self._delay = delay
+        self._fetch_images = fetch_images
+        self._image_dir = image_dir
+        self._data_dir = data_dir
 
     def run(self):
         self._ensure_dirs_exist()
         current_year = datetime.now().year
         current_week = datetime.now().isocalendar()[1]
 
-        for strategy in self.strategies:
-            for week in range(current_week, current_week + self.weeks_to_fetch):
+        for strategy in self._strategies:
+            for week in range(current_week, current_week + self._weeks_to_fetch):
                 try:
                     self._sync_one_week_food_data(current_year, week, strategy)
                     self._track_successful_job_run(current_year, strategy, week)
                 except Exception as e:
                     self._track_failed_job_jon(current_year, e, strategy, week)
 
-                time.sleep(self.delay)
+                time.sleep(self._delay)
 
     def _ensure_dirs_exist(self):
-        self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.image_dir.mkdir(parents=True, exist_ok=True)
+        self._data_dir.mkdir(parents=True, exist_ok=True)
+        self._image_dir.mkdir(parents=True, exist_ok=True)
 
     def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodVendorStrategy):
         foods = strategy.fetch_foods_for(year, week)
@@ -65,19 +74,19 @@ class CollectFoodDataJob:
         raw_data = strategy.get_raw_data(year, week)
         self._save_foods_to_json(strategy.get_name().value, raw_data, year, week)
 
-        # if self.fetch_images:
-        #     self._download_food_images(foods, strategy)
+        if self._fetch_images:
+            self._download_food_images(foods, strategy)
 
     def _save_food_to_db(self, foods: list[Food], week: int):
         for food in foods:
-            self.session.merge(food)
+            self._session.merge(food)
 
-        self.session.commit()
+        self._session.commit()
 
         JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
     def _save_foods_to_json(self, vendor_name: str, data: dict, year: int, week: int):
-        filename = self.data_dir / f"{vendor_name}-week-{year}-{week}.json"
+        filename = self._data_dir / f"{vendor_name}-week-{year}-{week}.json"
         save_to_json(data, filename)
 
         JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
@@ -89,9 +98,9 @@ class CollectFoodDataJob:
 
     def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendor) -> int:
         job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor)
-        self.session.add(job_run)
-        self.session.commit()
-        self.session.refresh(job_run)
+        self._session.add(job_run)
+        self._session.commit()
+        self._session.refresh(job_run)
 
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id
@@ -103,11 +112,11 @@ class CollectFoodDataJob:
     def _download_food_images(self, foods: list[Food], strategy: FoodVendorStrategy):
         for food in foods:
             self._download_image(strategy.get_food_image_url(food.food_id),
-                                 f"{food.food_id}_{strategy.get_name().value}.png")
-            time.sleep(self.delay)
+                                 f"{strategy.get_name().value}_{food.food_id}.png")
+            time.sleep(self._delay + random.uniform(0.1, 0.5))
 
     def _download_image(self, url: str, image_name: str):
-        save_path = self.image_dir / image_name
+        save_path = self._image_dir / image_name
         if save_path.exists():
             JOB_LOGGER.info(f"🟡 Skipping image (already exists): {save_path}")
             return
