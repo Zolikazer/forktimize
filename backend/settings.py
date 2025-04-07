@@ -20,12 +20,10 @@ class Settings(BaseSettings):
     FETCH_IMAGES: bool = True
 
     @computed_field
-    @property
     def city_food_menu_url(self) -> str:
         return f"{self.CITY_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     @computed_field
-    @property
     def inter_food_menu_url(self) -> str:
         return f"{self.INTER_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
@@ -38,17 +36,14 @@ class Settings(BaseSettings):
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
 
     @computed_field
-    @property
     def database_connection_string(self) -> str:
         return f"sqlite:///{self.DATABASE_PATH}"
 
     @computed_field
-    @property
     def data_dir(self) -> Path:
         return self.PROJECT_ROOT_DIR / "resources"
 
     @computed_field
-    @property
     def food_image_dir(self) -> Path:
         return Path("/var/www/forktimize/images")
 
