@@ -9,7 +9,10 @@ class Settings(BaseSettings):
     PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
 
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
+    CITY_FOOD_IMAGE_URL_TEMPLATE: str = "https://ca.cityfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
     INTER_FOOD_API_BASE: str = "https://ia.interfood.hu"
+
+    INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
     @computed_field
@@ -40,6 +43,11 @@ class Settings(BaseSettings):
     def data_dir(self) -> Path:
         return self.PROJECT_ROOT_DIR / "resources"
 
+    @computed_field
+    @property
+    def food_image_dir(self) -> Path:
+        return Path("/var/www/forktimize/images")
+
     model_config = {
         "env_file": f"{PROJECT_ROOT_DIR}/.env",
         "env_file_encoding": "utf-8",
@@ -49,6 +57,11 @@ class Settings(BaseSettings):
 class DevSettings(Settings):
     DATABASE_PATH: str = f"{Settings().PROJECT_ROOT_DIR}/forktimize.db"
     LOG_DIR: str = f"{Settings().PROJECT_ROOT_DIR}/logs"
+
+    @computed_field
+    @property
+    def food_image_dir(self) -> Path:
+        return self.PROJECT_ROOT_DIR / "images"
 
 
 def get_settings() -> Settings:

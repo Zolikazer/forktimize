@@ -17,3 +17,7 @@ class FoodVendorStrategy(ABC):
     @abstractmethod
     def get_name(self) -> FoodVendor:
         pass
+
+    @abstractmethod
+    def get_food_image_url(self, food_id: int) -> str:
+        pass

@@ -33,7 +33,7 @@ def mock_requests_post_success():
     (InterFoodStrategy(), "interfood-response-test.json", FoodVendor.INTER_FOOD),
 ])
 def test_inter_city_vendor_fetch_foods_fetches_foods(mock_requests_post_success, strategy, response_file,
-                                                       expected_vendor):
+                                                     expected_vendor):
     with mock_requests_post_success(response_file):
         foods = strategy.fetch_foods_for(2025, 10)
         assert len(foods) > 0, "Expected food items but got none."
@@ -92,3 +92,15 @@ def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
     result2 = strategy.get_raw_data(2025, 14)
     assert result2 == expected_response
     assert mock_post.call_count == 1
+
+
+@pytest.mark.parametrize("strategy, expected_url", [
+    (CityFoodStrategy(), "https://ca.cityfood.hu/api/v1/i?menu_item_id=123&width=425&height=425"),
+    (InterFoodStrategy(), "https://ia.interfood.hu/api/v1/i?menu_item_id=123&width=425&height=425"),
+])
+def test_get_food_image_url(strategy, expected_url):
+    food_id = 123
+
+    result = strategy.get_food_image_url(food_id)
+
+    assert result == expected_url
