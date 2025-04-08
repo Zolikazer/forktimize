@@ -9,15 +9,15 @@ class Settings(BaseSettings):
     PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
     FETCHING_DELAY: float = 0.3
     WEEKS_TO_FETCH: int = 3
+    FETCH_IMAGES: bool = True
 
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
     CITY_FOOD_IMAGE_URL_TEMPLATE: str = "https://ca.cityfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
+
     INTER_FOOD_API_BASE: str = "https://ia.interfood.hu"
-
     INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
-    INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
-    FETCH_IMAGES: bool = True
+    INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
     @computed_field
     def city_food_menu_url(self) -> str:

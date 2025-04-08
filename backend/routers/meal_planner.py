@@ -25,8 +25,8 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
 
 
 @meal_planner.post("/meal-plan")
-def generate_meal_plan_endpoint(meal_plan_request: MealPlanRequest,
-                                session: Session = Depends(get_session)) -> MealPlan:
+def generate_meal_plan(meal_plan_request: MealPlanRequest,
+                       session: Session = Depends(get_session)) -> MealPlan:
     food_selection = get_foods_for_given_date(session,
                                               meal_plan_request.date,
                                               meal_plan_request.food_vendor,

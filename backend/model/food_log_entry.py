@@ -21,7 +21,7 @@ class FoodLogEntry(BaseModel):
         chicken_fat = (chicken_grams / 100) * cls.CHICKEN_FAT_CONTENT
         leftover_fat = max(0, fat - int(chicken_fat))
 
-        return FoodLogEntry(
+        return cls(
             chicken=int(chicken_grams),
             sugar=int(carb),
             oil=int(leftover_fat),

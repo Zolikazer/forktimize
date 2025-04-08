@@ -1,5 +1,4 @@
 import time
-from typing import List
 
 from cachetools import TTLCache, cached
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
@@ -16,7 +15,7 @@ from monitoring.performance import benchmark
         key=lambda foods, nutritional_constraints, max_food_repeat: (
                 tuple(foods), nutritional_constraints, max_food_repeat)
         )
-def solve_meal_plan_ilp(foods: List[Food], nutrition_constraints: NutritionalConstraints,
+def solve_meal_plan_ilp(foods: list[Food], nutrition_constraints: NutritionalConstraints,
                         max_food_repeat: int = None) -> dict[int, int]:
     problem, x_vars = _create_price_minimization_problem(foods)
 
