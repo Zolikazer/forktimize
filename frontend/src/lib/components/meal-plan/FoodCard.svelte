@@ -1,7 +1,6 @@
 <script>
     import {mealPlanStore} from "$lib/stores/mealPlanStore.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
-    import {FoodVendor} from "$lib/utils/foodVendors.js";
     import Macro from "$lib/components/meal-plan/Macro.svelte";
     import {calculateMacroRatio} from "$lib/utils/macroRatio.js";
     import {t} from "$lib/stores/localeStore.js";
@@ -34,12 +33,7 @@
     }
 
     function getImageUrl(foodId, vendor) {
-        if (vendor === FoodVendor.CITY_FOOD.value) {
-            return `https://ca.cityfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
-        } else if(vendor === FoodVendor.INTER_FOOD.value) {
-            return `https://ia.interfood.hu/api/v1/i?menu_item_id=${foodId}&width=425&height=425`
-        }
-        return fallbackImageSrc;
+        return `https://forktimize.xyz/images/${vendor}_${foodId}.png`
     }
 
     function handleImageError() {
@@ -74,7 +68,8 @@
     <div class="card-content">
         <div class="media mb-1">
             <div class="media-content m-0">
-                <p class="title food-name is-6 is-inline-block is-relative is-clickable" data-tooltip={food.name}>{getShortenedName(food.name)}</p>
+                <p class="title food-name is-6 is-inline-block is-relative is-clickable"
+                   data-tooltip={food.name}>{getShortenedName(food.name)}</p>
                 <p class="subtitle is-7">{food.price} Ft</p>
             </div>
         </div>
