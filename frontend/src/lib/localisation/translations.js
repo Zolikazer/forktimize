@@ -151,7 +151,7 @@ export const translations = {
             fat: () => "Zsír",
         },
         mealPlan: {
-            yourMealPlan: () => "A te étrended",
+            yourMealPlan: () => "Az étrended",
             orderTheseFoods: () => `Rendeld meg ezeket innen:`,
             items: () => "étel",
             dontLike: () => "Nem szeretem",
