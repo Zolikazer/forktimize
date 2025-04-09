@@ -7,7 +7,7 @@ import requests
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from food_vendors.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food

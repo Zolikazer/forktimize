@@ -1,4 +1,4 @@
-from food_vendors.teletal.teletal_parser import TeletalParser
+from food_vendors.strategies.teletal.teletal_parser import TeletalParser
 from test.common import TEST_RESOURCES_DIR
 
 

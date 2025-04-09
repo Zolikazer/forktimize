@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
-from food_vendors.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from jobs.collect_food_data_job import CollectFoodDataJob
 from model.food import Food
 from food_vendors.food_vendor import FoodVendor

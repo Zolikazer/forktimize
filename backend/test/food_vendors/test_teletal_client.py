@@ -1,6 +1,6 @@
 import requests_mock
 
-from food_vendors.teletal.teletal_client import TeletalClient
+from food_vendors.strategies.teletal.teletal_client import TeletalClient
 
 
 def test_get_main_menu_html():

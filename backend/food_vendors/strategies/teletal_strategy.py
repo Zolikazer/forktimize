@@ -1,5 +1,5 @@
-from food_vendors.food_vendor_strategy import FoodVendorStrategy
-from food_vendors.teletal.teletal_client import TeletalClient
+from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from model.food import Food
 from food_vendors.food_vendor import FoodVendor
 

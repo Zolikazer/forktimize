@@ -1,5 +1,5 @@
-from food_vendors.city_food_strategy import CityFoodStrategy
-from food_vendors.inter_food_strategy import InterFoodStrategy
+from food_vendors.strategies.city_food_strategy import CityFoodStrategy
+from food_vendors.strategies.inter_food_strategy import InterFoodStrategy
 
 VENDOR_STRATEGIES = [
     CityFoodStrategy(),
