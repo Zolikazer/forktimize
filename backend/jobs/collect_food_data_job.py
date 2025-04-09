@@ -11,7 +11,7 @@ from food_vendors.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
 from monitoring.performance import benchmark

@@ -10,7 +10,7 @@ from sqlmodel import select, SQLModel, Session
 from food_vendors.food_vendor_strategy import FoodVendorStrategy
 from jobs.collect_food_data_job import CollectFoodDataJob
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobRun, JobStatus
 from test.food_factory import make_food
 

@@ -1,5 +1,5 @@
 from food_vendors.inter_city_food_strategy import InterCityFoodStrategy
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from settings import SETTINGS
 
 

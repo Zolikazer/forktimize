@@ -8,7 +8,7 @@ from sqlmodel import SQLModel, Session
 from starlette.testclient import TestClient
 
 from database.db import get_session
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from main import app
 from routers.meal_planner import AppStatus
 from test.food_factory import make_food

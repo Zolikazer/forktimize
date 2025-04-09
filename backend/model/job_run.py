@@ -4,7 +4,7 @@ from enum import Enum
 from pydantic import PositiveInt
 from sqlmodel import SQLModel, Field
 
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 
 
 class JobStatus(str, Enum):

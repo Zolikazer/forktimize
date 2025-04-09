@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from model.food_log_entry import FoodLogEntry
 from model.meal_plan import MealPlan
 

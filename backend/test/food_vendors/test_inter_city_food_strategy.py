@@ -7,7 +7,7 @@ from requests import Response
 
 from food_vendors.city_food_strategy import CityFoodStrategy
 from food_vendors.inter_food_strategy import InterFoodStrategy
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from jobs.serialization import open_json
 from settings import SETTINGS
 

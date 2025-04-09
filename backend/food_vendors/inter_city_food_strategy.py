@@ -5,7 +5,7 @@ import requests
 
 from food_vendors.food_vendor_strategy import FoodVendorStrategy
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from monitoring.logging import JOB_LOGGER
 
 

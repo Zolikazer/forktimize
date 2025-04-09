@@ -4,7 +4,7 @@ from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 
 
 class Food(SQLModel, table=True):

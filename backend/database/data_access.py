@@ -5,7 +5,7 @@ from sqlalchemy import String
 from sqlmodel import select, col, Session, cast
 
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 from monitoring.performance import benchmark
 from constants import ONE_DAY
 

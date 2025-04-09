@@ -3,7 +3,7 @@ from datetime import date as datetime_date
 from functools import partial
 
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 
 _food_id_counter = itertools.count(1)
 

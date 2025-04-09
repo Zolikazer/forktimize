@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from model.food import Food
-from model.food_vendors import FoodVendor
+from food_vendors.food_vendor import FoodVendor
 
 
 class FoodVendorStrategy(ABC):
