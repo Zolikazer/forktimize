@@ -43,6 +43,7 @@ class NutritionalConstraints(BaseModel):
 
         return self
 
+    # TODO: can it be deleted?
     def _total_max_macro_calories(self) -> int:
         return self._max_carb_calories() + self._max_fat_calories() + self._max_protein_calories()
 

@@ -13,15 +13,15 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
     @abstractmethod
     def __init__(self, api_endpoint: str, food_vendor: FoodVendor):
-        self._api_endpoint = api_endpoint
-        self._food_vendor = food_vendor
-        self._raw_data = {}
+        self._api_endpoint: str = api_endpoint
+        self._food_vendor: FoodVendor = food_vendor
+        self._raw_data: dict = {}
 
     def fetch_foods_for(self, year: int, week: int) -> list[Food]:
         data = self.get_raw_data(year, week)
         foods = self._deserialize_food_items(data)
 
-        JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from CityFood for week {week}, year {year}.")
+        JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from {self._food_vendor.value} for week {week}, year {year}.")
 
         return foods
 

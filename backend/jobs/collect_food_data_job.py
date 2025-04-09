@@ -2,6 +2,7 @@ import random
 import time
 from datetime import datetime
 from pathlib import Path
+from tkinter import image_names
 
 import requests
 from sqlmodel import Session
@@ -116,9 +117,9 @@ class CollectFoodDataJob:
             time.sleep(self._delay + random.uniform(0.1, 0.5))
 
     def _download_image(self, url: str, image_name: str):
-        save_path = self._image_dir / image_name
-        if save_path.exists():
-            JOB_LOGGER.info(f"🟡 Skipping image (already exists): {save_path}")
+        image_path = self._image_dir / image_name
+        if image_path.exists():
+            JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
             return
 
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
@@ -126,9 +127,9 @@ class CollectFoodDataJob:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
 
-            save_image(response.content, save_path)
+            save_image(response.content, image_path)
 
-            JOB_LOGGER.info(f"✅ Saved image: {save_path}")
+            JOB_LOGGER.info(f"✅ Saved image: {image_path}")
         except Exception as e:
             JOB_LOGGER.warning(f"❌ Failed to download image from {url}: {e}")
 
