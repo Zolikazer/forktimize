@@ -7,7 +7,22 @@ class TeletalParser:
     FAT_LABEL = "Zsír"
     CALORIES_LABEL = "Energiatartalom"
 
-    def parse_kods(self,html: str) -> list[str]:
+    def parse_dynamic_categories(self, html: str) -> list[dict[str, str]]:
+        soup = BeautifulSoup(html, "html.parser")
+
+        category_sections = soup.find_all("section", attrs={"ewid": True, "section": True})
+
+        dynamic_categories = []
+        for category_section in category_sections:
+            category = {
+                "ewid": category_section.get("ewid"),
+                "varname": category_section.get("section"),
+            }
+            dynamic_categories.append(category)
+
+        return dynamic_categories
+
+    def parse_category_codes(self, html: str) -> list[str]:
         soup = BeautifulSoup(html, "html.parser")
         tr_elements = soup.find_all("tr", attrs={"kod": True})
 
@@ -18,7 +33,7 @@ class TeletalParser:
 
         return codes
 
-    def parse_food_data(self, html: str) -> dict[str, int]:
+    def parse_food_data(self, html: str) -> dict[str, str]:
         soup = BeautifulSoup(html, "html.parser")
 
         name = self._extract_name(soup)
@@ -28,16 +43,17 @@ class TeletalParser:
         fat = self._extract_fat(soup)
 
         return {"name": name,
-                "calories": self._to_int(calories),
-                "protein": self._to_int(protein),
-                "carb": self._to_int(carb),
-                "fat": self._to_int(fat), }
+                "calories": calories,
+                "protein": protein,
+                "carb": carb,
+                "fat": fat, }
 
     def _extract_name(self, soup: BeautifulSoup):
         return soup.find("h1", class_="uk-article-title").text.strip()
 
     def _extract_calories(self, soup: BeautifulSoup):
-        for row in soup.find_all("div", class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
+        for row in soup.find_all("div",
+                                 class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
             label_div = row.find("div", class_="uk-width-1-2")
             if label_div and self.CALORIES_LABEL in label_div.text:
                 calories_div = row.find("span", class_="en_adag")
@@ -46,7 +62,8 @@ class TeletalParser:
         return None
 
     def _extract_protein(self, soup: BeautifulSoup):
-        for row in soup.find_all("div", class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
+        for row in soup.find_all("div",
+                                 class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
             label_div = row.find("div", class_="uk-width-1-2")
             if label_div and self.PROTEIN_LABEL in label_div.text:
                 calories_div = row.find("span", class_="en_adag")
