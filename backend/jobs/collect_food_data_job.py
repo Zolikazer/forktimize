@@ -2,14 +2,13 @@ import random
 import time
 from datetime import datetime
 from pathlib import Path
-from tkinter import image_names
 
 import requests
 from sqlmodel import Session
 
 from database.db import init_db, engine
-from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
-from jobs.food_vendors_strategies.vendor_strategies import VENDOR_STRATEGIES
+from food_vendors.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food
 from model.food_vendors import FoodVendor

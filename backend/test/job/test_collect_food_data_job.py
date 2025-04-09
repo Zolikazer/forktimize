@@ -1,14 +1,14 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock
 
 import pytest
 from freezegun import freeze_time
 from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
+from food_vendors.food_vendor_strategy import FoodVendorStrategy
 from jobs.collect_food_data_job import CollectFoodDataJob
-from jobs.food_vendors_strategies.food_vendor_strategy import FoodVendorStrategy
 from model.food import Food
 from model.food_vendors import FoodVendor
 from model.job_run import JobRun, JobStatus

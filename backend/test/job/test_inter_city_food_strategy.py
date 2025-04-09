@@ -5,9 +5,9 @@ from unittest.mock import patch, Mock, MagicMock
 import pytest
 from requests import Response
 
-from jobs.food_vendors_strategies.city_food_strategy import CityFoodStrategy
+from food_vendors.city_food_strategy import CityFoodStrategy
+from food_vendors.inter_food_strategy import InterFoodStrategy
 from model.food_vendors import FoodVendor
-from jobs.food_vendors_strategies.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import open_json
 from settings import SETTINGS
 
@@ -71,7 +71,7 @@ def test_strategy_get_name(strategy_cls, expected_vendor):
     (CityFoodStrategy(), SETTINGS.city_food_menu_url),
     (InterFoodStrategy(), SETTINGS.inter_food_menu_url),
 ])
-@patch("jobs.food_vendors_strategies.inter_city_food_strategy.requests.post")
+@patch("food_vendors.inter_city_food_strategy.requests.post")
 def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
     expected_response = {"data": {"mock": "value"}}
 
