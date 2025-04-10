@@ -1,3 +1,4 @@
+import re
 import time
 
 from bs4 import BeautifulSoup
@@ -12,12 +13,22 @@ class TeletalMenuPage:
         self._menu_soup: BeautifulSoup | None = None
 
     def get_food_category_codes(self, year: int, week: int) -> list[str]:
-        self._load_menu_page(week)
+        self.load(week)
         self._load_dynamic_categories(year, week)
 
         return self._parse_category_codes()
 
-    def _load_menu_page(self, week: int):
+    def get_price(self, category_code: str, day: int) -> str | None:
+        food_category_row = self._menu_soup.find("div", class_=f"hl_{category_code}_{day}")
+
+        if not food_category_row:
+            return None
+
+        price_tag = food_category_row.select("div.menu-price-field strong")
+
+        return re.sub(r"\s+", " ", price_tag[0].text).strip()
+
+    def load(self, week: int):
         self._menu_soup = BeautifulSoup(self._client.get_main_menu_html(week), "html.parser")
 
     def _load_dynamic_categories(self, year: int, week: int):
