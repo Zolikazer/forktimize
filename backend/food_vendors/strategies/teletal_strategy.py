@@ -2,7 +2,6 @@ from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
-from food_vendors.strategies.teletal.teletal_parser import TeletalParser
 from model.food import Food
 
 

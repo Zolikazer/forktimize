@@ -14,9 +14,13 @@ class TeletalFoodPage:
         self._load(year=year, week=week, category_code=category_code, day=day)
 
         if self._is_contains_multiple_foods():
-            return TeletalFoodMenuPage(self._food_page_soup).get_menu_data()
+            food_data = TeletalFoodMenuPage(self._food_page_soup).get_menu_data()
         else:
-            return TeletalSingleFoodPage(self._food_page_soup).get_food_data()
+            food_data = TeletalSingleFoodPage(self._food_page_soup).get_food_data()
+
+        food_data["code"] = category_code
+
+        return food_data
 
     def _load(self, year: int, week: int, category_code: str, day: int):
         self._food_page_soup = BeautifulSoup(

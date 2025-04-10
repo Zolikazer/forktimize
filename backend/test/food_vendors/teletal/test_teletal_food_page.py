@@ -67,6 +67,7 @@ def test_food_page_get_food_data_delegates_to_single_food_page():
         result = food_page.get_food_data(year=2025, week=15, category_code="ZK", day=1)
 
         assert result["name"] == "Single"
+        assert result["code"] == "ZK"
         mock_single_page.assert_called_once()
         mock_menu_page.assert_not_called()
 
@@ -91,5 +92,7 @@ def test_food_page_get_food_data_delegates_to_food_menu_page():
         result = food_page.get_food_data(year=2025, week=15, category_code="ZK", day=1)
 
         assert result["name"] == "Menu"
+        assert result["code"] == "ZK"
         mock_menu_page.assert_called_once()
         mock_single_page.assert_not_called()
+
