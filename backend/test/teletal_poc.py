@@ -5,13 +5,17 @@ import requests
 from bs4 import BeautifulSoup
 from requests import Session
 
+from food_vendors.strategies.teletal.teletal_client import TeletalClient
+from food_vendors.strategies.teletal.teletal_parser import TeletalParser
+from food_vendors.strategies.teletal_strategy import TeletalStrategy
+
 url = "https://www.teletal.hu/etlap"
 headers = {
     "User-Agent": "Mozilla/5.0"
 }
 
 
-def find_static_codes(soup : BeautifulSoup) -> list:
+def find_static_codes(soup: BeautifulSoup) -> list:
     tr_elements = soup.find_all("tr", attrs={"kod": True})
     codes = []
     for tr in tr_elements:
@@ -22,8 +26,7 @@ def find_static_codes(soup : BeautifulSoup) -> list:
     return codes
 
 
-
-def get_sections(soup : BeautifulSoup) -> list:
+def get_sections(soup: BeautifulSoup) -> list:
     section_elements = soup.find_all("section", attrs={"ewid": True, "ev": True, "het": True, "section": True})
     sections = []
     for section in section_elements:
@@ -73,7 +76,8 @@ def fetch_codes_from_sections(session: Session, sections: list[dict], delay: flo
     return all_codes
 
 
-def fetch_food_details(session: requests.Session, codes: list[str], year: int, week: int, day: int = 1, delay: float = 0.3) -> list[str]:
+def fetch_food_details(session: requests.Session, codes: list[str], year: int, week: int, day: int = 1,
+                       delay: float = 0.3) -> list[str]:
     food_url = "https://www.teletal.hu/ajax/kodinfo"
     results = []
 
@@ -103,14 +107,11 @@ def fetch_food_details(session: requests.Session, codes: list[str], year: int, w
     return results
 
 
-
-if __name__ == "__main__":
+def poc():
     session = requests.Session()
     session.headers.update(headers)
-
     res = session.get(url, headers=headers)
     print(res.text)
-
     soup = BeautifulSoup(res.text, "html.parser")
     static_codes = find_static_codes(soup)
     sections = get_sections(soup)
@@ -119,10 +120,12 @@ if __name__ == "__main__":
     print(dynamic_codes)
     all_codes = set(static_codes + dynamic_codes)
     print(all_codes)
-
     year = 2025
     week = 16
     food_details_html = fetch_food_details(session, all_codes, year, week)
-
     print(f"🍽️ Successfully fetched {len(food_details_html)} food detail responses.")
 
+
+if __name__ == "__main__":
+    TeletalStrategy(TeletalClient("https://www.teletal.hu/etlap",
+                                  "https://www.teletal.hu/ajax"), TeletalParser())

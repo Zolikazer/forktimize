@@ -8,6 +8,9 @@ from sqlmodel import Session
 
 from database.db import init_db, engine
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.teletal.teletal_client import TeletalClient
+from food_vendors.strategies.teletal.teletal_parser import TeletalParser
+from food_vendors.strategies.teletal_strategy import TeletalStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food
@@ -27,10 +30,10 @@ def run_collect_food_data_job():
 
 class CollectFoodDataJob:
     FORKTIMIZE_HEADERS = {
-                "User-Agent": "ForktimizeBot/1.0 (+https://forktimize.xyz/bot-info)",
-                "From": "spagina.zoltan@gmail.com",
-                "X-Forktimize-Purpose": "Meal planning helper, not scraping for resale or spam. Contact: forktimize.xyz"
-            }
+        "User-Agent": "ForktimizeBot/1.0 (+https://forktimize.xyz/bot-info)",
+        "From": "spagina.zoltan@gmail.com",
+        "X-Forktimize-Purpose": "Meal planning helper, not scraping for resale or spam. Contact: forktimize.xyz"
+    }
 
     def __init__(self,
                  session: Session,
@@ -135,7 +138,18 @@ class CollectFoodDataJob:
 
 if __name__ == "__main__":
     SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
+    #
+    # init_db()
+    # with Session(engine) as job_session:
+    #     CollectFoodDataJob(job_session, VENDOR_STRATEGIES, 1).run()
+    teletal = TeletalStrategy(TeletalClient("https://www.teletal.hu/etlap",
+                                            "https://www.teletal.hu/ajax"), TeletalParser())
 
-    init_db()
-    with Session(engine) as job_session:
-        CollectFoodDataJob(job_session, VENDOR_STRATEGIES, 1).run()
+    raw, _ = teletal.fetch_foods_for(2025, 16)
+    print(len(raw))
+    print(raw)
+    save_to_json(raw, SETTINGS.data_dir / "teletal_poc.json")
+    print("END FOODS SAVED")
+    print(f"FAILUER {teletal.failures}")
+    with open(SETTINGS.data_dir / "teletal_raw.html", "w") as f:
+        f.write(str(teletal.raw_data))

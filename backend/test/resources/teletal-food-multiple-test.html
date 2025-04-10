@@ -1,0 +1,3014 @@
+<main>
+    <script src="/js/chart.min.js"></script>
+    <script src="/js/chartjs-plugin-datalabels.min.js"></script>
+    <script src="/js/chartjs-plugin-deferred.min.js"></script>
+    <script src="/js/raty.js"></script>
+    <link rel=stylesheet href="/style/raty.css">
+    <article class="uk-article">
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h1 class="uk-article-title uk-background-secondary">16.hét Hétfő Z10 összesítés</h1>
+                <div class="uk-grid">
+                    <div class="uk-width-1-3@m">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-1" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-1').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+                                                data: [44.70, 121.10, 102.00],
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Energia tartalom</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"></div>
+                            <div>1,340.8 kcal</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"></div>
+                            <div>5,630.7 KJ</div>
+                        </div>
+                        <hr>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Zsír</div>
+                            <div>44.70 g</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-expand">amelyből telített zsírsavak</div>
+                            <div>16.50 g</div>
+                        </div>
+                        <hr>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Szénhidrát</div>
+                            <div>121.10 g</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-expand">amelyből</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-expand">cukor</div>
+                            <div>24.00 g</div>
+                        </div>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-expand">rost</div>
+                            <div>22.90 g</div>
+                        </div>
+                        <hr>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Fehérje</div>
+                            <div>102.00 g</div>
+                        </div>
+                        <hr>
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Só</div>
+                            <div>12.60 g</div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand">Az étkezéshez adott összes étel:</div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"><a href="#5/1">Z10 5/1 : Fokhagymás sült pulykacomb, pikáns
+                                párolt lilakáposzta, édesítőszerekkel</a></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"><a href="#5/2">Z10 5/2 : Kemencében sült csirkemell csíkozva,
+                                mozzarellás almasaláta </a></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"><a href="#5/3">Z10 5/3 : Sült hekk paprikás lisztben forgatva,
+                                zöldborsós jázmin rizs </a></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"><a href="#5/4">Z10 5/4 : Szeletben sült csirkemell,
+                                zöldségkrémmártásban, rizi-bizi </a></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-expand"><a href="#5/5">Z10 5/5 : Tiramisu szelet, édesítőszerrel</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+        </section>
+
+
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h2 id="5/1">16.hét Hétfő: Z10 5/1</h2>
+
+                <h1 class="uk-article-title">Fokhagymás sült pulykacomb, pikáns párolt lilakáposzta,
+                    édesítőszerekkel</h1>
+
+                <div class="uk-grid-small uk-text-small uk-flex-middle uk-grid-divider uk-child-width-1-1@s uk-child-width-auto@m"
+                     uk-grid>
+                    <div class="uk-text-small">
+                        <button class="uk-button uk-button-danger uk-width-1-1@s" type="button"><span
+                                class="tm-text-xsmall">Megrendelhető</span><span uk-icon="icon: triangle-down"></span>
+                        </button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Kedvencekhez adom -->
+
+                    <div>
+                        <div>
+                            <!-- Kedvencekhez adom - Kijelentkezve -->
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Kedvencekhez adáshoz kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+                                <span class="uk-text-primary">Kedvencekhez adom</span>
+                                <span class="uk-margin-small-right uk-text-primary" uk-icon="icon: heart"></span>
+                            </button>
+                            <!--/ Kedvencekhez adom - Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- / Kedvencekhez adom -->
+                    <!-- Értékelem -->
+
+                    <div>
+                        <div>
+
+                            <span class="uk-margin-small-right">Értékelem</span>
+                            <!-- Kijelentkezve -->
+
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Értékeléshez kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+
+                                <span id="ertekeles-114695615" class="uk-text-primary tm-text-xxxsmall"></span>
+
+                                <script>
+                                    $('#ertekeles-114695615').raty({
+                                        starType: 'i',
+                                        score: 3,
+                                        hints: null,
+                                        readOnly: true // Kijelentkezve
+                                    });
+                                </script>
+
+                            </button>
+
+                            <!--/ Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Értékelem -->
+
+                    <!-- Megosztás -->
+                    <div>
+                        <span class="uk-text-small">Megosztás:</span>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: facebook"
+                           href="https://www.facebook.com/sharer.php?u=https://www.teletal.hu/etel/fokhagymas_sult_pulykacomb_pikans_parolt_lilakaposzta_edesitoszerekkel"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: twitter"
+                           href="https://twitter.com/intent/tweet?url=https://www.teletal.hu/etel/fokhagymas_sult_pulykacomb_pikans_parolt_lilakaposzta_edesitoszerekkel&text=Fokhagym%C3%A1s+s%C3%BClt+pulykacomb%2C+pik%C3%A1ns+p%C3%A1rolt+lilak%C3%A1poszta%2C+%C3%A9des%C3%ADt%C5%91szerekkel&hashtags="></a>
+                        <!--
+                        {hashtags}: Hashtagek, pl. a keywords meta tag első 2-3 eleme
+                        -->
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: google-plus"
+                           href="https://plus.google.com/share?url=https://www.teletal.hu/etel/fokhagymas_sult_pulykacomb_pikans_parolt_lilakaposzta_edesitoszerekkel"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: pinterest"
+                           href="https://pinterest.com/pin/create/bookmarklet/?media=&url=https://www.teletal.hu##=IFE(/etel/fokhagymas_sult_pulykacomb_pikans_parolt_lilakaposzta_edesitoszerekkel;;/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10;/etel/fokhagymas_sult_pulykacomb_pikans_parolt_lilakaposzta_edesitoszerekkel)###&description=Fokhagym%C3%A1s+s%C3%BClt+pulykacomb%2C+pik%C3%A1ns+p%C3%A1rolt+lilak%C3%A1poszta%2C+%C3%A9des%C3%ADt%C5%91szerekkel"></a>
+                        <!--
+                        {img}: Thumbnailként használni kívánt kép url-je, legalább 100x200px, pl. https://www.example.com/images/image.jpg
+                        -->
+                    </div>
+                    <!-- / Megosztás -->
+
+                </div>
+
+                <hr>
+                <div class="uk-grid-small uk-grid-divider uk-grid" uk-grid>
+                    <div class="uk-width-1-3@m uk-first-column">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-114695615" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-114695615').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+
+                                                data: [5.70, 11.50, 17.60],
+
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1000 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m uk-text-small">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4"><span class="en_adag">1 adagban</span></div>
+                            <div class="uk-width-1-4"><span class="en_100">100g-ban</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-flex-right" uk-grid>
+                            <hr class="uk-width-1-2 uk-margin uk-align-right">
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Energiatartalom</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">184.3 kcal</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">97.0 kcal</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">772.1 KJ</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">406.4 KJ</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span class="uk-text-bold">Zsír</span><span>, amelyből</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">5.7 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">3.0 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">telített zsírsavak</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">1.5 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.8 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span
+                                    class="uk-text-bold">Szénhidrát</span><span>, amelyből</span></div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">11.5 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">6.1 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">cukor</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">7.3 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">3.8 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">rost</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">8.2 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">4.3 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Fehérje</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">17.6 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">9.3 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Só</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.7 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">1.4 g</span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Nettó súly:</strong></span>
+                            <span class="uk-badge-neutral uk-margin-small-right">190 g</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Összetevők:</strong></span>
+                            <span>lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+(erjesztett ecet, etanol), napraforgóolaj, étkezési só, fokhagyma, sültcsirke
+fűszersó (jódozott só, ízfokozó:nátrium-glutamát, paprika, fokhagyma,
+majoranna, rozmaring, tartósítószer:<strong>kén-dioxid</strong>), sertészsír, édesítőszer
+(szukralóz, szteviol-glikozidok, étkezési sav:citromsav,
+tartósítószer:kálium-szorbát), fűszerek</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Allergének:</strong></span>
+                            <span>Kén-dioxid</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bejegyzés - étel -->
+
+                <!-- schema.org / JSON-LD structured data -->
+
+                <!-- Recept -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Recipe",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Fokhagymás sült pulykacomb, pikáns párolt lilakáposzta, édesítőszerekkel",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerek
+                        ",
+                        "datePublished": "2025.04.09",
+                        "recipeYield": "1",
+                        "nutrition": {
+                            "@type": "NutritionInformation",
+                            "servingSize": "1",
+                            "calories": "184.30 cal",
+                            "fatContent": "5.70 g"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Recept -->
+
+                <!-- Termék / étel -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Product",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Fokhagymás sült pulykacomb, pikáns párolt lilakáposzta, édesítőszerekkel",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerek
+                        ",
+                        "brand": "",
+                        "sku": "",
+                        "offers": {
+                            "@type": "Offer",
+                            "priceCurrency": "HUF",
+                            "price": "3640.00",
+                            "priceValidUntil": "2025.04.14",
+                            "availability": "http://schema.org/InStock",
+                            "itemCondition": "http://schema.org/NewCondition"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Termék / étel -->
+
+                <!-- / schema.org / JSON-LD structured data -->
+
+
+            </div>
+        </section>
+
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h2 id="5/2">16.hét Hétfő: Z10 5/2</h2>
+
+                <h1 class="uk-article-title">Kemencében sült csirkemell csíkozva, mozzarellás almasaláta </h1>
+
+                <div class="uk-grid-small uk-text-small uk-flex-middle uk-grid-divider uk-child-width-1-1@s uk-child-width-auto@m"
+                     uk-grid>
+                    <div class="uk-text-small">
+                        <button class="uk-button uk-button-danger uk-width-1-1@s" type="button"><span
+                                class="tm-text-xsmall">Megrendelhető</span><span uk-icon="icon: triangle-down"></span>
+                        </button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Kedvencekhez adom -->
+
+                    <div>
+                        <div>
+                            <!-- Kedvencekhez adom - Kijelentkezve -->
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Kedvencekhez adáshoz kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+                                <span class="uk-text-primary">Kedvencekhez adom</span>
+                                <span class="uk-margin-small-right uk-text-primary" uk-icon="icon: heart"></span>
+                            </button>
+                            <!--/ Kedvencekhez adom - Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- / Kedvencekhez adom -->
+                    <!-- Értékelem -->
+
+                    <div>
+                        <div>
+
+                            <span class="uk-margin-small-right">Értékelem</span>
+                            <!-- Kijelentkezve -->
+
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Értékeléshez kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+
+                                <span id="ertekeles-114694775" class="uk-text-primary tm-text-xxxsmall"></span>
+
+                                <script>
+                                    $('#ertekeles-114694775').raty({
+                                        starType: 'i',
+                                        score: 3,
+                                        hints: null,
+                                        readOnly: true // Kijelentkezve
+                                    });
+                                </script>
+
+                            </button>
+
+                            <!--/ Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Értékelem -->
+
+                    <!-- Megosztás -->
+                    <div>
+                        <span class="uk-text-small">Megosztás:</span>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: facebook"
+                           href="https://www.facebook.com/sharer.php?u=https://www.teletal.hu/etel/kemenceben_sult_csirkemell_csikozva_mozzarellas_almasalata"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: twitter"
+                           href="https://twitter.com/intent/tweet?url=https://www.teletal.hu/etel/kemenceben_sult_csirkemell_csikozva_mozzarellas_almasalata&text=Kemenc%C3%A9ben+s%C3%BClt+csirkemell+cs%C3%ADkozva%2C+mozzarell%C3%A1s+almasal%C3%A1ta+&hashtags="></a>
+                        <!--
+                        {hashtags}: Hashtagek, pl. a keywords meta tag első 2-3 eleme
+                        -->
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: google-plus"
+                           href="https://plus.google.com/share?url=https://www.teletal.hu/etel/kemenceben_sult_csirkemell_csikozva_mozzarellas_almasalata"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: pinterest"
+                           href="https://pinterest.com/pin/create/bookmarklet/?media=&url=https://www.teletal.hu##=IFE(/etel/kemenceben_sult_csirkemell_csikozva_mozzarellas_almasalata;;/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10;/etel/kemenceben_sult_csirkemell_csikozva_mozzarellas_almasalata)###&description=Kemenc%C3%A9ben+s%C3%BClt+csirkemell+cs%C3%ADkozva%2C+mozzarell%C3%A1s+almasal%C3%A1ta+"></a>
+                        <!--
+                        {img}: Thumbnailként használni kívánt kép url-je, legalább 100x200px, pl. https://www.example.com/images/image.jpg
+                        -->
+                    </div>
+                    <!-- / Megosztás -->
+
+                </div>
+
+                <hr>
+                <div class="uk-grid-small uk-grid-divider uk-grid" uk-grid>
+                    <div class="uk-width-1-3@m uk-first-column">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-114694775" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-114694775').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+
+                                                data: [7.30, 14.00, 24.90],
+
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1000 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m uk-text-small">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4"><span class="en_adag">1 adagban</span></div>
+                            <div class="uk-width-1-4"><span class="en_100">100g-ban</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-flex-right" uk-grid>
+                            <hr class="uk-width-1-2 uk-margin uk-align-right">
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Energiatartalom</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">231.0 kcal</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">110.0 kcal</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">970.1 KJ</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">462.0 KJ</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span class="uk-text-bold">Zsír</span><span>, amelyből</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">7.3 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">3.5 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">telített zsírsavak</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">3.8 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">1.8 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span
+                                    class="uk-text-bold">Szénhidrát</span><span>, amelyből</span></div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">14.0 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">6.7 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">cukor</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">12.0 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">5.7 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">rost</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">4.8 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">2.3 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Fehérje</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">24.9 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">11.9 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Só</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">1.8 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.9 g</span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Nettó súly:</strong></span>
+                            <span class="uk-badge-neutral uk-margin-small-right">210 g</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Összetevők:</strong></span>
+                            <span>alma (alma, étkezési só, savanyúságot szabályzó anyagok:aszkorbinsav) (36%),
+csirkemell (33%), jégsaláta, <strong>mozzarella</strong>, citromlé (citromlé, étkezési sav:citromsav,
+tartósítószer:kálium-szorbát), grill fűszerkeverék (jódozott só, paprika, kömény,
+fokhagyma, cayenne bors), étkezési só, sertészsír, fűszerek</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Allergének:</strong></span>
+                            <span>Tej, Kén-dioxid</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bejegyzés - étel -->
+
+                <!-- schema.org / JSON-LD structured data -->
+
+                <!-- Recept -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Recipe",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Kemencében sült csirkemell csíkozva, mozzarellás almasaláta ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerek
+                        ",
+                        "datePublished": "2025.04.09",
+                        "recipeYield": "1",
+                        "nutrition": {
+                            "@type": "NutritionInformation",
+                            "servingSize": "1",
+                            "calories": "231.00 cal",
+                            "fatContent": "7.30 g"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Recept -->
+
+                <!-- Termék / étel -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Product",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Kemencében sült csirkemell csíkozva, mozzarellás almasaláta ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerek
+                        ",
+                        "brand": "",
+                        "sku": "",
+                        "offers": {
+                            "@type": "Offer",
+                            "priceCurrency": "HUF",
+                            "price": "3640.00",
+                            "priceValidUntil": "2025.04.14",
+                            "availability": "http://schema.org/InStock",
+                            "itemCondition": "http://schema.org/NewCondition"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Termék / étel -->
+
+                <!-- / schema.org / JSON-LD structured data -->
+
+
+            </div>
+        </section>
+
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h2 id="5/3">16.hét Hétfő: Z10 5/3</h2>
+
+                <h1 class="uk-article-title">Sült hekk paprikás lisztben forgatva, zöldborsós jázmin rizs </h1>
+
+                <div class="uk-grid-small uk-text-small uk-flex-middle uk-grid-divider uk-child-width-1-1@s uk-child-width-auto@m"
+                     uk-grid>
+                    <div class="uk-text-small">
+                        <button class="uk-button uk-button-danger uk-width-1-1@s" type="button"><span
+                                class="tm-text-xsmall">Megrendelhető</span><span uk-icon="icon: triangle-down"></span>
+                        </button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Kedvencekhez adom -->
+
+                    <div>
+                        <div>
+                            <!-- Kedvencekhez adom - Kijelentkezve -->
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Kedvencekhez adáshoz kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+                                <span class="uk-text-primary">Kedvencekhez adom</span>
+                                <span class="uk-margin-small-right uk-text-primary" uk-icon="icon: heart"></span>
+                            </button>
+                            <!--/ Kedvencekhez adom - Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- / Kedvencekhez adom -->
+                    <!-- Értékelem -->
+
+                    <div>
+                        <div>
+
+                            <span class="uk-margin-small-right">Értékelem</span>
+                            <!-- Kijelentkezve -->
+
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Értékeléshez kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+
+                                <span id="ertekeles-114655053" class="uk-text-primary tm-text-xxxsmall"></span>
+
+                                <script>
+                                    $('#ertekeles-114655053').raty({
+                                        starType: 'i',
+                                        score: 4,
+                                        hints: null,
+                                        readOnly: true // Kijelentkezve
+                                    });
+                                </script>
+
+                            </button>
+
+                            <!--/ Kijelentkezve -->
+
+                            <span class="uk-badge">2</span>
+                        </div>
+                    </div>
+
+                    <!-- Értékelem -->
+
+                    <!-- Megosztás -->
+                    <div>
+                        <span class="uk-text-small">Megosztás:</span>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: facebook"
+                           href="https://www.facebook.com/sharer.php?u=https://www.teletal.hu/etel/sult_hekk_paprikas_lisztben_forgatva_zoldborsos_jazmin_rizs"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: twitter"
+                           href="https://twitter.com/intent/tweet?url=https://www.teletal.hu/etel/sult_hekk_paprikas_lisztben_forgatva_zoldborsos_jazmin_rizs&text=S%C3%BClt+hekk+paprik%C3%A1s+lisztben+forgatva%2C+z%C3%B6ldbors%C3%B3s+j%C3%A1zmin+rizs+&hashtags="></a>
+                        <!--
+                        {hashtags}: Hashtagek, pl. a keywords meta tag első 2-3 eleme
+                        -->
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: google-plus"
+                           href="https://plus.google.com/share?url=https://www.teletal.hu/etel/sult_hekk_paprikas_lisztben_forgatva_zoldborsos_jazmin_rizs"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: pinterest"
+                           href="https://pinterest.com/pin/create/bookmarklet/?media=&url=https://www.teletal.hu##=IFE(/etel/sult_hekk_paprikas_lisztben_forgatva_zoldborsos_jazmin_rizs;;/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10;/etel/sult_hekk_paprikas_lisztben_forgatva_zoldborsos_jazmin_rizs)###&description=S%C3%BClt+hekk+paprik%C3%A1s+lisztben+forgatva%2C+z%C3%B6ldbors%C3%B3s+j%C3%A1zmin+rizs+"></a>
+                        <!--
+                        {img}: Thumbnailként használni kívánt kép url-je, legalább 100x200px, pl. https://www.example.com/images/image.jpg
+                        -->
+                    </div>
+                    <!-- / Megosztás -->
+
+                </div>
+
+                <hr>
+                <div class="uk-grid-small uk-grid-divider uk-grid" uk-grid>
+                    <div class="uk-width-1-3@m uk-first-column">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-114655053" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-114655053').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+
+                                                data: [17.40, 48.70, 29.00],
+
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1000 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m uk-text-small">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4"><span class="en_adag">1 adagban</span></div>
+                            <div class="uk-width-1-4"><span class="en_100">100g-ban</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-flex-right" uk-grid>
+                            <hr class="uk-width-1-2 uk-margin uk-align-right">
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Energiatartalom</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">472.5 kcal</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">225.0 kcal</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">1,985.0 KJ</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">945.2 KJ</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span class="uk-text-bold">Zsír</span><span>, amelyből</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">17.4 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">8.3 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">telített zsírsavak</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">3.0 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">1.4 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span
+                                    class="uk-text-bold">Szénhidrát</span><span>, amelyből</span></div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">48.7 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">23.2 g</span>
+                            </div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">cukor</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">0.5 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.2 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">rost</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.6 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">1.2 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Fehérje</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">29.0 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">13.8 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Só</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.2 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">1.0 g</span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Nettó súly:</strong></span>
+                            <span class="uk-badge-neutral uk-margin-small-right">210 g</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Összetevők:</strong></span>
+                            <span>argentin hekk <strong>hal</strong> (41%), ivóvíz, jázmin rizs (13%), zöldborsó (8%), <strong>búzaliszt</strong>,
+napraforgóolaj, étkezési só, fokhagymapor, fűszerek</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Allergének:</strong></span>
+                            <span>Glutén, Mustár, Zeller, Hal</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bejegyzés - étel -->
+
+                <!-- schema.org / JSON-LD structured data -->
+
+                <!-- Recept -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Recipe",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Sült hekk paprikás lisztben forgatva, zöldborsós jázmin rizs ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerek
+                        ",
+                        "datePublished": "2025.04.09",
+                        "recipeYield": "1",
+                        "nutrition": {
+                            "@type": "NutritionInformation",
+                            "servingSize": "1",
+                            "calories": "472.50 cal",
+                            "fatContent": "17.40 g"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "4",
+                            "bestRating": "5",
+                            "worstRating": "3",
+                            "ratingCount": "2"
+                        }
+                    }
+                </script>
+                <!-- / Recept -->
+
+                <!-- Termék / étel -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Product",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Sült hekk paprikás lisztben forgatva, zöldborsós jázmin rizs ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerek
+                        ",
+                        "brand": "",
+                        "sku": "",
+                        "offers": {
+                            "@type": "Offer",
+                            "priceCurrency": "HUF",
+                            "price": "3640.00",
+                            "priceValidUntil": "2025.04.14",
+                            "availability": "http://schema.org/InStock",
+                            "itemCondition": "http://schema.org/NewCondition"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "4",
+                            "bestRating": "5",
+                            "worstRating": "3",
+                            "ratingCount": "2"
+                        }
+                    }
+                </script>
+                <!-- / Termék / étel -->
+
+                <!-- / schema.org / JSON-LD structured data -->
+
+
+            </div>
+        </section>
+
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h2 id="5/4">16.hét Hétfő: Z10 5/4</h2>
+
+                <h1 class="uk-article-title">Szeletben sült csirkemell, zöldségkrémmártásban, rizi-bizi </h1>
+
+                <div class="uk-grid-small uk-text-small uk-flex-middle uk-grid-divider uk-child-width-1-1@s uk-child-width-auto@m"
+                     uk-grid>
+                    <div class="uk-text-small">
+                        <button class="uk-button uk-button-danger uk-width-1-1@s" type="button"><span
+                                class="tm-text-xsmall">Megrendelhető</span><span uk-icon="icon: triangle-down"></span>
+                        </button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Kedvencekhez adom -->
+
+                    <div>
+                        <div>
+                            <!-- Kedvencekhez adom - Kijelentkezve -->
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Kedvencekhez adáshoz kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+                                <span class="uk-text-primary">Kedvencekhez adom</span>
+                                <span class="uk-margin-small-right uk-text-primary" uk-icon="icon: heart"></span>
+                            </button>
+                            <!--/ Kedvencekhez adom - Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- / Kedvencekhez adom -->
+                    <!-- Értékelem -->
+
+                    <div>
+                        <div>
+
+                            <span class="uk-margin-small-right">Értékelem</span>
+                            <!-- Kijelentkezve -->
+
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Értékeléshez kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+
+                                <span id="ertekeles-114655064" class="uk-text-primary tm-text-xxxsmall"></span>
+
+                                <script>
+                                    $('#ertekeles-114655064').raty({
+                                        starType: 'i',
+                                        score: 3,
+                                        hints: null,
+                                        readOnly: true // Kijelentkezve
+                                    });
+                                </script>
+
+                            </button>
+
+                            <!--/ Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Értékelem -->
+
+                    <!-- Megosztás -->
+                    <div>
+                        <span class="uk-text-small">Megosztás:</span>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: facebook"
+                           href="https://www.facebook.com/sharer.php?u=https://www.teletal.hu/etel/szeletben_sult_csirkemell_zoldsegkremmartasban_rizi_bizi"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: twitter"
+                           href="https://twitter.com/intent/tweet?url=https://www.teletal.hu/etel/szeletben_sult_csirkemell_zoldsegkremmartasban_rizi_bizi&text=Szeletben+s%C3%BClt+csirkemell%2C+z%C3%B6lds%C3%A9gkr%C3%A9mm%C3%A1rt%C3%A1sban%2C+rizi-bizi+&hashtags="></a>
+                        <!--
+                        {hashtags}: Hashtagek, pl. a keywords meta tag első 2-3 eleme
+                        -->
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: google-plus"
+                           href="https://plus.google.com/share?url=https://www.teletal.hu/etel/szeletben_sult_csirkemell_zoldsegkremmartasban_rizi_bizi"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: pinterest"
+                           href="https://pinterest.com/pin/create/bookmarklet/?media=&url=https://www.teletal.hu##=IFE(/etel/szeletben_sult_csirkemell_zoldsegkremmartasban_rizi_bizi;;/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10;/etel/szeletben_sult_csirkemell_zoldsegkremmartasban_rizi_bizi)###&description=Szeletben+s%C3%BClt+csirkemell%2C+z%C3%B6lds%C3%A9gkr%C3%A9mm%C3%A1rt%C3%A1sban%2C+rizi-bizi+"></a>
+                        <!--
+                        {img}: Thumbnailként használni kívánt kép url-je, legalább 100x200px, pl. https://www.example.com/images/image.jpg
+                        -->
+                    </div>
+                    <!-- / Megosztás -->
+
+                </div>
+
+                <hr>
+                <div class="uk-grid-small uk-grid-divider uk-grid" uk-grid>
+                    <div class="uk-width-1-3@m uk-first-column">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-114655064" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-114655064').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+
+                                                data: [7.20, 38.30, 23.10],
+
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1000 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m uk-text-small">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4"><span class="en_adag">1 adagban</span></div>
+                            <div class="uk-width-1-4"><span class="en_100">100g-ban</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-flex-right" uk-grid>
+                            <hr class="uk-width-1-2 uk-margin uk-align-right">
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Energiatartalom</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">324.0 kcal</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">115.7 kcal</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">1,364.5 KJ</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">487.3 KJ</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span class="uk-text-bold">Zsír</span><span>, amelyből</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">7.2 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">2.6 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">telített zsírsavak</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.5 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.9 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span
+                                    class="uk-text-bold">Szénhidrát</span><span>, amelyből</span></div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">38.3 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">13.7 g</span>
+                            </div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">cukor</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.1 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.8 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">rost</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">6.8 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">2.4 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Fehérje</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">23.1 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">8.3 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Só</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">5.7 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">2.0 g</span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Nettó súly:</strong></span>
+                            <span class="uk-badge-neutral uk-margin-small-right">280 g</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Összetevők:</strong></span>
+                            <span>csirkemell (19%), zöldborsó (15%), rizs (12%), spárga (3%),
+sárgarépa (3%), karfiol, <strong>tej</strong>, <strong>zeller</strong>, tejszín (író (<strong>tej</strong>), teljes
+mértékben hidrogénezett növényi zsír (növényi eredet:pálmamag, pálma),
+<strong>tejszín</strong>, <strong>laktóz</strong>, emulgeálószerek:<strong>szójalecitin</strong>, étkezési só), étkezési só,
+napraforgóolaj, <strong>búzaliszt</strong>, sültcsirke fűszersó (jódozott só,
+ízfokozó:nátrium-glutamát, paprika, fokhagyma, majoranna, rozmaring,
+tartósítószer:<strong>kén-dioxid</strong>), sertészsír, fűszerek</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Allergének:</strong></span>
+                            <span>Kén-dioxid, Tej,  Szója, Glutén,Zeller</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bejegyzés - étel -->
+
+                <!-- schema.org / JSON-LD structured data -->
+
+                <!-- Recept -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Recipe",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Szeletben sült csirkemell, zöldségkrémmártásban, rizi-bizi ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerekcsirkemell
+                        (19
+                        %
+                        ),
+                        zöldborsó
+                        (15
+                        %
+                        ),
+                        rizs
+                        (12
+                        %
+                        ),
+                        spárga
+                        (3
+                        %
+                        ),
+                        sárgarépa
+                        (3
+                        %
+                        ),
+                        karfiol,
+                        tej,
+                        zeller,
+                        tejszín
+                        (író
+                        (tej),
+                        teljes
+                        mértékben
+                        hidrogénezett
+                        növényi
+                        zsír
+                        (növényi
+                        eredet: pálmamag,
+                        pálma),
+                        tejszín,
+                        laktóz,
+                        emulgeálószerek: szójalecitin,
+                        étkezési
+                        só),
+                        étkezési
+                        só,
+                        napraforgóolaj,
+                        búzaliszt,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        fűszerek
+                        ",
+                        "datePublished": "2025.04.09",
+                        "recipeYield": "1",
+                        "nutrition": {
+                            "@type": "NutritionInformation",
+                            "servingSize": "1",
+                            "calories": "324.00 cal",
+                            "fatContent": "7.20 g"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Recept -->
+
+                <!-- Termék / étel -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Product",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Szeletben sült csirkemell, zöldségkrémmártásban, rizi-bizi ",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerekcsirkemell
+                        (19
+                        %
+                        ),
+                        zöldborsó
+                        (15
+                        %
+                        ),
+                        rizs
+                        (12
+                        %
+                        ),
+                        spárga
+                        (3
+                        %
+                        ),
+                        sárgarépa
+                        (3
+                        %
+                        ),
+                        karfiol,
+                        tej,
+                        zeller,
+                        tejszín
+                        (író
+                        (tej),
+                        teljes
+                        mértékben
+                        hidrogénezett
+                        növényi
+                        zsír
+                        (növényi
+                        eredet: pálmamag,
+                        pálma),
+                        tejszín,
+                        laktóz,
+                        emulgeálószerek: szójalecitin,
+                        étkezési
+                        só),
+                        étkezési
+                        só,
+                        napraforgóolaj,
+                        búzaliszt,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        fűszerek
+                        ",
+                        "brand": "",
+                        "sku": "",
+                        "offers": {
+                            "@type": "Offer",
+                            "priceCurrency": "HUF",
+                            "price": "3640.00",
+                            "priceValidUntil": "2025.04.14",
+                            "availability": "http://schema.org/InStock",
+                            "itemCondition": "http://schema.org/NewCondition"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "3",
+                            "bestRating": "3",
+                            "worstRating": "3",
+                            "ratingCount": "0"
+                        }
+                    }
+                </script>
+                <!-- / Termék / étel -->
+
+                <!-- / schema.org / JSON-LD structured data -->
+
+
+            </div>
+        </section>
+
+        <section class="uk-section uk-section-small uk-section-default">
+            <div class="uk-container uk-container-small uk-text-break ">
+                <h2 id="5/5">16.hét Hétfő: Z10 5/5</h2>
+
+                <h1 class="uk-article-title">Tiramisu szelet, édesítőszerrel</h1>
+
+                <div class="uk-grid-small uk-text-small uk-flex-middle uk-grid-divider uk-child-width-1-1@s uk-child-width-auto@m"
+                     uk-grid>
+                    <div class="uk-text-small">
+                        <button class="uk-button uk-button-danger uk-width-1-1@s" type="button"><span
+                                class="tm-text-xsmall">Megrendelhető</span><span uk-icon="icon: triangle-down"></span>
+                        </button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z10">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z10</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/16/?nap=1#Z9">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z9</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/app2/16/?nap=1#Z9">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z9</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/app21/16/?nap=1#Z9">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z9</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/egyszeru/16/?nap=1#Z9">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z9</span>
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="uk-link-reset" href="/etlap/orig/16/?nap=1#Z9">
+                                        <span class="uk-badge">16. hét, 1. nap</span>
+                                        <span class="uk-badge uk-margin-small-right">Z9</span>
+
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Kedvencekhez adom -->
+
+                    <div>
+                        <div>
+                            <!-- Kedvencekhez adom - Kijelentkezve -->
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Kedvencekhez adáshoz kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+                                <span class="uk-text-primary">Kedvencekhez adom</span>
+                                <span class="uk-margin-small-right uk-text-primary" uk-icon="icon: heart"></span>
+                            </button>
+                            <!--/ Kedvencekhez adom - Kijelentkezve -->
+
+                            <span class="uk-badge">0</span>
+                        </div>
+                    </div>
+
+                    <!-- / Kedvencekhez adom -->
+                    <!-- Értékelem -->
+
+                    <div>
+                        <div>
+
+                            <span class="uk-margin-small-right">Értékelem</span>
+                            <!-- Kijelentkezve -->
+
+                            <button class="uk-button uk-button-link" type="button"
+                                    onclick="UIkit.notification({message: 'Értékeléshez kérjük, jelentkezzen be vagy regisztráljon!', status: 'danger', pos: 'top-center', timeout: 5000});">
+
+                                <span id="ertekeles-136695204" class="uk-text-primary tm-text-xxxsmall"></span>
+
+                                <script>
+                                    $('#ertekeles-136695204').raty({
+                                        starType: 'i',
+                                        score: 4,
+                                        hints: null,
+                                        readOnly: true // Kijelentkezve
+                                    });
+                                </script>
+
+                            </button>
+
+                            <!--/ Kijelentkezve -->
+
+                            <span class="uk-badge">1</span>
+                        </div>
+                    </div>
+
+                    <!-- Értékelem -->
+
+                    <!-- Megosztás -->
+                    <div>
+                        <span class="uk-text-small">Megosztás:</span>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: facebook"
+                           href="https://www.facebook.com/sharer.php?u=https://www.teletal.hu/etel/tiramisu_szelet_edesitoszerrel"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: twitter"
+                           href="https://twitter.com/intent/tweet?url=https://www.teletal.hu/etel/tiramisu_szelet_edesitoszerrel&text=Tiramisu+szelet%2C+%C3%A9des%C3%ADt%C5%91szerrel&hashtags="></a>
+                        <!--
+                        {hashtags}: Hashtagek, pl. a keywords meta tag első 2-3 eleme
+                        -->
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: google-plus"
+                           href="https://plus.google.com/share?url=https://www.teletal.hu/etel/tiramisu_szelet_edesitoszerrel"></a>
+                        <a target="_blank" class="uk-text-primary" uk-icon="icon: pinterest"
+                           href="https://pinterest.com/pin/create/bookmarklet/?media=/etel_kepek/tiramisu_szelet2_960x.jpg&url=https://www.teletal.hu##=IFE(/etel/tiramisu_szelet_edesitoszerrel;;/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10;/etel/tiramisu_szelet_edesitoszerrel)###&description=Tiramisu+szelet%2C+%C3%A9des%C3%ADt%C5%91szerrel"></a>
+                        <!--
+                        {img}: Thumbnailként használni kívánt kép url-je, legalább 100x200px, pl. https://www.example.com/images/image.jpg
+                        -->
+                    </div>
+                    <!-- / Megosztás -->
+
+                </div>
+
+                <hr>
+                <div class="uk-text-center">
+                    <picture>
+                        <img src='' width='960' height='586' alt='' sizes='(min-width: 1600px) 100vw, 100vw'
+                             srcset='/etel_kepek/imageset_tiramisu_szelet2_960x/tiramisu_szelet2_960x_200x122.jpg 200w,/etel_kepek/imageset_tiramisu_szelet2_960x/tiramisu_szelet2_960x_400x244.jpg 400w,/etel_kepek/imageset_tiramisu_szelet2_960x/tiramisu_szelet2_960x_640x390.jpg 640w,/etel_kepek/imageset_tiramisu_szelet2_960x/tiramisu_szelet2_960x_960x586.jpg 960w'>
+
+                    </picture>
+                </div>
+
+                <hr>
+                <div class="uk-grid-small uk-grid-divider uk-grid" uk-grid>
+                    <div class="uk-width-1-3@m uk-first-column">
+                        <div class="uk-text-small">
+
+                            <div class="uk-text-small uk-margin">
+                                <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                                <span class="uk-margin-small-right"><strong>Tápanyagtartalom:</strong></span>
+                            </div>
+
+                            <!-- Chart (http://www.chartjs.org) -->
+
+                            <div class=uk-margin>
+
+                                <canvas id="nutrition-chart-modal-136695204" width="300" height="300"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('nutrition-chart-modal-136695204').getContext('2d');
+                                    var chart = new Chart(ctx, {
+                                        // Chart type
+                                        type: 'doughnut',
+
+                                        // Data
+                                        data: {
+                                            labels: ["Zsír", "Szénhidrát", "Fehérje"],
+                                            datasets: [{
+
+                                                data: [7.10, 8.60, 7.40],
+
+                                                backgroundColor: [
+                                                    '#1e87f0',
+                                                    '#f0506e',
+                                                    '#999',
+                                                ],
+                                                borderColor: 'white',
+                                                hoverBorderColor: 'white',
+                                            }]
+                                        },
+
+                                        // Options
+                                        options: {
+                                            responsive: true,
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                                labels: {
+                                                    boxWidth: 14,
+                                                    fontSize: 14,
+                                                    fontFamily: "'Segoe UI', 'Roboto','Helvetica Neue', 'Arial', sans-serif",
+                                                }
+                                            },
+                                            animation: {
+                                                animateScale: false,
+                                                animateRotate: true
+                                            },
+                                            tooltips: {
+                                                enabled: false
+                                            },
+                                            plugins: {
+                                                datalabels: {
+                                                    anchor: 'center',
+                                                    color: 'white'
+                                                },
+                                                deferred: {
+                                                    xOffset: '100%', // Number of pixels (or percent of the canvas width) from which the chart is considered inside the viewport.
+                                                    yOffset: '100%', // Number of pixels (or percent of the canvas height) from which the chart is considered inside the viewport.
+                                                    delay: 1000 // Number of milliseconds to delay the loading after the chart is considered inside the viewport.
+                                                }
+                                            }
+                                        }
+
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="uk-width-1-3@m uk-text-small">
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4"><span class="en_adag">1 adagban</span></div>
+                            <div class="uk-width-1-4"><span class="en_100">100g-ban</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-flex-right" uk-grid>
+                            <hr class="uk-width-1-2 uk-margin uk-align-right">
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Energiatartalom</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">129.0 kcal</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">143.3 kcal</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">539.0 KJ</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">598.9 KJ</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span class="uk-text-bold">Zsír</span><span>, amelyből</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">7.1 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">7.9 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">telített zsírsavak</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">5.7 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">6.3 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2"><span
+                                    class="uk-text-bold">Szénhidrát</span><span>, amelyből</span></div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_adag">8.6 g</span>
+                            </div>
+                            <div class="uk-width-1-4 uk-text-right uk-text-bold"><span class="en_100">9.6 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">cukor</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">2.1 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">2.3 g</span></div>
+                        </div>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom" uk-grid>
+                            <div class="uk-width-1-2">rost</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">0.5 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.6 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Fehérje</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">7.4 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">8.2 g</span></div>
+                        </div>
+
+                        <br>
+
+                        <div class="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold" uk-grid>
+                            <div class="uk-width-1-2">Só</div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_adag">0.2 g</span></div>
+                            <div class="uk-width-1-4 uk-text-right"><span class="en_100">0.2 g</span></div>
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-1-3@m">
+
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Nettó súly:</strong></span>
+                            <span class="uk-badge-neutral uk-margin-small-right">90 g</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Összetevők:</strong></span>
+                            <span>emulgeálószer: zsírsavak mono- és digliceridjei,
+<strong>szójalecitin</strong>, <strong>tojáslé</strong>, <strong>búzaliszt</strong>, lisztkeverék
+(<strong>szója, glutén</strong>), kakaópor, <strong>tejpor</strong>, vaníliaízű pudingpor
+(kukoricakeményítő, étkezési só, színezékek: béta-karotin,
+riboflavin), pótkávé (1%) (pörkölt cirkória, rozs, árpa
+<strong>glutén</strong>, finomított napraforgó étolaj), aromák, sütőpor,
+tartósítószer: kálium-szorbát, édesítőszer: szukralóz</span>
+                        </div>
+
+                        <div class="uk-text-small uk-margin">
+                            <span class="uk-margin-small-right" uk-icon="icon: tag"></span>
+                            <span class="uk-margin-small-right"><strong>Allergének:</strong></span>
+                            <span>Glutén, Tej, Tojás, Szója</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Bejegyzés - étel -->
+
+                <!-- schema.org / JSON-LD structured data -->
+
+                <!-- Recept -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Recipe",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Tiramisu szelet, édesítőszerrel",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerekcsirkemell
+                        (19
+                        %
+                        ),
+                        zöldborsó
+                        (15
+                        %
+                        ),
+                        rizs
+                        (12
+                        %
+                        ),
+                        spárga
+                        (3
+                        %
+                        ),
+                        sárgarépa
+                        (3
+                        %
+                        ),
+                        karfiol,
+                        tej,
+                        zeller,
+                        tejszín
+                        (író
+                        (tej),
+                        teljes
+                        mértékben
+                        hidrogénezett
+                        növényi
+                        zsír
+                        (növényi
+                        eredet: pálmamag,
+                        pálma),
+                        tejszín,
+                        laktóz,
+                        emulgeálószerek: szójalecitin,
+                        étkezési
+                        só),
+                        étkezési
+                        só,
+                        napraforgóolaj,
+                        búzaliszt,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        fűszerekemulgeálószer: zsírsavak
+                        mono-
+                        és
+                        digliceridjei,
+                        szójalecitin,
+                        tojáslé,
+                        búzaliszt,
+                        lisztkeverék
+                        (szója,
+                        glutén),
+                        kakaópor,
+                        tejpor,
+                        vaníliaízű
+                        pudingpor
+                        (kukoricakeményítő,
+                        étkezési
+                        só,
+                        színezékek: béta-karotin,
+                        riboflavin),
+                        pótkávé
+                        (1
+                        %
+                        )
+                        (pörkölt
+                        cirkória,
+                        rozs,
+                        árpa
+                        glutén,
+                        finomított
+                        napraforgó
+                        étolaj),
+                        aromák,
+                        sütőpor,
+                        tartósítószer: kálium-szorbát,
+                        édesítőszer: szukralóz
+                        ",
+                        "datePublished": "2025.04.09",
+                        "recipeYield": "1",
+                        "nutrition": {
+                            "@type": "NutritionInformation",
+                            "servingSize": "1",
+                            "calories": "129.00 cal",
+                            "fatContent": "7.10 g"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "4",
+                            "bestRating": "4",
+                            "worstRating": "4",
+                            "ratingCount": "1"
+                        }
+                    }
+                </script>
+                <!-- / Recept -->
+
+                <!-- Termék / étel -->
+                <script type="application/ld+json">
+                    {
+                        "@context": "http://schema.org/",
+                        "@type": "Product",
+                        "url": "https://www.teletal.hu/ajax/kodinfo?ev=2025&het=16&tipus=1&nap=1&kod=Z10",
+                        "name": "Tiramisu szelet, édesítőszerrel",
+                        "image": "",
+                        "description": "lilakáposzta* (66%), pulyka felsőcomb (22%), vöröshagyma, ecet
+                        (erjesztett
+                        ecet,
+                        etanol),
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagyma,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        édesítőszer
+                        (szukralóz,
+                        szteviol-glikozidok,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        fűszerekalma
+                        (alma,
+                        étkezési
+                        só,
+                        savanyúságot
+                        szabályzó
+                        anyagok: aszkorbinsav)
+                        (36
+                        %
+                        ),
+                        csirkemell
+                        (33
+                        %
+                        ),
+                        jégsaláta,
+                        mozzarella,
+                        citromlé
+                        (citromlé,
+                        étkezési
+                        sav: citromsav,
+                        tartósítószer: kálium-szorbát),
+                        grill
+                        fűszerkeverék
+                        (jódozott
+                        só,
+                        paprika,
+                        kömény,
+                        fokhagyma,
+                        cayenne
+                        bors),
+                        étkezési
+                        só,
+                        sertészsír,
+                        fűszerekargentin
+                        hekk
+                        hal
+                        (41
+                        %
+                        ),
+                        ivóvíz,
+                        jázmin
+                        rizs
+                        (13
+                        %
+                        ),
+                        zöldborsó
+                        (8
+                        %
+                        ),
+                        búzaliszt,
+                        napraforgóolaj,
+                        étkezési
+                        só,
+                        fokhagymapor,
+                        fűszerekcsirkemell
+                        (19
+                        %
+                        ),
+                        zöldborsó
+                        (15
+                        %
+                        ),
+                        rizs
+                        (12
+                        %
+                        ),
+                        spárga
+                        (3
+                        %
+                        ),
+                        sárgarépa
+                        (3
+                        %
+                        ),
+                        karfiol,
+                        tej,
+                        zeller,
+                        tejszín
+                        (író
+                        (tej),
+                        teljes
+                        mértékben
+                        hidrogénezett
+                        növényi
+                        zsír
+                        (növényi
+                        eredet: pálmamag,
+                        pálma),
+                        tejszín,
+                        laktóz,
+                        emulgeálószerek: szójalecitin,
+                        étkezési
+                        só),
+                        étkezési
+                        só,
+                        napraforgóolaj,
+                        búzaliszt,
+                        sültcsirke
+                        fűszersó
+                        (jódozott
+                        só,
+                        ízfokozó: nátrium-glutamát,
+                        paprika,
+                        fokhagyma,
+                        majoranna,
+                        rozmaring,
+                        tartósítószer: kén-dioxid),
+                        sertészsír,
+                        fűszerekemulgeálószer: zsírsavak
+                        mono-
+                        és
+                        digliceridjei,
+                        szójalecitin,
+                        tojáslé,
+                        búzaliszt,
+                        lisztkeverék
+                        (szója,
+                        glutén),
+                        kakaópor,
+                        tejpor,
+                        vaníliaízű
+                        pudingpor
+                        (kukoricakeményítő,
+                        étkezési
+                        só,
+                        színezékek: béta-karotin,
+                        riboflavin),
+                        pótkávé
+                        (1
+                        %
+                        )
+                        (pörkölt
+                        cirkória,
+                        rozs,
+                        árpa
+                        glutén,
+                        finomított
+                        napraforgó
+                        étolaj),
+                        aromák,
+                        sütőpor,
+                        tartósítószer: kálium-szorbát,
+                        édesítőszer: szukralóz
+                        ",
+                        "brand": "",
+                        "sku": "",
+                        "offers": {
+                            "@type": "Offer",
+                            "priceCurrency": "HUF",
+                            "price": "870.00",
+                            "priceValidUntil": "2025.04.14",
+                            "availability": "http://schema.org/InStock",
+                            "itemCondition": "http://schema.org/NewCondition"
+                        },
+                        "aggregateRating": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "4",
+                            "bestRating": "4",
+                            "worstRating": "4",
+                            "ratingCount": "1"
+                        }
+                    }
+                </script>
+                <!-- / Termék / étel -->
+
+                <!-- / schema.org / JSON-LD structured data -->
+
+
+            </div>
+        </section>
+
+
+    </article>
+</main>
