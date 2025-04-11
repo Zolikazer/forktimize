@@ -1,4 +1,6 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, Mock
+
+import pytest
 
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
@@ -27,6 +29,7 @@ def test_get_food_category_codes():
     mock_client.get_main_menu_html.assert_called_once()
     mock_client.get_dynamic_category_html.assert_called_once_with(2025, 15, 123, "Hidegkonyha")
 
+
 def test_menu_page_get_price_returns_price():
     test_file = TEST_RESOURCES_DIR / "teletal-main-menu-test.html"
     mock_client = MagicMock(spec=TeletalClient)
@@ -45,5 +48,9 @@ def test_menu_page_get_price_returns_price():
     assert menu_page.get_price("C", 1) == "1.890 Ft"
 
 
+def test_menu_page_raises_if_get_called_before_load():
+    client = Mock(spec=TeletalClient)
+    page = TeletalMenuPage(client)
 
-
+    with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
+        page.get_food_category_codes()

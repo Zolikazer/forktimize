@@ -1,5 +1,6 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, Mock
 
+import pytest
 from bs4 import BeautifulSoup
 
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
@@ -111,3 +112,10 @@ def test_food_page_get_food_data_delegates_to_food_menu_page():
         assert food_data["day"] == str(day)
         mock_menu_page.assert_called_once()
         mock_single_page.assert_not_called()
+
+def test_food_page_raises_if_get_called_before_load():
+    client = Mock(spec=TeletalClient)
+    page = TeletalFoodPage(client)
+
+    with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
+        page.get_food_data()
