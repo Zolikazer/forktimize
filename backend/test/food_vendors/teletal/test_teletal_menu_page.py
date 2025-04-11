@@ -20,7 +20,8 @@ def test_get_food_category_codes():
     mock_client.get_dynamic_category_html.return_value = fake_dynamic_category
 
     page = TeletalMenuPage(client=mock_client, delay=0)
-    codes = page.get_food_category_codes(year=2025, week=15)
+    page.load(week=15)
+    codes = page.get_food_category_codes()
 
     assert codes == ["HU", "ZK", "LE"]
     mock_client.get_main_menu_html.assert_called_once()

@@ -9,23 +9,31 @@ class TeletalFoodPage:
     def __init__(self, client: TeletalClient):
         self._client = client
         self._food_page_soup: BeautifulSoup | None = None
+        self._year = None
+        self._week = None
+        self._day = None
+        self._category_code = None
 
-    def get_food_data(self, year: int, week: int, category_code: str, day: int) -> dict[str, str]:
-        self._load(year=year, week=week, category_code=category_code, day=day)
-
+    def get_food_data(self) -> dict[str, str]:
+        assert self._food_page_soup is not None, "You must call load() first"
         if self._is_contains_multiple_foods():
             food_data = TeletalFoodMenuPage(self._food_page_soup).get_menu_data()
         else:
             food_data = TeletalSingleFoodPage(self._food_page_soup).get_food_data()
 
-        food_data["code"] = category_code
-        food_data["year"] = str(year)
-        food_data["week"] = str(week)
-        food_data["day"] = str(day)
+        food_data["code"] = self._category_code
+        food_data["year"] = str(self._year)
+        food_data["week"] = str(self._week)
+        food_data["day"] = str(self._day)
 
         return food_data
 
-    def _load(self, year: int, week: int, category_code: str, day: int):
+    def load(self, year: int, week: int,  day: int, category_code: str):
+        self._year = year
+        self._week = week
+        self._day = day
+        self._category_code = category_code
+
         self._food_page_soup = BeautifulSoup(
             self._client.fetch_food_data(year=year, week=week, day=day, code=category_code), "html.parser")
 

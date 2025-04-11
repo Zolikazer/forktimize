@@ -68,13 +68,14 @@ def test_food_page_get_food_data_delegates_to_single_food_page():
         mock_single_page.return_value.get_food_data.return_value = {"name": "Single"}
         food_page = TeletalFoodPage(mock_client)
 
-        result = food_page.get_food_data(year=year, week=week, category_code=code, day=day)
+        food_page.load(year=year, week=week, day=day, category_code=code)
+        food_data = food_page.get_food_data()
 
-        assert result["name"] == "Single"
-        assert result["code"] == str(code)
-        assert result["year"] == str(year)
-        assert result["week"] == str(week)
-        assert result["day"] == str(day)
+        assert food_data["name"] == "Single"
+        assert food_data["code"] == str(code)
+        assert food_data["year"] == str(year)
+        assert food_data["week"] == str(week)
+        assert food_data["day"] == str(day)
 
         mock_single_page.assert_called_once()
         mock_menu_page.assert_not_called()
@@ -100,12 +101,13 @@ def test_food_page_get_food_data_delegates_to_food_menu_page():
         mock_menu_page.return_value.get_menu_data.return_value = {"name": "Menu"}
         food_page = TeletalFoodPage(mock_client)
 
-        result = food_page.get_food_data(year=year, week=week, category_code=code, day=day)
+        food_page.load(year=year, week=week, category_code=code, day=day)
+        food_data = food_page.get_food_data()
 
-        assert result["name"] == "Menu"
-        assert result["code"] == str(code)
-        assert result["year"] == str(year)
-        assert result["week"] == str(week)
-        assert result["day"] == str(day)
+        assert food_data["name"] == "Menu"
+        assert food_data["code"] == str(code)
+        assert food_data["year"] == str(year)
+        assert food_data["week"] == str(week)
+        assert food_data["day"] == str(day)
         mock_menu_page.assert_called_once()
         mock_single_page.assert_not_called()

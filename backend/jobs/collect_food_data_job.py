@@ -6,7 +6,8 @@ from pathlib import Path
 import requests
 from sqlmodel import Session
 
-from database.db import init_db, engine
+from database.db import engine
+from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_parser import TeletalParser
@@ -14,7 +15,6 @@ from food_vendors.strategies.teletal_strategy import TeletalStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
 from monitoring.performance import benchmark
@@ -152,4 +152,4 @@ if __name__ == "__main__":
     print("END FOODS SAVED")
     print(f"FAILUER {teletal.failures}")
     with open(SETTINGS.data_dir / "teletal_raw.html", "w") as f:
-        f.write(str(teletal.raw_data))
+        f.write(str(teletal._raw_data))
