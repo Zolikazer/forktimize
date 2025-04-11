@@ -51,8 +51,12 @@ class TeletalFoodMenuPage:
 
         return None
 
-    def _extract_name(self) -> str:
+    def _extract_name(self) -> str | None:
         headers = self._menu_soup.find_all("h1", class_="uk-article-title")
+
+        if len(headers) == 0:
+            return None
+
         food_names = [re.sub(r"\s+", " ", h.text).strip() for h in headers[1:] if h.text.strip()]
 
         return "\n".join(food_names)

@@ -39,4 +39,6 @@ class TeletalFoodPage:
 
     def _is_contains_multiple_foods(self) -> bool:
         h1_tags = self._food_page_soup.find_all("h1", class_="uk-article-title")
+        assert len(h1_tags) > 0, "No food names were found – expected 1 or multiple <h1> tags"
+
         return len(h1_tags) > 1

@@ -17,10 +17,10 @@ class TeletalClient:
         }
 
     def get_main_menu_html(self, week: int) -> str:
+        JOB_LOGGER.info("Fetching main menu html")
         response = self.session.get(f"{self.teletal_menu_url}/{week}", headers=self.headers)
         response.raise_for_status()
 
-        JOB_LOGGER.info("Fetching main menu html")
         return response.text
 
     def get_dynamic_category_html(self, year: int, week: int, ewid: int, varname: str) -> str:

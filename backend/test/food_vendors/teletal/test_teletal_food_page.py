@@ -113,6 +113,24 @@ def test_food_page_get_food_data_delegates_to_food_menu_page():
         mock_menu_page.assert_called_once()
         mock_single_page.assert_not_called()
 
+
+def test_food_page_get_food_data_throws_exception_if_no_name_found():
+    fake_html = """
+    <html><body>
+        <h2 class="uk-article-title">Menu Title</h2>
+    </body></html>
+    """
+
+    mock_client = MagicMock(spec=TeletalClient)
+    mock_client.fetch_food_data.return_value = fake_html
+
+    food_page = TeletalFoodPage(mock_client)
+    food_page.load(year=2025, week=15, day=3, category_code="R1")
+
+    with pytest.raises(AssertionError, match="No food names were found – expected 1 or multiple <h1> tags"):
+        food_page.get_food_data()
+
+
 def test_food_page_raises_if_get_called_before_load():
     client = Mock(spec=TeletalClient)
     page = TeletalFoodPage(client)

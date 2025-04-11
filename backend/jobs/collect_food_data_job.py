@@ -10,7 +10,6 @@ from database.db import engine
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
-from food_vendors.strategies.teletal.teletal_parser import TeletalParser
 from food_vendors.strategies.teletal_strategy import TeletalStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
@@ -143,7 +142,7 @@ if __name__ == "__main__":
     # with Session(engine) as job_session:
     #     CollectFoodDataJob(job_session, VENDOR_STRATEGIES, 1).run()
     teletal = TeletalStrategy(TeletalClient("https://www.teletal.hu/etlap",
-                                            "https://www.teletal.hu/ajax"), TeletalParser())
+                                            "https://www.teletal.hu/ajax"))
 
     raw, _ = teletal.fetch_foods_for(2025, 16)
     print(len(raw))
