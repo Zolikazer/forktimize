@@ -14,7 +14,7 @@ def load_test_html(path: str) -> str:
         return f.read()
 
 
-def test_food_page_returns_correct_food_data():
+def test_single_food_page_returns_correct_food_data():
     test_file = TEST_RESOURCES_DIR / "teletal-food-test.html"
     food_page_html = load_test_html(test_file)
 
