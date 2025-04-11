@@ -19,6 +19,9 @@ class TeletalFoodPage:
             food_data = TeletalSingleFoodPage(self._food_page_soup).get_food_data()
 
         food_data["code"] = category_code
+        food_data["year"] = str(year)
+        food_data["week"] = str(week)
+        food_data["day"] = str(day)
 
         return food_data
 

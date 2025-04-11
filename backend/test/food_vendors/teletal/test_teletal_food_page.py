@@ -58,16 +58,24 @@ def test_food_page_get_food_data_delegates_to_single_food_page():
 
     mock_client = MagicMock(spec=TeletalClient)
     mock_client.fetch_food_data.return_value = fake_html
+    year = 2025
+    week = 15
+    day = 1
+    code = "ZK"
 
     with patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage") as mock_single_page, \
             patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage") as mock_menu_page:
         mock_single_page.return_value.get_food_data.return_value = {"name": "Single"}
         food_page = TeletalFoodPage(mock_client)
 
-        result = food_page.get_food_data(year=2025, week=15, category_code="ZK", day=1)
+        result = food_page.get_food_data(year=year, week=week, category_code=code, day=day)
 
         assert result["name"] == "Single"
-        assert result["code"] == "ZK"
+        assert result["code"] == str(code)
+        assert result["year"] == str(year)
+        assert result["week"] == str(week)
+        assert result["day"] == str(day)
+
         mock_single_page.assert_called_once()
         mock_menu_page.assert_not_called()
 
@@ -83,16 +91,21 @@ def test_food_page_get_food_data_delegates_to_food_menu_page():
 
     mock_client = MagicMock(spec=TeletalClient)
     mock_client.fetch_food_data.return_value = fake_html
-
+    year = 2025
+    week = 15
+    day = 1
+    code = "ZK"
     with patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage") as mock_single_page, \
             patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage") as mock_menu_page:
         mock_menu_page.return_value.get_menu_data.return_value = {"name": "Menu"}
         food_page = TeletalFoodPage(mock_client)
 
-        result = food_page.get_food_data(year=2025, week=15, category_code="ZK", day=1)
+        result = food_page.get_food_data(year=year, week=week, category_code=code, day=day)
 
         assert result["name"] == "Menu"
-        assert result["code"] == "ZK"
+        assert result["code"] == str(code)
+        assert result["year"] == str(year)
+        assert result["week"] == str(week)
+        assert result["day"] == str(day)
         mock_menu_page.assert_called_once()
         mock_single_page.assert_not_called()
-
