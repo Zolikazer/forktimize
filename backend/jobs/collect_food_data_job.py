@@ -1,15 +1,19 @@
+import json
 import random
 import time
 from datetime import datetime
 from pathlib import Path
 
 import requests
+from pydantic import TypeAdapter
 from sqlmodel import Session
 
 from database.db import engine
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
+from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
+from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal_strategy import TeletalStrategy
 from food_vendors.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
@@ -141,14 +145,13 @@ if __name__ == "__main__":
     # init_db()
     # with Session(engine) as job_session:
     #     CollectFoodDataJob(job_session, VENDOR_STRATEGIES, 1).run()
-    teletal = TeletalStrategy(TeletalClient("https://www.teletal.hu/etlap",
-                                            "https://www.teletal.hu/ajax"))
+    delay = 0.5
+    client = TeletalClient("https://www.teletal.hu/etlap", "https://www.teletal.hu/ajax")
+    teletal = TeletalStrategy(TeletalMenuPage(client, delay=delay), TeletalFoodPage(client))
 
-    raw, _ = teletal.fetch_foods_for(2025, 16)
-    print(len(raw))
-    print(raw)
-    save_to_json(raw, SETTINGS.data_dir / "teletal_poc.json")
+    foods = teletal.fetch_foods_for(2025, 16)
+    print(len(foods))
+    print(foods)
+    save_to_json(teletal.get_raw_data(5,5), SETTINGS.data_dir / "teletal_poc_raw.json")
     print("END FOODS SAVED")
-    print(f"FAILUER {teletal.failures}")
-    with open(SETTINGS.data_dir / "teletal_raw.html", "w") as f:
-        f.write(str(teletal._raw_data))
+    print(f"FAILUER {teletal._failures}")

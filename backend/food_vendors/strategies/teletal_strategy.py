@@ -1,5 +1,6 @@
 import time
 
+from error_handling.exceptions import TeletalUnavailableFoodError
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.food_model_mapper import map_to_food_model
@@ -7,10 +8,11 @@ from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from model.food import Food
 from monitoring.logging import JOB_LOGGER
+from settings import SETTINGS
 
 
 class TeletalStrategy(FoodVendorStrategy):
-    def __init__(self, menu_page: TeletalMenuPage, food_page: TeletalFoodPage, delay=0.3):
+    def __init__(self, menu_page: TeletalMenuPage, food_page: TeletalFoodPage, delay=SETTINGS.FETCHING_DELAY):
         self._menu_page: TeletalMenuPage = menu_page
         self._food_page: TeletalFoodPage = food_page
         self._delay: float = delay
@@ -41,12 +43,16 @@ class TeletalStrategy(FoodVendorStrategy):
 
     def _fetch_raw_food_data(self, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []
-        for code in category_codes:
-            for day in range(1, 6):
+        for day in range(1, 6):
+            for code in category_codes:
                 try:
                     food = self._fetch_a_single_food_data(code, day)
+                    food["price"] = self._menu_page.get_price(code, day)
                     raw_food_data.append(food)
                     time.sleep(self._delay)
+                    # TODO test it
+                except TeletalUnavailableFoodError:
+                    JOB_LOGGER.info(f"ℹ️ Skipping unavailable food: code={code}, day={day} — No info on page.")
                 except Exception as e:
                     self._failures += 1
                     JOB_LOGGER.error(
@@ -57,6 +63,10 @@ class TeletalStrategy(FoodVendorStrategy):
                         f"code: {code}:"
                         f"{e}")
 
+                    # TODO extract and test
+                    # with open(SETTINGS.data_dir / f"debug_food_page_{code}_{day}.html", "w", encoding="utf-8") as f:
+                    #     f.write(self._food_page.get_raw_data())
+
         return raw_food_data
 
     def _fetch_a_single_food_data(self, code: str, day: int) -> dict[str, str]:
@@ -66,9 +76,8 @@ class TeletalStrategy(FoodVendorStrategy):
 
     def _get_food_categories(self) -> list[str]:
         self._menu_page.load(self._week)
-        category_codes = self._menu_page.get_food_category_codes()
 
-        return category_codes
+        return self._menu_page.get_food_category_codes()
 
     def _convert_raw_food_to_model(self, raw_food_data: list[dict[str, str]]) -> list[Food]:
         food_models = []

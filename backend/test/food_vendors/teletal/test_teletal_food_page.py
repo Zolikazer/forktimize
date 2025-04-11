@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch, Mock
 import pytest
 from bs4 import BeautifulSoup
 
+from error_handling.exceptions import TeletalUnavailableFoodError
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMenuPage
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
@@ -136,4 +137,37 @@ def test_food_page_raises_if_get_called_before_load():
     page = TeletalFoodPage(client)
 
     with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
+        page.get_food_data()
+
+
+def test_food_page_returns_original_html():
+    food_available_html = """
+                <main>
+                    <h1 class="uk-article-title">Brokkolis rizs</h1>
+                </main>
+                """
+    client = MagicMock()
+    client.fetch_food_data.return_value = food_available_html
+
+    page = TeletalFoodPage(client)
+    page.load(year=2025, week=16, day=1, category_code="BROK")
+
+    raw_data = page.get_raw_data()
+    assert "Brokkolis rizs" in raw_data
+    assert "<main>" in raw_data
+
+
+def test_food_page_throws_exception_if_no_data_available():
+    food_not_available_html = """
+                <main>
+                    <h2>Jelenleg sajnos nem érhető el információ!</h2>
+                </main>
+                """
+    client = MagicMock()
+    client.fetch_food_data.return_value = food_not_available_html
+
+    page = TeletalFoodPage(client)
+    page.load(year=2025, week=16, day=1, category_code="GHOST")
+
+    with pytest.raises(TeletalUnavailableFoodError):
         page.get_food_data()

@@ -4,3 +4,6 @@ class MealPlanRequestException(Exception):
         self.message = message
         self.error_code = error_code
         self.field = field
+
+class TeletalUnavailableFoodError(Exception):
+    pass

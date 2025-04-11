@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
-    FETCHING_DELAY: float = 0.3
+    FETCHING_DELAY: float = 0.5
     WEEKS_TO_FETCH: int = 3
     FETCH_IMAGES: bool = True
 

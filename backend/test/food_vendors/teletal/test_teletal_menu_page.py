@@ -48,6 +48,22 @@ def test_menu_page_get_price_returns_price():
     assert menu_page.get_price("C", 1) == "1.890 Ft"
 
 
+def test_menu_page_get_price_returns_price_with_menu_layout():
+    test_file = TEST_RESOURCES_DIR / "teletal-fullday-section-test.html"
+    mock_client = MagicMock(spec=TeletalClient)
+
+    with open(test_file, encoding="utf-8") as f:
+        test_menu_page = f.read()
+
+    mock_client.get_main_menu_html.return_value = test_menu_page
+    mock_client.get_dynamic_category_html.return_value = ""
+
+    menu_page = TeletalMenuPage(client=mock_client, delay=0)
+    menu_page.load(15)
+
+    assert menu_page.get_price("Z10", 1) == "3.640 Ft"
+    assert menu_page.get_price("Z10", 5) == "3.640 Ft"
+
 def test_menu_page_raises_if_get_called_before_load():
     client = Mock(spec=TeletalClient)
     page = TeletalMenuPage(client)
