@@ -22,3 +22,7 @@ def save_image(content: bytes, path: str | Path):
 def save_file(content: str, path: str | Path):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
+def load_file(path: str | Path) -> str:
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()

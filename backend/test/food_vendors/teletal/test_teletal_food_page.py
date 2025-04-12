@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch, Mock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from bs4 import BeautifulSoup
@@ -8,17 +8,26 @@ from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMenuPage
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSingleFoodPage
+from jobs.serialization import load_file
 from test.common import TEST_RESOURCES_DIR
 
+YEAR = 2025
+WEEK = 16
+DAY = 1
+CODE = "ZK"
 
-def load_test_html(path: str) -> str:
-    with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+@pytest.fixture
+def mock_teletal_client():
+    def _make_client_with_html(html: str = "") -> MagicMock:
+        client = MagicMock(spec=TeletalClient)
+        client.fetch_food_data.return_value = html
+        return client
+
+    return _make_client_with_html
 
 
-def test_single_food_page_returns_correct_food_data():
-    test_file = TEST_RESOURCES_DIR / "teletal-food-test.html"
-    food_page_html = load_test_html(test_file)
+def test_parses_food_data_correctly_for_single_food_page():
+    food_page_html = load_file(TEST_RESOURCES_DIR / "teletal-food-test.html")
 
     food_page = TeletalSingleFoodPage(BeautifulSoup(food_page_html, "html.parser"))
     food_data = food_page.get_food_data()
@@ -30,12 +39,8 @@ def test_single_food_page_returns_correct_food_data():
                          "protein": "11.3 g"}
 
 
-def test_menu_page_returns_correct_food_data():
-    test_file = TEST_RESOURCES_DIR / "teletal-food-multiple-test.html"
-    food_page_html = load_test_html(test_file)
-
-    mock_client = MagicMock(spec=TeletalClient)
-    mock_client.fetch_food_data.return_value = food_page_html
+def test_parses_food_data_correctly_for_menu_page_with_multiple_items():
+    food_page_html = load_file(TEST_RESOURCES_DIR / "teletal-food-multiple-test.html")
 
     food_page = TeletalFoodMenuPage(BeautifulSoup(food_page_html, "html.parser"))
     food_data = food_page.get_menu_data()
@@ -51,122 +56,114 @@ def test_menu_page_returns_correct_food_data():
                          "protein": "102.00 g"}
 
 
-def test_food_page_get_food_data_delegates_to_single_food_page():
-    fake_html = """
+@patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage")
+@patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage")
+def test_uses_single_food_parser_when_one_food_present(mock_single_page, mock_menu_page, mock_teletal_client):
+    food_page_html = """
     <html><body>
         <h1 class="uk-article-title">Just One Delicious Item</h1>
     </body></html>
     """
+    food_name = "Single"
+    teletal_client = mock_teletal_client(food_page_html)
+    mock_single_page.return_value.get_food_data.return_value = {"name": food_name}
 
-    mock_client = MagicMock(spec=TeletalClient)
-    mock_client.fetch_food_data.return_value = fake_html
-    year = 2025
-    week = 15
-    day = 1
-    code = "ZK"
+    food_page = TeletalFoodPage(teletal_client)
+    food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
+    food_data = food_page.get_food_data()
 
-    with patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage") as mock_single_page, \
-            patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage") as mock_menu_page:
-        mock_single_page.return_value.get_food_data.return_value = {"name": "Single"}
-        food_page = TeletalFoodPage(mock_client)
-
-        food_page.load(year=year, week=week, day=day, category_code=code)
-        food_data = food_page.get_food_data()
-
-        assert food_data["name"] == "Single"
-        assert food_data["code"] == str(code)
-        assert food_data["year"] == str(year)
-        assert food_data["week"] == str(week)
-        assert food_data["day"] == str(day)
-
-        mock_single_page.assert_called_once()
-        mock_menu_page.assert_not_called()
+    assert food_data == {"name": food_name,
+                         "code": str(CODE),
+                         "year": str(YEAR),
+                         "week": str(WEEK),
+                         "day": str(DAY), }
+    mock_single_page.assert_called_once()
+    mock_menu_page.assert_not_called()
 
 
-def test_food_page_get_food_data_delegates_to_food_menu_page():
-    fake_html = """
+@patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage")
+@patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage")
+def test_uses_menu_parser_when_multiple_foods_present(mock_single_page, mock_menu_page, mock_teletal_client):
+    food_page_html = """
     <html><body>
         <h1 class="uk-article-title">Menu Title</h1>
         <h1 class="uk-article-title">Food 1</h1>
-        <h1 class="uk-article-title">Food 2</h1>
     </body></html>
     """
+    food_name = "Menu"
+    teletal_client = mock_teletal_client(food_page_html)
+    mock_menu_page.return_value.get_menu_data.return_value = {"name": food_name}
 
-    mock_client = MagicMock(spec=TeletalClient)
-    mock_client.fetch_food_data.return_value = fake_html
-    year = 2025
-    week = 15
-    day = 1
-    code = "ZK"
-    with patch("food_vendors.strategies.teletal.teletal_food_page.TeletalSingleFoodPage") as mock_single_page, \
-            patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage") as mock_menu_page:
-        mock_menu_page.return_value.get_menu_data.return_value = {"name": "Menu"}
-        food_page = TeletalFoodPage(mock_client)
+    food_page = TeletalFoodPage(teletal_client)
+    food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
+    food_data = food_page.get_food_data()
 
-        food_page.load(year=year, week=week, category_code=code, day=day)
-        food_data = food_page.get_food_data()
-
-        assert food_data["name"] == "Menu"
-        assert food_data["code"] == str(code)
-        assert food_data["year"] == str(year)
-        assert food_data["week"] == str(week)
-        assert food_data["day"] == str(day)
-        mock_menu_page.assert_called_once()
-        mock_single_page.assert_not_called()
+    assert food_data == {"name": food_name,
+                         "code": str(CODE),
+                         "year": str(YEAR),
+                         "week": str(WEEK),
+                         "day": str(DAY), }
+    mock_menu_page.assert_called_once()
+    mock_single_page.assert_not_called()
 
 
-def test_food_page_get_food_data_throws_exception_if_no_name_found():
-    fake_html = """
+def test_raises_when_no_food_name_found_in_html(mock_teletal_client):
+    food_page_html = """
     <html><body>
         <h2 class="uk-article-title">Menu Title</h2>
     </body></html>
     """
+    teletal_client = mock_teletal_client(food_page_html)
 
-    mock_client = MagicMock(spec=TeletalClient)
-    mock_client.fetch_food_data.return_value = fake_html
-
-    food_page = TeletalFoodPage(mock_client)
-    food_page.load(year=2025, week=15, day=3, category_code="R1")
+    food_page = TeletalFoodPage(teletal_client)
+    food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
 
     with pytest.raises(AssertionError, match="No food names were found – expected 1 or multiple <h1> tags"):
         food_page.get_food_data()
 
+def test_load_calls_fetch_food_data_with_correct_params(mock_teletal_client):
+    teletal_client = mock_teletal_client("<html></html>")
+    food_page = TeletalFoodPage(teletal_client)
 
-def test_food_page_raises_if_get_called_before_load():
-    client = Mock(spec=TeletalClient)
-    page = TeletalFoodPage(client)
+    food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
 
-    with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
-        page.get_food_data()
+    teletal_client.fetch_food_data.assert_called_once_with(
+        year=YEAR, week=WEEK, day=DAY, code=CODE
+    )
 
 
-def test_food_page_returns_original_html():
+def test_returns_original_html_after_loading(mock_teletal_client):
     food_available_html = """
                 <main>
                     <h1 class="uk-article-title">Brokkolis rizs</h1>
                 </main>
                 """
-    client = MagicMock()
-    client.fetch_food_data.return_value = food_available_html
+    teletal_client = mock_teletal_client(food_available_html)
 
-    page = TeletalFoodPage(client)
-    page.load(year=2025, week=16, day=1, category_code="BROK")
+    page = TeletalFoodPage(teletal_client)
+    page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
 
     raw_data = page.get_raw_data()
     assert "Brokkolis rizs" in raw_data
     assert "<main>" in raw_data
 
 
-def test_food_page_throws_exception_if_no_data_available():
+def test_raises_if_get_food_data_called_without_loading_page(mock_teletal_client):
+    food_page = TeletalFoodPage(mock_teletal_client())
+
+    with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
+        food_page.get_food_data()
+
+
+def test_raises_unavailable_error_when_info_missing_on_page(mock_teletal_client):
     food_not_available_html = """
                 <main>
                     <h2>Jelenleg sajnos nem érhető el információ!</h2>
                 </main>
                 """
-    client = MagicMock()
-    client.fetch_food_data.return_value = food_not_available_html
+    teletal_client = mock_teletal_client(food_not_available_html)
 
-    page = TeletalFoodPage(client)
+    page = TeletalFoodPage(teletal_client)
     page.load(year=2025, week=16, day=1, category_code="GHOST")
 
     with pytest.raises(TeletalUnavailableFoodError):
