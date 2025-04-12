@@ -36,15 +36,15 @@ class TeletalMenuPage:
     def load(self, week: int):
         self._week = week
         self._year = datetime.now().year
-        self._menu_soup = BeautifulSoup(self._client.get_main_menu_html(week), "html.parser")
+        self._menu_soup = BeautifulSoup(self._client.get_main_menu(week), "html.parser")
         self._load_dynamic_categories()
 
     def _load_dynamic_categories(self):
         dynamic_categories_codes = self._parse_dynamic_categories()
         for category_code in dynamic_categories_codes:
-            dynamic_category_html = self._client.get_dynamic_category_html(self._year, self._week,
-                                                                           int(category_code["ewid"]),
-                                                                           category_code["varname"])
+            dynamic_category_html = self._client.get_dynamic_category(self._year, self._week,
+                                                                      int(category_code["ewid"]),
+                                                                      category_code["varname"])
             self._append_content_to_menu_page(dynamic_category_html)
             time.sleep(self._delay)
 

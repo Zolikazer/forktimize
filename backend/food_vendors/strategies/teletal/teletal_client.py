@@ -19,14 +19,14 @@ class TeletalClient:
                           "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.86 Safari/537.36"
         }
 
-    def get_main_menu_html(self, week: int) -> str:
+    def get_main_menu(self, week: int) -> str:
         JOB_LOGGER.info("Fetching main menu html")
         response = self.session.get(f"{self.teletal_menu_url}/{week}", headers=self.headers)
         response.raise_for_status()
 
         return response.text
 
-    def get_dynamic_category_html(self, year: int, week: int, ewid: int, varname: str) -> str:
+    def get_dynamic_category(self, year: int, week: int, ewid: int, varname: str) -> str:
         params = {
             "ev": year,
             "het": week,

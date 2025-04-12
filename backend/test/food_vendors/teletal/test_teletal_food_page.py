@@ -1,29 +1,15 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from bs4 import BeautifulSoup
 
 from error_handling.exceptions import TeletalUnavailableFoodError
-from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMenuPage
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSingleFoodPage
 from jobs.serialization import load_file
 from test.common import TEST_RESOURCES_DIR
-
-YEAR = 2025
-WEEK = 16
-DAY = 1
-CODE = "ZK"
-
-@pytest.fixture
-def mock_teletal_client():
-    def _make_client_with_html(html: str = "") -> MagicMock:
-        client = MagicMock(spec=TeletalClient)
-        client.fetch_food_data.return_value = html
-        return client
-
-    return _make_client_with_html
+from test.conftest import YEAR, WEEK, DAY, CODE
 
 
 def test_parses_food_data_correctly_for_single_food_page():
@@ -65,7 +51,7 @@ def test_uses_single_food_parser_when_one_food_present(mock_single_page, mock_me
     </body></html>
     """
     food_name = "Single"
-    teletal_client = mock_teletal_client(food_page_html)
+    teletal_client = mock_teletal_client(fetch_food_data=food_page_html)
     mock_single_page.return_value.get_food_data.return_value = {"name": food_name}
 
     food_page = TeletalFoodPage(teletal_client)
@@ -91,7 +77,7 @@ def test_uses_menu_parser_when_multiple_foods_present(mock_single_page, mock_men
     </body></html>
     """
     food_name = "Menu"
-    teletal_client = mock_teletal_client(food_page_html)
+    teletal_client = mock_teletal_client(fetch_food_data=food_page_html)
     mock_menu_page.return_value.get_menu_data.return_value = {"name": food_name}
 
     food_page = TeletalFoodPage(teletal_client)
@@ -113,7 +99,7 @@ def test_raises_when_no_food_name_found_in_html(mock_teletal_client):
         <h2 class="uk-article-title">Menu Title</h2>
     </body></html>
     """
-    teletal_client = mock_teletal_client(food_page_html)
+    teletal_client = mock_teletal_client(fetch_food_data=food_page_html)
 
     food_page = TeletalFoodPage(teletal_client)
     food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
@@ -122,7 +108,7 @@ def test_raises_when_no_food_name_found_in_html(mock_teletal_client):
         food_page.get_food_data()
 
 def test_load_calls_fetch_food_data_with_correct_params(mock_teletal_client):
-    teletal_client = mock_teletal_client("<html></html>")
+    teletal_client = mock_teletal_client()
     food_page = TeletalFoodPage(teletal_client)
 
     food_page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
@@ -138,7 +124,7 @@ def test_returns_original_html_after_loading(mock_teletal_client):
                     <h1 class="uk-article-title">Brokkolis rizs</h1>
                 </main>
                 """
-    teletal_client = mock_teletal_client(food_available_html)
+    teletal_client = mock_teletal_client(fetch_food_data=food_available_html)
 
     page = TeletalFoodPage(teletal_client)
     page.load(year=YEAR, week=WEEK, day=DAY, category_code=CODE)
@@ -161,7 +147,7 @@ def test_raises_unavailable_error_when_info_missing_on_page(mock_teletal_client)
                     <h2>Jelenleg sajnos nem érhető el információ!</h2>
                 </main>
                 """
-    teletal_client = mock_teletal_client(food_not_available_html)
+    teletal_client = mock_teletal_client(fetch_food_data=food_not_available_html)
 
     page = TeletalFoodPage(teletal_client)
     page.load(year=2025, week=16, day=1, category_code="GHOST")

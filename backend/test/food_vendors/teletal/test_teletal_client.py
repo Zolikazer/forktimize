@@ -26,7 +26,7 @@ def test_get_main_menu_html__sends_correct_request_and_returns_response(teletal_
     expected_url = f"{MOCK_MENU_URL}/16"
     mock_requests.get(expected_url, text=mock_html)
 
-    html = teletal_client.get_main_menu_html(16)
+    html = teletal_client.get_main_menu(16)
 
     assert mock_requests.called
     assert expected_url == mock_requests.request_history[0].url
@@ -42,7 +42,7 @@ def test_get_dynamic_category_html__builds_correct_url_and_returns_section_html(
     expected_url = f"{MOCK_AJAX_URL}/szekcio?ev={year}&het={week}&ewid={ewid}&varname={varname}"
     mock_requests.get(expected_url, text=mock_html)
 
-    html = teletal_client.get_dynamic_category_html(year, week, ewid, varname)
+    html = teletal_client.get_dynamic_category(year, week, ewid, varname)
 
     assert mock_requests.called
     assert expected_url == mock_requests.request_history[0].url

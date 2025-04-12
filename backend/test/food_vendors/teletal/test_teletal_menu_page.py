@@ -1,72 +1,89 @@
-from unittest.mock import MagicMock, Mock
-
 import pytest
 
-from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
+from jobs.serialization import load_file
 from test.common import TEST_RESOURCES_DIR
+from test.conftest import YEAR, WEEK
 
 
-def test_get_food_category_codes():
-    fake_menu_html = """
+def test_get_food_category_codes__returns_static_and_dynamic_codes(mock_teletal_client):
+    ewid = 123
+    category = "Hidegkonyha"
+    menu_html = f"""
     <html><body>
         <tr kod="HU">
-        <section ewid="123" section="Hidegkonyha" ev="2025" het="15"></section>
+        <section ewid="{ewid}" section={category} ev={YEAR} het={WEEK}></section>
     </body></html>
     """
 
     fake_dynamic_category = '<tr kod="ZK"></tr><tr kod="LE"></tr>'
+    teletal_client = mock_teletal_client(get_main_menu=menu_html, get_dynamic_category=fake_dynamic_category)
 
-    mock_client = MagicMock(spec=TeletalClient)
-    mock_client.get_main_menu_html.return_value = fake_menu_html
-    mock_client.get_dynamic_category_html.return_value = fake_dynamic_category
-
-    page = TeletalMenuPage(client=mock_client, delay=0)
-    page.load(week=15)
+    page = TeletalMenuPage(client=teletal_client, delay=0)
+    page.load(week=WEEK)
     codes = page.get_food_category_codes()
 
     assert codes == ["HU", "ZK", "LE"]
-    mock_client.get_main_menu_html.assert_called_once()
-    mock_client.get_dynamic_category_html.assert_called_once_with(2025, 15, 123, "Hidegkonyha")
+    teletal_client.get_main_menu.assert_called_once()
+    teletal_client.get_dynamic_category.assert_called_once_with(YEAR, WEEK, ewid, category)
 
 
-def test_menu_page_get_price_returns_price():
-    test_file = TEST_RESOURCES_DIR / "teletal-main-menu-test.html"
-    mock_client = MagicMock(spec=TeletalClient)
+@pytest.mark.parametrize("code, day, expected", [
+    ("RE1", 1, "295 Ft"),
+    ("RE2", 5, "385 Ft"),
+    ("C", 1, "1.890 Ft"),
+])
+def test_get_price__returns_price_from_regular_layout(mock_teletal_client, code, day, expected):
+    menu_html = load_file(TEST_RESOURCES_DIR / "teletal-main-menu-test.html")
+    teletal_client = mock_teletal_client(get_main_menu=menu_html)
 
-    with open(test_file, encoding="utf-8") as f:
-        test_menu_page = f.read()
-
-    mock_client.get_main_menu_html.return_value = test_menu_page
-    mock_client.get_dynamic_category_html.return_value = ""
-
-    menu_page = TeletalMenuPage(client=mock_client, delay=0)
+    menu_page = TeletalMenuPage(client=teletal_client, delay=0)
     menu_page.load(15)
 
-    assert menu_page.get_price("RE1", 1) == "295 Ft"
-    assert menu_page.get_price("RE2", 5) == "385 Ft"
-    assert menu_page.get_price("C", 1) == "1.890 Ft"
+    assert menu_page.get_price(code, day) == expected
 
 
-def test_menu_page_get_price_returns_price_with_menu_layout():
-    test_file = TEST_RESOURCES_DIR / "teletal-fullday-section-test.html"
-    mock_client = MagicMock(spec=TeletalClient)
+def test_get_price__returns_price_from_menu_style_layout(mock_teletal_client):
+    menu_html = load_file(TEST_RESOURCES_DIR / "teletal-menu-style-category-test.html")
+    teletal_client = mock_teletal_client(get_main_menu=menu_html)
 
-    with open(test_file, encoding="utf-8") as f:
-        test_menu_page = f.read()
-
-    mock_client.get_main_menu_html.return_value = test_menu_page
-    mock_client.get_dynamic_category_html.return_value = ""
-
-    menu_page = TeletalMenuPage(client=mock_client, delay=0)
+    menu_page = TeletalMenuPage(client=teletal_client, delay=0)
     menu_page.load(15)
 
     assert menu_page.get_price("Z10", 1) == "3.640 Ft"
     assert menu_page.get_price("Z10", 5) == "3.640 Ft"
 
-def test_menu_page_raises_if_get_called_before_load():
-    client = Mock(spec=TeletalClient)
-    page = TeletalMenuPage(client)
+
+def test_get_food_category_codes__raises_if_called_before_load(mock_teletal_client):
+    page = TeletalMenuPage(mock_teletal_client())
 
     with pytest.raises(AssertionError, match="You must call load\\(\\) first"):
         page.get_food_category_codes()
+
+
+def test_get_price__returns_none_when_price_not_found(mock_teletal_client):
+    menu_html = "<html><body></body></html>"
+    teletal_client = mock_teletal_client(get_main_menu=menu_html)
+
+    menu_page = TeletalMenuPage(teletal_client)
+    menu_page.load(15)
+
+    assert menu_page.get_price("NON_EXISTENT", 1) is None
+
+
+def test_menu_page_load__calls_client_with_correct_week(mock_teletal_client):
+    ewid = 123
+    category = "Hidegkonyha"
+    menu_html = f"""
+    <html><body>
+        <tr kod="HU">
+        <section ewid="{ewid}" section={category} ev={YEAR} het={WEEK}></section>
+    </body></html>
+    """
+    client = mock_teletal_client(get_main_menu=menu_html)
+
+    page = TeletalMenuPage(client)
+    page.load(week=WEEK)
+
+    client.get_main_menu.assert_called_once_with(WEEK)
+    client.get_dynamic_category.assert_called_once_with(YEAR, WEEK, ewid, category)
