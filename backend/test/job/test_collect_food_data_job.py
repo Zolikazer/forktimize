@@ -14,9 +14,9 @@ from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobRun, JobStatus
 from test.conftest import make_food
 
-
+# TODO refact this test more
 @pytest.fixture(scope="function")
-def test_session():
+def session():
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -27,12 +27,13 @@ def test_session():
 
 
 @pytest.fixture(scope="function")
-def dummy_strategy():
+def strategy():
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food()]
     strategy.get_name.return_value = FoodVendor.CITY_FOOD
     strategy.get_raw_data.return_value = {"bombardino": "crocodilo"}
 
+    yield strategy
 
 @pytest.fixture
 def dummy_strategies() -> list[FoodVendorStrategy]:
@@ -50,25 +51,25 @@ def dummy_strategies() -> list[FoodVendorStrategy]:
     ]
 
 
-@patch("jobs.collect_food_data_job.save_to_json", autospec=True)
-def test_collect_food_data_saves_foods_to_db(_, test_session, dummy_strategies):
-    CollectFoodDataJob(test_session, dummy_strategies, 2, 0, fetch_images=False).run()
+@patch("jobs.collect_food_data_job.save_to_json")
+def test_run_saves_all_foods_to_database(_, session, dummy_strategies):
+    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
 
-    food_entries = test_session.exec(select(Food)).all()
+    food_entries = session.exec(select(Food)).all()
     assert len(food_entries) == 5, "No food entries were inserted into the database!"
 
 
-def test_collect_food_data_saves_data(test_session, dummy_strategies):
-    with patch("jobs.collect_food_data_job.save_to_json") as mock_save_to_file:
-        CollectFoodDataJob(test_session, dummy_strategies, 2, 0, fetch_images=False).run()
-        mock_save_to_file.assert_called()
-        assert mock_save_to_file.call_count == 4
+@patch("jobs.collect_food_data_job.save_to_json")
+def test_run_saves_raw_data_to_file(mock_save_to_json, session, dummy_strategies):
+    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
+    mock_save_to_json.assert_called()
+    assert mock_save_to_json.call_count == 4
 
 
-@patch("jobs.collect_food_data_job.save_to_json", autospec=True)
+@patch("jobs.collect_food_data_job.save_to_json")
 @freeze_time("2025-01-01")
-def test_collect_food_data_track_successful_job_runs(_, test_session, dummy_strategies):
-    CollectFoodDataJob(test_session, dummy_strategies, 2, 0, fetch_images=False).run()
+def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, dummy_strategies):
+    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
 
     expected = {
         (FoodVendor.CITY_FOOD, 1),
@@ -77,24 +78,23 @@ def test_collect_food_data_track_successful_job_runs(_, test_session, dummy_stra
         (FoodVendor.INTER_FOOD, 2),
     }
 
-    job_runs = test_session.exec(select(JobRun)).all()
+    job_runs = session.exec(select(JobRun)).all()
     actual = {(j.food_vendor, j.week) for j in job_runs}
 
     assert actual == expected
 
 
-def test_fetch_fails_and_marks_job_as_failed(test_session):
-    strategy = MagicMock()
+def test_run_marks_job_run_as_failed_on_fetch_exception(session, strategy):
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
-    strategy.get_name.return_value = FoodVendor.CITY_FOOD
-    CollectFoodDataJob(test_session, [strategy], 2, 0, fetch_images=False).run()
 
-    job_run = test_session.exec(select(JobRun)).first()
+    CollectFoodDataJob(session, [strategy], 2, 0, fetch_images=False).run()
+
+    job_run = session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
     assert job_run.food_vendor == FoodVendor.CITY_FOOD
 
 
-def test_collect_food_data_creates_necessary_directory(test_session, dummy_strategies):
+def test_run_creates_image_and_data_dirs_when_not_exist(session, dummy_strategies):
     with TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
         image_dir = tmp_path / "images"
@@ -118,13 +118,10 @@ def test_collect_food_data_creates_necessary_directory(test_session, dummy_strat
         assert data_dir.exists() and data_dir.is_dir()
 
 
-def test_collect_food_data_fetches_images(test_session):
+def test_run_downloads_and_saves_images_if_enabled(session, strategy):
     expected_img_url = "https://ca.cityfood.hu/api/v1/i?menu_item_id=1&width=425&height=425"
 
-    strategy = MagicMock()
     strategy.fetch_foods_for.return_value = [make_food(food_id=1)]
-    strategy.get_name.return_value = FoodVendor.CITY_FOOD
-    strategy.get_raw_data.return_value = {"bombardino": "crocodilo"}
     strategy.get_food_image_url.return_value = expected_img_url
 
     with TemporaryDirectory() as tmp_dir:
