@@ -5,7 +5,7 @@ from pydantic.alias_generators import to_camel
 from typing_extensions import Self
 
 from constants import PROTEIN_CALORIE, FAT_CALORIE, CARB_CALORIE
-from error_handling.exceptions import MealPlanRequestException
+from exceptions import MealPlanRequestException
 
 
 class NutritionalConstraints(BaseModel):

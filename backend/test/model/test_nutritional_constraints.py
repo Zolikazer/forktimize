@@ -1,6 +1,6 @@
 import pytest
 
-from error_handling.exceptions import MealPlanRequestException
+from exceptions import MealPlanRequestException
 from model.nutritional_constraints import NutritionalConstraints
 
 

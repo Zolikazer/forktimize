@@ -1,6 +1,6 @@
 import time
 
-from error_handling.exceptions import TeletalUnavailableFoodError
+from exceptions import TeletalUnavailableFoodError
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.food_model_mapper import map_to_food_model

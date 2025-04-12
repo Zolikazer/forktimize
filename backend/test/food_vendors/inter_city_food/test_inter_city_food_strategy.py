@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock
 
 import pytest
 from requests import Response
@@ -63,33 +63,6 @@ def test_inter_city_strategy_calls_correct_url(
 def test_strategy_get_name(strategy_cls, expected_vendor):
     strategy = strategy_cls()
     assert strategy.get_name() == expected_vendor
-
-
-@pytest.mark.parametrize("strategy, expected_url", [
-    (CityFoodStrategy(), SETTINGS.city_food_menu_url),
-    (InterFoodStrategy(), SETTINGS.inter_food_menu_url),
-])
-@patch("food_vendors.strategies.inter_city_food.inter_city_food_strategy.requests.post")
-def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
-    expected_response = {"data": {"mock": "value"}}
-
-    mock_resp = MagicMock()
-    mock_resp.status_code = 200
-    mock_resp.json.return_value = expected_response
-    mock_post.return_value = mock_resp
-
-    result = strategy.get_raw_data(2025, 14)
-    assert result == expected_response
-
-    mock_post.assert_called_once_with(
-        expected_url,
-        json=strategy._get_request_body(2025, 14),
-        timeout=10
-    )
-
-    result2 = strategy.get_raw_data(2025, 14)
-    assert result2 == expected_response
-    assert mock_post.call_count == 1
 
 
 @pytest.mark.parametrize("strategy, expected_url", [

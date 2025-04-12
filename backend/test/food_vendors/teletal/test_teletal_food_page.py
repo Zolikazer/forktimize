@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 from bs4 import BeautifulSoup
 
-from error_handling.exceptions import TeletalUnavailableFoodError
+from exceptions import TeletalUnavailableFoodError
 from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMenuPage
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSingleFoodPage

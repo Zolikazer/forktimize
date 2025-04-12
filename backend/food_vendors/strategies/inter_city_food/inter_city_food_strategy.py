@@ -18,25 +18,22 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
         self._raw_data: dict = {}
 
     def fetch_foods_for(self, year: int, week: int) -> list[Food]:
-        data = self.get_raw_data(year, week)
-        foods = self._deserialize_food_items(data)
+        response = requests.post(self._api_endpoint, json=self._get_request_body(year, week), timeout=10)
+        response.raise_for_status()
+        self._raw_data = response.json()
 
+        foods = self._deserialize_food_items()
         JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from {self._food_vendor.value} for week {week}, year {year}.")
 
         return foods
 
-    def get_raw_data(self, year: int, week: int) -> dict:
-        if self._raw_data.get(f"{year}{week}") is None:
-            response = requests.post(self._api_endpoint, json=self._get_request_body(year, week), timeout=10)
-            response.raise_for_status()
-            self._raw_data[f"{year}{week}"] = response.json()
-
-        return self._raw_data[f"{year}{week}"]
+    def get_raw_data(self) -> dict:
+        return self._raw_data
 
     def get_name(self) -> FoodVendor:
         return self._food_vendor
 
-    def _deserialize_food_items(self, data: dict) -> list[Food]:
+    def _deserialize_food_items(self) -> list[Food]:
         return [
             Food(
                 food_id=item['id'],
@@ -49,7 +46,7 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
                 date=datetime.strptime(item['date'], "%Y-%m-%d").date(),
                 food_vendor=self.get_name()
             )
-            for food_type in data['data'].values()
+            for food_type in self._raw_data['data'].values()
             for category in food_type['categories']
             for item in category['items']
         ]
