@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
     FETCHING_DELAY: float = 0.5
+    FETCHING_TIMEOUT: int = 30
     WEEKS_TO_FETCH: int = 3
     FETCH_IMAGES: bool = True
 
@@ -18,6 +19,9 @@ class Settings(BaseSettings):
     INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
+
+    TELETAL_MENU_URL: str = "https://www.teletal.hu/etlap"
+    TELETAL_AJAX_URL: str = "https://www.teletal.hu/ajax"
 
     @computed_field
     def city_food_menu_url(self) -> str:

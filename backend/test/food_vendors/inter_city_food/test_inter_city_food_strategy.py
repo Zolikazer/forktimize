@@ -10,8 +10,7 @@ from food_vendors.strategies.inter_food_strategy import InterFoodStrategy
 from food_vendors.food_vendor import FoodVendor
 from jobs.serialization import open_json
 from settings import SETTINGS
-
-TEST_JSON_PATH = Path(__file__).parent.parent.resolve() / "resources"
+from test.common import TEST_RESOURCES_DIR
 
 
 @pytest.fixture
@@ -21,7 +20,7 @@ def mock_requests_post_success():
         with patch("requests.post") as mock_post:
             mock_response = Mock(spec=Response)
             mock_response.status_code = 200
-            mock_response.json.return_value = open_json(str(TEST_JSON_PATH / filename))
+            mock_response.json.return_value = open_json(str(TEST_RESOURCES_DIR / filename))
             mock_post.return_value = mock_response
             yield mock_post
 

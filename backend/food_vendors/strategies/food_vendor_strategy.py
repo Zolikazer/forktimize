@@ -11,7 +11,7 @@ class FoodVendorStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_raw_data(self, year: int, week: int) -> dict:
+    def get_raw_data(self, *args, **kwargs) -> dict:
         pass
 
     @abstractmethod

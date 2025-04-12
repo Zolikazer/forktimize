@@ -17,3 +17,8 @@ def save_to_json(data: dict | list, path: str | Path):
 def save_image(content: bytes, path: str | Path):
     with open(path, "wb") as f:
         f.write(content)
+
+
+def save_file(content: str, path: str | Path):
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)

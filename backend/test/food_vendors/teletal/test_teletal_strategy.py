@@ -1,4 +1,4 @@
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
@@ -40,13 +40,13 @@ def test_strategy_happy_path():
     assert food_page.load.call_count == 10
     assert food_page.get_food_data.call_count == 10
 
-
-def test_strategy_handles_failures():
+@patch("food_vendors.strategies.teletal_strategy.save_file")
+def test_strategy_handles_failures(mock_save_file):
     menu_page = MagicMock(spec=TeletalMenuPage)
     food_page = MagicMock(spec=TeletalFoodPage)
     food_page.get_raw_data.return_value = ""
 
-    menu_page.get_food_category_codes.return_value = ["FAIL"]
+    menu_page.get_food_category_codes.return_value = ["R1"]
 
     def boom_loader(*args, **kwargs):
         raise Exception("💥 food page exploded")
@@ -57,3 +57,5 @@ def test_strategy_handles_failures():
     foods = strategy.fetch_foods_for(2025, 15)
 
     assert foods == []
+    assert mock_save_file.call_count == 5
+    assert "debug_food_page_R1_5.html" in str(mock_save_file.call_args[0][1])

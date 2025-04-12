@@ -3,10 +3,12 @@ from urllib.parse import urlencode
 import requests
 
 from monitoring.logging import JOB_LOGGER
+from settings import SETTINGS
 
 
 class TeletalClient:
-    def __init__(self, teletal_menu_url: str, teletal_ajax: str, timeout: int = 30):
+    def __init__(self, teletal_menu_url: str = SETTINGS.TELETAL_MENU_URL, teletal_ajax: str = SETTINGS.TELETAL_AJAX_URL,
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT):
         self.teletal_menu_url = teletal_menu_url
         self.teletal_ajax = teletal_ajax
         self.timeout = timeout

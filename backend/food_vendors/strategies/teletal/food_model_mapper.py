@@ -20,13 +20,17 @@ def map_to_food_model(food_data: dict[str, str]) -> Food:
     )
 
 
-def _macro_to_int(value: str) -> int:
+def _macro_to_int(value: str | None) -> int | None:
+    if not value:
+        return None
+
     return int(value.split(".")[0].replace(",", ""))
 
 
-def _price_to_int(value: str | None) -> int:
+def _price_to_int(value: str | None) -> int | None:
     if not value:
-        return 0
+        return None
+
     return int(re.sub(r"[^\d]", "", value))
 
 
@@ -34,7 +38,10 @@ def _to_date(year: int, week: int, day: int) -> datetime.date:
     return datetime.fromisocalendar(year, week, day).date()
 
 
-def _create_id(food_name: str, food_vendor: str) -> int:
+def _create_id(food_name: str | None, food_vendor: str) -> int | None:
+    if not food_name:
+        return None
+
     key = f"{food_name}|{food_vendor}"
     hash_object = hashlib.sha256(key.encode("utf-8"))
     numeric_id = int(hash_object.hexdigest(), 16)
