@@ -9,7 +9,7 @@ from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodS
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import open_json
 from settings import SETTINGS
-from test.common import TEST_RESOURCES_DIR
+from test.conftest import TEST_RESOURCES_DIR
 
 
 @pytest.fixture

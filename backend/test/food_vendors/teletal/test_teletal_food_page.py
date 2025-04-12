@@ -8,8 +8,7 @@ from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMe
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSingleFoodPage
 from jobs.serialization import load_file
-from test.common import TEST_RESOURCES_DIR
-from test.conftest import YEAR, WEEK, DAY, CODE
+from test.conftest import YEAR, WEEK, DAY, CODE, TEST_RESOURCES_DIR
 
 
 def test_parses_food_data_correctly_for_single_food_page():

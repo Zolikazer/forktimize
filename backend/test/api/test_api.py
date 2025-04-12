@@ -11,7 +11,7 @@ from database.db import get_session
 from food_vendors.food_vendor import FoodVendor
 from main import app
 from routers.meal_planner import AppStatus
-from test.food_factory import make_food
+from test.conftest import make_food
 
 
 @pytest.fixture(name="session")

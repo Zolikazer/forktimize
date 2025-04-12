@@ -2,8 +2,7 @@ import pytest
 
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from jobs.serialization import load_file
-from test.common import TEST_RESOURCES_DIR
-from test.conftest import YEAR, WEEK
+from test.conftest import YEAR, WEEK, TEST_RESOURCES_DIR
 
 
 def test_get_food_category_codes__returns_static_and_dynamic_codes(mock_teletal_client):

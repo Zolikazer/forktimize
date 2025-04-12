@@ -12,7 +12,7 @@ from jobs.collect_food_data_job import CollectFoodDataJob
 from model.food import Food
 from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobRun, JobStatus
-from test.food_factory import make_food
+from test.conftest import make_food
 
 
 @pytest.fixture(scope="function")
