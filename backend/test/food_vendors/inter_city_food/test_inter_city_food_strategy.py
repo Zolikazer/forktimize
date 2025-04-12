@@ -1,13 +1,12 @@
 from contextlib import contextmanager
-from pathlib import Path
 from unittest.mock import patch, Mock, MagicMock
 
 import pytest
 from requests import Response
 
+from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_food_strategy import InterFoodStrategy
-from food_vendors.food_vendor import FoodVendor
 from jobs.serialization import open_json
 from settings import SETTINGS
 from test.common import TEST_RESOURCES_DIR
