@@ -15,7 +15,7 @@ from test.conftest import make_food
 
 
 @pytest.fixture(name="session")
-def session_fixture():
+def in_memory_session():
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -25,9 +25,25 @@ def session_fixture():
 
 
 @pytest.fixture(scope="function")
-def client(session):
+def forktimize_client(session):
     app.dependency_overrides[get_session] = lambda: session
     return TestClient(app)
+
+
+def make_meal_request(**overrides) -> dict:
+    base = {
+        "date": "2025-02-24",
+        "nutritional_constraints": {
+            "min_calories": 1500,
+            "max_calories": 2700,
+            "min_protein": 200
+        },
+        "food_blacklist": [],
+        "food_vendor": "cityfood"
+    }
+    base.update(overrides)
+
+    return base
 
 
 def insert_test_food(session):
@@ -44,37 +60,19 @@ def insert_test_food(session):
     session.commit()
 
 
-def test_create_meal_plan_endpoint(client, session: Session):
+def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session: Session):
     insert_test_food(session)
     session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
 
-    requested_date = "2025-02-24"
-    meal_plan_request = {
-        "date": requested_date,
-        "nutritional_constraints": {
-            "min_calories": 1500,
-            "max_calories": 2700,
-            "min_protein": 200
-        },
-        "food_blacklist": ["Lencsefőzelék"],
-        "food_vendor": "cityfood",
-    }
+    meal_plan_request = make_meal_request()
 
-    response = client.post("/meal-plan", json=meal_plan_request)
+    response = forktimize_client.post("/meal-plan", json=meal_plan_request)
 
     assert response.status_code == 200
     data = response.json()
 
-    assert data["date"] == requested_date
+    assert data["date"] == meal_plan_request["date"]
     assert len(data["foods"]) == 4
-
-    food_names = [f["name"] for f in data["foods"]]
-    assert "Lencsefőzelék vagdalttal" not in food_names
-
-    food_log_entry = data["foodLogEntry"]
-    assert food_log_entry["chicken"] == 800
-    assert food_log_entry["oil"] == 16
-    assert food_log_entry["sugar"] == 80
 
     assert data["totalPrice"] == 4000
     assert data["totalCalories"] == 2000
@@ -84,7 +82,49 @@ def test_create_meal_plan_endpoint(client, session: Session):
     assert data["foodVendor"] == "cityfood"
 
 
-def test_create_meal_plan_max_food_repeat(client, session: Session):
+def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, session: Session):
+    insert_test_food(session)
+    session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
+
+    response = forktimize_client.post("/meal-plan", json=make_meal_request())
+
+    assert response.status_code == 200
+    data = response.json()
+
+    food_log_entry = data["foodLogEntry"]
+    assert food_log_entry["chicken"] == 800
+    assert food_log_entry["oil"] == 16
+    assert food_log_entry["sugar"] == 80
+
+
+def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session):
+    insert_test_food(session)
+    blacklisted_food = "cheap_and_blacklisted"
+    session.add(make_food(name=blacklisted_food, price=0, food_vendor=FoodVendor.CITY_FOOD))
+    meal_plan_request = make_meal_request(**{"food_blacklist": [blacklisted_food]})
+
+    response = forktimize_client.post("/meal-plan", json=meal_plan_request)
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert blacklisted_food not in [f["name"] for f in data["foods"]]
+
+def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, session: Session):
+    insert_test_food(session)
+    food_with_different_provider = make_food(price=0, food_vendor=FoodVendor.INTER_FOOD)
+    session.add(food_with_different_provider)
+    meal_plan_request = make_meal_request()
+
+    response = forktimize_client.post("/meal-plan", json=meal_plan_request)
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert food_with_different_provider.name not in [f["name"] for f in data["foods"]]
+
+
+def test_create_meal_plan__honors_max_food_repeat_limit(forktimize_client, session: Session):
     insert_test_food(session)
 
     requested_date = "2025-02-24"
@@ -95,12 +135,11 @@ def test_create_meal_plan_max_food_repeat(client, session: Session):
             "max_calories": 2700,
             "min_protein": 200
         },
-        "food_blacklist": ["Lencsefőzelék"],
         "max_food_repeat": 1,
         "food_vendor": "cityfood",
     }
 
-    response = client.post("/meal-plan", json=meal_planner_request)
+    response = forktimize_client.post("/meal-plan", json=meal_planner_request)
 
     assert response.status_code == 200
     data = response.json()
@@ -113,23 +152,23 @@ def test_create_meal_plan_max_food_repeat(client, session: Session):
 
 
 @freeze_time("2025-02-23")
-def test_get_available_dates(client, session):
+def test_get_available_dates__returns_future_dates_only(forktimize_client, session):
     insert_test_food(session)
 
-    response = client.get("/dates")
+    response = forktimize_client.get("/dates")
 
     assert response.status_code == 200
     assert response.json() == ["2025-02-24", "2025-02-25"]
 
 
-def test_health_check(client):
-    response = client.get("/health")
+def test_health_check__returns_status_healthy_when_db_connected(forktimize_client):
+    response = forktimize_client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {"status": "HEALTHY", "database": "connected"}
 
 
-def test_health_check_unhealthy(client):
+def test_health_check__returns_unhealthy_status_when_db_fails(forktimize_client):
     broken_session = MagicMock()
     broken_session.exec.side_effect = Exception("Database gone fishing 🐟")
 
@@ -137,7 +176,7 @@ def test_health_check_unhealthy(client):
         get_session: lambda: broken_session
     }
 
-    response = client.get("/api/health")
+    response = forktimize_client.get("/api/health")
     assert response.status_code == 200
     assert response.json() == {
         "status": AppStatus.UNHEALTHY,
@@ -145,21 +184,14 @@ def test_health_check_unhealthy(client):
     }
 
 
-def test_invalid_meal_plan_reqeust(client):
-    requested_date = "2025-02-24"
-    meal_planner_request = {
-        "date": requested_date,
-        "nutritional_constraints": {
-            "min_calories": 1500,
-            "max_calories": 2700,
-            "min_protein": 9999
-        },
-        "food_blacklist": ["Lencsefőzelék"],
-        "max_food_repeat": 1,
-        "food_vendor": "cityfood",
-    }
+def test_create_meal_plan__returns_422_if_min_macros_exceed_calories(forktimize_client):
+    meal_planner_request = make_meal_request(**{"nutritional_constraints": {
+        "min_calories": 1500,
+        "max_calories": 2700,
+        "min_protein": 9999
+    }})
 
-    response = client.post("/meal-plan", json=meal_planner_request)
+    response = forktimize_client.post("/meal-plan", json=meal_planner_request)
 
     assert response.status_code == 422
     assert response.json() == {
