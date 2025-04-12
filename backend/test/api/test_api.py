@@ -46,6 +46,7 @@ def make_meal_request(**overrides) -> dict:
     return base
 
 
+@pytest.fixture(autouse=True)
 def insert_test_food(session):
     food_items = [make_food(calories=500, protein=50, carb=20, fat=10, price=1000),
                   make_food(calories=600, protein=55, carb=10, fat=25, price=1200),
@@ -61,7 +62,6 @@ def insert_test_food(session):
 
 
 def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session: Session):
-    insert_test_food(session)
     session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
 
     meal_plan_request = make_meal_request()
@@ -83,7 +83,6 @@ def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session:
 
 
 def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, session: Session):
-    insert_test_food(session)
     session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
 
     response = forktimize_client.post("/meal-plan", json=make_meal_request())
@@ -98,7 +97,6 @@ def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, ses
 
 
 def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session):
-    insert_test_food(session)
     blacklisted_food = "cheap_and_blacklisted"
     session.add(make_food(name=blacklisted_food, price=0, food_vendor=FoodVendor.CITY_FOOD))
     meal_plan_request = make_meal_request(**{"food_blacklist": [blacklisted_food]})
@@ -110,8 +108,8 @@ def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session
 
     assert blacklisted_food not in [f["name"] for f in data["foods"]]
 
+
 def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, session: Session):
-    insert_test_food(session)
     food_with_different_provider = make_food(price=0, food_vendor=FoodVendor.INTER_FOOD)
     session.add(food_with_different_provider)
     meal_plan_request = make_meal_request()
@@ -125,19 +123,7 @@ def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, sess
 
 
 def test_create_meal_plan__honors_max_food_repeat_limit(forktimize_client, session: Session):
-    insert_test_food(session)
-
-    requested_date = "2025-02-24"
-    meal_planner_request = {
-        "date": requested_date,
-        "nutritional_constraints": {
-            "min_calories": 1500,
-            "max_calories": 2700,
-            "min_protein": 200
-        },
-        "max_food_repeat": 1,
-        "food_vendor": "cityfood",
-    }
+    meal_planner_request = make_meal_request(**{"max_food_repeat": 1})
 
     response = forktimize_client.post("/meal-plan", json=meal_planner_request)
 
@@ -153,8 +139,6 @@ def test_create_meal_plan__honors_max_food_repeat_limit(forktimize_client, sessi
 
 @freeze_time("2025-02-23")
 def test_get_available_dates__returns_future_dates_only(forktimize_client, session):
-    insert_test_food(session)
-
     response = forktimize_client.get("/dates")
 
     assert response.status_code == 200
