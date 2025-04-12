@@ -5,8 +5,8 @@ import pytest
 from requests import Response
 
 from food_vendors.food_vendor import FoodVendor
-from food_vendors.strategies.city_food_strategy import CityFoodStrategy
-from food_vendors.strategies.inter_food_strategy import InterFoodStrategy
+from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
+from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from jobs.serialization import open_json
 from settings import SETTINGS
 from test.common import TEST_RESOURCES_DIR
@@ -69,7 +69,7 @@ def test_strategy_get_name(strategy_cls, expected_vendor):
     (CityFoodStrategy(), SETTINGS.city_food_menu_url),
     (InterFoodStrategy(), SETTINGS.inter_food_menu_url),
 ])
-@patch("food_vendors.strategies.inter_city_food_strategy.requests.post")
+@patch("food_vendors.strategies.inter_city_food.inter_city_food_strategy.requests.post")
 def test_get_raw_data_fetches_and_caches(mock_post, strategy, expected_url):
     expected_response = {"data": {"mock": "value"}}
 

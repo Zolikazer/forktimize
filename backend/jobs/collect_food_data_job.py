@@ -1,11 +1,9 @@
-import json
 import random
 import time
 from datetime import datetime
 from pathlib import Path
 
 import requests
-from pydantic import TypeAdapter
 from sqlmodel import Session
 
 from database.db import engine
@@ -14,8 +12,8 @@ from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
-from food_vendors.strategies.teletal_strategy import TeletalStrategy
-from food_vendors.vendor_strategies import VENDOR_STRATEGIES
+from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
+from food_vendors.strategies.vendor_strategies import VENDOR_STRATEGIES
 from jobs.serialization import save_to_json, save_image
 from model.food import Food
 from model.job_run import JobStatus, JobRun

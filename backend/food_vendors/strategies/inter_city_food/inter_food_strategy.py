@@ -1,4 +1,4 @@
-from food_vendors.strategies.inter_city_food_strategy import InterCityFoodStrategy
+from food_vendors.strategies.inter_city_food.inter_city_food_strategy import InterCityFoodStrategy
 from food_vendors.food_vendor import FoodVendor
 from settings import SETTINGS
 

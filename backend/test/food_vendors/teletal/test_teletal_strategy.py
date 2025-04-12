@@ -1,11 +1,11 @@
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
-from food_vendors.strategies.teletal_strategy import TeletalStrategy
+from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 from test.conftest import YEAR, WEEK
 
 
@@ -81,7 +81,7 @@ def test_fetch_foods_for__parses_and_returns_all_foods_correctly(mock_menu_page,
     assert food_page.get_food_data.call_count == 10
 
 
-@patch("food_vendors.strategies.teletal_strategy.save_file")
+@patch("food_vendors.strategies.teletal.teletal_strategy.save_file")
 def test_fetch_foods_for__handles_exceptions(mock_menu_page, mock_food_page):
     menu_page = mock_menu_page(get_food_category_codes=["R1"])
     food_page = mock_food_page()
@@ -93,7 +93,7 @@ def test_fetch_foods_for__handles_exceptions(mock_menu_page, mock_food_page):
     assert foods == []
 
 
-@patch("food_vendors.strategies.teletal_strategy.save_file")
+@patch("food_vendors.strategies.teletal.teletal_strategy.save_file")
 def test_fetch_foods_for__handles_exceptions_saves_debug_file(mock_save_file, mock_menu_page, mock_food_page):
     food_page = mock_food_page()
     menu_page = mock_menu_page(get_food_category_codes=["R1"])

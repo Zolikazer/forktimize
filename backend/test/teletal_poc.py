@@ -7,7 +7,7 @@ from requests import Session
 
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_parser import TeletalParser
-from food_vendors.strategies.teletal_strategy import TeletalStrategy
+from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 
 url = "https://www.teletal.hu/etlap"
 headers = {
