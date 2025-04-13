@@ -2,21 +2,12 @@ from bs4 import BeautifulSoup
 
 
 class TeletalSingleFoodPage:
-    _PROTEIN_LABEL = "Fehérje"
-    _CARB_LABEL = "Szénhidrát"
-    _FAT_LABEL = "Zsír"
-    _CALORIES_LABEL = "Energiatartalom"
-
-    _LABEL_CLASS = "uk-width-1-2"
-    _VALUE_CLASS = "en_adag"
-
     def __init__(self, food_soup: BeautifulSoup):
         self._food_soup: BeautifulSoup | None = food_soup
 
     def get_food_data(self) -> dict[str, str]:
         return self._parse_food_data()
 
-    # TODO: refactor extract methods
     def _parse_food_data(self) -> dict[str, str]:
         return {"name": self._extract_name(),
                 "calories": self._extract_calories(),
@@ -29,40 +20,27 @@ class TeletalSingleFoodPage:
         return self._food_soup.find("h1", class_="uk-article-title").text.strip()
 
     def _extract_calories(self) -> str | None:
-        for row in self._food_soup.find_all("div",
-                                            class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
-            label_div = row.find("div", class_=self._LABEL_CLASS)
-            if label_div and self._CALORIES_LABEL in label_div.text:
-                calories_div = row.find("span", class_=self._VALUE_CLASS)
-                return calories_div.text.strip() if calories_div else None
-
-        return None
+        return self._extract_macro("Energiatartalom", bold=True)
 
     def _extract_protein(self) -> str | None:
-        for row in self._food_soup.find_all("div",
-                                            class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom uk-text-bold"):
-            label_div = row.find("div", class_=self._LABEL_CLASS)
-            if label_div and self._PROTEIN_LABEL in label_div.text:
-                calories_div = row.find("span", class_=self._VALUE_CLASS)
-                return calories_div.text.strip() if calories_div else None
-
-        return None
+        return self._extract_macro("Fehérje", bold=True)
 
     def _extract_fat(self) -> str | None:
-        for row in self._food_soup.find_all("div", class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom"):
-            label_div = row.find("div", class_=self._LABEL_CLASS)
-            if label_div and self._FAT_LABEL in label_div.text:
-                calories_div = row.find("span", class_=self._VALUE_CLASS)
-                return calories_div.text.strip() if calories_div else None
-
-        return None
+        return self._extract_macro("Zsír")
 
     def _extract_carb(self) -> str | None:
-        for row in self._food_soup.find_all("div", class_="uk-grid-small uk-margin-remove-top uk-margin-remove-bottom"):
-            label_div = row.find("div", class_=self._LABEL_CLASS)
-            if label_div and self._CARB_LABEL in label_div.text:
-                calories_div = row.find("span", class_=self._VALUE_CLASS)
-                return calories_div.text.strip() if calories_div else None
+        return self._extract_macro("Szénhidrát")
+
+    def _extract_macro(self, label: str, bold: bool = False) -> str | None:
+        search_class = "uk-grid-small uk-margin-remove-top uk-margin-remove-bottom"
+        if bold:
+            search_class += " uk-text-bold"
+
+        for row in self._food_soup.find_all("div", class_=search_class):
+            label_div = row.find("div", class_="uk-width-1-2")
+            if label_div and label in label_div.text:
+                value_div = row.find("span", class_="en_adag")
+                return value_div.text.strip() if value_div else None
 
         return None
 
