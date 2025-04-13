@@ -7,7 +7,7 @@ from requests import Response
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
-from jobs.serialization import open_json
+from jobs.file_utils import load_json
 from settings import SETTINGS
 from test.conftest import TEST_RESOURCES_DIR
 
@@ -19,7 +19,7 @@ def mock_requests_post_success():
         with patch("requests.post") as mock_post:
             mock_response = Mock(spec=Response)
             mock_response.status_code = 200
-            mock_response.json.return_value = open_json(str(TEST_RESOURCES_DIR / filename))
+            mock_response.json.return_value = load_json(str(TEST_RESOURCES_DIR / filename))
             mock_post.return_value = mock_response
             yield mock_post
 

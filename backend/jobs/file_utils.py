@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 
-def open_json(json_file: str) -> dict:
+def load_json(json_file: str) -> dict:
     with open(json_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
@@ -22,6 +22,7 @@ def save_image(content: bytes, path: str | Path):
 def save_file(content: str, path: str | Path):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
 
 def load_file(path: str | Path) -> str:
     with open(path, "r", encoding="utf-8") as f:

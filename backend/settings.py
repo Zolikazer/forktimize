@@ -20,8 +20,12 @@ class Settings(BaseSettings):
 
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
-    TELETAL_MENU_URL: str = "https://www.teletal.hu/etlap"
-    TELETAL_AJAX_URL: str = "https://www.teletal.hu/ajax"
+    TELETAL_URL: str = "https://www.teletal.hu"
+    TELETAL_MENU_URL: str = f"https://www.teletal.hu/etlap"
+    TELETAL_AJAX_URL: str = f"https://www.teletal.hu/ajax"
+
+    def teletal_menu_url(self) -> str:
+        return f"{self.TELETAL_MENU_URL}/etlap"
 
     @computed_field
     def city_food_menu_url(self) -> str:

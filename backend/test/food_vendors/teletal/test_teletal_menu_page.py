@@ -1,7 +1,7 @@
 import pytest
 
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
-from jobs.serialization import load_file
+from jobs.file_utils import load_file
 from test.conftest import YEAR, WEEK, TEST_RESOURCES_DIR
 
 

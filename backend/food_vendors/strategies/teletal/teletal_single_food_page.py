@@ -16,18 +16,14 @@ class TeletalSingleFoodPage:
     def get_food_data(self) -> dict[str, str]:
         return self._parse_food_data()
 
+    # TODO: refactor extract methods
     def _parse_food_data(self) -> dict[str, str]:
-        name = self._extract_name()
-        calories = self._extract_calories()
-        protein = self._extract_protein()
-        carb = self._extract_carb()
-        fat = self._extract_fat()
-
-        return {"name": name,
-                "calories": calories,
-                "protein": protein,
-                "carb": carb,
-                "fat": fat, }
+        return {"name": self._extract_name(),
+                "calories": self._extract_calories(),
+                "protein": self._extract_protein(),
+                "carb": self._extract_carb(),
+                "fat": self._extract_fat(),
+                "image": self._extract_image()}
 
     def _extract_name(self) -> str:
         return self._food_soup.find("h1", class_="uk-article-title").text.strip()
@@ -69,3 +65,16 @@ class TeletalSingleFoodPage:
                 return calories_div.text.strip() if calories_div else None
 
         return None
+
+    def _extract_image(self) -> str | None:
+        img_tag = self._food_soup.find("img")
+        if not img_tag:
+            return None
+
+        srcset = img_tag.get("srcset")
+        if not srcset:
+            return None
+
+        urls = [item.strip().split(" ")[0] for item in srcset.split(",")]
+
+        return urls[-1] if urls else None

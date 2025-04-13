@@ -6,7 +6,7 @@ from pathlib import Path
 import requests
 from sqlmodel import Session
 
-from database.db import engine
+from database.db import ENGINE
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
@@ -14,7 +14,7 @@ from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 from food_vendors.strategies.vendor_strategies import VENDOR_STRATEGIES
-from jobs.serialization import save_to_json, save_image
+from jobs.file_utils import save_to_json, save_image
 from model.food import Food
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
@@ -25,7 +25,7 @@ from settings import SETTINGS
 @benchmark
 def run_collect_food_data_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
-    with Session(engine) as session:
+    with Session(ENGINE) as session:
         CollectFoodDataJob(session, VENDOR_STRATEGIES).run()
 
 

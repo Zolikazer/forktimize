@@ -7,7 +7,7 @@ from exceptions import TeletalUnavailableFoodError
 from food_vendors.strategies.teletal.teletal_food_menu_page import TeletalFoodMenuPage
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSingleFoodPage
-from jobs.serialization import load_file
+from jobs.file_utils import load_file
 from test.conftest import YEAR, WEEK, DAY, CODE, TEST_RESOURCES_DIR
 
 
@@ -21,7 +21,8 @@ def test_parses_food_data_correctly_for_single_food_page():
                          "carb": "26.2 g",
                          "fat": "11.5 g",
                          "name": "ZabKása eperöntettel, édesítőszerekkel",
-                         "protein": "11.3 g"}
+                         "protein": "11.3 g",
+                         "image": "/etel_kepek/imageset_zabkasa_eperontettel_960x/zabkasa_eperontettel_960x_960x586.jpg"}
 
 
 def test_parses_food_data_correctly_for_menu_page_with_multiple_items():
@@ -38,7 +39,8 @@ def test_parses_food_data_correctly_for_menu_page_with_multiple_items():
                                  "Sült hekk paprikás lisztben forgatva, zöldborsós jázmin rizs\n"
                                  "Szeletben sült csirkemell, zöldségkrémmártásban, rizi-bizi\n"
                                  "Tiramisu szelet, édesítőszerrel",
-                         "protein": "102.00 g"}
+                         "protein": "102.00 g",
+                         "image": None}
 
 
 @patch("food_vendors.strategies.teletal.teletal_food_page.TeletalFoodMenuPage")
@@ -105,6 +107,7 @@ def test_raises_when_no_food_name_found_in_html(mock_teletal_client):
 
     with pytest.raises(AssertionError, match="No food names were found – expected 1 or multiple <h1> tags"):
         food_page.get_food_data()
+
 
 def test_load_calls_fetch_food_data_with_correct_params(mock_teletal_client):
     teletal_client = mock_teletal_client()

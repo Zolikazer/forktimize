@@ -29,7 +29,8 @@ class TeletalFoodMenuPage:
                 "calories": calories,
                 "protein": protein,
                 "carb": carb,
-                "fat": fat, }
+                "fat": fat,
+                "image": None}
 
     def _extract_macro_by_label(self, label: str) -> str | None:
         all_divs = self._menu_soup.find_all("div", class_="uk-width-expand")

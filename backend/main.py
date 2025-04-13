@@ -7,7 +7,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from database.data_access import is_database_empty
-from database.db import init_db, engine
+from database.db import init_db, ENGINE
 from exceptions import MealPlanRequestException
 from jobs.collect_food_data_job import run_collect_food_data_job
 from jobs.job_scheduler import SCHEDULER
@@ -39,7 +39,7 @@ async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException)
 
 @app.on_event("startup")
 def on_startup():
-    with Session(engine) as session:
+    with Session(ENGINE) as session:
         APP_LOGGER.info("🚀 Starting up...")
         APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
 
