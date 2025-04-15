@@ -7,8 +7,8 @@ from settings import SETTINGS
 
 
 class TeletalClient:
-    def __init__(self, teletal_menu_url: str = SETTINGS.TELETAL_MENU_URL,
-                 teletal_ajax_url: str = SETTINGS.TELETAL_AJAX_URL,
+    def __init__(self, teletal_menu_url: str = SETTINGS.teletal_menu_url,
+                 teletal_ajax_url: str = SETTINGS.teletal_ajax_url,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT):
         self.teletal_menu_url = teletal_menu_url
         self.teletal_ajax = teletal_ajax_url

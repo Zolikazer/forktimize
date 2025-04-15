@@ -32,9 +32,8 @@ class TeletalSingleFoodPage:
         return self._extract_macro("Szénhidrát")
 
     def _extract_macro(self, label: str, bold: bool = False) -> str | None:
-        search_class = "uk-grid-small uk-margin-remove-top uk-margin-remove-bottom"
-        if bold:
-            search_class += " uk-text-bold"
+        base_class = "uk-grid-small uk-margin-remove-top uk-margin-remove-bottom"
+        search_class = f"{base_class} uk-text-bold" if bold else base_class
 
         for row in self._food_soup.find_all("div", class_=search_class):
             label_div = row.find("div", class_="uk-width-1-2")

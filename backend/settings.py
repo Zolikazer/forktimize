@@ -21,11 +21,14 @@ class Settings(BaseSettings):
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
     TELETAL_URL: str = "https://www.teletal.hu"
-    TELETAL_MENU_URL: str = f"https://www.teletal.hu/etlap"
-    TELETAL_AJAX_URL: str = f"https://www.teletal.hu/ajax"
 
+    @computed_field
     def teletal_menu_url(self) -> str:
-        return f"{self.TELETAL_MENU_URL}/etlap"
+        return f"{self.TELETAL_URL}/etlap"
+
+    @computed_field
+    def teletal_ajax_url(self) -> str:
+        return f"{self.TELETAL_URL}/ajax"
 
     @computed_field
     def city_food_menu_url(self) -> str:
@@ -66,7 +69,6 @@ class DevSettings(Settings):
     LOG_DIR: str = f"{Settings().PROJECT_ROOT_DIR}/logs"
 
     @computed_field
-    @property
     def food_image_dir(self) -> Path:
         return self.PROJECT_ROOT_DIR / "images"
 

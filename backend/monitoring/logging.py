@@ -20,7 +20,7 @@ def _create_logger(name: str, filename: str):
 
         log_file = os.path.join(SETTINGS.LOG_DIR, filename)
 
-        handler = RotatingFileHandler(log_file, maxBytes=5 * 1024 * 1024)
+        handler = RotatingFileHandler(log_file, maxBytes=5 * 1024 * 1024, backupCount=5)
         handler.setFormatter(logging.Formatter(LOG_FORMAT))
         logger.addHandler(handler)
 

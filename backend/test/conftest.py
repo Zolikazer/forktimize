@@ -9,6 +9,7 @@ from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from model.food import Food
 
+TEST_RESOURCES_DIR = Path(__file__).parent.resolve() / "resources"
 YEAR = 2025
 WEEK = 16
 DAY = 1
@@ -31,7 +32,7 @@ def mock_teletal_client():
     return _make
 
 
-TEST_RESOURCES_DIR = Path(__file__).parent.resolve() / "resources"
+_food_id_counter = itertools.count(1)
 
 
 def make_food(
@@ -61,6 +62,3 @@ def make_food(
         fat=fat,
         price=price
     )
-
-
-_food_id_counter = itertools.count(1)

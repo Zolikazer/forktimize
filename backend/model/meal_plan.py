@@ -18,7 +18,6 @@ class MealPlan(BaseModel):
     food_vendor: FoodVendor = None
 
     @computed_field
-    @property
     def food_log_entry(self) -> FoodLogEntry:
         return FoodLogEntry.from_macros(
             protein=self.total_protein,
@@ -27,12 +26,10 @@ class MealPlan(BaseModel):
         )
 
     @computed_field
-    @property
     def total_price(self) -> int:
         return sum(food.price for food in self.foods)
 
     @computed_field
-    @property
     def total_calories(self) -> int:
         return sum(food.calories for food in self.foods)
 

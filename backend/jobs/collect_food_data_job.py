@@ -63,7 +63,7 @@ class CollectFoodDataJob:
                     self._sync_one_week_food_data(current_year, week, strategy)
                     self._track_successful_job_run(current_year, strategy, week)
                 except Exception as e:
-                    self._track_failed_job_jon(current_year, e, strategy, week)
+                    self._track_failed_job_run(current_year, e, strategy, week)
 
                 time.sleep(self._delay)
 
@@ -109,7 +109,7 @@ class CollectFoodDataJob:
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id
 
-    def _track_failed_job_jon(self, current_year, e, strategy, week):
+    def _track_failed_job_run(self, current_year, e, strategy, week):
         job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, strategy.get_name())
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
