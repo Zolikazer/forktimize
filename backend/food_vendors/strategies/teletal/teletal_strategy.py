@@ -27,18 +27,25 @@ class TeletalStrategy(FoodVendorStrategy):
         self._year: int | None = None
         self._week: int | None = None
         self._failures: int = 0
-        self._id_to_image: dict[str, str] | None = None
+        self._id_to_image: dict[int, str] | None = None
 
     def fetch_foods_for(self, year: int, week: int) -> list[Food]:
-        self._failures = 0
-        self._year = year
-        self._week = week
+        self._reset_state(week, year)
 
         category_codes = self._get_food_categories()
         self._raw_food_data = self._fetch_raw_food_data(category_codes)
         self._foods = self._convert_raw_food_to_model()
+        self._create_id_to_image_map()
 
         return self._foods
+
+    def _reset_state(self, week, year):
+        self._failures = 0
+        self._year = year
+        self._week = week
+        self._foods = None
+        self._raw_food_data = None
+        self._id_to_image = None
 
     def get_raw_data(self) -> list[dict[str, str]]:
         return self._raw_food_data
@@ -49,6 +56,8 @@ class TeletalStrategy(FoodVendorStrategy):
     def get_food_image_url(self, food_id: int) -> str | None:
         if self._id_to_image is None:
             return None
+
+        return self._id_to_image[food_id]
 
     def _fetch_raw_food_data(self, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []
@@ -104,3 +113,14 @@ class TeletalStrategy(FoodVendorStrategy):
                 JOB_LOGGER.error(f"Failed to convert raw food data to model: data: {raw_food} - exception: {e}")
 
         return food_models
+
+    def _create_id_to_image_map(self):
+        self._id_to_image = {}
+
+        for food in self._foods:
+            for raw_food in self._raw_food_data:
+                if raw_food.get("name") == food.name:
+                    image = raw_food.get("image")
+                    if image:
+                        self._id_to_image[food.food_id] = f"{self._teletal_url}/{image}"
+                    break

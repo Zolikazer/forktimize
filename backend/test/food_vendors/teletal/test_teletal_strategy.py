@@ -3,10 +3,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from food_vendors.food_vendor import FoodVendor
+from food_vendors.strategies.teletal import teletal_strategy
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
-from test.conftest import YEAR, WEEK
+from model.food import Food
+from test.conftest import YEAR, WEEK, DAY
 
 
 def boom_loader(*args, **kwargs):
@@ -104,3 +106,35 @@ def test_fetch_foods_for__handles_exceptions_saves_debug_file(mock_save_file, mo
 
     assert mock_save_file.call_count == 5
     assert "debug_food_page_R1_5.html" in str(mock_save_file.call_args[0][1])
+
+
+def test_get_food_image_url_when_map_is_none(mock_food_page, mock_menu_page):
+    food_page = mock_food_page()
+    menu_page = mock_menu_page()
+
+    strategy = TeletalStrategy(menu_page, food_page, delay=0)
+    result = strategy.get_food_image_url(food_id=123)
+
+    assert result is None
+
+def test_get_food_image_url_after_fetch_success_with_image(mock_food_page, mock_menu_page):
+    teletal_url = f"https://www.test.hu"
+    image_url = "banana.png"
+    menu_page = mock_menu_page(get_food_category_codes=["ZK"], get_price="1.990 Ft")
+    food_page = mock_food_page(get_food_data={
+        "name": "ZabKása",
+        "calories": "262.1",
+        "protein": "11.3",
+        "carb": "26.2",
+        "fat": "11.5",
+        "year": "2025",
+        "week": "15",
+        "day": "1",
+        "code": "ZK",
+        "image": image_url
+    })
+
+    strategy = TeletalStrategy(menu_page, food_page, teletal_url=teletal_url, delay=0)
+    foods = strategy.fetch_foods_for(year=YEAR, week=WEEK)
+
+    assert strategy.get_food_image_url(foods[0].food_id) == f"{teletal_url}/{image_url}"
