@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 from database.data_access import is_database_empty
 from database.db import init_db, ENGINE
 from exceptions import MealPlanRequestException
-from jobs.collect_food_data_job import run_collect_food_data_job
+from jobs.food_data_collector_job import run_collect_food_data_job
 from jobs.job_scheduler import SCHEDULER
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner

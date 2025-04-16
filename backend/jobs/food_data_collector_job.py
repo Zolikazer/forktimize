@@ -1,19 +1,21 @@
+import os
 import random
 import time
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 from sqlmodel import Session
 
-from database.db import ENGINE
+from database.db import ENGINE, init_db
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
-from food_vendors.strategies.vendor_strategies import VENDOR_STRATEGIES
+from food_vendors.strategies.vendor_strategies import get_vendor_strategies
 from jobs.file_utils import save_to_json, save_image
 from model.food import Food
 from model.job_run import JobStatus, JobRun
@@ -26,10 +28,10 @@ from settings import SETTINGS
 def run_collect_food_data_job():
     APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
     with Session(ENGINE) as session:
-        CollectFoodDataJob(session, VENDOR_STRATEGIES).run()
+        FoodDataCollectorJob(session, get_vendor_strategies()).run()
 
 
-class CollectFoodDataJob:
+class FoodDataCollectorJob:
     FORKTIMIZE_HEADERS = {
         "User-Agent": "ForktimizeBot/1.0 (+https://forktimize.xyz/bot-info)",
         "From": "spagina.zoltan@gmail.com",
@@ -75,7 +77,7 @@ class CollectFoodDataJob:
         foods = strategy.fetch_foods_for(year, week)
         self._save_food_to_db(foods, week)
 
-        raw_data = strategy.get_raw_data(year, week)
+        raw_data = strategy.get_raw_data()
         self._save_foods_to_json(strategy.get_name().value, raw_data, year, week)
 
         if self._fetch_images:
@@ -111,13 +113,22 @@ class CollectFoodDataJob:
 
     def _track_failed_job_run(self, current_year, e, strategy, week):
         job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, strategy.get_name())
-        JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
+        JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e.traceback}")
 
     def _download_food_images(self, foods: list[Food], strategy: FoodVendorStrategy):
         for food in foods:
-            self._download_image(strategy.get_food_image_url(food.food_id),
-                                 f"{strategy.get_name().value}_{food.food_id}.png")
-            time.sleep(self._delay + random.uniform(0.1, 0.5))
+            image_url = strategy.get_food_image_url(food.food_id)
+            if image_url:
+                ext = self._get_image_extension(image_url)
+                self._download_image(image_url,
+                                     f"{strategy.get_name().value}_{food.food_id}{ext}")
+                time.sleep(self._delay + random.uniform(0.1, 0.5))
+
+    @staticmethod
+    def _get_image_extension(image_url):
+        parsed = urlparse(image_url)
+        _, ext = os.path.splitext(parsed.path)
+        return ext if ext else ".png"
 
     def _download_image(self, url: str, image_name: str):
         image_path = self._image_dir / image_name
@@ -139,17 +150,7 @@ class CollectFoodDataJob:
 
 if __name__ == "__main__":
     SETTINGS.data_dir.mkdir(parents=True, exist_ok=True)
-    #
-    # init_db()
-    # with Session(engine) as job_session:
-    #     CollectFoodDataJob(job_session, VENDOR_STRATEGIES, 1).run()
-    delay = 0.5
+    init_db()
     client = TeletalClient("https://www.teletal.hu/etlap", "https://www.teletal.hu/ajax")
-    teletal = TeletalStrategy(TeletalMenuPage(client, delay=delay), TeletalFoodPage(client))
-
-    foods = teletal.fetch_foods_for(2025, 16)
-    print(len(foods))
-    print(foods)
-    save_to_json(teletal.get_raw_data(5,5), SETTINGS.data_dir / "teletal_poc_raw.json")
-    print("END FOODS SAVED")
-    print(f"FAILUER {teletal._failures}")
+    with Session(ENGINE) as job_session:
+        FoodDataCollectorJob(job_session, [TeletalStrategy(TeletalMenuPage(client), TeletalFoodPage(client))], 1).run()

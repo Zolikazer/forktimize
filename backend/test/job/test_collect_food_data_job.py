@@ -8,11 +8,12 @@ from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
-from jobs.collect_food_data_job import CollectFoodDataJob
+from jobs.food_data_collector_job import FoodDataCollectorJob
 from model.food import Food
 from food_vendors.food_vendor import FoodVendor
 from model.job_run import JobRun, JobStatus
 from test.conftest import make_food
+
 
 # TODO refact this test more
 @pytest.fixture(scope="function")
@@ -35,6 +36,7 @@ def strategy():
 
     yield strategy
 
+
 @pytest.fixture
 def dummy_strategies() -> list[FoodVendorStrategy]:
     def make_strategy(vendor_name: FoodVendor, foods: list[Food]) -> FoodVendorStrategy:
@@ -51,25 +53,25 @@ def dummy_strategies() -> list[FoodVendorStrategy]:
     ]
 
 
-@patch("jobs.collect_food_data_job.save_to_json")
+@patch("jobs.food_data_collector_job.save_to_json")
 def test_run_saves_all_foods_to_database(_, session, dummy_strategies):
-    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollectorJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
 
     food_entries = session.exec(select(Food)).all()
     assert len(food_entries) == 5, "No food entries were inserted into the database!"
 
 
-@patch("jobs.collect_food_data_job.save_to_json")
+@patch("jobs.food_data_collector_job.save_to_json")
 def test_run_saves_raw_data_to_file(mock_save_to_json, session, dummy_strategies):
-    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollectorJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
     mock_save_to_json.assert_called()
     assert mock_save_to_json.call_count == 4
 
 
-@patch("jobs.collect_food_data_job.save_to_json")
+@patch("jobs.food_data_collector_job.save_to_json")
 @freeze_time("2025-01-01")
 def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, dummy_strategies):
-    CollectFoodDataJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollectorJob(session, dummy_strategies, 2, 0, fetch_images=False).run()
 
     expected = {
         (FoodVendor.CITY_FOOD, 1),
@@ -87,7 +89,7 @@ def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, dummy_
 def test_run_marks_job_run_as_failed_on_fetch_exception(session, strategy):
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
 
-    CollectFoodDataJob(session, [strategy], 2, 0, fetch_images=False).run()
+    FoodDataCollectorJob(session, [strategy], 2, 0, fetch_images=False).run()
 
     job_run = session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
@@ -100,7 +102,7 @@ def test_run_creates_image_and_data_dirs_when_not_exist(session, dummy_strategie
         image_dir = tmp_path / "images"
         data_dir = tmp_path / "data"
 
-        job = CollectFoodDataJob(
+        job = FoodDataCollectorJob(
             session=MagicMock(spec=Session),
             strategies=dummy_strategies,
             image_dir=image_dir,
@@ -118,18 +120,23 @@ def test_run_creates_image_and_data_dirs_when_not_exist(session, dummy_strategie
         assert data_dir.exists() and data_dir.is_dir()
 
 
-def test_run_downloads_and_saves_images_if_enabled(session, strategy):
-    expected_img_url = "https://ca.cityfood.hu/api/v1/i?menu_item_id=1&width=425&height=425"
-
+@pytest.mark.parametrize("image_url, expected_ext", [
+    ("https://example.com/image.png", "png"),
+    ("https://example.com/image.jpeg", "jpeg"),
+    ("https://example.com/image.jpg", "jpg"),
+    ("https://example.com/image", "png"),
+])
+def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url, expected_ext):
     strategy.fetch_foods_for.return_value = [make_food(food_id=1)]
-    strategy.get_food_image_url.return_value = expected_img_url
+    strategy.get_food_image_url.return_value = image_url
 
+    # TODO: mock it
     with TemporaryDirectory() as tmp_dir:
         image_dir = Path(tmp_dir) / "images"
         image_dir.mkdir()
         fake_image = b"image-bytes"
 
-        job = CollectFoodDataJob(
+        job = FoodDataCollectorJob(
             session=MagicMock(spec=Session),
             strategies=[strategy],
             image_dir=image_dir,
@@ -146,7 +153,7 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy):
 
             job.run()
 
-            mock_get.assert_called_once_with(expected_img_url, timeout=10)
-            image = image_dir / f"{FoodVendor.CITY_FOOD.value}_1.png"
+            mock_get.assert_called_once_with(image_url, timeout=10)
+            image = image_dir / f"{FoodVendor.CITY_FOOD.value}_1.{expected_ext}"
             assert image.exists()
             assert image.read_bytes() == fake_image

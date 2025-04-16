@@ -57,7 +57,7 @@ class TeletalStrategy(FoodVendorStrategy):
         if self._id_to_image is None:
             return None
 
-        return self._id_to_image[food_id]
+        return self._id_to_image.get(food_id, None)
 
     def _fetch_raw_food_data(self, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []
