@@ -52,7 +52,9 @@ test.describe('Meal Plan Generator', () => {
 
         await mealPlanGeneratorPage.removeFoodFromMealPlan(page, mealPlanItems.first());
 
-        await expect(await mealPlanItems.count()).toBeLessThan(initialMealPlanItemCount);
+        await expect(async () => {
+            await expect(await mealPlanItems.count()).toBeLessThan(initialMealPlanItemCount);
+        }).toPass({ timeout: 5000 });
     });
 
     test('generates different meal plans for different days and constraints', async ({ page }) => {
