@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     FETCHING_TIMEOUT: int = 30
     WEEKS_TO_FETCH: int = 3
     FETCH_IMAGES: bool = True
-    INCLUDE_HEAVY_JOBS: bool = False
+    INCLUDE_HEAVY_JOBS: bool = True
 
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
     CITY_FOOD_IMAGE_URL_TEMPLATE: str = "https://ca.cityfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
