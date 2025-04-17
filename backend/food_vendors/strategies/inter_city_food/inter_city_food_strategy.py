@@ -27,13 +27,14 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
         return StrategyResult(foods=foods,
                               raw_data=raw_data,
-                              images=self._get_id_to_image_map(foods))
+                              images=self._get_id_to_image_map(foods),
+                              vendor=self._food_vendor)
 
     def _get_id_to_image_map(self, foods):
         return {f.food_id: self._food_image_url.format(food_id=f.food_id) for f
                 in foods}
 
-    def get_name(self) -> FoodVendor:
+    def get_vendor(self) -> FoodVendor:
         return self._food_vendor
 
     def _deserialize_food_items(self, raw_data: dict) -> list[Food]:
@@ -47,7 +48,7 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
                 fat=int(item['fat_portion_food_one']),
                 price=item['price'],
                 date=datetime.strptime(item['date'], "%Y-%m-%d").date(),
-                food_vendor=self.get_name()
+                food_vendor=self._food_vendor
             )
             for food_type in raw_data['data'].values()
             for category in food_type['categories']

@@ -34,19 +34,22 @@ def strategy():
     strategy = MagicMock()
     strategy.fetch_foods_for.return_value = StrategyResult(foods=[food],
                                                            raw_data={"bombardino": "crocodilo"},
-                                                           images={food.food_id: "sometething"})
-    strategy.get_name.return_value = FoodVendor.CITY_FOOD
+                                                           images={food.food_id: "sometething"},
+                                                           vendor=FoodVendor.CITY_FOOD)
+    strategy.get_vendor.return_value = FoodVendor.CITY_FOOD
 
     yield strategy
 
 
 @pytest.fixture
 def strategies() -> list[FoodVendorStrategy]:
-    def make_strategy(vendor_name: FoodVendor, foods: list[Food]) -> FoodVendorStrategy:
+    def make_strategy(vendor: FoodVendor, foods: list[Food]) -> FoodVendorStrategy:
         strategy = MagicMock(spec=FoodVendorStrategy)
-        strategy.get_name.return_value = vendor_name
-        strategy.fetch_foods_for.return_value = StrategyResult(foods=foods, raw_data={"bombardino": "crocodilo"},
-                                                               images={f.food_id: "sometething" for f in foods})
+        strategy.get_vendor.return_value = vendor
+        strategy.fetch_foods_for.return_value = StrategyResult(foods=foods,
+                                                               raw_data={"bombardino": "crocodilo"},
+                                                               images={f.food_id: "sometething" for f in foods},
+                                                               vendor=vendor)
 
         return strategy
 
@@ -130,9 +133,10 @@ def test_run_creates_image_and_data_dirs_when_not_exist(session, strategies):
     ("https://example.com/image", "png"),
 ])
 def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url, expected_ext):
-    strategy.fetch_foods_for.return_value = StrategyResult(images={1: image_url}, foods=[], raw_data={})
-    strategy.get_food_image_url.return_value = image_url
-
+    strategy.fetch_foods_for.return_value = StrategyResult(images={1: image_url},
+                                                           foods=[],
+                                                           raw_data={},
+                                                           vendor=strategy.get_vendor())
     # TODO: mock it
     with TemporaryDirectory() as tmp_dir:
         image_dir = Path(tmp_dir) / "images"
@@ -157,6 +161,6 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url,
             job.run()
 
             mock_get.assert_called_once_with(image_url, timeout=10)
-            image = image_dir / f"{FoodVendor.CITY_FOOD.value}_1.{expected_ext}"
+            image = image_dir / f"{strategy.get_vendor().value}_1.{expected_ext}"
             assert image.exists()
             assert image.read_bytes() == fake_image

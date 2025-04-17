@@ -63,9 +63,9 @@ class FoodDataCollectorJob:
             for week in range(current_week, current_week + self._weeks_to_fetch):
                 try:
                     self._sync_one_week_food_data(current_year, week, strategy)
-                    self._track_successful_job_run(current_year, strategy, week)
+                    self._track_successful_job_run(current_year, strategy.get_vendor(), week)
                 except Exception as e:
-                    self._track_failed_job_run(current_year, e, strategy, week)
+                    self._track_failed_job_run(current_year, e, strategy.get_vendor(), week)
 
                 time.sleep(self._delay)
 
@@ -77,10 +77,10 @@ class FoodDataCollectorJob:
         result = strategy.fetch_foods_for(year, week)
         self._save_food_to_db(result.foods, week)
 
-        self._save_foods_to_json(strategy.get_name().value, result.raw_data, year, week)
+        self._save_foods_to_json(result.vendor.value, result.raw_data, year, week)
 
         if self._fetch_images:
-            self._download_food_images(result.images, strategy.get_name())
+            self._download_food_images(result.images, result.vendor.value)
 
     def _save_food_to_db(self, foods: list[Food], week: int):
         for food in foods:
@@ -96,10 +96,10 @@ class FoodDataCollectorJob:
 
         JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
-    def _track_successful_job_run(self, current_year, strategy, week):
-        job_id = self._track_job_run(week, current_year, JobStatus.SUCCESS, strategy.get_name())
+    def _track_successful_job_run(self, current_year: int, vendor: FoodVendor, week: int):
+        job_id = self._track_job_run(week, current_year, JobStatus.SUCCESS, vendor)
         JOB_LOGGER.info(
-            f"✅ Job ID={job_id}: Successfully fetched & stored data for {strategy.get_name()} Week {week}.")
+            f"✅ Job ID={job_id}: Successfully fetched & stored data for {vendor.value} Week {week}.")
 
     def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendor) -> int:
         job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor)
@@ -110,15 +110,15 @@ class FoodDataCollectorJob:
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id
 
-    def _track_failed_job_run(self, current_year, e, strategy, week):
-        job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, strategy.get_name())
+    def _track_failed_job_run(self, current_year: int, e: Exception, vendor: FoodVendor, week:int):
+        job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, vendor)
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
-    def _download_food_images(self, images: dict[int, str], vendor: FoodVendor):
+    def _download_food_images(self, images: dict[int, str], vendor_name: str):
         for food_id, image in images.items():
             ext = self._get_image_extension(image)
             self._download_image(image,
-                                 f"{vendor.value}_{food_id}{ext}")
+                                 f"{vendor_name}_{food_id}{ext}")
             time.sleep(self._delay + random.uniform(0.1, 0.5))
 
     @staticmethod

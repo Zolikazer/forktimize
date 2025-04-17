@@ -9,7 +9,7 @@ from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodS
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from jobs.file_utils import load_json
 from settings import SETTINGS
-from test.conftest import TEST_RESOURCES_DIR
+from test.conftest import TEST_RESOURCES_DIR, WEEK, YEAR
 
 
 @pytest.fixture
@@ -55,14 +55,21 @@ def test_inter_city_strategy_calls_correct_url(
         actual_url = mock_post.call_args[0][0]
         assert actual_url == expected_url, f"Expected URL {expected_url}, but got {actual_url}!"
 
+@pytest.mark.parametrize("strategy_cls, expected_vendor", [
+    (CityFoodStrategy, FoodVendor.CITY_FOOD),
+    (InterFoodStrategy, FoodVendor.INTER_FOOD),
+])
+def test_strategy_get_vendor(strategy_cls, expected_vendor):
+    strategy = strategy_cls()
+    assert strategy.get_vendor() == expected_vendor
 
 @pytest.mark.parametrize("strategy_cls, expected_vendor", [
     (CityFoodStrategy, FoodVendor.CITY_FOOD),
     (InterFoodStrategy, FoodVendor.INTER_FOOD),
 ])
-def test_strategy_get_name(strategy_cls, expected_vendor):
-    strategy = strategy_cls()
-    assert strategy.get_name() == expected_vendor
+def test_strategy_result_contains_correct_vendor(strategy_cls, expected_vendor):
+    result = strategy_cls().fetch_foods_for(YEAR, WEEK)
+    assert result.vendor == expected_vendor
 
 
 @pytest.mark.parametrize("strategy, response_file, expected_url", [

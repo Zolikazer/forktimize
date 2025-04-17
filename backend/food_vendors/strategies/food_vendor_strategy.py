@@ -10,6 +10,7 @@ class StrategyResult:
     foods: list[Food]
     images: dict[int, str]
     raw_data: dict | list
+    vendor: FoodVendor
 
 
 class FoodVendorStrategy(ABC):
@@ -19,5 +20,5 @@ class FoodVendorStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_name(self) -> FoodVendor:
+    def get_vendor(self) -> FoodVendor:
         pass
