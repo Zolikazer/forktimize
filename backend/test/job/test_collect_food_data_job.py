@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch, MagicMock
@@ -143,7 +144,7 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url,
         fake_image = b"image-bytes"
 
         job = FoodDataCollectorJob(
-            session=MagicMock(spec=Session),
+            session=session,
             strategies=[strategy],
             image_dir=image_dir,
             data_dir=Path(tmp_dir) / "data",
@@ -163,3 +164,27 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url,
             image = image_dir / f"{strategy.get_vendor().value}_1.{expected_ext}"
             assert image.exists()
             assert image.read_bytes() == fake_image
+
+@freeze_time("2025-01-01")
+def test_job_skips_if_successful_run_already_exists(session, strategy):
+    now = datetime.now()
+    week = now.isocalendar()[1]
+    year = now.year
+
+    existing = JobRun(
+        week=week,
+        year=year,
+        status=JobStatus.SUCCESS,
+        timestamp=now,
+        food_vendor=FoodVendorType.CITY_FOOD
+    )
+    session.add(existing)
+    session.commit()
+
+    job = FoodDataCollectorJob(session, [strategy], weeks_to_fetch=1, delay=0, fetch_images=False)
+    job.run()
+
+    assert session.exec(select(Food)).first() is None, "Expected no food to be added — job should be skipped!"
+
+    job_runs = session.exec(select(JobRun)).all()
+    assert len(job_runs) == 1 and job_runs[0].id == existing.id, "Expected no new JobRun if already successful"

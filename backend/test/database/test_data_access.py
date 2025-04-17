@@ -1,13 +1,14 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 from sqlmodel import SQLModel, create_engine, Session
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
-    get_available_dates_for_vendor
+    get_available_dates_for_vendor, has_successful_job_run
 from food_vendors import food_vendor
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
+from model.job_run import JobRun, JobStatus
 from test.conftest import make_food
 
 
@@ -102,3 +103,20 @@ def test_is_database_empty__returns_true_when_empty(session):
 
 def test_is_database_empty__returns_false_when_food_exists(session):
     assert is_database_empty(session) is False
+
+def test_has_successful_job_run_returns_true_when_success_exists(session):
+    job = JobRun(
+        week=10,
+        year=2025,
+        status=JobStatus.SUCCESS,
+        timestamp=datetime.now(),
+        food_vendor=FoodVendorType.TELETAL
+    )
+    session.add(job)
+    session.commit()
+
+    assert has_successful_job_run(session, 2025, 10, FoodVendorType.TELETAL)
+
+
+def test_has_successful_job_run_returns_false_when_none_exists(session):
+    assert not has_successful_job_run(session, 2025, 99, FoodVendorType.TELETAL)

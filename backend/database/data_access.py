@@ -1,11 +1,12 @@
 from datetime import date
 
 from cachetools import TTLCache, cached
-from sqlalchemy import String
+from sqlalchemy import String, Select
 from sqlmodel import select, col, Session, cast
 
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
+from model.job_run import JobRun, JobStatus
 from monitoring.performance import benchmark
 from constants import ONE_DAY
 
@@ -51,6 +52,16 @@ def get_foods_for_given_date(
         statement = statement.where(cast(Food.name, String).not_like(f"%{blacklisted}%"))
 
     return list(session.exec(statement).all())
+
+
+def has_successful_job_run(session: Session, year: int, week: int, vendor: FoodVendorType) -> bool:
+    statement: Select = (select(JobRun)
+                 .where(JobRun.week == week)
+                 .where(JobRun.year == year)
+                 .where(JobRun.food_vendor == vendor)
+                 .where(JobRun.status == JobStatus.SUCCESS))
+
+    return session.exec(statement).first() is not None
 
 
 def is_database_empty(session: Session) -> bool:

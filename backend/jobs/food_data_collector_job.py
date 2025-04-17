@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import requests
 from sqlmodel import Session
 
+from database.data_access import has_successful_job_run
 from database.db import ENGINE, init_db
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
@@ -63,6 +64,10 @@ class FoodDataCollectorJob:
 
         for strategy in self._strategies:
             for week in range(current_week, current_week + self._weeks_to_fetch):
+                if has_successful_job_run(self._session, current_year, week, strategy.get_vendor()):
+                    JOB_LOGGER.info(
+                        f"Skipping job run for {strategy.get_vendor().value}, year:{current_year} week {week}...")
+                    continue
                 try:
                     self._sync_one_week_food_data(current_year, week, strategy)
                     self._track_successful_job_run(current_year, strategy.get_vendor(), week)
@@ -85,10 +90,7 @@ class FoodDataCollectorJob:
             self._download_food_images(result.images, result.vendor.value)
 
     def _save_food_to_db(self, foods: list[Food], week: int):
-        for food in foods:
-            print(food)
-            self._session.merge(food)
-
+        self._session.add_all(foods)
         self._session.commit()
 
         JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
