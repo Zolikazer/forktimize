@@ -15,7 +15,7 @@ class TeletalMenuPage:
         self._year: int | None = None
         self._week: int | None = None
 
-    def get_food_category_codes(self) -> list[str]:
+    def get_food_category_codes(self) -> set[str]:
         assert self._menu_soup is not None, "You must call load() first"
 
         return self._parse_category_codes()
@@ -53,13 +53,13 @@ class TeletalMenuPage:
         for tag in list(soup.contents):
             self._menu_soup.body.append(tag)
 
-    def _parse_category_codes(self) -> list[str]:
+    def _parse_category_codes(self) -> set[str]:
         tr_elements = self._menu_soup.find_all("tr", attrs={"kod": True})
 
-        codes = []
+        codes = set()
         for tr in tr_elements:
             kod_value = tr["kod"]
-            codes.append(kod_value)
+            codes.add(kod_value)
 
         return codes
 

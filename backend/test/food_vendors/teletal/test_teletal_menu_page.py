@@ -22,7 +22,7 @@ def test_get_food_category_codes__returns_static_and_dynamic_codes(mock_teletal_
     page.load(week=WEEK)
     codes = page.get_food_category_codes()
 
-    assert codes == ["HU", "ZK", "LE"]
+    assert codes == {"HU", "ZK", "LE"}
     teletal_client.get_main_menu.assert_called_once()
     teletal_client.get_dynamic_category.assert_called_once_with(YEAR, WEEK, ewid, category)
 

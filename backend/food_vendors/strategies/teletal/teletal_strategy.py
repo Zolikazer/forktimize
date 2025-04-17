@@ -65,7 +65,7 @@ class TeletalStrategy(FoodVendorStrategy):
                     f"{e}")
 
                 self._save_for_debug(code, day)
-            JOB_LOGGER.warning(f"TELETAL | Failed to fetch food data {failures} times.")
+        JOB_LOGGER.warning(f"TELETAL | Failed to fetch food data {failures} times.")
 
         return foods
 
@@ -77,7 +77,7 @@ class TeletalStrategy(FoodVendorStrategy):
 
         return self._food_page.get_food_data()
 
-    def _get_food_categories(self, week: int) -> list[str]:
+    def _get_food_categories(self, week: int) -> set[str]:
         self._menu_page.load(week)
 
         return self._menu_page.get_food_category_codes()
