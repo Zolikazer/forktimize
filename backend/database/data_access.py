@@ -20,6 +20,21 @@ def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
 
 
 @benchmark
+@cached(
+    TTLCache(maxsize=50, ttl=ONE_DAY),
+    key=lambda session, target_date, vendor_type: (target_date, vendor_type)
+)
+def get_available_dates_for_vendor(session: Session, target_date: date, vendor_type: FoodVendorType) -> list[date]:
+    statement = (
+        select(col(Food.date))
+        .distinct()
+        .where(Food.date > target_date)
+        .where(Food.food_vendor == vendor_type)
+    )
+    return list(session.exec(statement).all())
+
+
+@benchmark
 @cached(TTLCache(maxsize=100, ttl=ONE_DAY),
         key=lambda session, target_date, food_vendor, food_blacklist=None:
         (target_date, food_vendor, tuple(food_blacklist or ())))

@@ -3,7 +3,9 @@ from datetime import date
 import pytest
 from sqlmodel import SQLModel, create_engine, Session
 
-from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty
+from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
+    get_available_dates_for_vendor
+from food_vendors import food_vendor
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
 from test.conftest import make_food
@@ -75,6 +77,22 @@ def test_get_unique_dates_after__returns_distinct_future_dates(session):
     session.commit()
 
     result = get_unique_dates_after(session, date(2025, 3, 18))
+    assert result == [date(2025, 3, 19), date(2025, 3, 20)]
+
+
+def test_get_available_dates_for_vendor__returns_distinct_future_dates(session):
+    session.add_all([
+        make_food(date=date(2025, 3, 18), food_vendor=FoodVendorType.CITY_FOOD),
+        make_food(date=date(2025, 3, 19), food_vendor=FoodVendorType.CITY_FOOD),
+        make_food(date=date(2025, 3, 19), food_vendor=FoodVendorType.CITY_FOOD),
+        make_food(date=date(2025, 3, 20), food_vendor=FoodVendorType.CITY_FOOD),
+        make_food(date=date(2025, 3, 20), food_vendor=FoodVendorType.INTER_FOOD),
+
+    ])
+
+    session.commit()
+
+    result = get_available_dates_for_vendor(session, date(2025, 3, 18), FoodVendorType.CITY_FOOD)
     assert result == [date(2025, 3, 19), date(2025, 3, 20)]
 
 def test_is_database_empty__returns_true_when_empty(session):
