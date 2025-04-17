@@ -14,14 +14,18 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
     @abstractmethod
     def __init__(self, api_url: str, food_image_url: str, food_vendor: FoodVendorType,
-                 timeout: int = SETTINGS.FETCHING_TIMEOUT):
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT, headers: dict[str, str] = SETTINGS.HEADERS, ):
         self._api_url: str = api_url
         self._food_image_url: str = food_image_url
         self._food_vendor: FoodVendorType = food_vendor
         self._timeout: int = timeout
+        self._headers: dict[str, str] = headers
 
     def fetch_foods_for(self, year: int, week: int) -> StrategyResult:
-        response = requests.post(self._api_url, json=self._get_request_body(year, week), timeout=self._timeout)
+        response = requests.post(self._api_url,
+                                 json=self._get_request_body(year, week),
+                                 timeout=self._timeout,
+                                 headers=self._headers)
         response.raise_for_status()
         raw_data = response.json()
 

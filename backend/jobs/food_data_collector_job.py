@@ -45,6 +45,7 @@ class FoodDataCollectorJob:
                  weeks_to_fetch: int = SETTINGS.WEEKS_TO_FETCH,
                  delay: float = SETTINGS.FETCHING_DELAY,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT,
+                 headers: dict[str, str] = SETTINGS.HEADERS,
                  fetch_images: bool = SETTINGS.FETCH_IMAGES,
                  image_dir: Path = SETTINGS.food_image_dir,
                  data_dir: Path = SETTINGS.data_dir):
@@ -56,6 +57,7 @@ class FoodDataCollectorJob:
         self._fetch_images = fetch_images
         self._image_dir = image_dir
         self._data_dir = data_dir
+        self._headers = headers
 
     def run(self):
         self._ensure_dirs_exist()
@@ -140,7 +142,7 @@ class FoodDataCollectorJob:
     def _download_image(self, url: str, image_path: Path):
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
         try:
-            response = requests.get(url, timeout=self._timeout)
+            response = requests.get(url, timeout=self._timeout, headers=self._headers)
             response.raise_for_status()
 
             save_image(response.content, image_path)

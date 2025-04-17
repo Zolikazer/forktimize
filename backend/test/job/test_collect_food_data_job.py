@@ -13,6 +13,7 @@ from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, Str
 from jobs.food_data_collector_job import FoodDataCollectorJob
 from model.food import Food
 from model.job_run import JobRun, JobStatus
+from settings import SETTINGS
 from test.conftest import make_food
 
 
@@ -160,10 +161,11 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url,
 
             job.run()
 
-            mock_get.assert_called_once_with(image_url, timeout=30)
+            mock_get.assert_called_once_with(image_url, timeout=30, headers=SETTINGS.HEADERS)
             image = image_dir / f"{strategy.get_vendor().value}_1.{expected_ext}"
             assert image.exists()
             assert image.read_bytes() == fake_image
+
 
 @freeze_time("2025-01-01")
 def test_job_skips_if_successful_run_already_exists(session, strategy):

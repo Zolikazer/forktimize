@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 import requests
+from requests import Session
 
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
@@ -9,19 +10,17 @@ from settings import SETTINGS
 class TeletalClient:
     def __init__(self, teletal_menu_url: str = SETTINGS.teletal_menu_url,
                  teletal_ajax_url: str = SETTINGS.teletal_ajax_url,
-                 timeout: int = SETTINGS.FETCHING_TIMEOUT):
-        self.teletal_menu_url = teletal_menu_url
-        self.teletal_ajax = teletal_ajax_url
-        self.timeout = timeout
-        self.session = requests.Session()
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.86 Safari/537.36"
-        }
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT,
+                 headers: dict[str, str] = SETTINGS.HEADERS, ):
+        self._teletal_menu_url: str = teletal_menu_url
+        self._teletal_ajax: str = teletal_ajax_url
+        self._timeout: int = timeout
+        self._session: Session = requests.Session()
+        self._headers: dict[str, str] = headers
 
     def get_main_menu(self, week: int) -> str:
         JOB_LOGGER.info("Fetching main menu html")
-        response = self.session.get(f"{self.teletal_menu_url}/{week}", headers=self.headers)
+        response = self._session.get(f"{self._teletal_menu_url}/{week}", headers=self._headers)
         response.raise_for_status()
 
         return response.text
@@ -33,10 +32,10 @@ class TeletalClient:
             "ewid": ewid,
             "varname": varname,
         }
-        full_url = f"{self.teletal_ajax}/szekcio?{urlencode(params)}"
+        full_url = f"{self._teletal_ajax}/szekcio?{urlencode(params)}"
 
         JOB_LOGGER.info(f"🌐 Fetching dynamic section: {full_url}")
-        response = self.session.get(full_url, headers=self.headers, timeout=self.timeout)
+        response = self._session.get(full_url, headers=self._headers, timeout=self._timeout)
         response.raise_for_status()
 
         return response.text
@@ -49,10 +48,10 @@ class TeletalClient:
             "nap": day,
             "kod": code
         }
-        full_url = f"{self.teletal_ajax}/kodinfo?{urlencode(params)}"
+        full_url = f"{self._teletal_ajax}/kodinfo?{urlencode(params)}"
 
         JOB_LOGGER.info(f"🌐 Fetching food data: {full_url}")
-        response = self.session.get(full_url, headers=self.headers, timeout=self.timeout)
+        response = self._session.get(full_url, headers=self._headers, timeout=self._timeout)
         response.raise_for_status()
 
         return response.text

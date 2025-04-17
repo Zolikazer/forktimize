@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     WEEKS_TO_FETCH: int = 3
     FETCH_IMAGES: bool = True
     INCLUDE_HEAVY_JOBS: bool = True
+    HEADERS: dict[str, str] = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.86 Safari/537.36"}
 
     CITY_FOOD_MENU_URL: str = "https://rendel.cityfood.hu/"
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
