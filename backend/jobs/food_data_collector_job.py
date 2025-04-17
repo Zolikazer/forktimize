@@ -41,6 +41,7 @@ class FoodDataCollectorJob:
                  strategies: list[FoodVendorStrategy],
                  weeks_to_fetch: int = SETTINGS.WEEKS_TO_FETCH,
                  delay: float = SETTINGS.FETCHING_DELAY,
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT,
                  fetch_images: bool = SETTINGS.FETCH_IMAGES,
                  image_dir: Path = SETTINGS.food_image_dir,
                  data_dir: Path = SETTINGS.data_dir):
@@ -48,6 +49,7 @@ class FoodDataCollectorJob:
         self._strategies = strategies
         self._weeks_to_fetch = weeks_to_fetch
         self._delay = delay
+        self._timeout = timeout
         self._fetch_images = fetch_images
         self._image_dir = image_dir
         self._data_dir = data_dir
@@ -73,15 +75,16 @@ class FoodDataCollectorJob:
 
     def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodVendorStrategy):
         result = strategy.fetch_foods_for(year, week)
-        self._save_food_to_db(result.foods, week)
 
         self._save_foods_to_json(result.vendor.value, result.raw_data, year, week)
+        self._save_food_to_db(result.foods, week)
 
         if self._fetch_images:
             self._download_food_images(result.images, result.vendor.value)
 
     def _save_food_to_db(self, foods: list[Food], week: int):
         for food in foods:
+            print(food)
             self._session.merge(food)
 
         self._session.commit()
@@ -115,8 +118,13 @@ class FoodDataCollectorJob:
     def _download_food_images(self, images: dict[int, str], vendor_name: str):
         for food_id, image in images.items():
             ext = self._get_image_extension(image)
-            self._download_image(image,
-                                 f"{vendor_name}_{food_id}{ext}")
+            image_path = self._image_dir / f"{vendor_name}_{food_id}{ext}"
+
+            if image_path.exists():
+                JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
+                continue
+
+            self._download_image(image, image_path)
             time.sleep(self._delay + random.uniform(0.1, 0.5))
 
     @staticmethod
@@ -125,15 +133,10 @@ class FoodDataCollectorJob:
         _, ext = os.path.splitext(parsed.path)
         return ext if ext else ".png"
 
-    def _download_image(self, url: str, image_name: str):
-        image_path = self._image_dir / image_name
-        if image_path.exists():
-            JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
-            return
-
+    def _download_image(self, url: str, image_path: Path):
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=self._timeout)
             response.raise_for_status()
 
             save_image(response.content, image_path)

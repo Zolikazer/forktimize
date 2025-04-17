@@ -5,6 +5,8 @@ from sqlmodel import Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date
 from database.db import get_session
+from food_vendors.food_vendor import VENDOR_REGISTRY
+from model.food_vendor_data import FoodVendorData
 from model.meal_plan import MealPlan
 from model.meal_plan_request import MealPlanRequest
 from monitoring.logging import APP_LOGGER
@@ -24,7 +26,14 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
     return sorted([d.strftime("%Y-%m-%d") for d in get_unique_dates_after(session, date.today())])
 
 
-@meal_planner.post("/meal-plan")
+@meal_planner.get("/food-vendors", response_model=list[FoodVendorData])
+def get_vendor_data(session: Session = Depends(get_session)) -> list[FoodVendorData]:
+    return [FoodVendorData(name=v.name, menu_url=v.menu_url, available_dates=v.get_available_dates(session))
+            for v in
+            VENDOR_REGISTRY.values()]
+
+
+@meal_planner.post("/meal-plan", response_model=MealPlan)
 def generate_meal_plan(meal_plan_request: MealPlanRequest,
                        session: Session = Depends(get_session)) -> MealPlan:
     food_selection = get_foods_for_given_date(session,

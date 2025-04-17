@@ -8,16 +8,16 @@ from food_vendors.food_vendor_type import FoodVendorType
 
 
 class Food(SQLModel, table=True):
-    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel)
+    model_config = ConfigDict(arbitrary_types_allowed=True, alias_generator=to_camel, populate_by_name=True)
 
-    food_id: StrictInt = Field(primary_key=True)
-    date: datetime_date = Field(primary_key=True, index=True)
+    food_id: StrictInt = Field(primary_key=True, nullable=False)
+    date: datetime_date = Field(primary_key=True, index=True, nullable=False)
     food_vendor: FoodVendorType = Field(
         primary_key=True,
         nullable=False,
         index=True
     )
-    name: str = Field(index=True)
+    name: str = Field(index=True, nullable=False, min_length=1)
     calories: NonNegativeInt
     protein: NonNegativeInt
     carb: NonNegativeInt

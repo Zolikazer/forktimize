@@ -7,17 +7,16 @@ from model.food import Food
 
 
 def map_to_food_model(food_data: dict[str, str]) -> Food:
-    return Food(
-        food_id=_create_id(food_data["name"], FoodVendorType.TELETAL.value),
-        date=_to_date(int(food_data["year"]), int(food_data["week"]), int(food_data["day"])),
-        food_vendor=FoodVendorType.TELETAL,
-        name=food_data["name"],
-        calories=_macro_to_int(food_data["calories"]),
-        protein=_macro_to_int(food_data["protein"]),
-        carb=_macro_to_int(food_data["carb"]),
-        fat=_macro_to_int(food_data["fat"]),
-        price=_price_to_int(food_data["price"]),
-    )
+    food = Food(food_id=_create_id(food_data["name"], FoodVendorType.TELETAL.value),
+                date=_to_date(int(food_data["year"]), int(food_data["week"]), int(food_data["day"])),
+                food_vendor=FoodVendorType.TELETAL, name=food_data["name"],
+                calories=_macro_to_int(food_data["calories"]), protein=_macro_to_int(food_data["protein"]),
+                carb=_macro_to_int(food_data["carb"]), fat=_macro_to_int(food_data["fat"]),
+                price=_price_to_int(food_data["price"]), )
+
+    Food.model_validate(food.model_dump())
+
+    return food
 
 
 def _macro_to_int(value: str | None) -> int | None:

@@ -7,18 +7,21 @@ from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, Str
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
 from monitoring.logging import JOB_LOGGER
+from settings import SETTINGS
 
 
 class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
     @abstractmethod
-    def __init__(self, api_endpoint: str, food_image_url: str, food_vendor: FoodVendorType):
-        self._api_endpoint: str = api_endpoint
+    def __init__(self, api_url: str, food_image_url: str, food_vendor: FoodVendorType,
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT):
+        self._api_url: str = api_url
         self._food_image_url: str = food_image_url
         self._food_vendor: FoodVendorType = food_vendor
+        self._timeout: int = timeout
 
     def fetch_foods_for(self, year: int, week: int) -> StrategyResult:
-        response = requests.post(self._api_endpoint, json=self._get_request_body(year, week), timeout=10)
+        response = requests.post(self._api_url, json=self._get_request_body(year, week), timeout=self._timeout)
         response.raise_for_status()
         raw_data = response.json()
 

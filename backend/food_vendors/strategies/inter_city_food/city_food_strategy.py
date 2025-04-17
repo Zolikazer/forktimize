@@ -6,4 +6,4 @@ from settings import SETTINGS
 
 class CityFoodStrategy(InterCityFoodStrategy):
     def __init__(self):
-        super().__init__(SETTINGS.city_food_menu_url, SETTINGS.CITY_FOOD_IMAGE_URL_TEMPLATE, FoodVendorType.CITY_FOOD)
+        super().__init__(SETTINGS.city_food_menu_api_url, SETTINGS.CITY_FOOD_IMAGE_URL_TEMPLATE, FoodVendorType.CITY_FOOD)

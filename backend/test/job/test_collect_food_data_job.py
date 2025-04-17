@@ -159,7 +159,7 @@ def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url,
 
             job.run()
 
-            mock_get.assert_called_once_with(image_url, timeout=10)
+            mock_get.assert_called_once_with(image_url, timeout=30)
             image = image_dir / f"{strategy.get_vendor().value}_1.{expected_ext}"
             assert image.exists()
             assert image.read_bytes() == fake_image

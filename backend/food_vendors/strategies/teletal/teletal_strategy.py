@@ -36,14 +36,14 @@ class TeletalStrategy(FoodVendorStrategy):
     def get_vendor(self) -> FoodVendorType:
         return FoodVendorType.TELETAL
 
-    def _fetch_raw_food_data(self, year: int, week: int, category_codes: list[str]) -> list[dict[str, str]]:
+    def _fetch_raw_food_data(self, year: int, week: int, category_codes: set[str]) -> list[dict[str, str]]:
         raw_food_data = []
         for day in range(1, 6):
             raw_food_data.extend(self._fetch_food_for_day(year, week, day, category_codes))
 
         return raw_food_data
 
-    def _fetch_food_for_day(self, year: int, week: int, day: int, category_codes: list) -> list[dict[str, str]]:
+    def _fetch_food_for_day(self, year: int, week: int, day: int, category_codes: set) -> list[dict[str, str]]:
         failures = 0
         foods = []
         for code in category_codes:

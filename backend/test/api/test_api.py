@@ -145,6 +145,23 @@ def test_get_available_dates__returns_future_dates_only(forktimize_client, sessi
     assert response.json() == ["2025-02-24", "2025-02-25"]
 
 
+@freeze_time("2025-02-23")
+def test_get_vendor_data__returns_correct_vendor_data(forktimize_client, session):
+    session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD, date=date(2025, 5, 5)))
+    response = forktimize_client.get("/food-vendors")
+
+    assert response.status_code == 200
+    assert response.json() == [{'available_dates': ['2025-02-24', '2025-02-25'],
+                                'menu_url': 'https://rendel.cityfood.hu/',
+                                'name': 'Cityfood'},
+                               {'available_dates': ['2025-05-05'],
+                                'menu_url': 'https://rendel.interfood.hu/',
+                                'name': 'Interfood'},
+                               {'available_dates': [],
+                                'menu_url': 'https://www.teletal.hu/etlap',
+                                'name': 'Teletáletal'}]
+
+
 def test_health_check__returns_status_healthy_when_db_connected(forktimize_client):
     response = forktimize_client.get("/health")
 

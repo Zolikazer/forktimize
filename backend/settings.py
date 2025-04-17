@@ -35,11 +35,11 @@ class Settings(BaseSettings):
         return f"{self.TELETAL_URL}/ajax"
 
     @computed_field
-    def city_food_menu_url(self) -> str:
+    def city_food_menu_api_url(self) -> str:
         return f"{self.CITY_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     @computed_field
-    def inter_food_menu_url(self) -> str:
+    def inter_food_menu_api_url(self) -> str:
         return f"{self.INTER_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     LOG_DIR: str = "/var/log/forktimize"

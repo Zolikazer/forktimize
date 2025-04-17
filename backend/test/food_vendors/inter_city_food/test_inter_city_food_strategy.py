@@ -39,8 +39,8 @@ def test_inter_city_vendor_fetch_foods_fetches_foods(mock_requests_post_success,
 
 
 @pytest.mark.parametrize("strategy, expected_url, response_file", [
-    (CityFoodStrategy(), SETTINGS.city_food_menu_url, "city-response-test.json"),
-    (InterFoodStrategy(), SETTINGS.inter_food_menu_url, "interfood-response-test.json"),
+    (CityFoodStrategy(), SETTINGS.city_food_menu_api_url, "city-response-test.json"),
+    (InterFoodStrategy(), SETTINGS.inter_food_menu_api_url, "interfood-response-test.json"),
 ])
 def test_inter_city_strategy_calls_correct_url(
         mock_requests_post_success,
