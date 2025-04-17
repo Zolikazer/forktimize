@@ -9,12 +9,10 @@ import requests
 from sqlmodel import Session
 
 from database.db import ENGINE, init_db
+from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
-from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
-from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
-from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 from food_vendors.strategies.vendor_strategies import get_vendor_strategies
 from jobs.file_utils import save_to_json, save_image
 from model.food import Food
@@ -110,7 +108,7 @@ class FoodDataCollectorJob:
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id
 
-    def _track_failed_job_run(self, current_year: int, e: Exception, vendor: FoodVendorType, week:int):
+    def _track_failed_job_run(self, current_year: int, e: Exception, vendor: FoodVendorType, week: int):
         job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, vendor)
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
@@ -150,4 +148,4 @@ if __name__ == "__main__":
     init_db()
     client = TeletalClient("https://www.teletal.hu/etlap", "https://www.teletal.hu/ajax")
     with Session(ENGINE) as job_session:
-        FoodDataCollectorJob(job_session, [TeletalStrategy(TeletalMenuPage(client), TeletalFoodPage(client))], 1).run()
+        FoodDataCollectorJob(job_session, [vendor.strategy for vendor in VENDOR_REGISTRY.values()], 2).run()

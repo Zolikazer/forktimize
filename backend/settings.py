@@ -13,14 +13,17 @@ class Settings(BaseSettings):
     FETCH_IMAGES: bool = True
     INCLUDE_HEAVY_JOBS: bool = True
 
+    CITY_FOOD_MENU_URL: str = "https://rendel.cityfood.hu/"
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
     CITY_FOOD_IMAGE_URL_TEMPLATE: str = "https://ca.cityfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
+    INTER_FOOD_ORDERING_URL: str = "https://rendel.interfood.hu/"
     INTER_FOOD_API_BASE: str = "https://ia.interfood.hu"
     INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
+    TELETAL_MENU_URL: str = "https://www.teletal.hu/etlap"
     TELETAL_URL: str = "https://www.teletal.hu"
 
     @computed_field
