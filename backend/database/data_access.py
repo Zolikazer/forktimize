@@ -5,7 +5,7 @@ from sqlalchemy import String
 from sqlmodel import select, col, Session, cast
 
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from monitoring.performance import benchmark
 from constants import ONE_DAY
 
@@ -26,7 +26,7 @@ def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
 def get_foods_for_given_date(
         session: Session,
         target_date: date,
-        food_vendor: FoodVendor,
+        food_vendor: FoodVendorType,
         food_blacklist: list[str] = None,
 ) -> list[Food]:
     statement = (select(Food)

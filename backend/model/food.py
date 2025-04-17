@@ -4,7 +4,7 @@ from pydantic import ConfigDict, NonNegativeInt, StrictInt
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
 
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 
 
 class Food(SQLModel, table=True):
@@ -12,7 +12,7 @@ class Food(SQLModel, table=True):
 
     food_id: StrictInt = Field(primary_key=True)
     date: datetime_date = Field(primary_key=True, index=True)
-    food_vendor: FoodVendor = Field(
+    food_vendor: FoodVendorType = Field(
         primary_key=True,
         nullable=False,
         index=True

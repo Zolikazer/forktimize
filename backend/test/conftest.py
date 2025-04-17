@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from model.food import Food
 
@@ -38,7 +38,7 @@ _food_id_counter = itertools.count(1)
 def make_food(
         food_id: int = None,
         name: str = None,
-        food_vendor: FoodVendor = FoodVendor.CITY_FOOD,
+        food_vendor: FoodVendorType = FoodVendorType.CITY_FOOD,
         date: datetime_date = datetime_date(2025, 2, 24),
         calories: int = 500,
         protein: int = 50,

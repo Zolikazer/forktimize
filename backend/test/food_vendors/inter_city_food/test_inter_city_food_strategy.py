@@ -4,7 +4,7 @@ from unittest.mock import patch, Mock
 import pytest
 from requests import Response
 
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from jobs.file_utils import load_json
@@ -27,8 +27,8 @@ def mock_requests_post_success():
 
 
 @pytest.mark.parametrize("strategy, response_file, expected_vendor", [
-    (CityFoodStrategy(), "city-response-test.json", FoodVendor.CITY_FOOD),
-    (InterFoodStrategy(), "interfood-response-test.json", FoodVendor.INTER_FOOD),
+    (CityFoodStrategy(), "city-response-test.json", FoodVendorType.CITY_FOOD),
+    (InterFoodStrategy(), "interfood-response-test.json", FoodVendorType.INTER_FOOD),
 ])
 def test_inter_city_vendor_fetch_foods_fetches_foods(mock_requests_post_success, strategy, response_file,
                                                      expected_vendor):
@@ -56,16 +56,16 @@ def test_inter_city_strategy_calls_correct_url(
         assert actual_url == expected_url, f"Expected URL {expected_url}, but got {actual_url}!"
 
 @pytest.mark.parametrize("strategy_cls, expected_vendor", [
-    (CityFoodStrategy, FoodVendor.CITY_FOOD),
-    (InterFoodStrategy, FoodVendor.INTER_FOOD),
+    (CityFoodStrategy, FoodVendorType.CITY_FOOD),
+    (InterFoodStrategy, FoodVendorType.INTER_FOOD),
 ])
 def test_strategy_get_vendor(strategy_cls, expected_vendor):
     strategy = strategy_cls()
     assert strategy.get_vendor() == expected_vendor
 
 @pytest.mark.parametrize("strategy_cls, expected_vendor", [
-    (CityFoodStrategy, FoodVendor.CITY_FOOD),
-    (InterFoodStrategy, FoodVendor.INTER_FOOD),
+    (CityFoodStrategy, FoodVendorType.CITY_FOOD),
+    (InterFoodStrategy, FoodVendorType.INTER_FOOD),
 ])
 def test_strategy_result_contains_correct_vendor(strategy_cls, expected_vendor):
     result = strategy_cls().fetch_foods_for(YEAR, WEEK)

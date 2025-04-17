@@ -5,17 +5,17 @@ import requests
 
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, StrategyResult
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from monitoring.logging import JOB_LOGGER
 
 
 class InterCityFoodStrategy(FoodVendorStrategy, ABC):
 
     @abstractmethod
-    def __init__(self, api_endpoint: str, food_image_url: str, food_vendor: FoodVendor):
+    def __init__(self, api_endpoint: str, food_image_url: str, food_vendor: FoodVendorType):
         self._api_endpoint: str = api_endpoint
         self._food_image_url: str = food_image_url
-        self._food_vendor: FoodVendor = food_vendor
+        self._food_vendor: FoodVendorType = food_vendor
 
     def fetch_foods_for(self, year: int, week: int) -> StrategyResult:
         response = requests.post(self._api_endpoint, json=self._get_request_body(year, week), timeout=10)
@@ -34,7 +34,7 @@ class InterCityFoodStrategy(FoodVendorStrategy, ABC):
         return {f.food_id: self._food_image_url.format(food_id=f.food_id) for f
                 in foods}
 
-    def get_vendor(self) -> FoodVendor:
+    def get_vendor(self) -> FoodVendorType:
         return self._food_vendor
 
     def _deserialize_food_items(self, raw_data: dict) -> list[Food]:

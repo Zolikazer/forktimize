@@ -1,7 +1,7 @@
 import time
 
 from exceptions import TeletalUnavailableFoodError
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, StrategyResult
 from food_vendors.strategies.teletal.food_model_mapper import map_to_food_model
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
@@ -31,10 +31,10 @@ class TeletalStrategy(FoodVendorStrategy):
         return StrategyResult(foods=foods,
                               raw_data=raw_data,
                               images=self._create_id_to_image_map(foods, raw_data),
-                              vendor=FoodVendor.TELETAL)
+                              vendor=FoodVendorType.TELETAL)
 
-    def get_vendor(self) -> FoodVendor:
-        return FoodVendor.TELETAL
+    def get_vendor(self) -> FoodVendorType:
+        return FoodVendorType.TELETAL
 
     def _fetch_raw_food_data(self, year: int, week: int, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []

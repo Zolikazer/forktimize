@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
@@ -36,7 +36,7 @@ def mock_food_page():
     return _make_food_page
 
 def test_get_vendor__returns_teletal_enum(mock_menu_page, mock_food_page):
-    assert TeletalStrategy(mock_menu_page(), mock_food_page()).get_vendor() == FoodVendor.TELETAL
+    assert TeletalStrategy(mock_menu_page(), mock_food_page()).get_vendor() == FoodVendorType.TELETAL
 
 
 def test_strategy_result_contains_correct_vendor(mock_menu_page, mock_food_page):
@@ -44,7 +44,7 @@ def test_strategy_result_contains_correct_vendor(mock_menu_page, mock_food_page)
     food_page = mock_food_page(get_food_data={})
 
     result = TeletalStrategy(menu_page, food_page, delay=0).fetch_foods_for(YEAR, WEEK)
-    assert result.vendor == FoodVendor.TELETAL
+    assert result.vendor == FoodVendorType.TELETAL
 
 
 def test_fetch_foods_for__calls_menu_and_food_page_properly(mock_menu_page, mock_food_page):

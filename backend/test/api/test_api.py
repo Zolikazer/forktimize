@@ -8,7 +8,7 @@ from sqlmodel import SQLModel, Session
 from starlette.testclient import TestClient
 
 from database.db import get_session
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from main import app
 from routers.meal_planner import AppStatus
 from test.conftest import make_food
@@ -62,7 +62,7 @@ def insert_test_food(session):
 
 
 def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session: Session):
-    session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
+    session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD))
 
     meal_plan_request = make_meal_request()
 
@@ -83,7 +83,7 @@ def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session:
 
 
 def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, session: Session):
-    session.add(make_food(price=0, food_vendor=FoodVendor.INTER_FOOD))
+    session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD))
 
     response = forktimize_client.post("/meal-plan", json=make_meal_request())
 
@@ -98,7 +98,7 @@ def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, ses
 
 def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session):
     blacklisted_food = "cheap_and_blacklisted"
-    session.add(make_food(name=blacklisted_food, price=0, food_vendor=FoodVendor.CITY_FOOD))
+    session.add(make_food(name=blacklisted_food, price=0, food_vendor=FoodVendorType.CITY_FOOD))
     meal_plan_request = make_meal_request(**{"food_blacklist": [blacklisted_food]})
 
     response = forktimize_client.post("/meal-plan", json=meal_plan_request)
@@ -110,7 +110,7 @@ def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session
 
 
 def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, session: Session):
-    food_with_different_provider = make_food(price=0, food_vendor=FoodVendor.INTER_FOOD)
+    food_with_different_provider = make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD)
     session.add(food_with_different_provider)
     meal_plan_request = make_meal_request()
 

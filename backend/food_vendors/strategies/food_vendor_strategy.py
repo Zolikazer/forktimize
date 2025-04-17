@@ -1,8 +1,9 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 
 
 @dataclass
@@ -10,7 +11,7 @@ class StrategyResult:
     foods: list[Food]
     images: dict[int, str]
     raw_data: dict | list
-    vendor: FoodVendor
+    vendor: FoodVendorType
 
 
 class FoodVendorStrategy(ABC):
@@ -20,5 +21,5 @@ class FoodVendorStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_vendor(self) -> FoodVendor:
+    def get_vendor(self) -> FoodVendorType:
         pass

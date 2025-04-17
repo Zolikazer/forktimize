@@ -11,7 +11,7 @@ from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, Str
 from jobs.food_data_collector_job import FoodDataCollectorJob
 from model import food
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from model.job_run import JobRun, JobStatus
 from test.conftest import make_food
 
@@ -35,15 +35,15 @@ def strategy():
     strategy.fetch_foods_for.return_value = StrategyResult(foods=[food],
                                                            raw_data={"bombardino": "crocodilo"},
                                                            images={food.food_id: "sometething"},
-                                                           vendor=FoodVendor.CITY_FOOD)
-    strategy.get_vendor.return_value = FoodVendor.CITY_FOOD
+                                                           vendor=FoodVendorType.CITY_FOOD)
+    strategy.get_vendor.return_value = FoodVendorType.CITY_FOOD
 
     yield strategy
 
 
 @pytest.fixture
 def strategies() -> list[FoodVendorStrategy]:
-    def make_strategy(vendor: FoodVendor, foods: list[Food]) -> FoodVendorStrategy:
+    def make_strategy(vendor: FoodVendorType, foods: list[Food]) -> FoodVendorStrategy:
         strategy = MagicMock(spec=FoodVendorStrategy)
         strategy.get_vendor.return_value = vendor
         strategy.fetch_foods_for.return_value = StrategyResult(foods=foods,
@@ -54,8 +54,8 @@ def strategies() -> list[FoodVendorStrategy]:
         return strategy
 
     return [
-        make_strategy(FoodVendor.CITY_FOOD, [make_food(), make_food(), make_food()]),
-        make_strategy(FoodVendor.INTER_FOOD, [make_food(), make_food()]),
+        make_strategy(FoodVendorType.CITY_FOOD, [make_food(), make_food(), make_food()]),
+        make_strategy(FoodVendorType.INTER_FOOD, [make_food(), make_food()]),
     ]
 
 
@@ -80,10 +80,10 @@ def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, strate
     FoodDataCollectorJob(session, strategies, 2, 0, fetch_images=False).run()
 
     expected = {
-        (FoodVendor.CITY_FOOD, 1),
-        (FoodVendor.CITY_FOOD, 2),
-        (FoodVendor.INTER_FOOD, 1),
-        (FoodVendor.INTER_FOOD, 2),
+        (FoodVendorType.CITY_FOOD, 1),
+        (FoodVendorType.CITY_FOOD, 2),
+        (FoodVendorType.INTER_FOOD, 1),
+        (FoodVendorType.INTER_FOOD, 2),
     }
 
     job_runs = session.exec(select(JobRun)).all()
@@ -99,7 +99,7 @@ def test_run_marks_job_run_as_failed_on_fetch_exception(session, strategy):
 
     job_run = session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
-    assert job_run.food_vendor == FoodVendor.CITY_FOOD
+    assert job_run.food_vendor == FoodVendorType.CITY_FOOD
 
 
 def test_run_creates_image_and_data_dirs_when_not_exist(session, strategies):

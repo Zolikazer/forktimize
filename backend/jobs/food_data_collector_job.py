@@ -9,7 +9,7 @@ import requests
 from sqlmodel import Session
 
 from database.db import ENGINE, init_db
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
@@ -96,12 +96,12 @@ class FoodDataCollectorJob:
 
         JOB_LOGGER.info(f"✅ Week {week} data saved to {filename}.")
 
-    def _track_successful_job_run(self, current_year: int, vendor: FoodVendor, week: int):
+    def _track_successful_job_run(self, current_year: int, vendor: FoodVendorType, week: int):
         job_id = self._track_job_run(week, current_year, JobStatus.SUCCESS, vendor)
         JOB_LOGGER.info(
             f"✅ Job ID={job_id}: Successfully fetched & stored data for {vendor.value} Week {week}.")
 
-    def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendor) -> int:
+    def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendorType) -> int:
         job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor)
         self._session.add(job_run)
         self._session.commit()
@@ -110,7 +110,7 @@ class FoodDataCollectorJob:
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id
 
-    def _track_failed_job_run(self, current_year: int, e: Exception, vendor: FoodVendor, week:int):
+    def _track_failed_job_run(self, current_year: int, e: Exception, vendor: FoodVendorType, week:int):
         job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, vendor)
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 

@@ -1,7 +1,7 @@
 import datetime
 
 from model.food import Food
-from food_vendors.food_vendor import FoodVendor
+from food_vendors.food_vendor_type import FoodVendorType
 
 
 def test_food_creation():
@@ -53,9 +53,9 @@ def test_kcal_per_protein():
 
 
 def test_food_hash_and_equality():
-    food1 = Food(food_id=1, date=datetime.date(2025, 4, 2), food_vendor=FoodVendor.CITY_FOOD,
+    food1 = Food(food_id=1, date=datetime.date(2025, 4, 2), food_vendor=FoodVendorType.CITY_FOOD,
                  name="Test", calories=100, protein=10, carb=10, fat=5, price=100)
-    food2 = Food(food_id=1, date=datetime.date(2025, 4, 2), food_vendor=FoodVendor.CITY_FOOD,
+    food2 = Food(food_id=1, date=datetime.date(2025, 4, 2), food_vendor=FoodVendorType.CITY_FOOD,
                  name="Test", calories=200, protein=20, carb=20, fat=10, price=150)
 
     assert food1 == food2
