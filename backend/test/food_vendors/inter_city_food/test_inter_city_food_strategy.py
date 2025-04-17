@@ -33,9 +33,9 @@ def mock_requests_post_success():
 def test_inter_city_vendor_fetch_foods_fetches_foods(mock_requests_post_success, strategy, response_file,
                                                      expected_vendor):
     with mock_requests_post_success(response_file):
-        foods = strategy.fetch_foods_for(2025, 10)
-        assert len(foods) > 0, "Expected food items but got none."
-        assert foods[0].food_vendor == expected_vendor
+        result = strategy.fetch_foods_for(2025, 10)
+        assert len(result.foods) > 0, "Expected food items but got none."
+        assert result.foods[0].food_vendor == expected_vendor
 
 
 @pytest.mark.parametrize("strategy, expected_url, response_file", [
@@ -65,13 +65,15 @@ def test_strategy_get_name(strategy_cls, expected_vendor):
     assert strategy.get_name() == expected_vendor
 
 
-@pytest.mark.parametrize("strategy, expected_url", [
-    (CityFoodStrategy(), "https://ca.cityfood.hu/api/v1/i?menu_item_id=123&width=425&height=425"),
-    (InterFoodStrategy(), "https://ia.interfood.hu/api/v1/i?menu_item_id=123&width=425&height=425"),
+@pytest.mark.parametrize("strategy, response_file, expected_url", [
+    (CityFoodStrategy(), "city-response-test.json",
+     SETTINGS.CITY_FOOD_IMAGE_URL_TEMPLATE),
+    (InterFoodStrategy(), "interfood-response-test.json",
+     SETTINGS.INTER_FOOD_IMAGE_URL_TEMPLATE),
 ])
-def test_get_food_image_url(strategy, expected_url):
-    food_id = 123
+def test_get_food_image_url(strategy, response_file, expected_url: str, mock_requests_post_success):
+    with mock_requests_post_success(response_file):
+        result = strategy.fetch_foods_for(2025, 10)
 
-    result = strategy.get_food_image_url(food_id)
-
-    assert result == expected_url
+    for food in result.foods:
+        assert result.images.get(food.food_id) == expected_url.format(food_id=food.food_id)
