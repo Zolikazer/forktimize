@@ -30,14 +30,8 @@ class TeletalStrategy(FoodVendorStrategy):
 
         return StrategyResult(foods=foods, raw_data=raw_data, images=self._create_id_to_image_map(foods, raw_data))
 
-    def get_raw_data(self) -> list[dict[str, str]]:
-        return []
-
     def get_name(self) -> FoodVendor:
         return FoodVendor.TELETAL
-
-    def get_food_image_url(self, food_id: int) -> str | None:
-        return None
 
     def _fetch_raw_food_data(self, year: int, week: int, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []

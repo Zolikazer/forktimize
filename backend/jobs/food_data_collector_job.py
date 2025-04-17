@@ -74,14 +74,13 @@ class FoodDataCollectorJob:
         self._image_dir.mkdir(parents=True, exist_ok=True)
 
     def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodVendorStrategy):
-        foods = strategy.fetch_foods_for(year, week)
-        self._save_food_to_db(foods, week)
+        result = strategy.fetch_foods_for(year, week)
+        self._save_food_to_db(result.foods, week)
 
-        raw_data = strategy.get_raw_data()
-        self._save_foods_to_json(strategy.get_name().value, raw_data, year, week)
+        self._save_foods_to_json(strategy.get_name().value, result.raw_data, year, week)
 
         if self._fetch_images:
-            self._download_food_images(foods, strategy)
+            self._download_food_images(result.images, strategy.get_name())
 
     def _save_food_to_db(self, foods: list[Food], week: int):
         for food in foods:
@@ -115,14 +114,12 @@ class FoodDataCollectorJob:
         job_id = self._track_job_run(week, current_year, JobStatus.FAILURE, strategy.get_name())
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
-    def _download_food_images(self, foods: list[Food], strategy: FoodVendorStrategy):
-        for food in foods:
-            image_url = strategy.get_food_image_url(food.food_id)
-            if image_url:
-                ext = self._get_image_extension(image_url)
-                self._download_image(image_url,
-                                     f"{strategy.get_name().value}_{food.food_id}{ext}")
-                time.sleep(self._delay + random.uniform(0.1, 0.5))
+    def _download_food_images(self, images: dict[int, str], vendor: FoodVendor):
+        for food_id, image in images.items():
+            ext = self._get_image_extension(image)
+            self._download_image(image,
+                                 f"{vendor.value}_{food_id}{ext}")
+            time.sleep(self._delay + random.uniform(0.1, 0.5))
 
     @staticmethod
     def _get_image_extension(image_url):

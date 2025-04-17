@@ -104,15 +104,6 @@ def test_fetch_foods_for__handles_exceptions_saves_debug_file(mock_save_file, mo
     assert "debug_food_page_R1_5.html" in str(mock_save_file.call_args[0][1])
 
 
-def test_get_food_image_url_when_map_is_none(mock_food_page, mock_menu_page):
-    food_page = mock_food_page()
-    menu_page = mock_menu_page()
-
-    strategy = TeletalStrategy(menu_page, food_page, delay=0)
-    result = strategy.get_food_image_url(food_id=123)
-
-    assert result is None
-
 def test_get_food_image_url_after_fetch_success_with_image(mock_food_page, mock_menu_page):
     teletal_url = f"https://www.test.hu"
     image_url = "banana.png"

@@ -19,13 +19,5 @@ class FoodVendorStrategy(ABC):
         pass
 
     @abstractmethod
-    def get_raw_data(self, *args, **kwargs) -> dict:
-        pass
-
-    @abstractmethod
-    def get_food_image_url(self, food_id: int) -> str:
-        pass
-
-    @abstractmethod
     def get_name(self) -> FoodVendor:
         pass
