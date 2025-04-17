@@ -4,11 +4,13 @@ from dataclasses import dataclass
 from model.food import Food
 from food_vendors.food_vendor import FoodVendor
 
+
 @dataclass
 class StrategyResult:
     foods: list[Food]
     images: dict[int, str]
-    raw_data: dict
+    raw_data: dict | list
+
 
 class FoodVendorStrategy(ABC):
 

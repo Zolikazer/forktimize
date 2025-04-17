@@ -3,12 +3,11 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from food_vendors.food_vendor import FoodVendor
-from food_vendors.strategies.teletal import teletal_strategy
+from food_vendors.strategies.food_vendor_strategy import StrategyResult
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
-from model.food import Food
-from test.conftest import YEAR, WEEK, DAY
+from test.conftest import YEAR, WEEK
 
 
 def boom_loader(*args, **kwargs):
@@ -47,9 +46,9 @@ def test_fetch_foods_for__calls_menu_and_food_page_properly(mock_menu_page, mock
     food_page = mock_food_page(get_food_data={})
 
     strategy = TeletalStrategy(menu_page, food_page, delay=0)
-    strategy.fetch_foods_for(year=2025, week=15)
+    strategy.fetch_foods_for(year=YEAR, week=WEEK)
 
-    menu_page.load.assert_called_once_with(15)
+    menu_page.load.assert_called_once_with(WEEK)
     assert menu_page.get_food_category_codes.call_count == 1
     assert food_page.load.call_count == 10
     assert food_page.get_food_data.call_count == 10
@@ -71,16 +70,11 @@ def test_fetch_foods_for__parses_and_returns_all_foods_correctly(mock_menu_page,
     })
 
     strategy = TeletalStrategy(menu_page, food_page, delay=0)
-    foods = strategy.fetch_foods_for(year=YEAR, week=WEEK)
+    result = strategy.fetch_foods_for(year=YEAR, week=WEEK)
 
-    assert len(foods) == 10
-    assert all(f.name == "ZabKása" for f in foods)
-    assert all(f.price == 1990 for f in foods)
-
-    menu_page.load.assert_called_once_with(WEEK)
-    assert menu_page.get_food_category_codes.call_count == 1
-    assert food_page.load.call_count == 10
-    assert food_page.get_food_data.call_count == 10
+    assert len(result.foods) == 10
+    assert all(f.name == "ZabKása" for f in result.foods)
+    assert all(f.price == 1990 for f in result.foods)
 
 
 @patch("food_vendors.strategies.teletal.teletal_strategy.save_file")
@@ -90,9 +84,11 @@ def test_fetch_foods_for__handles_exceptions(mock_menu_page, mock_food_page):
     food_page.load.side_effect = boom_loader
 
     strategy = TeletalStrategy(menu_page, food_page, delay=0)
-    foods = strategy.fetch_foods_for(2025, 15)
+    result = strategy.fetch_foods_for(YEAR, WEEK)
 
-    assert foods == []
+    assert result.foods == []
+    assert result.images == {}
+    assert result.raw_data == []
 
 
 @patch("food_vendors.strategies.teletal.teletal_strategy.save_file")
@@ -135,6 +131,6 @@ def test_get_food_image_url_after_fetch_success_with_image(mock_food_page, mock_
     })
 
     strategy = TeletalStrategy(menu_page, food_page, teletal_url=teletal_url, delay=0)
-    foods = strategy.fetch_foods_for(year=YEAR, week=WEEK)
+    result = strategy.fetch_foods_for(year=YEAR, week=WEEK)
 
-    assert strategy.get_food_image_url(foods[0].food_id) == f"{teletal_url}/{image_url}"
+    assert result.images[758637169892] == f"{teletal_url}/{image_url}"

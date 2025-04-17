@@ -2,7 +2,7 @@ import time
 
 from exceptions import TeletalUnavailableFoodError
 from food_vendors.food_vendor import FoodVendor
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, StrategyResult
 from food_vendors.strategies.teletal.food_model_mapper import map_to_food_model
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
@@ -22,105 +22,93 @@ class TeletalStrategy(FoodVendorStrategy):
         self._food_page: TeletalFoodPage = food_page
         self._teletal_url: str = teletal_url
         self._delay: float = delay
-        self._raw_food_data: list[dict[str, str]] | None = None
-        self._foods: list[Food] | None = None
-        self._year: int | None = None
-        self._week: int | None = None
-        self._failures: int = 0
-        self._id_to_image: dict[int, str] | None = None
 
-    def fetch_foods_for(self, year: int, week: int) -> list[Food]:
-        self._reset_state(week, year)
+    def fetch_foods_for(self, year: int, week: int) -> StrategyResult:
+        category_codes = self._get_food_categories(week)
+        raw_data = self._fetch_raw_food_data(year, week, category_codes)
+        foods = self._convert_raw_food_to_model(raw_data)
 
-        category_codes = self._get_food_categories()
-        self._raw_food_data = self._fetch_raw_food_data(category_codes)
-        self._foods = self._convert_raw_food_to_model()
-        self._create_id_to_image_map()
-
-        return self._foods
-
-    def _reset_state(self, week, year):
-        self._failures = 0
-        self._year = year
-        self._week = week
-        self._foods = None
-        self._raw_food_data = None
-        self._id_to_image = None
+        return StrategyResult(foods=foods, raw_data=raw_data, images=self._create_id_to_image_map(foods, raw_data))
 
     def get_raw_data(self) -> list[dict[str, str]]:
-        return self._raw_food_data
+        return []
 
     def get_name(self) -> FoodVendor:
         return FoodVendor.TELETAL
 
     def get_food_image_url(self, food_id: int) -> str | None:
-        if self._id_to_image is None:
-            return None
+        return None
 
-        return self._id_to_image.get(food_id, None)
-
-    def _fetch_raw_food_data(self, category_codes: list[str]) -> list[dict[str, str]]:
+    def _fetch_raw_food_data(self, year: int, week: int, category_codes: list[str]) -> list[dict[str, str]]:
         raw_food_data = []
         for day in range(1, 6):
-            raw_food_data.extend(self._fetch_food_for_day(day, category_codes))
+            raw_food_data.extend(self._fetch_food_for_day(year, week, day, category_codes))
 
         return raw_food_data
 
-    def _fetch_food_for_day(self, day, category_codes) -> list[dict[str, str]]:
+    def _fetch_food_for_day(self, year: int, week: int, day: int, category_codes: list) -> list[dict[str, str]]:
+        failures = 0
         foods = []
         for code in category_codes:
             try:
-                food = self._fetch_single_food(code, day)
+                food = self._fetch_single_food(year, week, code, day)
                 food["price"] = self._menu_page.get_price(code, day)
                 foods.append(food)
                 time.sleep(self._delay)
             except TeletalUnavailableFoodError:
                 JOB_LOGGER.info(f"ℹ️ Skipping unavailable food: code={code}, day={day} — No info on page.")
             except Exception as e:
-                self._failures += 1
+                failures += 1
                 JOB_LOGGER.error(
                     f"Failed to fetch food data for year: "
-                    f"{self._year} - "
-                    f"week: {self._week} - "
+                    f"{year} - "
+                    f"week: {week} - "
                     f"day: {day} - "
                     f"code: {code}:"
                     f"{e}")
 
                 self._save_for_debug(code, day)
+            JOB_LOGGER.warning(f"TELETAL | Failed to fetch food data {failures} times.")
 
         return foods
 
     def _save_for_debug(self, code, day):
         save_file(self._food_page.get_raw_data(), SETTINGS.data_dir / f"teletal/debug_food_page_{code}_{day}.html")
 
-    def _fetch_single_food(self, code: str, day: int) -> dict[str, str]:
-        self._food_page.load(year=self._year, week=self._week, day=day, category_code=code)
+    def _fetch_single_food(self, year: int, week: int, code: str, day: int) -> dict[str, str]:
+        self._food_page.load(year=year, week=week, day=day, category_code=code)
 
         return self._food_page.get_food_data()
 
-    def _get_food_categories(self) -> list[str]:
-        self._menu_page.load(self._week)
+    def _get_food_categories(self, week: int) -> list[str]:
+        self._menu_page.load(week)
 
         return self._menu_page.get_food_category_codes()
 
-    def _convert_raw_food_to_model(self) -> list[Food]:
+    @staticmethod
+    def _convert_raw_food_to_model(raw_data: list[dict[str, str]]) -> list[Food]:
+        failures = 0
         food_models = []
-        for raw_food in self._raw_food_data:
+        for raw_food in raw_data:
             try:
                 food_models.append(map_to_food_model(raw_food))
             except Exception as e:
-                self._failures += 1
+                failures += 1
                 JOB_LOGGER.error(f"Failed to convert raw food data to model: data: {raw_food} - exception: {e}")
+
+        JOB_LOGGER.warning(f"TELETAL | Failed to convert food data {failures} times.")
 
         return food_models
 
-    def _create_id_to_image_map(self):
-        self._id_to_image = {}
+    def _create_id_to_image_map(self, foods: list[Food], raw_data: list[dict[str, str]]) -> dict[int, str]:
+        id_to_image = {}
 
-        for food in self._foods:
-            for raw_food in self._raw_food_data:
+        for food in foods:
+            for raw_food in raw_data:
                 if raw_food.get("name") == food.name:
                     image = raw_food.get("image")
                     if image:
-                        self._id_to_image[food.food_id] = f"{self._teletal_url}/{image}"
+                        id_to_image[food.food_id] = f"{self._teletal_url}/{image}"
                     break
+
+        return id_to_image
