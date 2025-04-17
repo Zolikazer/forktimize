@@ -43,6 +43,7 @@ jobs:
             FETCH_IMAGES: false
             WEEKS_TO_FETCH: 2
             INCLUDE_HEAVY_JOBS: false
+            MODE: testing
           run: |
             uvicorn main:app > $LOG_DIR/all.log 2>&1 &
             sleep 5

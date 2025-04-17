@@ -1,12 +1,20 @@
 import os
+from enum import Enum
 from pathlib import Path
 
 from pydantic import computed_field
 from pydantic_settings import BaseSettings
 
 
+class RunMode(str, Enum):
+    PRODUCTION = "production"
+    TESTING = "testing"
+    DEVELOPMENT = "development"
+
+
 class Settings(BaseSettings):
     PROJECT_ROOT_DIR: Path = Path(__file__).parent.resolve()
+    MODE: RunMode = RunMode.PRODUCTION
     FETCHING_DELAY: float = 0.5
     FETCHING_TIMEOUT: int = 30
     WEEKS_TO_FETCH: int = 3

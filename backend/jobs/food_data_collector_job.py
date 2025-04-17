@@ -13,20 +13,22 @@ from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
-from food_vendors.strategies.vendor_strategies import get_vendor_strategies
 from jobs.file_utils import save_to_json, save_image
 from model.food import Food
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
 from monitoring.performance import benchmark
-from settings import SETTINGS
+from settings import SETTINGS, RunMode
 
 
 @benchmark
-def run_collect_food_data_job():
-    APP_LOGGER.info("🔄 Running scheduled food data fetch job...")
+def run_collect_food_data_job(mode: RunMode = SETTINGS.MODE):
+    APP_LOGGER.info(f"🔄 Running scheduled food data fetch job in {mode} mode...")
     with Session(ENGINE) as session:
-        FoodDataCollectorJob(session, get_vendor_strategies()).run()
+        if mode == RunMode.PRODUCTION or mode == RunMode.DEVELOPMENT:
+            FoodDataCollectorJob(session, [v.strategy for v in VENDOR_REGISTRY.values()]).run()
+        if mode == RunMode.TESTING:
+            FoodDataCollectorJob(session, [VENDOR_REGISTRY[FoodVendorType.CITY_FOOD].strategy]).run()
 
 
 class FoodDataCollectorJob:

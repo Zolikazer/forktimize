@@ -13,6 +13,7 @@ from jobs.food_data_collector_job import run_collect_food_data_job
 from jobs.job_scheduler import SCHEDULER
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
+from settings import SETTINGS
 
 app = FastAPI(root_path="/api")
 app.include_router(meal_planner)
@@ -41,7 +42,7 @@ async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException)
 def on_startup():
     with Session(ENGINE) as session:
         APP_LOGGER.info("🚀 Starting up...")
-        APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')}")
+        APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')} mode: {SETTINGS.MODE.name}")
 
         try:
             init_db()
