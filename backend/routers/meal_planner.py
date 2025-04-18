@@ -2,7 +2,9 @@ from datetime import date
 
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
+from starlette.responses import JSONResponse
 
+from constants import ONE_DAY
 from database.data_access import get_unique_dates_after, get_foods_for_given_date
 from database.db import get_session
 from food_vendors.food_vendor import VENDOR_REGISTRY
@@ -27,15 +29,21 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
 
 
 @meal_planner.get("/food-vendors", response_model=list[FoodVendorData])
-def get_vendor_data(session: Session = Depends(get_session)) -> list[FoodVendorData]:
-    return [
-        FoodVendorData(
-            name=v.name,
-            type=v.type,
-            menu_url=v.menu_url,
-            available_dates=v.get_available_dates(session))
-        for v in
+def get_vendor_data(session: Session = Depends(get_session)) -> JSONResponse:
+    vendor_data = [FoodVendorData(
+        name=v.name,
+        type=v.type,
+        menu_url=v.menu_url,
+        available_dates=sorted(v.get_available_dates(session))) for v in
         VENDOR_REGISTRY.values()]
+
+    return JSONResponse(
+        content=[item.model_dump(mode="json", by_alias=True) for item in vendor_data],
+        headers={
+            "Cache-Control": f"public, max-age={ONE_DAY}",
+            "Surrogate-Control": f"max-age={ONE_DAY}",
+        }
+    )
 
 
 @meal_planner.post("/meal-plan", response_model=MealPlan)

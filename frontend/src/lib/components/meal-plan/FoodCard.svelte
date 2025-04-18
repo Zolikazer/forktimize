@@ -33,7 +33,7 @@
     }
 
     function getImageUrl(foodId, vendor) {
-        return `https://forktimize.xyz/images/${vendor}_${foodId}.png`
+        return `https://forktimize.xyz/images/${vendor}_${foodId}`
     }
 
     function handleImageError() {

@@ -1,5 +1,5 @@
 from datetime import date
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from freezegun import freeze_time
@@ -145,8 +145,9 @@ def test_get_available_dates__returns_future_dates_only(forktimize_client, sessi
     assert response.json() == ["2025-02-24", "2025-02-25"]
 
 
-@freeze_time("2025-02-23")
-def test_get_vendor_data__returns_correct_vendor_data(forktimize_client, session):
+@patch("food_vendors.food_vendor.date")
+def test_get_vendor_data__returns_correct_vendor_data(mock_date, forktimize_client, session):
+    mock_date.today.return_value = date(2025, 2, 23)
     session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD, date=date(2025, 5, 5)))
     response = forktimize_client.get("/food-vendors")
 
