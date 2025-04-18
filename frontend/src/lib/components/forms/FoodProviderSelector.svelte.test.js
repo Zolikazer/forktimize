@@ -22,11 +22,6 @@ describe("Food Vendor Selector", () => {
         });
     });
 
-    test("should default to CITY_FOOD in store", () => {
-        render(FoodVendorSelector);
-        expect(get(mealPlanRequestStore).foodVendor).toBe(FoodVendor.CITY_FOOD.value);
-    });
-
     test("should update the store when user selects a different kitchen", async () => {
         vendorListStore.set(VENDORS);
         render(FoodVendorSelector);

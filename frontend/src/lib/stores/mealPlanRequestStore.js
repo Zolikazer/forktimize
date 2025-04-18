@@ -4,7 +4,7 @@ import {FoodVendor} from "$lib/utils/foodVendors.js";
 function createMealPlanRequestStore() {
     const {subscribe, set, update} = writable({
         selectedDate: null,
-        foodVendor: FoodVendor.CITY_FOOD.value,
+        foodVendor: null,
         dislikedFoods: [],
         maxFoodRepeat: null,
         macroConstraints: [

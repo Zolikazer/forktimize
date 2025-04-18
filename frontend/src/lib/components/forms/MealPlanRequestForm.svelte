@@ -3,7 +3,7 @@
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {MealPlanStatus, mealPlanStore} from "$lib/stores/mealPlanStore.js";
-    import {selectedVendorStore, vendorListStore} from "$lib/stores/foodVendorStore.js";
+    import {vendorListStore} from "$lib/stores/foodVendorStore.js";
     import {getMealPlan, getVendorData} from "$lib/api/foodPlannerApi.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
@@ -18,6 +18,9 @@
         try {
             const vendors = await getVendorData();
             vendorListStore.set(vendors);
+            mealPlanRequestStore.setVendor(vendors[0].type);
+            console.log(vendors[0].availableDates[0]);
+            mealPlanRequestStore.setSelectedDate(vendors[0].availableDates[0]);
         } catch (err) {
             console.error("🚨 Failed to fetch vendor list:", err);
         }
@@ -96,6 +99,10 @@
         ({min, max}) => min == null || max == null || min < max
     );
 
+    $: dates =
+        $vendorListStore.find(v => v.type === $mealPlanRequestStore.foodVendor)
+            ?.availableDates ?? [];
+
 
 </script>
 
@@ -121,7 +128,7 @@
 
         <div class="columns is-centered mt-3">
             <div class="column">
-                <DateSelector/>
+                <DateSelector bind:dates={dates} bind:selectedDate={$mealPlanRequestStore.selectedDate}/>
             </div>
             <div class="column">
                 <FoodBlacklist/>
