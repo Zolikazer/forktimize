@@ -18,7 +18,8 @@
 
     <div class="control is-light ml-1">
         <div class="select is-primary is-small styled-select" class:is-loading={isVendorLoading}>
-            <select class="has-text-weight-bold is-loading"
+            <label for="vendor-selector"></label>
+            <select id="vendor-selector" class="has-text-weight-bold is-loading"
                     on:change={handleVendorChange}>
                 {#each $vendorListStore as vendor}
                     <option value={vendor.type}>{vendor.name}</option>

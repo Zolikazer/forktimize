@@ -8,10 +8,11 @@
 </script>
 
 <div class="field has-text-centered">
-    <p class="label mb-2">{$t.requestForm.canFoodRepeat()}?</p>
+    <label for="can-food-repeat" class="label mb-2">{$t.requestForm.canFoodRepeat()}?</label>
     <div class="is-flex is-justify-content-center is-align-content-center">
         <label class="checkbox is-large green-checkbox">
             <input
+                    id="can-food-repeat"
                     type="checkbox"
                     bind:checked={foodCanRepeat}
                     class="custom-checkbox"
