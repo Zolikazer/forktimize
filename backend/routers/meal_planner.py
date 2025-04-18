@@ -28,9 +28,14 @@ def get_available_dates(session: Session = Depends(get_session)) -> list[str]:
 
 @meal_planner.get("/food-vendors", response_model=list[FoodVendorData])
 def get_vendor_data(session: Session = Depends(get_session)) -> list[FoodVendorData]:
-    return [FoodVendorData(name=v.name, menu_url=v.menu_url, available_dates=v.get_available_dates(session))
-            for v in
-            VENDOR_REGISTRY.values()]
+    return [
+        FoodVendorData(
+            name=v.name,
+            type=v.type,
+            menu_url=v.menu_url,
+            available_dates=v.get_available_dates(session))
+        for v in
+        VENDOR_REGISTRY.values()]
 
 
 @meal_planner.post("/meal-plan", response_model=MealPlan)

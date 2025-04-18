@@ -63,7 +63,7 @@ def _get_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
             FoodVendor(
                 FoodVendorType.TELETAL,
                 TeletalStrategy(TeletalMenuPage(teletal_client), TeletalFoodPage(teletal_client)),
-                "Teletáletal",
+                "Teletál",
                 SETTINGS.TELETAL_MENU_URL
             )
     }

@@ -151,15 +151,18 @@ def test_get_vendor_data__returns_correct_vendor_data(forktimize_client, session
     response = forktimize_client.get("/food-vendors")
 
     assert response.status_code == 200
-    assert response.json() == [{'available_dates': ['2025-02-24', '2025-02-25'],
-                                'menu_url': 'https://rendel.cityfood.hu/',
-                                'name': 'Cityfood'},
-                               {'available_dates': ['2025-05-05'],
-                                'menu_url': 'https://rendel.interfood.hu/',
-                                'name': 'Interfood'},
-                               {'available_dates': [],
-                                'menu_url': 'https://www.teletal.hu/etlap',
-                                'name': 'Teletáletal'}]
+    assert response.json() == [{"availableDates": ["2025-02-24", "2025-02-25"],
+                                "menuUrl": "https://rendel.cityfood.hu/",
+                                "type": FoodVendorType.CITY_FOOD.value,
+                                "name": "Cityfood"},
+                               {"availableDates": ["2025-05-05"],
+                                "menuUrl": "https://rendel.interfood.hu/",
+                                "type": FoodVendorType.INTER_FOOD.value,
+                                "name": "Interfood"},
+                               {"availableDates": [],
+                                "menuUrl": "https://www.teletal.hu/etlap",
+                                "type": FoodVendorType.TELETAL.value,
+                                "name": "Teletál"}]
 
 
 def test_health_check__returns_status_healthy_when_db_connected(forktimize_client):
