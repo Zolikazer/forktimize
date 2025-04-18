@@ -40,7 +40,7 @@
     <label for="date-selector" class="label">{$t.requestForm.selectDate()} 📅 </label>
     <div class="control">
         <div class="select is-fullwidth">
-            <select id="date-selector" bind:value={$mealPlanRequestStore.selectedDate}>
+            <select id="date-selector" class="select" bind:value={$mealPlanRequestStore.selectedDate}>
                 {#each dates as date}
                     <option value={date}>{formatDateLabel(date)}</option>
                 {/each}

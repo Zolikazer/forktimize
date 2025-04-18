@@ -1,12 +1,16 @@
 <script>
-    import {getVendorLabel} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import LanguageSelector from "$lib/components/layout/LanguageSelector.svelte";
     import {t} from '$lib/stores/localeStore.js';
+    import {vendorListStore} from "$lib/stores/foodVendorStore.js";
 
     let title;
 
-    $: title = `${$t.hero.title({vendor: getVendorLabel($mealPlanRequestStore.foodVendor)})} 🥗🍽️`;
+    $: vendorName =
+        $vendorListStore.find(v => v.type === $mealPlanRequestStore.foodVendor)
+            ?.name ?? 'Forktimize';
+
+    $: title = `${$t.hero.title({vendor: vendorName})} 🥗🍽️`;
 
 </script>
 

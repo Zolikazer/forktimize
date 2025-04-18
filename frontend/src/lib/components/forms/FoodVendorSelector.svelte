@@ -1,18 +1,19 @@
 <script>
-    import {foodVendorList} from "$lib/utils/foodVendors.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import {t} from "$lib/stores/localeStore.js";
+    import {vendorListStore} from "$lib/stores/foodVendorStore.js";
 
+    $: isVendorLoading = $vendorListStore.length === 0;
 </script>
 
 <div class="field tag is-light is-success bigger-tag is-flex is-justify-content-space-between is-align-items-center">
     <span>🧑‍🍳 {$t.requestForm.kitchen()}:</span>
 
     <div class="control is-light ml-1">
-        <div class="select is-primary is-small styled-select">
-            <select class="has-text-weight-bold" bind:value={$mealPlanRequestStore.foodVendor}>
-                {#each foodVendorList as { label, value }}
-                    <option value={value}>{label}</option>
+        <div class="select is-primary is-small styled-select" class:is-loading={isVendorLoading}>
+            <select class="has-text-weight-bold is-loading" bind:value={$mealPlanRequestStore.foodVendor}>
+                {#each $vendorListStore as vendor}
+                    <option value={vendor.type}>{vendor.name}</option>
                 {/each}
             </select>
         </div>

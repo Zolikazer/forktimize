@@ -20,7 +20,7 @@ export const getDates = async () => {
     }
 };
 
-export const getProviderData = async () => {
+export const getVendorData = async () => {
     try {
         return await api.get(CONFIG.API.ENDPOINT.FOOD_VENDORS).json();
     } catch (error) {

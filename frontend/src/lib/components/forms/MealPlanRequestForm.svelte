@@ -3,7 +3,8 @@
     import DateSelector from "./DateSelector.svelte";
     import FoodBlacklist from "./FoodBlacklist.svelte";
     import {MealPlanStatus, mealPlanStore} from "$lib/stores/mealPlanStore.js";
-    import {getMealPlan} from "$lib/api/foodPlannerApi.js";
+    import {selectedVendorStore, vendorListStore} from "$lib/stores/foodVendorStore.js";
+    import {getMealPlan, getVendorData} from "$lib/api/foodPlannerApi.js";
     import {showError} from "$lib/stores/errorStore.js";
     import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
     import {get} from "svelte/store";
@@ -11,6 +12,16 @@
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
     import FoodVendorSelector from "$lib/components/forms/FoodVendorSelector.svelte";
     import {t} from '$lib/stores/localeStore.js';
+    import {onMount} from "svelte";
+
+    onMount(async () => {
+        try {
+            const vendors = await getVendorData();
+            vendorListStore.set(vendors);
+        } catch (err) {
+            console.error("🚨 Failed to fetch vendor list:", err);
+        }
+    });
 
 
     async function generateMealPlan() {
@@ -77,7 +88,7 @@
     }
 
     function capitalizeFirstLetter(word) {
-        return  word.charAt(0).toUpperCase() + word.slice(1);
+        return word.charAt(0).toUpperCase() + word.slice(1);
     }
 
     $: formData = $mealPlanRequestStore;
@@ -90,9 +101,9 @@
 
 <div class="card">
     <SectionHeader title={$t.requestForm.setYourGoals()} subTitle={$t.requestForm.setYourGoalSub()}>
-    <div class="tags" slot="tags">
-        <FoodVendorSelector/>
-    </div>
+        <div class="tags" slot="tags">
+            <FoodVendorSelector/>
+        </div>
     </SectionHeader>
     <div class="card-content">
         <div class="is-flex is-justify-content-center is-flex-wrap-wrap gap-2 mt-3">
@@ -124,7 +135,8 @@
         <div class="has-text-centered">
             <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                     on:click={generateMealPlan}
-                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>{$t.requestForm.generateMeal()} 🍽️
+                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>{$t.requestForm.generateMeal()}
+                🍽️
             </button>
         </div>
     </div>
