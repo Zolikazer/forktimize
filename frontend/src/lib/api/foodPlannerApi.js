@@ -20,6 +20,15 @@ export const getDates = async () => {
     }
 };
 
+export const getProviderData = async () => {
+    try {
+        return await api.get(CONFIG.API.ENDPOINT.FOOD_VENDORS).json();
+    } catch (error) {
+        console.error("❌ Failed to vendor data:", error.message);
+        throw error;
+    }
+}
+
 export const getMealPlan = async (mealPlanRequestParams) => {
     try {
         return await api.post(CONFIG.API.ENDPOINT.MEAL_PLAN, {json: mealPlanRequestParams}).json();

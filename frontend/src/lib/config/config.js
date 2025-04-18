@@ -10,6 +10,7 @@ export const CONFIG = {
         ENDPOINT: {
             DATES: "dates",
             MEAL_PLAN: "meal-plan",
+            FOOD_VENDORS: "food-vendors",
         },
     },
     RUN_MOCK_BACKEND: isDev
