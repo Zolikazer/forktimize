@@ -19,7 +19,6 @@
             const vendors = await getVendorData();
             vendorListStore.set(vendors);
             mealPlanRequestStore.setVendor(vendors[0].type);
-            console.log(vendors[0].availableDates[0]);
             mealPlanRequestStore.setSelectedDate(vendors[0].availableDates[0]);
         } catch (err) {
             console.error("🚨 Failed to fetch vendor list:", err);
