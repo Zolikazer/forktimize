@@ -1,7 +1,6 @@
 import {fireEvent, render, screen} from "@testing-library/svelte";
 import {get} from "svelte/store";
 import {mealPlanRequestStore} from "$lib/stores/mealPlanRequestStore.js";
-import {FoodVendor, foodVendorList} from "$lib/utils/foodVendors.js";
 import FoodVendorSelector from "$lib/components/forms/FoodVendorSelector.svelte";
 import {beforeEach, describe, expect, test} from "vitest";
 import {vendorListStore} from "$lib/stores/foodVendorStore.js";
@@ -27,8 +26,8 @@ describe("Food Vendor Selector", () => {
         render(FoodVendorSelector);
         const select = screen.getByRole("combobox");
 
-        await fireEvent.change(select, {target: {value: FoodVendor.INTER_FOOD.value}});
+        await fireEvent.change(select, {target: {value: VENDORS[0].type}});
 
-        expect(get(mealPlanRequestStore).foodVendor).toBe(FoodVendor.INTER_FOOD.value);
+        expect(get(mealPlanRequestStore).foodVendor).toBe(VENDORS[0].type);
     });
 });
