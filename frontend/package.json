@@ -15,7 +15,6 @@
   },
   "devDependencies": {
     "@fontsource/fira-mono": "^5.0.0",
-    "@fullhuman/postcss-purgecss": "^7.0.2",
     "@neoconfetti/svelte": "^2.0.0",
     "@playwright/test": "^1.49.1",
     "@squoosh/cli": "^0.7.1",
