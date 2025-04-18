@@ -10,7 +10,7 @@
 
     const maxFoodLength = 42;
     $: imageSrc = getImageUrl(food.foodId, $mealPlanStore.foodVendor);
-    const fallbackImageSrc = "fallback-food-image.png";
+    const fallbackImageSrc = "fallback-food-image.webp";
 
     let triedImageFallback = false;
 

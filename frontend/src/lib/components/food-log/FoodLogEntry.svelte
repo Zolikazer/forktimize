@@ -12,7 +12,7 @@
     <div class="columns is-mobile is-4 mt-4 px-5">
         <div class="column">
             <MacroEquivalent
-                    icon="chicken-breast.png"
+                    icon="chicken-breast.webp"
                     label={$t.foodLog.chickenBreast()}
                     value={$mealPlanStore.foodLogEntry.chicken}
                     unit="g"
@@ -21,7 +21,7 @@
 
         <div class="column">
             <MacroEquivalent
-                    icon="honey.png"
+                    icon="honey.webp"
                     label={$t.foodLog.sugar()}
                     value={$mealPlanStore.foodLogEntry.sugar}
                     unit="g"
@@ -30,7 +30,7 @@
 
         <div class="column">
             <MacroEquivalent
-                    icon="olive.png"
+                    icon="olive.webp"
                     label={$t.foodLog.oliveOil()}
                     value={$mealPlanStore.foodLogEntry.oil}
                     unit="g"

@@ -29,7 +29,7 @@
                 <div class="column is-4">
                     <figure class="image is-3by2">
                         <button on:click={() => showModal = true} style="cursor: zoom-in;">
-                            <img src="forktimize-preview.png"
+                            <img src="forktimize-preview.webp"
                                  alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
                                  class="has-radius-small"/>
                         </button>
@@ -42,7 +42,7 @@
                         <div class="modal-content" style="height: 95vh; width: 100vh">
                             <figure class="image">
                                 <img
-                                        src="forktimize-preview.png"
+                                        src="forktimize-preview.webp"
                                         alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
                                         class="has-radius-small"
                                         style="height: 95vh; width: 100vh"

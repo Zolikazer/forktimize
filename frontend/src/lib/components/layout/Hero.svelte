@@ -28,7 +28,7 @@
 <style>
     .hero-custom {
         background: linear-gradient(135deg, #00d1b2, #009e8e),
-        url("/food.png");
+        url("/food.webp");
         background-blend-mode: overlay;
         padding: 1.5rem 1rem;
         color: white;

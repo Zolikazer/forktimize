@@ -16,7 +16,7 @@
     <SectionHeader title={$t.mealPlan.yourMealPlan()}
                    subTitle={`🛵 ${$t.mealPlan.orderTheseFoods()} ${vendorName}`}>
             <span slot="tags" class="tag is-light is-success bigger-tag">
-      <img src="meal-plan.png" alt="Protein" width="30" height="30"
+      <img src="meal-plan.webp" alt="Protein" width="30" height="30"
            class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
     </span>
     </SectionHeader>

@@ -27,10 +27,10 @@
         })}>
         <div class="tags" slot="tags">
             <span class="tag is-success is-light bigger-tag">
-                <img src="money.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalPrice.toLocaleString("fr-FR")} Ft
+                <img src="money.webp" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalPrice.toLocaleString("fr-FR")} Ft
               </span>
             <span class="tag is-success is-light bigger-tag">
-                <img src="calorie.png" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} {$t.macro.caloriesSmall()}
+                <img src="calorie.webp" alt="Protein" width="30" height="30" class="mr-2" /> {$mealPlanStore.totalCalories.toLocaleString("fr-FR")} {$t.macro.caloriesSmall()}
               </span>
         </div>
     </SectionHeader>
@@ -39,7 +39,7 @@
         <div class="columns is-mobile is-multiline is-justify-content-center mb-1">
             <div class="column is-one-third">
                 <MacroStat
-                        icon="protein.png"
+                        icon="protein.webp"
                         label={$t.macro.protein()}
                         value={`${$mealPlanStore.totalProtein} g`}
                         subValue={`${proteinRatio}%`}
@@ -49,7 +49,7 @@
 
             <div class="column is-one-third">
                 <MacroStat
-                        icon="carb.png"
+                        icon="carb.webp"
                         label={$t.macro.carb()}
                         value={`${$mealPlanStore.totalCarbs} g`}
                         subValue={`${carbRatio}%`}
@@ -59,7 +59,7 @@
 
             <div class="column is-one-third">
                 <MacroStat
-                        icon="fat.png"
+                        icon="fat.webp"
                         label={$t.macro.fat()}
                         value={`${$mealPlanStore.totalFat} g`}
                         subValue={`${fatRatio}%`}
