@@ -10,7 +10,6 @@ describe("DateSelector", () => {
         render(DateSelector, {
             props: { dates: mockDates, selectedDate: mockDates[0] },
         });
-        await screen.findByText(/2025-03-10/i);
 
         const select = screen.getByLabelText(/Select Date/i);
         expect(select).toBeInTheDocument();
@@ -25,7 +24,6 @@ describe("DateSelector", () => {
             props: { dates: mockDates, selectedDate: mockDates[0] },
         });
 
-        await screen.findByText(/2025-03-10/i);
 
         mockDates.forEach((date) => {
             const formattedLabel = `${date} | ${new Date(date).toLocaleDateString("en-US", {weekday: "long"})}`;

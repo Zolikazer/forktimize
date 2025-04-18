@@ -97,6 +97,7 @@
     $: allConstraintsValid = $mealPlanRequestStore.macroConstraints.every(
         ({min, max}) => min == null || max == null || min < max
     );
+    let dateValid;
 
     $: dates =
         $vendorListStore.find(v => v.type === $mealPlanRequestStore.foodVendor)
@@ -127,7 +128,9 @@
 
         <div class="columns is-centered mt-3">
             <div class="column">
-                <DateSelector bind:dates={dates} bind:selectedDate={$mealPlanRequestStore.selectedDate}/>
+                <DateSelector bind:dates={dates}
+                              bind:selectedDate={$mealPlanRequestStore.selectedDate}
+                              bind:isValid={dateValid}/>
             </div>
             <div class="column">
                 <FoodBlacklist/>
@@ -141,7 +144,7 @@
         <div class="has-text-centered">
             <button class="button generate-button is-fullwidth has-text-weight-bold is-rounded is-medium p-3 is-size-5 "
                     on:click={generateMealPlan}
-                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid}>{$t.requestForm.generateMeal()}
+                    disabled={$mealPlanStore.status === MealPlanStatus.IN_PROGRESS || !allConstraintsValid || !dateValid}>{$t.requestForm.generateMeal()}
                 🍽️
             </button>
         </div>
