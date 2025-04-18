@@ -9,9 +9,9 @@ function createMealPlanRequestStore() {
         maxFoodRepeat: null,
         macroConstraints: [
             {name: "calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
-            {name: "protein", min: undefined, max: undefined, unit: "g", emoji: "💪", isValid: true},
+            {name: "protein", min: 200, max: undefined, unit: "g", emoji: "💪", isValid: true},
             {name: "carb", min: undefined, max: undefined, unit: "g", emoji: "🍞", isValid: true},
-            {name: "fat", min: undefined, max: undefined, unit: "g", emoji: "🧈", isValid: true}
+            {name: "fat", min: undefined, max: 100, unit: "g", emoji: "🧈", isValid: true}
         ],
     });
 
