@@ -20,9 +20,7 @@ from test.conftest import make_food
 # TODO refact this test more
 @pytest.fixture(scope="function")
 def session():
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
+    engine = create_engine("sqlite:///:memory:", echo=True)
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
@@ -127,44 +125,35 @@ def test_run_creates_image_and_data_dirs_when_not_exist(session, strategies):
         assert data_dir.exists() and data_dir.is_dir()
 
 
-@pytest.mark.parametrize("image_url, expected_ext", [
-    ("https://example.com/image.png", "png"),
-    ("https://example.com/image.jpeg", "jpeg"),
-    ("https://example.com/image.jpg", "jpg"),
-    ("https://example.com/image", "png"),
-])
-def test_run_downloads_and_saves_images_if_enabled(session, strategy, image_url, expected_ext):
+@patch("jobs.food_data_collector_job.save_to_json")
+@patch("jobs.food_data_collector_job.save_image_to_webp")
+def test_run_downloads_and_saves_images_if_enabled(image_saver, _, session, strategy):
+    image_url = "https://example.com/image.png"
     strategy.fetch_foods_for.return_value = StrategyResult(images={1: image_url},
                                                            foods=[],
                                                            raw_data={},
                                                            vendor=strategy.get_vendor())
-    # TODO: mock it
-    with TemporaryDirectory() as tmp_dir:
-        image_dir = Path(tmp_dir) / "images"
-        image_dir.mkdir()
-        fake_image = b"image-bytes"
+    fake_image = b"image-bytes"
+    image_dir = Path("/tmp/images")
+    job = FoodDataCollectorJob(
+        session=session,
+        strategies=[strategy],
+        fetch_images=True,
+        image_dir=image_dir,
+        delay=0,
+        weeks_to_fetch=1
+    )
 
-        job = FoodDataCollectorJob(
-            session=session,
-            strategies=[strategy],
-            image_dir=image_dir,
-            data_dir=Path(tmp_dir) / "data",
-            fetch_images=True,
-            delay=0
-        )
+    with patch("requests.get") as mock_get:
+        mock_response = MagicMock()
+        mock_response.content = fake_image
+        mock_get.return_value = mock_response
 
-        with patch("requests.get") as mock_get:
-            mock_response = MagicMock()
-            mock_response.content = fake_image
-            mock_response.raise_for_status = MagicMock()
-            mock_get.return_value = mock_response
+        job.run()
 
-            job.run()
-
-            mock_get.assert_called_once_with(image_url, timeout=30, headers=SETTINGS.HEADERS)
-            image = image_dir / f"{strategy.get_vendor().value}_1.{expected_ext}"
-            assert image.exists()
-            assert image.read_bytes() == fake_image
+        mock_get.assert_called_once_with(image_url, timeout=30, headers=SETTINGS.HEADERS)
+        image_path = image_dir / f"{strategy.get_vendor().value}_1.webp"
+        image_saver.assert_called_once_with(fake_image, image_path)
 
 
 @freeze_time("2025-01-01")

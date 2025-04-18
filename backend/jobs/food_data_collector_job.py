@@ -1,11 +1,11 @@
-import os
 import random
 import time
 from datetime import datetime
+from io import BytesIO
 from pathlib import Path
-from urllib.parse import urlparse
 
 import requests
+from PIL import Image
 from sqlmodel import Session
 
 from database.data_access import has_successful_job_run
@@ -14,7 +14,7 @@ from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
-from jobs.file_utils import save_to_json, save_image
+from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food
 from model.job_run import JobStatus, JobRun
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
@@ -123,8 +123,7 @@ class FoodDataCollectorJob:
 
     def _download_food_images(self, images: dict[int, str], vendor_name: str):
         for food_id, image in images.items():
-            ext = self._get_image_extension(image)
-            image_path = self._image_dir / f"{vendor_name}_{food_id}{ext}"
+            image_path = self._image_dir / f"{vendor_name}_{food_id}.webp"
 
             if image_path.exists():
                 JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
@@ -133,23 +132,20 @@ class FoodDataCollectorJob:
             self._download_image(image, image_path)
             time.sleep(self._delay + random.uniform(0.1, 0.5))
 
-    @staticmethod
-    def _get_image_extension(image_url):
-        parsed = urlparse(image_url)
-        _, ext = os.path.splitext(parsed.path)
-        return ext if ext else ".png"
-
     def _download_image(self, url: str, image_path: Path):
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
         try:
             response = requests.get(url, timeout=self._timeout, headers=self._headers)
             response.raise_for_status()
 
-            save_image(response.content, image_path)
-
+            save_image_to_webp(response.content, image_path)
             JOB_LOGGER.info(f"✅ Saved image: {image_path}")
+
+            return response.content
         except Exception as e:
             JOB_LOGGER.warning(f"❌ Failed to download image from {url}: {e}")
+
+        return None
 
 
 if __name__ == "__main__":

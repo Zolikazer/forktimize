@@ -55,3 +55,4 @@ pydantic-settings~=2.8.1
 alembic~=1.15.2
 requests-mock~=1.12.1
 beautifulsoup4~=4.13.3
+pillow~=11.2.1

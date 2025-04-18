@@ -5,7 +5,6 @@ from sqlmodel import SQLModel, create_engine, Session
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
     get_available_dates_for_vendor, has_successful_job_run
-from food_vendors import food_vendor
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
 from model.job_run import JobRun, JobStatus

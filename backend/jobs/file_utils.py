@@ -1,5 +1,8 @@
 import json
+from io import BytesIO
 from pathlib import Path
+
+from PIL import Image
 
 
 def load_json(json_file: str) -> dict:
@@ -27,3 +30,7 @@ def save_file(content: str, path: str | Path):
 def load_file(path: str | Path) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
+def save_image_to_webp(content: bytes, path: str | Path, quality: int = 90):
+    image_bytes = BytesIO(content)
+    Image.open(image_bytes).save(path, format="WEBP", quality=quality)
