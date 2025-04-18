@@ -4,6 +4,13 @@
     import {vendorListStore} from "$lib/stores/foodVendorStore.js";
 
     $: isVendorLoading = $vendorListStore.length === 0;
+
+    function handleVendorChange(event) {
+        const newVendor = event.target.value;
+        mealPlanRequestStore.setVendor(newVendor);
+        console.log($mealPlanRequestStore);
+    }
+
 </script>
 
 <div class="field tag is-light is-success bigger-tag is-flex is-justify-content-space-between is-align-items-center">
@@ -11,7 +18,8 @@
 
     <div class="control is-light ml-1">
         <div class="select is-primary is-small styled-select" class:is-loading={isVendorLoading}>
-            <select class="has-text-weight-bold is-loading" bind:value={$mealPlanRequestStore.foodVendor}>
+            <select class="has-text-weight-bold is-loading"
+                    on:change={handleVendorChange}>
                 {#each $vendorListStore as vendor}
                     <option value={vendor.type}>{vendor.name}</option>
                 {/each}

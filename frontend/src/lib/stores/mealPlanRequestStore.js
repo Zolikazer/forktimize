@@ -42,6 +42,12 @@ function createMealPlanRequestStore() {
                 selectedDate: date
             }));
         },
+        setVendor: (vendor) => {
+            update(state => ({
+                ...state,
+                foodVendor: vendor
+            }))
+        },
         reset: () => set({
             macroConstraints: [
                 {name: "calories", min: 2300, max: 2700, unit: "kcal", emoji: "🔥", isValid: true},
