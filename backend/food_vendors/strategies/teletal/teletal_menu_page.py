@@ -9,8 +9,8 @@ from food_vendors.strategies.teletal.teletal_client import TeletalClient
 
 class TeletalMenuPage:
     def __init__(self, client: TeletalClient, delay=0.3):
-        self._client = client
-        self._delay = delay
+        self._client: TeletalClient = client
+        self._delay: float = delay
         self._menu_soup: BeautifulSoup | None = None
         self._year: int | None = None
         self._week: int | None = None

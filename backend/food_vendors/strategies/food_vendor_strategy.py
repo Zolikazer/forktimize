@@ -14,7 +14,7 @@ class StrategyResult:
     vendor: FoodVendorType
 
 
-class FoodVendorStrategy(ABC):
+class FoodCollectionStrategy(ABC):
 
     @abstractmethod
     def fetch_foods_for(self, year: int, week: int) -> StrategyResult:

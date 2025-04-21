@@ -8,12 +8,12 @@ from food_vendors.strategies.teletal.teletal_single_food_page import TeletalSing
 
 class TeletalFoodPage:
     def __init__(self, client: TeletalClient):
-        self._client = client
+        self._client: TeletalClient = client
         self._food_page_soup: BeautifulSoup | None = None
-        self._year = None
-        self._week = None
-        self._day = None
-        self._category_code = None
+        self._year: int | None = None
+        self._week: int | None = None
+        self._day: int | None = None
+        self._category_code: str | None = None
 
     def get_food_data(self) -> dict[str, str]:
         assert self._food_page_soup is not None, "You must call load() first"

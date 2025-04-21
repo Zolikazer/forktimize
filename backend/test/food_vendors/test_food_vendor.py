@@ -8,12 +8,12 @@ from sqlmodel import Session
 
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 
 
 def test_food_vendor_properties():
-    mock_strategy = Mock(spec=FoodVendorStrategy)
+    mock_strategy = Mock(spec=FoodCollectionStrategy)
     vendor_name = "something"
     vendor_url = "dsfdsfs"
     vendor = FoodVendor(FoodVendorType.TELETAL, mock_strategy, vendor_name, vendor_url)
@@ -25,7 +25,7 @@ def test_food_vendor_properties():
 
 
 def test_food_vendor_type_is_read_only():
-    mock_strategy = Mock(spec=FoodVendorStrategy)
+    mock_strategy = Mock(spec=FoodCollectionStrategy)
     vendor = FoodVendor(FoodVendorType.CITY_FOOD, mock_strategy, "something", "dsfds")
 
     with pytest.raises(AttributeError):
@@ -33,27 +33,27 @@ def test_food_vendor_type_is_read_only():
 
 
 def test_food_vendor_strategy_is_read_only():
-    mock_strategy = Mock(spec=FoodVendorStrategy)
+    mock_strategy = Mock(spec=FoodCollectionStrategy)
     vendor = FoodVendor(FoodVendorType.INTER_FOOD, mock_strategy, "something", "dfd")
 
     with pytest.raises(AttributeError):
-        vendor.strategy = Mock(spec=FoodVendorStrategy)
+        vendor.strategy = Mock(spec=FoodCollectionStrategy)
 
 
 def test_food_vendor_menu_url_is_read_only():
-    mock_strategy = Mock(spec=FoodVendorStrategy)
+    mock_strategy = Mock(spec=FoodCollectionStrategy)
     vendor = FoodVendor(FoodVendorType.INTER_FOOD, mock_strategy, "something", "dsfds")
 
     with pytest.raises(AttributeError):
-        vendor.menu_url = Mock(spec=FoodVendorStrategy)
+        vendor.menu_url = Mock(spec=FoodCollectionStrategy)
 
 
 def test_food_vendor_name_is_read_only():
-    mock_strategy = Mock(spec=FoodVendorStrategy)
+    mock_strategy = Mock(spec=FoodCollectionStrategy)
     vendor = FoodVendor(FoodVendorType.INTER_FOOD, mock_strategy, "something", "dsfds")
 
     with pytest.raises(AttributeError):
-        vendor.name = Mock(spec=FoodVendorStrategy)
+        vendor.name = Mock(spec=FoodCollectionStrategy)
 
 
 @freeze_time("2025-02-23")

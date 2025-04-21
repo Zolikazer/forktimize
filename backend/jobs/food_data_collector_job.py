@@ -1,18 +1,16 @@
 import random
 import time
 from datetime import datetime
-from io import BytesIO
 from pathlib import Path
 
 import requests
-from PIL import Image
 from sqlmodel import Session
 
 from database.data_access import has_successful_job_run
 from database.db import ENGINE, init_db
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food
@@ -41,7 +39,7 @@ class FoodDataCollectorJob:
 
     def __init__(self,
                  session: Session,
-                 strategies: list[FoodVendorStrategy],
+                 strategies: list[FoodCollectionStrategy],
                  weeks_to_fetch: int = SETTINGS.WEEKS_TO_FETCH,
                  delay: float = SETTINGS.FETCHING_DELAY,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT,
@@ -49,15 +47,15 @@ class FoodDataCollectorJob:
                  fetch_images: bool = SETTINGS.FETCH_IMAGES,
                  image_dir: Path = SETTINGS.food_image_dir,
                  data_dir: Path = SETTINGS.data_dir):
-        self._session = session
-        self._strategies = strategies
-        self._weeks_to_fetch = weeks_to_fetch
-        self._delay = delay
-        self._timeout = timeout
-        self._fetch_images = fetch_images
-        self._image_dir = image_dir
-        self._data_dir = data_dir
-        self._headers = headers
+        self._session: Session = session
+        self._strategies: list[FoodCollectionStrategy] = strategies
+        self._weeks_to_fetch: int = weeks_to_fetch
+        self._delay: float = delay
+        self._timeout: int = timeout
+        self._fetch_images: bool = fetch_images
+        self._image_dir: Path = image_dir
+        self._data_dir: Path = data_dir
+        self._headers: dict[str, str] = headers
 
     def run(self):
         self._ensure_dirs_exist()
@@ -82,7 +80,7 @@ class FoodDataCollectorJob:
         self._data_dir.mkdir(parents=True, exist_ok=True)
         self._image_dir.mkdir(parents=True, exist_ok=True)
 
-    def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodVendorStrategy):
+    def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodCollectionStrategy):
         result = strategy.fetch_foods_for(year, week)
 
         self._save_foods_to_json(result.vendor.value, result.raw_data, year, week)

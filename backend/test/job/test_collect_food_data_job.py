@@ -9,7 +9,7 @@ from sqlalchemy import create_engine, StaticPool
 from sqlmodel import select, SQLModel, Session
 
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, StrategyResult
+from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy, StrategyResult
 from jobs.food_data_collector_job import FoodDataCollectorJob
 from model.food import Food
 from model.job_run import JobRun, JobStatus
@@ -41,9 +41,9 @@ def strategy():
 
 
 @pytest.fixture
-def strategies() -> list[FoodVendorStrategy]:
-    def make_strategy(vendor: FoodVendorType, foods: list[Food]) -> FoodVendorStrategy:
-        strategy = MagicMock(spec=FoodVendorStrategy)
+def strategies() -> list[FoodCollectionStrategy]:
+    def make_strategy(vendor: FoodVendorType, foods: list[Food]) -> FoodCollectionStrategy:
+        strategy = MagicMock(spec=FoodCollectionStrategy)
         strategy.get_vendor.return_value = vendor
         strategy.fetch_foods_for.return_value = StrategyResult(foods=foods,
                                                                raw_data={"bombardino": "crocodilo"},

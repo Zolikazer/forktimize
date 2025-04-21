@@ -3,14 +3,14 @@ from datetime import datetime
 
 import requests
 
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy, StrategyResult
+from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy, StrategyResult
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
 from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
 
-class InterCityFoodStrategy(FoodVendorStrategy, ABC):
+class InterCityFoodStrategy(FoodCollectionStrategy, ABC):
 
     @abstractmethod
     def __init__(self, api_url: str, food_image_url: str, food_vendor: FoodVendorType,

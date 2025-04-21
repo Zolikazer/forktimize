@@ -6,7 +6,7 @@ from sqlmodel import Session
 
 from database.data_access import get_available_dates_for_vendor
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodVendorStrategy
+from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
 from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
@@ -17,11 +17,11 @@ from settings import SETTINGS
 
 
 class FoodVendor:
-    def __init__(self, vendor_type: FoodVendorType, strategy: FoodVendorStrategy, name: str, menu_url: str):
+    def __init__(self, vendor_type: FoodVendorType, strategy: FoodCollectionStrategy, name: str, menu_url: str):
         self._food_vendor_type: FoodVendorType = vendor_type
-        self._strategy: FoodVendorStrategy = strategy
-        self._menu_url = menu_url
-        self._name = name
+        self._strategy: FoodCollectionStrategy = strategy
+        self._menu_url: str = menu_url
+        self._name: str = name
 
     @property
     def name(self) -> str:
@@ -32,7 +32,7 @@ class FoodVendor:
         return self._food_vendor_type
 
     @property
-    def strategy(self) -> FoodVendorStrategy:
+    def strategy(self) -> FoodCollectionStrategy:
         return self._strategy
 
     @property
@@ -43,7 +43,7 @@ class FoodVendor:
         return get_available_dates_for_vendor(session, date.today(), self._food_vendor_type)
 
 
-def _get_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
+def _create_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
     teletal_client = TeletalClient()
     return {
         FoodVendorType.CITY_FOOD:
@@ -69,4 +69,4 @@ def _get_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
     }
 
 
-VENDOR_REGISTRY = _get_vendor_registry()
+VENDOR_REGISTRY = _create_vendor_registry()

@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image
 
 
-def load_json(json_file: str) -> dict:
+def load_json(json_file: str | Path) -> dict:
     with open(json_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
