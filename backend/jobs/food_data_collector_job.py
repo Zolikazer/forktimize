@@ -131,7 +131,7 @@ class FoodDataCollectorJob:
                 continue
 
             self._download_image(image, image_path)
-            time.sleep(self._delay + random.uniform(0.1, 0.5))
+            time.sleep(self._delay)
 
     def _download_image(self, url: str, image_path: Path):
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
