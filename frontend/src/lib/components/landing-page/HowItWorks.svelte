@@ -44,12 +44,24 @@
 </section>
 
 <style>
+    .columns {
+        align-items: stretch;
+    }
+
     .box {
-        height: 150px
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        padding: 1.5rem;
+        min-height: 150px;
+        transition: transform 0.2s ease;
     }
 
     .box:hover {
         transform: translateY(-4px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
+
 </style>
