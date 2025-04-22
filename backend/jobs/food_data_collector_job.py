@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session
 
 from database.data_access import has_successful_job_run
@@ -31,12 +32,6 @@ def run_collect_food_data_job(mode: RunMode = SETTINGS.MODE):
 
 
 class FoodDataCollectorJob:
-    FORKTIMIZE_HEADERS = {
-        "User-Agent": "ForktimizeBot/1.0 (+https://forktimize.xyz/bot-info)",
-        "From": "spagina.zoltan@gmail.com",
-        "X-Forktimize-Purpose": "Meal planning helper, not scraping for resale or spam. Contact: forktimize.xyz"
-    }
-
     def __init__(self,
                  session: Session,
                  strategies: list[FoodCollectionStrategy],
@@ -63,7 +58,7 @@ class FoodDataCollectorJob:
         current_week = datetime.now().isocalendar()[1]
 
         for strategy in self._strategies:
-            for week in range(current_week, current_week + self._weeks_to_fetch):
+            for week in range(current_week + 1, current_week + self._weeks_to_fetch):
                 if has_successful_job_run(self._session, current_year, week, strategy.get_vendor()):
                     JOB_LOGGER.info(
                         f"Skipping job run for {strategy.get_vendor().value}, year:{current_year} week {week}...")
@@ -83,19 +78,27 @@ class FoodDataCollectorJob:
     def _sync_one_week_food_data(self, year: int, week: int, strategy: FoodCollectionStrategy):
         result = strategy.fetch_foods_for(year, week)
 
-        self._save_foods_to_json(result.vendor.value, result.raw_data, year, week)
-        self._save_food_to_db(result.foods, week)
+        self._save_raw_data_to_json(result.vendor.value, result.raw_data, year, week)
+        self._save_foods_to_db(result.foods, week)
 
         if self._fetch_images:
             self._download_food_images(result.images, result.vendor.value)
 
-    def _save_food_to_db(self, foods: list[Food], week: int):
-        self._session.add_all(foods)
-        self._session.commit()
+    def _save_foods_to_db(self, foods: list[Food], week: int):
+        foods_debug = [food.model_dump(mode="json", by_alias=True) for food in foods]
+        save_to_json(foods_debug, f"/tmp/teletal-{week}.json")
+        for food in foods:
+            try:
+                self._session.add(food)
+                self._session.commit()
+            except IntegrityError as e:
+                JOB_LOGGER.error(
+                    f"❌ IntegrityError while inserting food (ID: {food.id}): {e.orig}\n"
+                    f"Offending food: {food.model_dump()}")
 
         JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
-    def _save_foods_to_json(self, vendor_name: str, data: dict, year: int, week: int):
+    def _save_raw_data_to_json(self, vendor_name: str, data: dict, year: int, week: int):
         filename = self._data_dir / f"{vendor_name}-week-{year}-{week}.json"
         save_to_json(data, filename)
 
@@ -151,4 +154,4 @@ if __name__ == "__main__":
     init_db()
     client = TeletalClient("https://www.teletal.hu/etlap", "https://www.teletal.hu/ajax")
     with Session(ENGINE) as job_session:
-        FoodDataCollectorJob(job_session, [vendor.strategy for vendor in VENDOR_REGISTRY.values()], 2).run()
+        FoodDataCollectorJob(job_session, [vendor.strategy for vendor in VENDOR_REGISTRY.values()], 3).run()
