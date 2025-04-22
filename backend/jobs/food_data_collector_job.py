@@ -58,7 +58,7 @@ class FoodDataCollectorJob:
         current_week = datetime.now().isocalendar()[1]
 
         for strategy in self._strategies:
-            for week in range(current_week + 1, current_week + self._weeks_to_fetch):
+            for week in range(current_week, current_week + self._weeks_to_fetch):
                 if has_successful_job_run(self._session, current_year, week, strategy.get_vendor()):
                     JOB_LOGGER.info(
                         f"Skipping job run for {strategy.get_vendor().value}, year:{current_year} week {week}...")
@@ -85,16 +85,10 @@ class FoodDataCollectorJob:
             self._download_food_images(result.images, result.vendor.value)
 
     def _save_foods_to_db(self, foods: list[Food], week: int):
-        foods_debug = [food.model_dump(mode="json", by_alias=True) for food in foods]
-        save_to_json(foods_debug, f"/tmp/teletal-{week}.json")
         for food in foods:
-            try:
-                self._session.add(food)
-                self._session.commit()
-            except IntegrityError as e:
-                JOB_LOGGER.error(
-                    f"❌ IntegrityError while inserting food (ID: {food.id}): {e.orig}\n"
-                    f"Offending food: {food.model_dump()}")
+            self._session.merge(food)
+
+        self._session.commit()
 
         JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
