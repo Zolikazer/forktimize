@@ -84,6 +84,7 @@ class FoodDataCollectorJob:
         if self._fetch_images:
             self._download_food_images(result.images, result.vendor.value)
 
+    # TODO: fix name collision in teletal?
     def _save_foods_to_db(self, foods: list[Food], week: int):
         for food in foods:
             self._session.merge(food)
