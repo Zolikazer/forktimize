@@ -27,7 +27,7 @@
                     </p>
                 </div>
                 <div class="column is-4">
-                    <figure class="image is-3by2">
+                    <figure class="image thumb">
                         <button on:click={() => showModal = true} style="cursor: zoom-in;">
                             <img src="forktimize-preview.webp"
                                  alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
@@ -38,21 +38,20 @@
 
                 {#if showModal}
                     <div class="modal is-active">
-                        <div class="modal-background"></div>
-                        <div class="modal-content" style="height: 95vh; width: 100vh">
+                        <div role="button" tabindex="0" on:click={() => showModal = false}></div>
+
+                        <div class="modal-content">
                             <figure class="image">
                                 <img
                                         src="forktimize-preview.webp"
                                         alt="Forktimize étrend tervező előnézet – CityFood és InterFood ajánlatok"
-                                        class="has-radius-small"
-                                        style="height: 95vh; width: 100vh"
+                                        class="modal-img"
                                 />
                             </figure>
                         </div>
-                        <button class="modal-close is-large"
-                                aria-label="close"
-                                on:click={() => showModal = false}>
-                        </button>
+
+                        <button class="modal-close is-large" aria-label="close"
+                                on:click={() => showModal = false}></button>
                     </div>
                 {/if}
             </div>
