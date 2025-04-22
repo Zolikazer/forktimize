@@ -2,7 +2,7 @@ import time
 
 from exceptions import TeletalUnavailableFoodError
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy, StrategyResult
+from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy, StrategyResult
 from food_vendors.strategies.teletal.food_model_mapper import map_to_food_model
 from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage

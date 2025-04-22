@@ -6,7 +6,7 @@ from sqlmodel import Session
 
 from database.data_access import get_available_dates_for_vendor
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
+from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy
 from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient

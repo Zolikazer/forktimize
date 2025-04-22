@@ -10,7 +10,7 @@ from database.data_access import has_successful_job_run
 from database.db import ENGINE, init_db
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
+from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food

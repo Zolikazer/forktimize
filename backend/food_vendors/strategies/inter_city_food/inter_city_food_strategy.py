@@ -3,7 +3,7 @@ from datetime import datetime
 
 import requests
 
-from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy, StrategyResult
+from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy, StrategyResult
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
 from monitoring.logging import JOB_LOGGER

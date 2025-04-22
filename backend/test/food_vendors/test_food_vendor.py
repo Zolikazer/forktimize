@@ -8,7 +8,7 @@ from sqlmodel import Session
 
 from food_vendors.food_vendor import FoodVendor
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.food_vendor_strategy import FoodCollectionStrategy
+from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy
 from food_vendors.strategies.teletal.teletal_strategy import TeletalStrategy
 
 
