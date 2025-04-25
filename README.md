@@ -45,3 +45,4 @@ To add a new vendor:
 
 1. Implement the `FoodCollectionStrategy` interface.
 2. Add your food vendor to the `VENDOR_REGISTRY`
+3. Add your food vendor type to the `FoodVendorType`

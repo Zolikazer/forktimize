@@ -10,7 +10,7 @@
         <div>
             <p class="title is-size-5 has-text-black mb-1 has-text-black-100">{title}</p>
             <p class="subtitle is-size-6 has-text-black shadow-text has-text-black-20">
-                {subTitle}
+                {@html subTitle}
             </p>
         </div>
 

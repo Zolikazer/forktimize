@@ -9,12 +9,18 @@
         $vendorListStore.find(v => v.type === $mealPlanStore.foodVendor)
             ?.name ?? 'Forktimize';
 
+    $: vendorLink =
+        $vendorListStore.find(v => v.type === $mealPlanStore.foodVendor)
+            ?.menuUrl ?? '#';
+
+    $: subtitleHtml = `🛵 ${$t.mealPlan.orderTheseFoods()}
+        <a href=${vendorLink} target="_blank" rel="noopener noreferrer" class="has-text-link">${vendorName}</a>`;
 
 </script>
 
 <div class="card">
     <SectionHeader title={$t.mealPlan.yourMealPlan()}
-                   subTitle={`🛵 ${$t.mealPlan.orderTheseFoods()} ${vendorName}`}>
+                   subTitle={subtitleHtml}>
             <span slot="tags" class="tag is-light is-success bigger-tag">
       <img src="meal-plan.webp" alt="Protein" width="30" height="30"
            class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
