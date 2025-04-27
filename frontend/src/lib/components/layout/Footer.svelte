@@ -12,7 +12,7 @@
             <div class="level-left">
                 <div class="level-item">
                     <p class="is-size-6 has-text-weight-bold footer-text">
-                        © 2025 Forktimize App Vibe Coded by Zoltán Spagina and ChatGPT 👨‍💻👊🤖
+                        © 2025 Forktimize App Coded by Zoltán Spagina
                     </p>
                 </div>
             </div>
