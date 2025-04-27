@@ -1,6 +1,5 @@
 SHELL := /bin/bash
 
-VPS_USER := spazo
 VPS_HOST := forktimize
 REMOTE_DIR := /opt/forktimize
 LOCAL_DIR := .backend/
