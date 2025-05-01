@@ -14,7 +14,7 @@ class InterCityFoodStrategy(FoodCollectionStrategy, ABC):
 
     @abstractmethod
     def __init__(self, api_url: str, food_image_url: str, food_vendor: FoodVendorType,
-                 timeout: int = SETTINGS.FETCHING_TIMEOUT, headers: dict[str, str] = SETTINGS.HEADERS, ):
+                 timeout: int = SETTINGS.FETCHING_TIMEOUT, headers: dict[str, str] = SETTINGS.HEADERS):
         self._api_url: str = api_url
         self._food_image_url: str = food_image_url
         self._food_vendor: FoodVendorType = food_vendor

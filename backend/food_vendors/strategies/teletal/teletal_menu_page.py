@@ -15,6 +15,12 @@ class TeletalMenuPage:
         self._year: int | None = None
         self._week: int | None = None
 
+    def load(self, week: int):
+        self._week = week
+        self._year = datetime.now().year
+        self._menu_soup = BeautifulSoup(self._client.get_main_menu(week), "html.parser")
+        self._load_dynamic_categories()
+
     def get_food_category_codes(self) -> set[str]:
         assert self._menu_soup is not None, "You must call load() first"
 
@@ -32,12 +38,6 @@ class TeletalMenuPage:
             return None
 
         return re.sub(r"\s+", " ", price_tag[0].text).strip()
-
-    def load(self, week: int):
-        self._week = week
-        self._year = datetime.now().year
-        self._menu_soup = BeautifulSoup(self._client.get_main_menu(week), "html.parser")
-        self._load_dynamic_categories()
 
     def _load_dynamic_categories(self):
         dynamic_categories_codes = self._parse_dynamic_categories()

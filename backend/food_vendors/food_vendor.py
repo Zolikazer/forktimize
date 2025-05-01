@@ -6,6 +6,7 @@ from sqlmodel import Session
 
 from database.data_access import get_available_dates_for_vendor
 from food_vendors.food_vendor_type import FoodVendorType
+from food_vendors.strategies.efood_strategy import EfoodStrategy
 from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy
 from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
 from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
@@ -51,7 +52,7 @@ def _create_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
                 FoodVendorType.CITY_FOOD,
                 CityFoodStrategy(),
                 "Cityfood",
-                SETTINGS.CITY_FOOD_MENU_URL),
+                SETTINGS.CITY_FOOD_ORDERING_URL),
         FoodVendorType.INTER_FOOD:
             FoodVendor(
                 FoodVendorType.INTER_FOOD,
@@ -65,7 +66,13 @@ def _create_vendor_registry() -> dict[FoodVendorType, FoodVendor]:
                 TeletalStrategy(TeletalMenuPage(teletal_client), TeletalFoodPage(teletal_client)),
                 "Teletál",
                 SETTINGS.TELETAL_MENU_URL
-            )
+            ),
+        FoodVendorType.EFOOD:
+            FoodVendor(
+                FoodVendorType.EFOOD,
+                EfoodStrategy(),
+                "e-food",
+                SETTINGS.EFOOD_FOOD_ORDERING_URL),
     }
 
 

@@ -23,13 +23,17 @@ class Settings(BaseSettings):
     HEADERS: dict[str, str] = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                                              "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.86 Safari/537.36"}
 
-    CITY_FOOD_MENU_URL: str = "https://rendel.cityfood.hu/"
+    CITY_FOOD_ORDERING_URL: str = "https://rendel.cityfood.hu/"
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"
     CITY_FOOD_IMAGE_URL_TEMPLATE: str = "https://ca.cityfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     INTER_FOOD_ORDERING_URL: str = "https://rendel.interfood.hu/"
     INTER_FOOD_API_BASE: str = "https://ia.interfood.hu"
     INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
+
+    EFOOD_FOOD_ORDERING_URL: str = "https://rendel.e-food.hu/"
+    EFOOD_FOOD_API_BASE: str = "https://ia.interfood.hu"
+    EFOOD_FOOD_IMAGE_URL_TEMPLATE: str = "https://ea.e-food.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"
 
@@ -51,6 +55,10 @@ class Settings(BaseSettings):
     @computed_field
     def inter_food_menu_api_url(self) -> str:
         return f"{self.INTER_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
+
+    @computed_field
+    def efood_food_menu_api_url(self) -> str:
+        return f"{self.EFOOD_FOOD_API_BASE}/{self.INTER_CITY_FOOD_MENU_API_PATH}"
 
     LOG_DIR: str = "/var/log/forktimize"
     API_LOG_FILE: str = "api.log"

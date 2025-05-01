@@ -163,7 +163,12 @@ def test_get_vendor_data__returns_correct_vendor_data(mock_date, forktimize_clie
                                {"availableDates": [],
                                 "menuUrl": "https://www.teletal.hu/etlap",
                                 "type": FoodVendorType.TELETAL.value,
-                                "name": "Teletál"}]
+                                "name": "Teletál"},
+                               {'availableDates': [],
+                                'menuUrl': 'https://rendel.e-food.hu/',
+                                'name': 'e-food',
+                                'type': 'efood'}
+                               ]
 
 
 def test_health_check__returns_status_healthy_when_db_connected(forktimize_client):
