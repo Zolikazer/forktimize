@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     INTER_FOOD_IMAGE_URL_TEMPLATE: str = "https://ia.interfood.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     EFOOD_FOOD_ORDERING_URL: str = "https://rendel.e-food.hu/"
-    EFOOD_FOOD_API_BASE: str = "https://ia.interfood.hu"
+    EFOOD_FOOD_API_BASE: str = "https://ea.e-food.hu"
     EFOOD_FOOD_IMAGE_URL_TEMPLATE: str = "https://ea.e-food.hu/api/v1/i?menu_item_id={food_id}&width=425&height=425"
 
     INTER_CITY_FOOD_MENU_API_PATH: str = "api/v1/menu"

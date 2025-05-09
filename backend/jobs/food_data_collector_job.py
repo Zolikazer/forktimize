@@ -1,10 +1,8 @@
-import random
 import time
 from datetime import datetime
 from pathlib import Path
 
 import requests
-from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session
 
 from database.data_access import has_successful_job_run
