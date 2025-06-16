@@ -1,9 +1,11 @@
 import time
 from datetime import datetime
 from pathlib import Path
+import logging
 
 import requests
 from sqlmodel import Session
+from tenacity import retry, stop_after_attempt, wait_exponential, before_sleep_log
 
 from database.data_access import has_successful_job_run
 from database.db import ENGINE, init_db
@@ -116,30 +118,33 @@ class FoodDataCollectorJob:
         JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
     def _download_food_images(self, images: dict[int, str], vendor_name: str):
-        for food_id, image in images.items():
+        for food_id, image_url in images.items():
             image_path = self._image_dir / f"{vendor_name}_{food_id}.webp"
 
             if image_path.exists():
                 JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
                 continue
+            try:
+                self._download_image(image_url, image_path)
+                time.sleep(self._delay)
+            except Exception as e:
+                JOB_LOGGER.warning(f"❌ Failed to download image from {image_url}: {e}")
 
-            self._download_image(image, image_path)
-            time.sleep(self._delay)
-
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1),
+        before_sleep=before_sleep_log(JOB_LOGGER, logging.WARNING),
+        reraise=True
+    )
     def _download_image(self, url: str, image_path: Path):
         JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
-        try:
-            response = requests.get(url, timeout=self._timeout, headers=self._headers)
-            response.raise_for_status()
+        response = requests.get(url, timeout=self._timeout, headers=self._headers)
+        response.raise_for_status()
 
-            save_image_to_webp(response.content, image_path)
-            JOB_LOGGER.info(f"✅ Saved image: {image_path}")
+        save_image_to_webp(response.content, image_path)
+        JOB_LOGGER.info(f"✅ Saved image: {image_path}")
 
-            return response.content
-        except Exception as e:
-            JOB_LOGGER.warning(f"❌ Failed to download image from {url}: {e}")
-
-        return None
+        return response.content
 
 
 if __name__ == "__main__":
