@@ -9,9 +9,8 @@
     let extensionPresent = false;
 
     onMount(() => {
-        // Check if extension is present
         window.postMessage({type: 'FORKTIMIZE_EXTENSION_CHECK'}, '*');
-        
+
         window.addEventListener('message', (event) => {
             if (event.data.type === 'FORKTIMIZE_EXTENSION_PRESENT') {
                 extensionPresent = true;
@@ -36,6 +35,7 @@
 
 </script>
 
+
 <div class="card">
     <SectionHeader title={$t.mealPlan.yourMealPlan()}
                    subTitle={subtitleHtml}>
@@ -45,7 +45,8 @@
                      class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
             </span>
             {#if extensionPresent}
-                <button class="button is-primary is-small" on:click={handleExportClick}>
+                <button class="tag is-light is-success bigger-tag extension-button has-text-weight-bold"
+                        on:click={handleExportClick}>
                     📲 Send to Extension
                 </button>
             {/if}
@@ -57,3 +58,29 @@
         {/each}
     </div>
 </div>
+
+<style>
+    .extension-button {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 2px solid transparent;
+    }
+
+    .extension-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(72, 199, 142, 0.4);
+        border-color: #48c78e;
+        filter: brightness(1.1);
+    }
+
+    .extension-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(72, 199, 142, 0.3);
+        filter: brightness(0.95);
+    }
+
+    .extension-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.25);
+    }
+</style>
