@@ -9,6 +9,7 @@
   ],
   "host_permissions": [
     "https://forktimize.xyz/*",
+    "http://localhost:5173/*",
     "https://*.cityfood.hu/*",
     "https://*.interfood.hu/*",
     "https://*.teletal.hu/*",
@@ -20,6 +21,8 @@
   "content_scripts": [
     {
       "matches": [
+        "https://forktimize.xyz/*",
+        "http://localhost:5173/*",
         "https://*.cityfood.hu/*",
         "https://*.interfood.hu/*",
         "https://*.teletal.hu/*",

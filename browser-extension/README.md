@@ -16,6 +16,19 @@ npm run dev:firefox
 # 2. Load unpacked -> select dist/chrome/
 ```
 
+## Debug Extension
+
+### Firefox
+- **Debug URL**: `about:debugging#/runtime/this-firefox`
+- Find your extension → Click **"Inspect"** 
+- Opens DevTools console for background/content script logs
+
+### Chrome  
+- Go to `chrome://extensions/`
+- Find your extension → Click **"Inspect views: background page"**
+- Opens DevTools for background script debugging
+```
+
 ## Structure
 
 ```

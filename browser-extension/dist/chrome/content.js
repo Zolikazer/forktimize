@@ -1,1 +1,0 @@
-console.log('Forktimize extension loaded on:', window.location.hostname);

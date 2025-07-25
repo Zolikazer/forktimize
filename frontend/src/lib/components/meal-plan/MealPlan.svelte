@@ -4,6 +4,24 @@
     import SectionHeader from "$lib/components/common/SectionHeader.svelte";
     import {t} from "$lib/stores/localeStore.js";
     import {vendorListStore} from "$lib/stores/foodVendorStore.js";
+    import {onMount} from 'svelte';
+
+    let extensionPresent = false;
+
+    onMount(() => {
+        // Check if extension is present
+        window.postMessage({type: 'FORKTIMIZE_EXTENSION_CHECK'}, '*');
+        
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'FORKTIMIZE_EXTENSION_PRESENT') {
+                extensionPresent = true;
+            }
+        });
+    });
+
+    function handleExportClick() {
+        window.postMessage({type: 'FORKTIMIZE_EXPORT_CLICKED'}, '*');
+    }
 
     $: vendorName =
         $vendorListStore.find(v => v.type === $mealPlanStore.foodVendor)
@@ -21,10 +39,17 @@
 <div class="card">
     <SectionHeader title={$t.mealPlan.yourMealPlan()}
                    subTitle={subtitleHtml}>
-            <span slot="tags" class="tag is-light is-success bigger-tag">
-      <img src="meal-plan.webp" alt="Protein" width="30" height="30"
-           class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
-    </span>
+        <div slot="tags" class="tags">
+            <span class="tag is-light is-success bigger-tag">
+                <img src="meal-plan.webp" alt="Protein" width="30" height="30"
+                     class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
+            </span>
+            {#if extensionPresent}
+                <button class="button is-primary is-small" on:click={handleExportClick}>
+                    📲 Send to Extension
+                </button>
+            {/if}
+        </div>
     </SectionHeader>
     <div class="is-flex is-flex-wrap-wrap mt-5 p-3">
         {#each $mealPlanStore.foods as food}

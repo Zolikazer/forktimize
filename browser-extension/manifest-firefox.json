@@ -7,6 +7,9 @@
     "storage",
     "activeTab",
     "https://forktimize.xyz/*",
+    "http://localhost:5173/*",
+    "http://127.0.0.1:5173/*",
+    "http://localhost/*",
     "https://*.cityfood.hu/*",
     "https://*.interfood.hu/*",
     "https://*.teletal.hu/*",
@@ -19,12 +22,17 @@
   "content_scripts": [
     {
       "matches": [
+        "https://forktimize.xyz/*",
+        "http://localhost:5173/*",
+        "http://127.0.0.1:5173/*",
+        "http://localhost/*",
         "https://*.cityfood.hu/*",
         "https://*.interfood.hu/*",
         "https://*.teletal.hu/*",
         "https://*.efood.hu/*"
       ],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_end"
     }
   ],
   "browser_action": {
