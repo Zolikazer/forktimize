@@ -19,7 +19,17 @@
     });
 
     function handleExportClick() {
-        window.postMessage({type: 'FORKTIMIZE_EXPORT_CLICKED'}, '*');
+        const mealPlanData = {
+            date: $mealPlanStore.date,
+            foodVendor: $mealPlanStore.foodVendor,
+            foods: $mealPlanStore.foods,
+            exportedAt: new Date().toISOString()
+        };
+        
+        window.postMessage({
+            type: 'FORKTIMIZE_MEAL_PLAN_DATA',
+            data: mealPlanData
+        }, '*');
     }
 
     $: vendorName =
