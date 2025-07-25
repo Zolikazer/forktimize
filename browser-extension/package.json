@@ -1,0 +1,13 @@
+{
+  "name": "forktimize-browser-extension",
+  "version": "1.0.0",
+  "description": "Minimal cross-browser extension for Forktimize",
+  "scripts": {
+    "build": "./build.sh",
+    "dev:firefox": "web-ext run --source-dir=dist/firefox",
+    "dev:chrome": "echo 'Load dist/chrome/ in Chrome developer mode'"
+  },
+  "devDependencies": {
+    "web-ext": "^7.0.0"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "manifest_version": 2,
+  "name": "Forktimize - Smart Meal Planning",
+  "version": "1.0.0",
+  "description": "Plan optimal meals based on nutritional constraints and food vendor availability",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "https://forktimize.xyz/*",
+    "https://*.cityfood.hu/*",
+    "https://*.interfood.hu/*",
+    "https://*.teletal.hu/*",
+    "https://*.efood.hu/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.cityfood.hu/*",
+        "https://*.interfood.hu/*",
+        "https://*.teletal.hu/*",
+        "https://*.efood.hu/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Forktimize Meal Planner",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "applications": {
+    "gecko": {
+      "id": "forktimize@forktimize.xyz",
+      "strict_min_version": "70.0"
+    }
+  }
+}
