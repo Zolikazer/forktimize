@@ -69,6 +69,7 @@ class Settings(BaseSettings):
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
     DATABASE_BACKUP_BUCKET_NAME: str = "forktimize_backup"
     DATABASE_BACKUP_FILE_PREFIX: str = "forktimize-backup"
+    DATABASE_BACKUP_INTERVAL_DAYS: int = 7
 
     @computed_field
     def database_connection_string(self) -> str:

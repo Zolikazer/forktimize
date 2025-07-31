@@ -1,8 +1,8 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from pathlib import Path
 
 from google.cloud import storage
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from database.db import ENGINE
 from model.job_run import JobRun, JobStatus, JobType, DatabaseBackupDetails
@@ -23,23 +23,25 @@ class DatabaseBackupJob:
                  session: Session,
                  bucket_name: str = SETTINGS.DATABASE_BACKUP_BUCKET_NAME,
                  file_prefix: str = SETTINGS.DATABASE_BACKUP_FILE_PREFIX,
-                 database_path: str = SETTINGS.DATABASE_PATH):
+                 database_path: str = SETTINGS.DATABASE_PATH,
+                 backup_interval_days: int = SETTINGS.DATABASE_BACKUP_INTERVAL_DAYS):
         self._session = session
         self._bucket_name = bucket_name
         self._file_prefix = file_prefix
         self._database_path = Path(database_path)
+        self._backup_interval_days = backup_interval_days
         self._storage_client = storage.Client()
 
     def run(self):
+        if self._has_recent_successful_backup(self._backup_interval_days):
+            JOB_LOGGER.info(f"✅ Recent backup found within {self._backup_interval_days} days, skipping...")
+            return
+            
         try:
             backup_date = date.today()
             backup_filename = f"{self._file_prefix}-{backup_date.strftime('%Y-%m-%d')}.db"
             
             JOB_LOGGER.info(f"📦 Starting backup: {backup_filename}")
-            
-            # Check if database exists
-            if not self._database_path.exists():
-                raise FileNotFoundError(f"Database not found at {self._database_path}")
             
             db_size_mb = self._get_database_size_mb()
             self._upload_to_storage(backup_filename)
@@ -50,6 +52,16 @@ class DatabaseBackupJob:
         except Exception as e:
             self._track_failed_job_run(str(e))
             raise
+
+    def _has_recent_successful_backup(self, days: int) -> bool:
+        cutoff_time = datetime.now() - timedelta(days=days)
+        
+        statement = (select(JobRun)
+                    .where(JobRun.job_type == JobType.DATABASE_BACKUP)
+                    .where(JobRun.status == JobStatus.SUCCESS)
+                    .where(JobRun.timestamp >= cutoff_time))
+        
+        return self._session.exec(statement).first() is not None
 
     def _get_database_size_mb(self) -> float:
         db_size_bytes = self._database_path.stat().st_size

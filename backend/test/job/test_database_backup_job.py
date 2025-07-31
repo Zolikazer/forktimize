@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch, MagicMock
@@ -94,27 +94,37 @@ def test_backup_uploads_to_correct_gcp_path(mock_client_class, session, temp_db_
 
 
 @patch("jobs.database_backup_job.storage.Client")
-def test_backup_handles_missing_database_file(mock_client_class, session, mock_storage_client):
+def test_backup_skips_when_recent_backup_exists(mock_client_class, session, temp_db_file, mock_storage_client):
     mock_client, mock_bucket, mock_blob = mock_storage_client
     mock_client_class.return_value = mock_client
     
+    # Create an existing successful backup from 3 days ago
+    existing_backup = JobRun(
+        job_type=JobType.DATABASE_BACKUP,
+        status=JobStatus.SUCCESS,
+        timestamp=datetime.now() - timedelta(days=3),
+        details={"backup_filename": "old-backup.db", "bucket_name": "test"}
+    )
+    session.add(existing_backup)
+    session.commit()
+    
     job = DatabaseBackupJob(
         session=session,
-        bucket_name="test-bucket",
+        bucket_name="test-bucket", 
         file_prefix="test-backup",
-        database_path="/nonexistent/path/fake.db"
+        database_path=str(temp_db_file),
+        backup_interval_days=7
     )
     
-    with pytest.raises(FileNotFoundError):
-        job.run()
+    job.run()
     
+    # Should not create new backup or upload anything
+    mock_blob.upload_from_filename.assert_not_called()
+    
+    # Should only have the original JobRun (no new one created)
     job_runs = session.exec(select(JobRun)).all()
     assert len(job_runs) == 1
-    
-    job_run = job_runs[0]
-    assert job_run.job_type == JobType.DATABASE_BACKUP
-    assert job_run.status == JobStatus.FAILURE
-    assert "Database not found" in job_run.details["error"]
+    assert job_runs[0].id == existing_backup.id
 
 
 @patch("jobs.database_backup_job.storage.Client")
