@@ -57,3 +57,4 @@ requests-mock~=1.12.1
 beautifulsoup4~=4.13.3
 pillow~=11.2.1
 tenacity~=8.2.3
+google-cloud-storage~=2.18.0

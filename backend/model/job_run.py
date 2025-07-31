@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 from typing import Any
 
@@ -22,6 +22,13 @@ class FoodDataCollectorDetails(BaseModel):
     food_vendor: FoodVendorType
     week: PositiveInt
     year: PositiveInt
+
+
+class DatabaseBackupDetails(BaseModel):
+    backup_filename: str
+    bucket_name: str
+    database_size_mb: float
+    backup_date: date
 
 
 class JobRun(SQLModel, table=True):

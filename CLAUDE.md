@@ -57,4 +57,8 @@ Located in `/browser-extension/` directory. This is a **cross-platform** extensi
 - Frontend: `npm run dev` (port 5173)
 - Backend: `make dev` 
 - Extension build: `cd browser-extension && ./build.sh`
-- Tests: Check README for specific test commands per component
+- Tests: Use project venv with `source .venv/bin/activate && python -m pytest`
+
+## Code Style Guidelines
+- **Comments**: Only add comments for critical information that is not obvious from the code itself
+- **Environment**: Always use the project's virtual environment (`.venv`) for Python development and testing

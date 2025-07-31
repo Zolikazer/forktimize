@@ -10,6 +10,7 @@ from database.data_access import is_database_empty
 from database.db import init_db, ENGINE
 from exceptions import MealPlanRequestException
 from jobs.food_data_collector_job import run_collect_food_data_job
+from jobs.database_backup_job import run_database_backup_job
 from jobs.job_scheduler import SCHEDULER
 from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
@@ -49,6 +50,7 @@ def on_startup():
             APP_LOGGER.info("🌐 Database initialized.")
 
             SCHEDULER.add_job(run_collect_food_data_job, "cron", hour=0, minute=0)
+            SCHEDULER.add_job(run_database_backup_job, "cron", day_of_week=6, hour=22, minute=0)
             APP_LOGGER.info("Jobs scheduled.")
 
             if is_database_empty(session):
