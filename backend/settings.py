@@ -67,7 +67,7 @@ class Settings(BaseSettings):
     PERF_LOG_FILE: str = "perf.log"
 
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
-    DATABASE_BACKUP_BUCKET_NAME: str = "forktimize-backup"
+    DATABASE_BACKUP_BUCKET_NAME: str = "forktimize_backup"
     DATABASE_BACKUP_FILE_PREFIX: str = "forktimize-backup"
 
     @computed_field
