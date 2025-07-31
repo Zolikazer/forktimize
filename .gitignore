@@ -32,8 +32,10 @@ backend/*.sqlite3
 backend/resources/city*
 backend/resources/inter*
 backend/resources/teletal*
+backend/resources/efood*
 backend/images
 backend/logs
+backend/backups
 *.db
 debug.png
 

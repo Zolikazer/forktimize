@@ -15,7 +15,7 @@ from food_vendors.strategies.food_collection_strategy import FoodCollectionStrat
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
 from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food
-from model.job_run import JobStatus, JobRun
+from model.job_run import JobStatus, JobRun, JobType
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
 from monitoring.performance import benchmark
 from settings import SETTINGS, RunMode
@@ -105,7 +105,7 @@ class FoodDataCollectorJob:
             f"✅ Job ID={job_id}: Successfully fetched & stored data for {vendor.value} Week {week}.")
 
     def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendorType) -> int:
-        job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor)
+        job_run = JobRun(week=week, year=year, status=status, timestamp=datetime.now(), food_vendor=vendor, job_type=JobType.FOOD_DATA_COLLECTION)
         self._session.add(job_run)
         self._session.commit()
         self._session.refresh(job_run)

@@ -12,9 +12,15 @@ class JobStatus(str, Enum):
     FAILURE = "failure"
 
 
+class JobType(str, Enum):
+    FOOD_DATA_COLLECTION = "food_data_collection"
+    DATABASE_BACKUP = "database_backup"
+
+
 class JobRun(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     timestamp: datetime = Field(default_factory=lambda: datetime.now())
+    job_type: JobType = Field(default=JobType.FOOD_DATA_COLLECTION)
     food_vendor: FoodVendorType = Field(nullable=False)
     week: PositiveInt
     year: PositiveInt

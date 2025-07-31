@@ -7,6 +7,13 @@ from sqlmodel import SQLModel
 
 from settings import SETTINGS
 
+# Import all models so they register with SQLModel.metadata
+from model.food import Food
+from model.job_run import JobRun
+from model.meal_plan import MealPlan
+from model.food_log_entry import FoodLogEntry
+from model.nutritional_constraints import NutritionalConstraints
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
