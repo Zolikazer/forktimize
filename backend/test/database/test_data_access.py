@@ -7,7 +7,7 @@ from database.data_access import get_unique_dates_after, get_foods_for_given_dat
     get_available_dates_for_vendor, has_successful_job_run
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
-from model.job_run import JobRun, JobStatus
+from model.job_run import JobRun, JobStatus, FoodDataCollectorDetails
 from test.conftest import make_food
 
 
@@ -104,12 +104,15 @@ def test_is_database_empty__returns_false_when_food_exists(session):
     assert is_database_empty(session) is False
 
 def test_has_successful_job_run_returns_true_when_success_exists(session):
-    job = JobRun(
+    details = FoodDataCollectorDetails(
+        food_vendor=FoodVendorType.TELETAL,
         week=10,
-        year=2025,
+        year=2025
+    )
+    job = JobRun(
         status=JobStatus.SUCCESS,
         timestamp=datetime.now(),
-        food_vendor=FoodVendorType.TELETAL
+        details=details.model_dump()
     )
     session.add(job)
     session.commit()

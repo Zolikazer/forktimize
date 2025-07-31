@@ -5,14 +5,14 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 from freezegun import freeze_time
-from sqlalchemy import create_engine, StaticPool
+from sqlalchemy import create_engine
 from sqlmodel import select, SQLModel, Session
 
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy, StrategyResult
 from jobs.food_data_collector_job import FoodDataCollectorJob
 from model.food import Food
-from model.job_run import JobRun, JobStatus
+from model.job_run import JobRun, JobStatus, FoodDataCollectorDetails
 from settings import SETTINGS
 from test.conftest import make_food
 
@@ -86,7 +86,7 @@ def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, strate
     }
 
     job_runs = session.exec(select(JobRun)).all()
-    actual = {(j.food_vendor, j.week) for j in job_runs}
+    actual = {(FoodVendorType(j.details['food_vendor']), j.details['week']) for j in job_runs}
 
     assert actual == expected
 
@@ -98,7 +98,7 @@ def test_run_marks_job_run_as_failed_on_fetch_exception(session, strategy):
 
     job_run = session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
-    assert job_run.food_vendor == FoodVendorType.CITY_FOOD
+    assert FoodVendorType(job_run.details['food_vendor']) == FoodVendorType.CITY_FOOD
 
 
 def test_run_creates_image_and_data_dirs_when_not_exist(session, strategies):
@@ -162,12 +162,15 @@ def test_job_skips_if_successful_run_already_exists(session, strategy):
     week = now.isocalendar()[1]
     year = now.year
 
-    existing = JobRun(
+    details = FoodDataCollectorDetails(
+        food_vendor=FoodVendorType.CITY_FOOD,
         week=week,
-        year=year,
+        year=year
+    )
+    existing = JobRun(
         status=JobStatus.SUCCESS,
         timestamp=now,
-        food_vendor=FoodVendorType.CITY_FOOD
+        details=details.model_dump()
     )
     session.add(existing)
     session.commit()

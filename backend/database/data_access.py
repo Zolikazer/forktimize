@@ -1,7 +1,7 @@
 from datetime import date
 
 from cachetools import TTLCache, cached
-from sqlalchemy import String, Select
+from sqlalchemy import String, Select, func
 from sqlmodel import select, col, Session, cast
 
 from model.food import Food
@@ -56,9 +56,9 @@ def get_foods_for_given_date(
 
 def has_successful_job_run(session: Session, year: int, week: int, vendor: FoodVendorType) -> bool:
     statement: Select = (select(JobRun)
-                 .where(JobRun.week == week)
-                 .where(JobRun.year == year)
-                 .where(JobRun.food_vendor == vendor)
+                 .where(func.json_extract(JobRun.details, '$.week') == week)
+                 .where(func.json_extract(JobRun.details, '$.year') == year)
+                 .where(func.json_extract(JobRun.details, '$.food_vendor') == vendor.value)
                  .where(JobRun.status == JobStatus.SUCCESS))
 
     return session.exec(statement).first() is not None
