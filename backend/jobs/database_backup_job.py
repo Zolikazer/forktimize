@@ -5,6 +5,7 @@ from google.cloud import storage
 from sqlmodel import Session, select
 
 from database.db import ENGINE
+from database.data_access import create_job_run
 from model.job_run import JobRun, JobStatus, JobType, DatabaseBackupDetails
 from monitoring.logging import JOB_LOGGER
 from monitoring.performance import benchmark
@@ -80,28 +81,22 @@ class DatabaseBackupJob:
             database_size_mb=db_size_mb,
             backup_date=backup_date
         )
-        job_run = JobRun(
-            job_type=JobType.DATABASE_BACKUP,
-            status=JobStatus.SUCCESS,
-            timestamp=datetime.now(),
-            details=details.model_dump(mode='json')
+        job_run = create_job_run(
+            self._session,
+            JobType.DATABASE_BACKUP,
+            JobStatus.SUCCESS,
+            details.model_dump(mode='json')
         )
-        self._session.add(job_run)
-        self._session.commit()
-        self._session.refresh(job_run)
         
         JOB_LOGGER.info(f"📌 Backup Job Run Logged: ID={job_run.id}, Status={JobStatus.SUCCESS}")
 
     def _track_failed_job_run(self, error_message: str):
-        job_run = JobRun(
-            job_type=JobType.DATABASE_BACKUP,
-            status=JobStatus.FAILURE,
-            timestamp=datetime.now(),
-            details={"error": error_message}
+        job_run = create_job_run(
+            self._session,
+            JobType.DATABASE_BACKUP,
+            JobStatus.FAILURE,
+            {"error": error_message}
         )
-        self._session.add(job_run)
-        self._session.commit()
-        self._session.refresh(job_run)
         
         JOB_LOGGER.error(f"❌ Backup Job Run Failed: ID={job_run.id}, Error: {error_message}")
 

@@ -7,7 +7,7 @@ import requests
 from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_exponential, before_sleep_log
 
-from database.data_access import has_successful_job_run
+from database.data_access import has_successful_job_run, create_job_run, save_foods_to_db
 from database.db import ENGINE, init_db
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
@@ -86,11 +86,7 @@ class FoodDataCollectorJob:
 
     # TODO: fix name collision in teletal?
     def _save_foods_to_db(self, foods: list[Food], week: int):
-        for food in foods:
-            self._session.merge(food)
-
-        self._session.commit()
-
+        save_foods_to_db(self._session, foods)
         JOB_LOGGER.info(f"✅ Week {week} food selection stored in the database.")
 
     def _save_raw_data_to_json(self, vendor_name: str, data: dict, year: int, week: int):
@@ -106,15 +102,12 @@ class FoodDataCollectorJob:
 
     def _track_job_run(self, week: int, year: int, status: JobStatus, vendor: FoodVendorType) -> int:
         details = FoodDataCollectorDetails(food_vendor=vendor, week=week, year=year)
-        job_run = JobRun(
-            job_type=JobType.FOOD_DATA_COLLECTION,
-            status=status,
-            timestamp=datetime.now(),
-            details=details.model_dump()
+        job_run = create_job_run(
+            self._session,
+            JobType.FOOD_DATA_COLLECTION,
+            status,
+            details.model_dump()
         )
-        self._session.add(job_run)
-        self._session.commit()
-        self._session.refresh(job_run)
 
         JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={week}, Year={year}, Status={status}")
         return job_run.id

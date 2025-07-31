@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from cachetools import TTLCache, cached
 from sqlalchemy import String, Select, func
@@ -6,7 +6,7 @@ from sqlmodel import select, col, Session, cast
 
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
-from model.job_run import JobRun, JobStatus
+from model.job_run import JobRun, JobStatus, JobType
 from monitoring.performance import benchmark
 from constants import ONE_DAY
 
@@ -65,4 +65,23 @@ def has_successful_job_run(session: Session, year: int, week: int, vendor: FoodV
 
 
 def is_database_empty(session: Session) -> bool:
-    return session.query(Food).first() is None
+    return session.exec(select(Food)).first() is None
+
+
+def create_job_run(session: Session, job_type: JobType, status: JobStatus, details: dict) -> JobRun:
+    job_run = JobRun(
+        job_type=job_type,
+        status=status,
+        timestamp=datetime.now(),
+        details=details
+    )
+    session.add(job_run)
+    session.commit()
+    session.refresh(job_run)
+    return job_run
+
+
+def save_foods_to_db(session: Session, foods: list[Food]) -> None:
+    for food in foods:
+        session.merge(food)
+    session.commit()

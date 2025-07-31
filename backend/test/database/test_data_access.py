@@ -1,13 +1,13 @@
 from datetime import date, datetime
 
 import pytest
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel, create_engine, Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
-    get_available_dates_for_vendor, has_successful_job_run
+    get_available_dates_for_vendor, has_successful_job_run, create_job_run, save_foods_to_db
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
-from model.job_run import JobRun, JobStatus, FoodDataCollectorDetails
+from model.job_run import JobRun, JobStatus, JobType, FoodDataCollectorDetails, DatabaseBackupDetails
 from test.conftest import make_food
 
 
@@ -122,3 +122,52 @@ def test_has_successful_job_run_returns_true_when_success_exists(session):
 
 def test_has_successful_job_run_returns_false_when_none_exists(session):
     assert not has_successful_job_run(session, 2025, 99, FoodVendorType.TELETAL)
+
+
+def test_create_job_run__creates_and_returns_job_run_with_correct_data(session):
+    details = {"test": "data", "number": 42}
+    
+    job_run = create_job_run(session, JobType.DATABASE_BACKUP, JobStatus.SUCCESS, details)
+    
+    assert job_run.id is not None
+    assert job_run.job_type == JobType.DATABASE_BACKUP
+    assert job_run.status == JobStatus.SUCCESS
+    assert job_run.details == details
+    assert job_run.timestamp is not None
+
+
+def test_create_job_run__persists_job_run_to_database(session):
+    details = DatabaseBackupDetails(
+        backup_filename="test-backup.db",
+        bucket_name="test-bucket",
+        database_size_mb=1.5,
+        backup_date=date(2025, 1, 1)
+    )
+    
+    job_run = create_job_run(session, JobType.DATABASE_BACKUP, JobStatus.FAILURE, details.model_dump(mode='json'))
+    
+    persisted_job = session.exec(select(JobRun).where(JobRun.id == job_run.id)).first()
+    assert persisted_job is not None
+    assert persisted_job.job_type == JobType.DATABASE_BACKUP
+    assert persisted_job.status == JobStatus.FAILURE
+
+
+def test_save_foods_to_db__saves_new_foods_to_database(session):
+    new_foods = [
+        make_food(food_id=100, name="New Food 1", date=date(2025, 4, 1)),
+        make_food(food_id=101, name="New Food 2", date=date(2025, 4, 2))
+    ]
+    
+    save_foods_to_db(session, new_foods)
+    
+    saved_foods = session.exec(select(Food).where(Food.food_id.in_([100, 101]))).all()
+    assert len(saved_foods) == 2
+    assert {f.name for f in saved_foods} == {"New Food 1", "New Food 2"}
+
+
+def test_save_foods_to_db__updates_existing_foods_in_database(session):
+    updated_food = make_food(food_id=1, name="Updated Name", date=date(2025, 3, 18))
+    save_foods_to_db(session, [updated_food])
+    
+    persisted_food = session.exec(select(Food).where(Food.food_id == 1)).first()
+    assert persisted_food.name == "Updated Name"
