@@ -3,7 +3,6 @@ import time
 from cachetools import TTLCache, cached
 from pulp import LpProblem, LpMinimize, LpInteger, LpVariable, lpSum, PULP_CBC_CMD, LpStatus
 
-from constants import ONE_DAY
 from model.food import Food
 from model.nutritional_constraints import NutritionalConstraints
 from monitoring.logging import APP_LOGGER

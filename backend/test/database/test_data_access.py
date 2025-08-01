@@ -4,7 +4,7 @@ import pytest
 from sqlmodel import SQLModel, create_engine, Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
-    get_available_dates_for_vendor, has_successful_job_run, create_job_run, save_foods_to_db
+    get_available_dates_for_vendor, has_successful_job_run, create_job_run, save_foods_to_db, filter_blacklisted_foods
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
 from model.job_run import JobRun, JobStatus, JobType, FoodDataCollectorDetails, DatabaseBackupDetails
@@ -49,15 +49,32 @@ def test_get_foods_for_given_date__returns_empty_list_if_vendor_has_no_food(sess
     assert foods == []
 
 
-def test_get_foods_for_given_date__filters_out_blacklisted_foods(session):
-    foods = get_foods_for_given_date(
-        session,
-        date(2025, 3, 18),
-        FoodVendorType.CITY_FOOD,
-        ["Test Chicken 1", "Test Chicken 2"]
-    )
-    assert len(foods) == 1
-    assert foods[0].name == "Test Chicken 3"
+def test_filter_blacklisted_foods__filters_out_blacklisted_foods():
+    foods = [
+        make_food(name="Chicken Parmesan"),
+        make_food(name="Beef Stew"),
+        make_food(name="Chicken Teriyaki")
+    ]
+    filtered_foods = filter_blacklisted_foods(foods, ["Chicken"])
+    
+    assert len(filtered_foods) == 1
+    assert filtered_foods[0].name == "Beef Stew"
+
+
+def test_filter_blacklisted_foods__returns_all_foods_when_no_blacklist():
+    foods = [make_food(name="Food 1"), make_food(name="Food 2")]
+    filtered_foods = filter_blacklisted_foods(foods, None)
+    
+    assert len(filtered_foods) == 2
+    assert filtered_foods == foods
+
+
+def test_filter_blacklisted_foods__is_case_insensitive():
+    foods = [make_food(name="CHICKEN Salad"), make_food(name="Beef Burger")]
+    filtered_foods = filter_blacklisted_foods(foods, ["chicken"])
+    
+    assert len(filtered_foods) == 1
+    assert filtered_foods[0].name == "Beef Burger"
 
 
 def test_get_foods_for_given_date__returns_interfood_correctly(session):

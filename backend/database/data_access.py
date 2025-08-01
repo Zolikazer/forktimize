@@ -38,21 +38,27 @@ def get_available_dates_for_vendor(session: Session, target_date: date, vendor_t
 
 @benchmark
 @cached(TTLCache(maxsize=SETTINGS.LARGE_CACHE_SIZE, ttl=SETTINGS.DEFAULT_CACHE_TTL),
-        key=lambda session, target_date, food_vendor, food_blacklist=None:
-        (target_date, food_vendor, tuple(food_blacklist or ())))
+        key=lambda session, target_date, food_vendor: (target_date, food_vendor))
 def get_foods_for_given_date(
         session: Session,
         target_date: date,
         food_vendor: FoodVendorType,
-        food_blacklist: list[str] = None,
 ) -> list[Food]:
     statement = (select(Food)
                  .where(Food.date == target_date)
                  .where(Food.food_vendor == food_vendor))
-    for blacklisted in (food_blacklist or []):
-        statement = statement.where(cast(Food.name, String).not_like(f"%{blacklisted}%"))
 
     return list(session.exec(statement).all())
+
+
+def filter_blacklisted_foods(foods: list[Food], food_blacklist: list[str] = None) -> list[Food]:
+    """Filter out blacklisted foods from the given list in memory."""
+    if not food_blacklist:
+        return foods
+    
+    return [food for food in foods 
+            if not any(blacklisted.lower() in food.name.lower() 
+                      for blacklisted in food_blacklist)]
 
 
 def has_successful_job_run(session: Session, year: int, week: int, vendor: FoodVendorType) -> bool:

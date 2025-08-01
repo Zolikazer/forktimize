@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from starlette.responses import JSONResponse
 
 from constants import ONE_DAY
-from database.data_access import get_unique_dates_after, get_foods_for_given_date
+from database.data_access import get_unique_dates_after, get_foods_for_given_date, filter_blacklisted_foods
 from database.db import get_session
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from model.food_vendor_data import FoodVendorData
@@ -53,10 +53,13 @@ def generate_meal_plan(meal_plan_request: MealPlanRequest,
     if meal_plan_request.date < date.today():
         raise HTTPException(status_code=400, detail="Cannot generate meal plan for past dates")
     
-    food_selection = get_foods_for_given_date(session,
-                                              meal_plan_request.date,
-                                              meal_plan_request.food_vendor,
-                                              meal_plan_request.food_blacklist)
+    # Get all foods for the date/vendor (cached)
+    all_foods = get_foods_for_given_date(session,
+                                         meal_plan_request.date,
+                                         meal_plan_request.food_vendor)
+    
+    # Filter blacklisted foods in memory
+    food_selection = filter_blacklisted_foods(all_foods, meal_plan_request.food_blacklist)
 
     if not food_selection:
         APP_LOGGER.warning(f"No food selection available for {meal_plan_request.date} from {meal_plan_request.food_vendor}")
