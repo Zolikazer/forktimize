@@ -10,7 +10,7 @@ from sqlmodel import select, SQLModel, Session
 
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy, StrategyResult
-from jobs.food_data_collector_job import FoodDataCollectorJob
+from jobs.food_data_collector_job import FoodDataCollector, FoodDataCollectorJob
 from model.food import Food
 from model.job_run import JobRun, JobStatus, FoodDataCollectorDetails
 from settings import SETTINGS
@@ -60,7 +60,7 @@ def strategies() -> list[FoodCollectionStrategy]:
 
 @patch("jobs.food_data_collector_job.save_to_json")
 def test_run_saves_all_foods_to_database(_, session, strategies):
-    FoodDataCollectorJob(session, strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollector(session, strategies, 2, 0, fetch_images=False).run()
 
     food_entries = session.exec(select(Food)).all()
     assert len(food_entries) == 5, "No food entries were inserted into the database!"
@@ -68,7 +68,7 @@ def test_run_saves_all_foods_to_database(_, session, strategies):
 
 @patch("jobs.food_data_collector_job.save_to_json")
 def test_run_saves_raw_data_to_file(mock_save_to_json, session, strategies):
-    FoodDataCollectorJob(session, strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollector(session, strategies, 2, 0, fetch_images=False).run()
     mock_save_to_json.assert_called()
     assert mock_save_to_json.call_count == 4
 
@@ -76,7 +76,7 @@ def test_run_saves_raw_data_to_file(mock_save_to_json, session, strategies):
 @patch("jobs.food_data_collector_job.save_to_json")
 @freeze_time("2025-01-01")
 def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, strategies):
-    FoodDataCollectorJob(session, strategies, 2, 0, fetch_images=False).run()
+    FoodDataCollector(session, strategies, 2, 0, fetch_images=False).run()
 
     expected = {
         (FoodVendorType.CITY_FOOD, 1),
@@ -94,7 +94,7 @@ def test_run_creates_job_run_entries_for_each_week_and_vendor(_, session, strate
 def test_run_marks_job_run_as_failed_on_fetch_exception(session, strategy):
     strategy.fetch_foods_for.side_effect = Exception("Failed to fetch food data!")
 
-    FoodDataCollectorJob(session, [strategy], 2, 0, fetch_images=False).run()
+    FoodDataCollector(session, [strategy], 2, 0, fetch_images=False).run()
 
     job_run = session.exec(select(JobRun)).first()
     assert job_run.status == JobStatus.FAILURE, "JobRun with FAILURE not found!"
@@ -107,19 +107,20 @@ def test_run_creates_image_and_data_dirs_when_not_exist(session, strategies):
         image_dir = tmp_path / "images"
         data_dir = tmp_path / "data"
 
-        job = FoodDataCollectorJob(
-            session=MagicMock(spec=Session),
+        collector = FoodDataCollector(
+            session=session,
             strategies=strategies,
             image_dir=image_dir,
             data_dir=data_dir,
             fetch_images=False,
-            delay=0
+            delay=0,
+            weeks_to_fetch=1
         )
 
         assert not image_dir.exists()
         assert not data_dir.exists()
 
-        job.run()
+        collector.run()
 
         assert image_dir.exists() and image_dir.is_dir()
         assert data_dir.exists() and data_dir.is_dir()
@@ -135,7 +136,7 @@ def test_run_downloads_and_saves_images_if_enabled(image_saver, _, session, stra
                                                            vendor=strategy.get_vendor())
     fake_image = b"image-bytes"
     image_dir = Path("/tmp/images")
-    job = FoodDataCollectorJob(
+    collector = FoodDataCollector(
         session=session,
         strategies=[strategy],
         fetch_images=True,
@@ -149,7 +150,7 @@ def test_run_downloads_and_saves_images_if_enabled(image_saver, _, session, stra
         mock_response.content = fake_image
         mock_get.return_value = mock_response
 
-        job.run()
+        collector.run()
 
         mock_get.assert_called_once_with(image_url, timeout=30, headers=SETTINGS.HEADERS)
         image_path = image_dir / f"{strategy.get_vendor().value}_1.webp"
@@ -175,10 +176,69 @@ def test_job_skips_if_successful_run_already_exists(session, strategy):
     session.add(existing)
     session.commit()
 
-    job = FoodDataCollectorJob(session, [strategy], weeks_to_fetch=1, delay=0, fetch_images=False)
-    job.run()
+    collector = FoodDataCollector(session, [strategy], weeks_to_fetch=1, delay=0, fetch_images=False)
+    collector.run()
 
     assert session.exec(select(Food)).first() is None, "Expected no food to be added — job should be skipped!"
 
     job_runs = session.exec(select(JobRun)).all()
     assert len(job_runs) == 1 and job_runs[0].id == existing.id, "Expected no new JobRun if already successful"
+
+
+# Test the atomic FoodDataCollectorJob class directly
+@freeze_time("2025-01-01")
+def test_atomic_job_handles_single_vendor_week(session, strategy):
+    """Test that the atomic job handles a single vendor/week combination correctly."""
+    year = 2025
+    week = 1
+    
+    job = FoodDataCollectorJob(
+        session=session,
+        strategy=strategy,
+        year=year,
+        week=week,
+        delay=0,
+        fetch_images=False,
+        data_dir=Path("/tmp/data"),
+        image_dir=Path("/tmp/images")
+    )
+    
+    with patch("jobs.food_data_collector_job.save_to_json"):
+        job.run()
+    
+    # Should create exactly one job run
+    job_runs = session.exec(select(JobRun)).all()
+    assert len(job_runs) == 1
+    
+    job_run = job_runs[0]
+    assert job_run.status == JobStatus.SUCCESS
+    assert job_run.details['food_vendor'] == FoodVendorType.CITY_FOOD.value
+    assert job_run.details['week'] == week
+    assert job_run.details['year'] == year
+
+
+def test_atomic_job_tracks_failure_correctly(session, strategy):
+    """Test that the atomic job tracks failures correctly."""
+    strategy.fetch_foods_for.side_effect = Exception("Network error!")
+    
+    job = FoodDataCollectorJob(
+        session=session,
+        strategy=strategy,
+        year=2025,
+        week=1,
+        delay=0,
+        fetch_images=False,
+        data_dir=Path("/tmp/data"),
+        image_dir=Path("/tmp/images")
+    )
+    
+    with pytest.raises(Exception, match="Network error!"):
+        job.run()
+    
+    # Should create exactly one failed job run
+    job_runs = session.exec(select(JobRun)).all()
+    assert len(job_runs) == 1
+    
+    job_run = job_runs[0]
+    assert job_run.status == JobStatus.FAILURE
+    assert job_run.details['food_vendor'] == FoodVendorType.CITY_FOOD.value

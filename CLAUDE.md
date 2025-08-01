@@ -6,9 +6,11 @@
 **Tech Stack:**
 - Backend: FastAPI (Python)
 - Frontend: SvelteKit 
-- Database: PostgreSQL
+- Database: SQLite with SQLModel ORM
 - Styling: Bulma CSS framework
 - Browser Extension: Cross-platform WebExtensions API
+- Job Scheduler: APScheduler for background tasks
+- Cloud Storage: Google Cloud Storage for backups
 
 ## Browser Extension
 Located in `/browser-extension/` directory. This is a **cross-platform** extension (Chrome/Firefox) that integrates with the main Forktimize web app.
@@ -42,6 +44,27 @@ Located in `/browser-extension/` directory. This is a **cross-platform** extensi
 - **Minimal approach** - Keep things simple, no complex build systems
 - **Bulma styling** - Match existing design patterns in the frontend
 - **Git hygiene** - `dist/` directory is gitignored
+
+## Backend Architecture
+
+**Database Layer:**
+- SQLite database with SQLModel ORM for type safety
+- Data access layer pattern (`database/data_access.py`) - all DB operations go through this layer
+- Jobs use data access functions instead of direct DB manipulation
+- Proper separation of concerns between jobs and data persistence
+
+**Job System:**
+- APScheduler handles background jobs (food data collection, database backups)
+- `FoodDataCollectorJob` - Fetches weekly menus from food vendors
+- `DatabaseBackupJob` - Weekly SQLite backups to Google Cloud Storage  
+- Job tracking with `JobRun` model for monitoring and debugging
+- All jobs use the data access layer for consistent DB operations
+
+**Key Patterns:**
+- Functional data access layer (not repository pattern - simpler and sufficient)
+- Cached queries with TTLCache for performance
+- Comprehensive test coverage including job testing
+- Benchmarking on data-heavy operations only
 
 ## Communication Style
 **IMPORTANT:** Always speak as a cool, funny, nonchalant Gen Z bro. Use casual language, slang, and be chill about everything. Examples:
