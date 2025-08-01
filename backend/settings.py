@@ -5,6 +5,8 @@ from pathlib import Path
 from pydantic import computed_field
 from pydantic_settings import BaseSettings
 
+from constants import ONE_DAY
+
 
 class RunMode(str, Enum):
     PRODUCTION = "production"
@@ -22,6 +24,12 @@ class Settings(BaseSettings):
     INCLUDE_HEAVY_JOBS: bool = True
     HEADERS: dict[str, str] = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                                              "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.86 Safari/537.36"}
+
+    # Cache settings
+    DEFAULT_CACHE_SIZE: int = 50
+    LARGE_CACHE_SIZE: int = 100
+    DEFAULT_CACHE_TTL: int = 7 * ONE_DAY
+    SHORT_CACHE_TTL: int = ONE_DAY
 
     CITY_FOOD_ORDERING_URL: str = "https://rendel.cityfood.hu/"
     CITY_FOOD_API_BASE: str = "https://ca.cityfood.hu"

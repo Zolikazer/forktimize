@@ -61,7 +61,9 @@ def insert_test_food(session):
     session.commit()
 
 
-def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session: Session):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__returns_correct_meal_plan(mock_date, forktimize_client, session: Session):
+    mock_date.today.return_value = date(2025, 2, 23)  # Day before test date
     session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD))
 
     meal_plan_request = make_meal_request()
@@ -82,7 +84,9 @@ def test_create_meal_plan__returns_correct_meal_plan(forktimize_client, session:
     assert data["foodVendor"] == "cityfood"
 
 
-def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, session: Session):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__returns_correct_food_log_entry(mock_date, forktimize_client, session: Session):
+    mock_date.today.return_value = date(2025, 2, 23)
     session.add(make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD))
 
     response = forktimize_client.post("/meal-plan", json=make_meal_request())
@@ -96,7 +100,9 @@ def test_create_meal_plan__returns_correct_food_log_entry(forktimize_client, ses
     assert food_log_entry["sugar"] == 80
 
 
-def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__filters_blacklist(mock_date, forktimize_client, session: Session):
+    mock_date.today.return_value = date(2025, 2, 23)
     blacklisted_food = "cheap_and_blacklisted"
     session.add(make_food(name=blacklisted_food, price=0, food_vendor=FoodVendorType.CITY_FOOD))
     meal_plan_request = make_meal_request(**{"food_blacklist": [blacklisted_food]})
@@ -109,7 +115,9 @@ def test_create_meal_plan__filters_blacklist(forktimize_client, session: Session
     assert blacklisted_food not in [f["name"] for f in data["foods"]]
 
 
-def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, session: Session):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__filters_food_by_food_provider(mock_date, forktimize_client, session: Session):
+    mock_date.today.return_value = date(2025, 2, 23)
     food_with_different_provider = make_food(price=0, food_vendor=FoodVendorType.INTER_FOOD)
     session.add(food_with_different_provider)
     meal_plan_request = make_meal_request()
@@ -122,7 +130,9 @@ def test_create_meal_plan__filters_food_by_food_provider(forktimize_client, sess
     assert food_with_different_provider.name not in [f["name"] for f in data["foods"]]
 
 
-def test_create_meal_plan__honors_max_food_repeat_limit(forktimize_client, session: Session):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__honors_max_food_repeat_limit(mock_date, forktimize_client, session: Session):
+    mock_date.today.return_value = date(2025, 2, 23)
     meal_planner_request = make_meal_request(**{"max_food_repeat": 1})
 
     response = forktimize_client.post("/meal-plan", json=meal_planner_request)
@@ -190,11 +200,13 @@ def test_health_check__returns_unhealthy_status_when_db_fails(forktimize_client)
     assert response.status_code == 200
     assert response.json() == {
         "status": AppStatus.UNHEALTHY,
-        "database": "error"
+        "database": "disconnected"
     }
 
 
-def test_create_meal_plan__returns_422_if_min_macros_exceed_calories(forktimize_client):
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__returns_422_if_min_macros_exceed_calories(mock_date, forktimize_client):
+    mock_date.today.return_value = date(2025, 2, 23)
     meal_planner_request = make_meal_request(**{"nutritional_constraints": {
         "min_calories": 1500,
         "max_calories": 2700,
@@ -208,3 +220,15 @@ def test_create_meal_plan__returns_422_if_min_macros_exceed_calories(forktimize_
         "code": "macro_calories_conflict",
         "message": "Total min macro calories exceed min_calories."
     }
+
+
+@patch('routers.meal_planner.date')
+def test_create_meal_plan__returns_400_for_past_date(mock_date, forktimize_client):
+    """Test that requesting meal plan for past date returns 400 error"""
+    mock_date.today.return_value = date(2025, 2, 24)  # Set "today"
+    meal_planner_request = make_meal_request(**{"date": "2025-02-23"})  # Yesterday
+
+    response = forktimize_client.post("/meal-plan", json=meal_planner_request)
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Cannot generate meal plan for past dates"}

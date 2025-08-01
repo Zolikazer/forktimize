@@ -59,7 +59,8 @@ def on_startup():
 
             SCHEDULER.start()
         except Exception as e:
-            APP_LOGGER.error(f"Something fucked when starting upp the app {e}")
+            APP_LOGGER.error(f"Failed to initialize application: {e}")
+            raise  # Re-raise to prevent app from starting in broken state
 
 
 @app.on_event("shutdown")

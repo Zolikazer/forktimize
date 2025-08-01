@@ -8,10 +8,11 @@ from model.food import Food
 from model.nutritional_constraints import NutritionalConstraints
 from monitoring.logging import APP_LOGGER
 from monitoring.performance import benchmark
+from settings import SETTINGS
 
 
 @benchmark
-@cached(TTLCache(maxsize=50, ttl=ONE_DAY),
+@cached(TTLCache(maxsize=SETTINGS.DEFAULT_CACHE_SIZE, ttl=SETTINGS.DEFAULT_CACHE_TTL),
         key=lambda foods, nutritional_constraints, max_food_repeat: (
                 tuple(foods), nutritional_constraints, max_food_repeat)
         )

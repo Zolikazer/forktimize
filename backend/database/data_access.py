@@ -9,10 +9,11 @@ from food_vendors.food_vendor_type import FoodVendorType
 from model.job_run import JobRun, JobStatus, JobType
 from monitoring.performance import benchmark
 from constants import ONE_DAY
+from settings import SETTINGS
 
 
 @benchmark
-@cached(TTLCache(maxsize=50, ttl=ONE_DAY),
+@cached(TTLCache(maxsize=SETTINGS.DEFAULT_CACHE_SIZE, ttl=SETTINGS.DEFAULT_CACHE_TTL),
         key=lambda session, target_date: target_date)
 def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
     statement = select(col(Food.date)).distinct().where(Food.date > target_date)
@@ -22,7 +23,7 @@ def get_unique_dates_after(session: Session, target_date: date) -> list[date]:
 
 @benchmark
 @cached(
-    TTLCache(maxsize=50, ttl=ONE_DAY),
+    TTLCache(maxsize=SETTINGS.DEFAULT_CACHE_SIZE, ttl=SETTINGS.SHORT_CACHE_TTL),
     key=lambda session, target_date, vendor_type: (target_date, vendor_type)
 )
 def get_available_dates_for_vendor(session: Session, target_date: date, vendor_type: FoodVendorType) -> list[date]:
@@ -36,7 +37,7 @@ def get_available_dates_for_vendor(session: Session, target_date: date, vendor_t
 
 
 @benchmark
-@cached(TTLCache(maxsize=100, ttl=ONE_DAY),
+@cached(TTLCache(maxsize=SETTINGS.LARGE_CACHE_SIZE, ttl=SETTINGS.DEFAULT_CACHE_TTL),
         key=lambda session, target_date, food_vendor, food_blacklist=None:
         (target_date, food_vendor, tuple(food_blacklist or ())))
 def get_foods_for_given_date(

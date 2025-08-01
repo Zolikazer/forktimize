@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from starlette.responses import JSONResponse
 
@@ -49,12 +49,17 @@ def get_vendor_data(session: Session = Depends(get_session)) -> JSONResponse:
 @meal_planner.post("/meal-plan", response_model=MealPlan)
 def generate_meal_plan(meal_plan_request: MealPlanRequest,
                        session: Session = Depends(get_session)) -> MealPlan:
+    # Basic date validation - prevent past date requests
+    if meal_plan_request.date < date.today():
+        raise HTTPException(status_code=400, detail="Cannot generate meal plan for past dates")
+    
     food_selection = get_foods_for_given_date(session,
                                               meal_plan_request.date,
                                               meal_plan_request.food_vendor,
                                               meal_plan_request.food_blacklist)
 
     if not food_selection:
+        APP_LOGGER.warning(f"No food selection available for {meal_plan_request.date} from {meal_plan_request.food_vendor}")
         return MealPlan(foods=[])
 
     food_counts = solve_meal_plan_ilp(food_selection, meal_plan_request.nutritional_constraints,
@@ -68,10 +73,10 @@ def generate_meal_plan(meal_plan_request: MealPlanRequest,
 def health_check(session: Session = Depends(get_session)) -> dict:
     try:
         session.exec(select(1)).first()
-
         APP_LOGGER.info("✅ Health check passed.")
         return {"status": AppStatus.HEALTHY, "database": "connected"}
 
     except Exception as e:
+        # Log the actual error internally but don't expose details publicly
         APP_LOGGER.error(f"❌ Health check failed: {e}")
-        return {"status": AppStatus.UNHEALTHY, "database": "error"}
+        return {"status": AppStatus.UNHEALTHY, "database": "disconnected"}
