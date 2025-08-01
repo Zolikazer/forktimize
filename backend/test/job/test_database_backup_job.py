@@ -121,10 +121,15 @@ def test_backup_skips_when_recent_backup_exists(mock_client_class, session, temp
     # Should not create new backup or upload anything
     mock_blob.upload_from_filename.assert_not_called()
     
-    # Should only have the original JobRun (no new one created)
+    # Should have 2 job runs: original + new successful "skipped" run
     job_runs = session.exec(select(JobRun)).all()
-    assert len(job_runs) == 1
-    assert job_runs[0].id == existing_backup.id
+    assert len(job_runs) == 2
+    
+    # The new job run should be marked as successful with skip details
+    new_job_run = job_runs[1]  # Second job run
+    assert new_job_run.status == JobStatus.SUCCESS
+    assert new_job_run.details['skipped'] == True
+    assert new_job_run.details['reason'] == "Recent backup exists"
 
 
 @patch("jobs.database_backup_job.storage.Client")
@@ -150,7 +155,15 @@ def test_backup_handles_gcp_upload_failure(mock_client_class, session, temp_db_f
     job_run = job_runs[0]
     assert job_run.job_type == JobType.DATABASE_BACKUP
     assert job_run.status == JobStatus.FAILURE
-    assert "GCP upload failed!" in job_run.details["error"]
+    
+    # Check that failure context includes all the backup details
+    assert job_run.details['error'] == "GCP upload failed!"
+    assert job_run.details['bucket_name'] == "test-bucket"
+    assert job_run.details['file_prefix'] == "test-backup"  
+    assert job_run.details['database_path'] == str(temp_db_file)
+    assert 'backup_filename' in job_run.details
+    assert 'backup_date' in job_run.details
+    assert 'database_size_mb' in job_run.details  # Should be present
 
 
 @patch("jobs.database_backup_job.storage.Client")

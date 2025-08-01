@@ -7,15 +7,16 @@ import requests
 from sqlmodel import Session
 from tenacity import retry, stop_after_attempt, wait_exponential, before_sleep_log
 
-from database.data_access import has_successful_job_run, create_job_run, save_foods_to_db
+from database.data_access import has_successful_job_run, save_foods_to_db
 from database.db import ENGINE, init_db
 from food_vendors.food_vendor import VENDOR_REGISTRY
 from food_vendors.food_vendor_type import FoodVendorType
 from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy
 from food_vendors.strategies.teletal.teletal_client import TeletalClient
+from jobs.base_job import BaseJob
 from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food
-from model.job_run import JobStatus, JobType, FoodDataCollectorDetails
+from model.job_run import JobType, FoodDataCollectorDetails
 from monitoring.logging import JOB_LOGGER, APP_LOGGER
 from monitoring.performance import benchmark
 from settings import SETTINGS, RunMode
@@ -31,8 +32,8 @@ def run_collect_food_data_job(mode: RunMode = SETTINGS.MODE):
             FoodDataCollector(session, [VENDOR_REGISTRY[FoodVendorType.CITY_FOOD].strategy]).run()
 
 
-class FoodDataCollectorJob:
-    """Atomic job that collects food data for one vendor and one week."""
+class FoodDataCollectorJob(BaseJob):
+    """Individual job that collects food data for one vendor and one week."""
     
     def __init__(self,
                  session: Session,
@@ -45,7 +46,7 @@ class FoodDataCollectorJob:
                  fetch_images: bool = SETTINGS.FETCH_IMAGES,
                  image_dir: Path = SETTINGS.food_image_dir,
                  data_dir: Path = SETTINGS.data_dir):
-        self._session = session
+        super().__init__(session, JobType.FOOD_DATA_COLLECTION)
         self._strategy = strategy
         self._year = year
         self._week = week
@@ -56,14 +57,25 @@ class FoodDataCollectorJob:
         self._data_dir = data_dir
         self._headers = headers
 
-    def run(self):
-        """Execute the job for this specific vendor/week combination."""
-        try:
-            self._sync_one_week_food_data()
-            self._track_successful_job_run()
-        except Exception as e:
-            self._track_failed_job_run(e)
-            raise
+    def _execute(self) -> dict:
+        """Execute the job-specific work for this vendor/week combination."""
+        self._sync_one_week_food_data()
+        
+        # Return details for job tracking using proper model
+        details = FoodDataCollectorDetails(
+            food_vendor=self._strategy.get_vendor(),
+            week=self._week,
+            year=self._year
+        )
+        return details.model_dump()
+
+    def _get_failure_context(self) -> dict:
+        """Provide vendor and week context for job failures."""
+        return {
+            "food_vendor": self._strategy.get_vendor().value,
+            "week": self._week,
+            "year": self._year
+        }
 
     def _sync_one_week_food_data(self):
         result = self._strategy.fetch_foods_for(self._year, self._week)
@@ -83,26 +95,6 @@ class FoodDataCollectorJob:
         save_to_json(data, filename)
         JOB_LOGGER.info(f"✅ Week {self._week} data saved to {filename}.")
 
-    def _track_successful_job_run(self):
-        job_id = self._track_job_run(JobStatus.SUCCESS)
-        JOB_LOGGER.info(
-            f"✅ Job ID={job_id}: Successfully fetched & stored data for {self._strategy.get_vendor().value} Week {self._week}.")
-
-    def _track_job_run(self, status: JobStatus) -> int:
-        details = FoodDataCollectorDetails(food_vendor=self._strategy.get_vendor(), week=self._week, year=self._year)
-        job_run = create_job_run(
-            self._session,
-            JobType.FOOD_DATA_COLLECTION,
-            status,
-            details.model_dump()
-        )
-
-        JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Week={self._week}, Year={self._year}, Status={status}")
-        return job_run.id
-
-    def _track_failed_job_run(self, e: Exception):
-        job_id = self._track_job_run(JobStatus.FAILURE)
-        JOB_LOGGER.error(f"❌ Job ID={job_id}: Unexpected error: {e}")
 
     def _download_food_images(self, images: dict[int, str], vendor_name: str):
         for food_id, image_url in images.items():

@@ -225,7 +225,11 @@ def test_individual_job_tracks_failure_correctly(session, strategy):
     
     job_run = job_runs[0]
     assert job_run.status == JobStatus.FAILURE
+    # BaseJob now stores error message plus job-specific context for failures
+    assert job_run.details['error'] == "Network error!"
     assert job_run.details['food_vendor'] == FoodVendorType.CITY_FOOD.value
+    assert job_run.details['week'] == 1
+    assert job_run.details['year'] == 2025
 
 
 @patch("jobs.food_data_collector_job.save_to_json")
