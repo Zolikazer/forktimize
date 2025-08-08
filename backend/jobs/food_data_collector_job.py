@@ -90,6 +90,8 @@ class FoodDataCollectorJob(BaseJob):
         }
 
     def _sync_one_week_food_data(self):
+        # Inject contextual logger into strategy
+        self._strategy.set_logger(self._logger)
         result = self._strategy.fetch_foods_for(self._year, self._week)
 
         self._save_raw_data_to_json(result.vendor.value, result.raw_data)
@@ -210,4 +212,4 @@ if __name__ == "__main__":
     init_db()
     client = TeletalClient("https://www.teletal.hu/etlap", "https://www.teletal.hu/ajax")
     with Session(ENGINE) as job_session:
-        FoodDataCollector(job_session, [vendor.strategy for vendor in VENDOR_REGISTRY.values()], 3).run()
+        FoodDataCollector(job_session, [vendor.strategy for vendor in VENDOR_REGISTRY.values()], weeks_to_fetch=3).run()

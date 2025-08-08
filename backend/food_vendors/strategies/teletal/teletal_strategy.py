@@ -8,7 +8,6 @@ from food_vendors.strategies.teletal.teletal_food_page import TeletalFoodPage
 from food_vendors.strategies.teletal.teletal_menu_page import TeletalMenuPage
 from jobs.file_utils import save_file
 from model.food import Food
-from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
 
@@ -18,6 +17,7 @@ class TeletalStrategy(FoodCollectionStrategy):
                  food_page: TeletalFoodPage,
                  teletal_url: str = SETTINGS.TELETAL_URL,
                  delay=SETTINGS.FETCHING_DELAY):
+        super().__init__()
         self._menu_page: TeletalMenuPage = menu_page
         self._food_page: TeletalFoodPage = food_page
         self._teletal_url: str = teletal_url
@@ -53,19 +53,13 @@ class TeletalStrategy(FoodCollectionStrategy):
                 foods.append(food)
                 time.sleep(self._delay)
             except TeletalUnavailableFoodError:
-                JOB_LOGGER.info(f"ℹ️ Skipping unavailable food: code={code}, day={day} — No info on page.")
+                self._logger.info(f"ℹ️ Skipping unavailable food: code={code}, day={day} — No info on page.")
             except Exception as e:
                 failures += 1
-                JOB_LOGGER.error(
-                    f"Failed to fetch food data for year: "
-                    f"{year} - "
-                    f"week: {week} - "
-                    f"day: {day} - "
-                    f"code: {code}:"
-                    f"{e}")
+                self._logger.error(f"Failed to fetch food data for day {day}, code {code}: {e}")
 
                 self._save_for_debug(code, day)
-        JOB_LOGGER.warning(f"TELETAL | Failed to fetch food data {failures} times.")
+        self._logger.warning(f"Failed to fetch food data {failures} times")
 
         return foods
 
@@ -82,8 +76,7 @@ class TeletalStrategy(FoodCollectionStrategy):
 
         return self._menu_page.get_food_category_codes()
 
-    @staticmethod
-    def _convert_raw_food_to_model(raw_data: list[dict[str, str]]) -> list[Food]:
+    def _convert_raw_food_to_model(self, raw_data: list[dict[str, str]]) -> list[Food]:
         failures = 0
         food_models = []
         for raw_food in raw_data:
@@ -91,9 +84,9 @@ class TeletalStrategy(FoodCollectionStrategy):
                 food_models.append(map_to_food_model(raw_food))
             except Exception as e:
                 failures += 1
-                JOB_LOGGER.error(f"Failed to convert raw food data to model: data: {raw_food} - exception: {e}")
+                self._logger.error(f"Failed to convert raw food data to model: data: {raw_food} - exception: {e}")
 
-        JOB_LOGGER.warning(f"TELETAL | Failed to convert food data {failures} times.")
+        self._logger.warning(f"Failed to convert food data {failures} times")
 
         return food_models
 

@@ -5,9 +5,9 @@ import pytest
 from requests import Response
 
 from food_vendors.food_vendor_type import FoodVendorType
-from food_vendors.strategies.efood_strategy import EfoodStrategy
-from food_vendors.strategies.inter_city_food.city_food_strategy import CityFoodStrategy
-from food_vendors.strategies.inter_city_food.inter_food_strategy import InterFoodStrategy
+from food_vendors.strategies.e_inter_city_food.efood_strategy import EfoodStrategy
+from food_vendors.strategies.e_inter_city_food.city_food_strategy import CityFoodStrategy
+from food_vendors.strategies.e_inter_city_food.inter_food_strategy import InterFoodStrategy
 from jobs.file_utils import load_json
 from settings import SETTINGS
 from test.conftest import TEST_RESOURCES_DIR, WEEK, YEAR

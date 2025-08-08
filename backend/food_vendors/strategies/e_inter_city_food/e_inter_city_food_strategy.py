@@ -6,15 +6,15 @@ import requests
 from food_vendors.strategies.food_collection_strategy import FoodCollectionStrategy, StrategyResult
 from model.food import Food
 from food_vendors.food_vendor_type import FoodVendorType
-from monitoring.logging import JOB_LOGGER
 from settings import SETTINGS
 
 
-class InterCityFoodStrategy(FoodCollectionStrategy, ABC):
+class EInterCityFoodStrategy(FoodCollectionStrategy, ABC):
 
     @abstractmethod
     def __init__(self, api_url: str, food_image_url: str, food_vendor: FoodVendorType,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT, headers: dict[str, str] = SETTINGS.HEADERS):
+        super().__init__()
         self._api_url: str = api_url
         self._food_image_url: str = food_image_url
         self._food_vendor: FoodVendorType = food_vendor
@@ -30,7 +30,7 @@ class InterCityFoodStrategy(FoodCollectionStrategy, ABC):
         raw_data = response.json()
 
         foods = self._deserialize_food_items(raw_data)
-        JOB_LOGGER.info(f"✅ Fetched {len(foods)} foods from {self._food_vendor.value} for week {week}, year {year}.")
+        self._logger.info(f"✅ Fetched {len(foods)} foods")
 
         return StrategyResult(foods=foods,
                               raw_data=raw_data,
@@ -64,9 +64,19 @@ class InterCityFoodStrategy(FoodCollectionStrategy, ABC):
 
     @staticmethod
     def _get_request_body(year: int, week: int) -> dict:
-        return {"year": str(year), "week": str(week), "calorie": {"min": 0, "max": 9000},
-                "carb": {"min": 0, "max": 9000},
-                "protein": {"min": 0, "max": 9000}, "fat": {"min": 0, "max": 9000}, "price": {"min": 0, "max": 9000},
-                "favorites": False, "last_minute": False, "seek_labels": [], "ignore_labels": [],
-                "seek_ingredients": [],
-                "ignore_ingredients": []}
+        return {
+            "year": str(year), 
+            "week": str(week), 
+            "seek_labels": [], 
+            "ignore_labels": [],
+            "seek_ingredients": [],
+            "ignore_ingredients": [],
+            "calorie": {"min": 0, "max": 9000},
+            "carb": {"min": 0, "max": 9000},
+            "protein": {"min": 0, "max": 9000}, 
+            "fat": {"min": 0, "max": 9000}, 
+            "price": {"min": 0, "max": 9000},
+            "favorites": False, 
+            "last_minute": False
+        }
+

@@ -45,6 +45,15 @@ class BaseJob(ABC):
         """
         return {}
 
+    def _create_logger_context(self) -> Dict[str, Any]:
+        """
+        Override this method to provide context for job logging.
+        
+        Returns:
+            Dict containing job-specific context to include in all logs.
+        """
+        return {}
+
     def run(self):
         """
         Main entry point for job execution.
@@ -61,7 +70,8 @@ class BaseJob(ABC):
         self._job_id = job_run.id
         
         # Create job logger now that we have the job ID
-        self._logger = create_job_logger(self._job_id, self._job_type)
+        logger_context = self._create_logger_context()
+        self._logger = create_job_logger(self._job_id, self._job_type, logger_context)
         
         self._logger.info(f"🔄 Starting {self._job_type.value} job...")
         
