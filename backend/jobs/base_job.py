@@ -6,7 +6,7 @@ from sqlmodel import Session
 
 from database.data_access import create_job_run, update_job_run
 from model.job_run import JobStatus, JobType
-from monitoring.logging import JOB_LOGGER
+from monitoring.job_logger import create_job_logger
 
 
 class BaseJob(ABC):
@@ -21,6 +21,7 @@ class BaseJob(ABC):
         self._session = session
         self._job_type = job_type
         self._job_id: int | None = None
+        self._logger = None  # Will be set after job_id is available
 
     @abstractmethod
     def _execute(self) -> Dict[str, Any]:
@@ -59,12 +60,15 @@ class BaseJob(ABC):
         job_run = create_job_run(self._session, self._job_type, JobStatus.RUNNING, {})
         self._job_id = job_run.id
         
-        JOB_LOGGER.info(f"🔄 [JOB-{self._job_id}] Starting {self._job_type.value} job...")
+        # Create job logger now that we have the job ID
+        self._logger = create_job_logger(self._job_id, self._job_type)
+        
+        self._logger.info(f"🔄 Starting {self._job_type.value} job...")
         
         try:
             details = self._execute()
             update_job_run(self._session, self._job_id, JobStatus.SUCCESS, details)
-            JOB_LOGGER.info(f"✅ [JOB-{self._job_id}] {self._job_type.value} job completed successfully")
+            self._logger.info(f"✅ {self._job_type.value} job completed successfully")
             
         except Exception as e:
             error_details = {"error": str(e)}
@@ -72,7 +76,7 @@ class BaseJob(ABC):
             error_details.update(context)
             
             update_job_run(self._session, self._job_id, JobStatus.FAILURE, error_details)
-            JOB_LOGGER.error(f"❌ [JOB-{self._job_id}] {self._job_type.value} job failed: {e}")
-            JOB_LOGGER.error(f"❌ [JOB-{self._job_id}] {self._job_type.value} job stacktrace:\n{traceback.format_exc()}")
+            self._logger.error(f"❌ {self._job_type.value} job failed: {e}")
+            self._logger.error(f"❌ {self._job_type.value} job stacktrace:\n{traceback.format_exc()}")
             raise
 
