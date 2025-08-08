@@ -17,7 +17,9 @@ from jobs.base_job import BaseJob
 from jobs.file_utils import save_to_json, save_image_to_webp
 from model.food import Food
 from model.job_run import JobType, FoodDataCollectorDetails
-from monitoring.logging import JOB_LOGGER, APP_LOGGER
+import logging
+
+from monitoring.logging import APP_LOGGER, JOB_LOGGER
 from monitoring.performance import benchmark
 from settings import SETTINGS, RunMode
 
@@ -40,6 +42,7 @@ class FoodDataCollectorJob(BaseJob):
                  strategy: FoodCollectionStrategy,
                  year: int,
                  week: int,
+                 base_logger: logging.Logger = JOB_LOGGER,
                  delay: float = SETTINGS.FETCHING_DELAY,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT,
                  headers: dict[str, str] = SETTINGS.HEADERS,
@@ -50,12 +53,21 @@ class FoodDataCollectorJob(BaseJob):
         self._strategy = strategy
         self._year = year
         self._week = week
+        self._base_logger = base_logger
         self._delay = delay
         self._timeout = timeout
         self._fetch_images = fetch_images
         self._image_dir = image_dir
         self._data_dir = data_dir
         self._headers = headers
+
+    def _create_logger_context(self) -> dict:
+        """Provide vendor, week, and year context for logging."""
+        return {
+            "vendor": self._strategy.get_vendor().value,
+            "week": self._week,
+            "year": self._year
+        }
 
     def _execute(self) -> dict:
         """Execute the job-specific work for this vendor/week combination."""
@@ -88,12 +100,12 @@ class FoodDataCollectorJob(BaseJob):
 
     def _save_foods_to_db(self, foods: list[Food]):
         save_foods_to_db(self._session, foods)
-        JOB_LOGGER.info(f"✅ Week {self._week} food selection stored in the database.")
+        self._logger.info(f"✅ Food selection stored in the database")
 
     def _save_raw_data_to_json(self, vendor_name: str, data: dict):
         filename = self._data_dir / f"{vendor_name}-week-{self._year}-{self._week}.json"
         save_to_json(data, filename)
-        JOB_LOGGER.info(f"✅ Week {self._week} data saved to {filename}.")
+        self._logger.info(f"✅ Data saved to {filename}")
 
 
     def _download_food_images(self, images: dict[int, str], vendor_name: str):
@@ -101,13 +113,13 @@ class FoodDataCollectorJob(BaseJob):
             image_path = self._image_dir / f"{vendor_name}_{food_id}.webp"
 
             if image_path.exists():
-                JOB_LOGGER.info(f"🟡 Skipping image (already exists): {image_path}")
+                self._logger.info(f"🟡 Skipping image (already exists): {image_path}")
                 continue
             try:
                 self._download_image(image_url, image_path)
                 time.sleep(self._delay)
             except Exception as e:
-                JOB_LOGGER.warning(f"❌ Failed to download image from {image_url}: {e}")
+                self._logger.warning(f"❌ Failed to download image from {image_url}: {e}")
 
     @retry(
         stop=stop_after_attempt(3),
@@ -116,12 +128,12 @@ class FoodDataCollectorJob(BaseJob):
         reraise=True
     )
     def _download_image(self, url: str, image_path: Path):
-        JOB_LOGGER.info(f"⬇️ Downloading image: {url}")
+        self._logger.info(f"⬇️ Downloading image: {url}")
         response = requests.get(url, timeout=self._timeout, headers=self._headers)
         response.raise_for_status()
 
         save_image_to_webp(response.content, image_path)
-        JOB_LOGGER.info(f"✅ Saved image: {image_path}")
+        self._logger.info(f"✅ Saved image: {image_path}")
 
         return response.content
 
@@ -132,6 +144,7 @@ class FoodDataCollector:
     def __init__(self,
                  session: Session,
                  strategies: list[FoodCollectionStrategy],
+                 logger: logging.Logger = JOB_LOGGER,
                  weeks_to_fetch: int = SETTINGS.WEEKS_TO_FETCH,
                  delay: float = SETTINGS.FETCHING_DELAY,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT,
@@ -141,6 +154,7 @@ class FoodDataCollector:
                  data_dir: Path = SETTINGS.data_dir):
         self._session: Session = session
         self._strategies: list[FoodCollectionStrategy] = strategies
+        self._logger = logger
         self._weeks_to_fetch: int = weeks_to_fetch
         self._delay: float = delay
         self._timeout: int = timeout
@@ -158,7 +172,7 @@ class FoodDataCollector:
         for strategy in self._strategies:
             for week in range(current_week, current_week + self._weeks_to_fetch):
                 if has_successful_job_run(self._session, current_year, week, strategy.get_vendor()):
-                    JOB_LOGGER.info(
+                    self._logger.info(
                         f"Skipping job run for {strategy.get_vendor().value}, year:{current_year} week {week}...")
                     continue
                 
@@ -168,6 +182,7 @@ class FoodDataCollector:
                     strategy=strategy,
                     year=current_year,
                     week=week,
+                    base_logger=self._logger,  # Pass the same logger from orchestrator
                     delay=self._delay,
                     timeout=self._timeout,
                     headers=self._headers,
@@ -179,7 +194,7 @@ class FoodDataCollector:
                 try:
                     job.run()
                 except Exception as e:
-                    JOB_LOGGER.error(f"Individual job failed for {strategy.get_vendor().value} week {week}: {e}")
+                    self._logger.error(f"Individual job failed for {strategy.get_vendor().value} week {week}: {e}")
                     # Job already tracked its own failure, so we continue with other jobs
                 
                 time.sleep(self._delay)
