@@ -93,3 +93,42 @@ def test_get_food_image_url(strategy, response_file, expected_url: str, mock_req
 
     for food in result.foods:
         assert result.images.get(food.food_id) == expected_url.format(food_id=food.food_id)
+
+
+@pytest.mark.parametrize("strategy", [
+    CityFoodStrategy(),
+    InterFoodStrategy(),
+    EfoodStrategy(),
+])
+def test_maintenance_response_detection(strategy):
+    """Test that maintenance response is properly detected and handled."""
+    # Test maintenance response: error=false, data=[]
+    maintenance_response = {"error": False, "data": []}
+    assert strategy._is_maintenance_response(maintenance_response) == True
+    
+    # Test normal response: error=false, data=populated
+    normal_response = {"error": False, "data": {"breakfast": {"categories": [{"items": [{"id": 1}]}]}}}
+    assert strategy._is_maintenance_response(normal_response) == False
+    
+    # Test error response: error=true
+    error_response = {"error": True, "data": []}
+    assert strategy._is_maintenance_response(error_response) == False
+
+
+@patch("requests.post")
+def test_fetch_foods_handles_maintenance_mode(mock_post):
+    """Test that fetch_foods_for returns empty result during maintenance."""
+    # Mock maintenance response
+    mock_response = Mock(spec=Response)
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"error": False, "data": []}
+    mock_post.return_value = mock_response
+    
+    strategy = CityFoodStrategy()
+    result = strategy.fetch_foods_for(2025, 10)
+    
+    # Should return empty result gracefully
+    assert result.foods == []
+    assert result.images == {}
+    assert result.vendor == FoodVendorType.CITY_FOOD
+    assert result.raw_data == {"error": False, "data": []}

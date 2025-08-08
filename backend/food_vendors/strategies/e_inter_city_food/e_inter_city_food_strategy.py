@@ -29,6 +29,11 @@ class EInterCityFoodStrategy(FoodCollectionStrategy, ABC):
         response.raise_for_status()
         raw_data = response.json()
 
+        # Defensive check for planned maintenance or empty responses
+        if self._is_maintenance_response(raw_data):
+            self._logger.info(f"🚧 Vendor in maintenance mode or no data available, returning empty result")
+            return StrategyResult(foods=[], raw_data=raw_data, images={}, vendor=self._food_vendor)
+
         foods = self._deserialize_food_items(raw_data)
         self._logger.info(f"✅ Fetched {len(foods)} foods")
 
@@ -43,6 +48,10 @@ class EInterCityFoodStrategy(FoodCollectionStrategy, ABC):
 
     def get_vendor(self) -> FoodVendorType:
         return self._food_vendor
+
+    def _is_maintenance_response(self, raw_data: dict) -> bool:
+        """Check if response indicates maintenance mode (error=false, data=[])."""
+        return raw_data.get('error') is False and raw_data.get('data') == []
 
     def _deserialize_food_items(self, raw_data: dict) -> list[Food]:
         return [

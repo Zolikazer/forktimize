@@ -62,7 +62,8 @@ app.add_middleware(
 
 
 @app.exception_handler(MealPlanRequestException)
-async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException):
+async def meal_plan_exception_handler(request: Request, exc: MealPlanRequestException):
+    APP_LOGGER.warning(f"🚨 Meal plan request failed: {exc.error_code} - {exc.message} | Path: {request.url.path} | Method: {request.method}")
     return JSONResponse(
         status_code=422,
         content={
