@@ -4,7 +4,7 @@ import pytest
 from sqlmodel import SQLModel, create_engine, Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
-    get_available_dates_for_vendor, has_successful_job_run, create_job_run, save_foods_to_db, filter_blacklisted_foods
+    get_available_dates_for_vendor, has_successful_job_run, create_job_run, update_job_run, save_foods_to_db, filter_blacklisted_foods
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
 from model.job_run import JobRun, JobStatus, JobType, FoodDataCollectorDetails, DatabaseBackupDetails
@@ -188,3 +188,29 @@ def test_save_foods_to_db__updates_existing_foods_in_database(session):
     
     persisted_food = session.exec(select(Food).where(Food.food_id == 1)).first()
     assert persisted_food.name == "Updated Name"
+
+
+def test_update_job_run_updates_existing_job(session):
+    """Test that update_job_run successfully updates an existing job run."""
+    # Create initial job run
+    job_run = create_job_run(session, JobType.FOOD_DATA_COLLECTION, JobStatus.RUNNING, {})
+    initial_id = job_run.id
+    
+    # Update to success
+    updated_job_run = update_job_run(session, initial_id, JobStatus.SUCCESS, {"result": "completed"})
+    
+    # Verify return value
+    assert updated_job_run.id == initial_id
+    assert updated_job_run.status == JobStatus.SUCCESS
+    assert updated_job_run.details == {"result": "completed"}
+    
+    # Verify in database
+    db_job_run = session.get(JobRun, initial_id)
+    assert db_job_run.status == JobStatus.SUCCESS
+    assert db_job_run.details == {"result": "completed"}
+
+
+def test_update_job_run_raises_error_for_nonexistent_id(session):
+    """Test that update_job_run raises ValueError for nonexistent job ID."""
+    with pytest.raises(ValueError, match="JobRun with id 99999 not found"):
+        update_job_run(session, 99999, JobStatus.SUCCESS, {})

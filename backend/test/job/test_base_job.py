@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from sqlalchemy import create_engine
@@ -48,16 +48,23 @@ def test_successful_job_execution_creates_job_run(session):
     """Test that successful job execution creates a job run with success status."""
     job = TestJob(session)
     
+    # Job ID should be None before execution
+    assert job._job_id is None
+    
     job.run()
     
     # Verify _execute was called
     assert job.execute_called
+    
+    # Job should have an ID after execution
+    assert job._job_id is not None
     
     # Verify job run was created
     job_runs = session.exec(select(JobRun)).all()
     assert len(job_runs) == 1
     
     job_run = job_runs[0]
+    assert job_run.id == job._job_id
     assert job_run.job_type == JobType.FOOD_DATA_COLLECTION
     assert job_run.status == JobStatus.SUCCESS
     assert job_run.details == {"test": "data"}
@@ -68,6 +75,9 @@ def test_failed_job_execution_creates_failure_job_run(session):
     job = TestJob(session)
     job.should_fail = True
     
+    # Job ID should be None before execution
+    assert job._job_id is None
+    
     with pytest.raises(Exception, match="Test failure"):
         job.run()
     
@@ -75,11 +85,15 @@ def test_failed_job_execution_creates_failure_job_run(session):
     assert job.execute_called
     assert job.failure_context_called
     
+    # Job should have an ID even after failure
+    assert job._job_id is not None
+    
     # Verify failure job run was created
     job_runs = session.exec(select(JobRun)).all()
     assert len(job_runs) == 1
     
     job_run = job_runs[0]
+    assert job_run.id == job._job_id
     assert job_run.job_type == JobType.FOOD_DATA_COLLECTION
     assert job_run.status == JobStatus.FAILURE
     assert job_run.details["error"] == "Test failure"
@@ -157,3 +171,51 @@ def test_template_method_pattern_execution_order(session):
     
     # Both methods should be called in correct order
     assert execution_order == ["execute", "failure_context"]
+
+
+@patch('jobs.base_job.update_job_run')
+@patch('jobs.base_job.create_job_run')
+def test_job_lifecycle_creates_then_updates_on_success(mock_create, mock_update, session):
+    """Test that job creates RUNNING record, then updates to SUCCESS."""
+    # Mock create_job_run to return a job with ID
+    mock_job_run = MagicMock()
+    mock_job_run.id = 123
+    mock_create.return_value = mock_job_run
+    
+    job = TestJob(session)
+    job.run()
+    
+    # Verify create_job_run called with RUNNING status
+    mock_create.assert_called_once_with(session, JobType.FOOD_DATA_COLLECTION, JobStatus.RUNNING, {})
+    
+    # Verify update_job_run called with SUCCESS and details
+    mock_update.assert_called_once_with(session, 123, JobStatus.SUCCESS, {"test": "data"})
+    
+    # Verify job has the ID
+    assert job._job_id == 123
+
+
+@patch('jobs.base_job.update_job_run')
+@patch('jobs.base_job.create_job_run')
+def test_job_lifecycle_creates_then_updates_on_failure(mock_create, mock_update, session):
+    """Test that job creates RUNNING record, then updates to FAILURE on exception."""
+    # Mock create_job_run to return a job with ID
+    mock_job_run = MagicMock()
+    mock_job_run.id = 456
+    mock_create.return_value = mock_job_run
+    
+    job = TestJob(session)
+    job.should_fail = True
+    
+    with pytest.raises(Exception, match="Test failure"):
+        job.run()
+    
+    # Verify create_job_run called with RUNNING status
+    mock_create.assert_called_once_with(session, JobType.FOOD_DATA_COLLECTION, JobStatus.RUNNING, {})
+    
+    # Verify update_job_run called with FAILURE and error details
+    expected_details = {"error": "Test failure", "context": "info"}
+    mock_update.assert_called_once_with(session, 456, JobStatus.FAILURE, expected_details)
+    
+    # Verify job has the ID
+    assert job._job_id == 456

@@ -88,6 +88,18 @@ def create_job_run(session: Session, job_type: JobType, status: JobStatus, detai
     return job_run
 
 
+def update_job_run(session: Session, job_run_id: int, status: JobStatus, details: dict) -> JobRun:
+    job_run = session.get(JobRun, job_run_id)
+    if not job_run:
+        raise ValueError(f"JobRun with id {job_run_id} not found")
+    
+    job_run.status = status
+    job_run.details = details
+    session.commit()
+    session.refresh(job_run)
+    return job_run
+
+
 def save_foods_to_db(session: Session, foods: list[Food]) -> None:
     for food in foods:
         session.merge(food)

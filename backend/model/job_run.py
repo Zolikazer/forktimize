@@ -9,6 +9,7 @@ from food_vendors.food_vendor_type import FoodVendorType
 
 
 class JobStatus(str, Enum):
+    RUNNING = "running"
     SUCCESS = "success"
     FAILURE = "failure"
 

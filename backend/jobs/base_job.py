@@ -1,9 +1,10 @@
+import traceback
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 from sqlmodel import Session
 
-from database.data_access import create_job_run
+from database.data_access import create_job_run, update_job_run
 from model.job_run import JobStatus, JobType
 from monitoring.logging import JOB_LOGGER
 
@@ -19,6 +20,7 @@ class BaseJob(ABC):
     def __init__(self, session: Session, job_type: JobType):
         self._session = session
         self._job_type = job_type
+        self._job_id: int | None = None
 
     @abstractmethod
     def _execute(self) -> Dict[str, Any]:
@@ -47,44 +49,30 @@ class BaseJob(ABC):
         Main entry point for job execution.
         
         Uses template method pattern to handle common concerns:
+        - Create job record in RUNNING state
         - Job execution via _execute()
-        - Success/failure tracking
-        - Consistent logging
+        - Update job record to SUCCESS/FAILURE
+        - Consistent logging with job ID
         - Error handling
         """
-        JOB_LOGGER.info(f"🔄 Starting {self._job_type.value} job...")
+        # Create job record in RUNNING state to get job ID
+        job_run = create_job_run(self._session, self._job_type, JobStatus.RUNNING, {})
+        self._job_id = job_run.id
+        
+        JOB_LOGGER.info(f"🔄 [JOB-{self._job_id}] Starting {self._job_type.value} job...")
         
         try:
             details = self._execute()
-            self._track_successful_job_run(details)
-            JOB_LOGGER.info(f"✅ {self._job_type.value} job completed successfully")
+            update_job_run(self._session, self._job_id, JobStatus.SUCCESS, details)
+            JOB_LOGGER.info(f"✅ [JOB-{self._job_id}] {self._job_type.value} job completed successfully")
             
         except Exception as e:
-            self._track_failed_job_run(str(e))
-            JOB_LOGGER.error(f"❌ {self._job_type.value} job failed: {e}")
+            error_details = {"error": str(e)}
+            context = self._get_failure_context()
+            error_details.update(context)
+            
+            update_job_run(self._session, self._job_id, JobStatus.FAILURE, error_details)
+            JOB_LOGGER.error(f"❌ [JOB-{self._job_id}] {self._job_type.value} job failed: {e}")
+            JOB_LOGGER.error(f"❌ [JOB-{self._job_id}] {self._job_type.value} job stacktrace:\n{traceback.format_exc()}")
             raise
 
-    def _track_successful_job_run(self, details: Dict[str, Any]):
-        """Track a successful job run with the provided details."""
-        job_run = create_job_run(
-            self._session,
-            self._job_type,
-            JobStatus.SUCCESS,
-            details
-        )
-        JOB_LOGGER.info(f"📌 Job Run Logged: ID={job_run.id}, Status={JobStatus.SUCCESS}")
-
-    def _track_failed_job_run(self, error_message: str):
-        """Track a failed job run with the error details and job-specific context."""
-        details = {"error": error_message}
-        # Add job-specific context for failures
-        context = self._get_failure_context()
-        details.update(context)
-        
-        job_run = create_job_run(
-            self._session,
-            self._job_type,
-            JobStatus.FAILURE,
-            details
-        )
-        JOB_LOGGER.error(f"❌ Job Run Failed: ID={job_run.id}, Error: {error_message}")
