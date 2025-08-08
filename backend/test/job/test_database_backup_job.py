@@ -8,7 +8,7 @@ from freezegun import freeze_time
 from sqlalchemy import create_engine
 from sqlmodel import select, SQLModel, Session
 
-from jobs.database_backup_job import DatabaseBackupJob
+from jobs.database_backup_job import DatabaseBackupJob, run_database_backup_job
 from model.job_run import JobRun, JobStatus, JobType, DatabaseBackupDetails
 
 
@@ -93,11 +93,7 @@ def test_backup_uploads_to_correct_gcp_path(mock_client_class, session, temp_db_
     mock_blob.upload_from_filename.assert_called_once_with(str(temp_db_file))
 
 
-@patch("jobs.database_backup_job.storage.Client")
-def test_backup_skips_when_recent_backup_exists(mock_client_class, session, temp_db_file, mock_storage_client):
-    mock_client, mock_bucket, mock_blob = mock_storage_client
-    mock_client_class.return_value = mock_client
-    
+def test_run_database_backup_job_skips_when_recent_backup_exists(session):
     # Create an existing successful backup from 3 days ago
     existing_backup = JobRun(
         job_type=JobType.DATABASE_BACKUP,
@@ -108,28 +104,14 @@ def test_backup_skips_when_recent_backup_exists(mock_client_class, session, temp
     session.add(existing_backup)
     session.commit()
     
-    job = DatabaseBackupJob(
-        session=session,
-        bucket_name="test-bucket", 
-        file_prefix="test-backup",
-        database_path=str(temp_db_file),
-        backup_interval_days=7
-    )
+    with patch("jobs.database_backup_job.Session", return_value=session):
+        with patch("jobs.database_backup_job.SETTINGS.DATABASE_BACKUP_INTERVAL_DAYS", 7):
+            run_database_backup_job()
     
-    job.run()
-    
-    # Should not create new backup or upload anything
-    mock_blob.upload_from_filename.assert_not_called()
-    
-    # Should have 2 job runs: original + new successful "skipped" run
+    # Should only have the original backup entry - no new job run created
     job_runs = session.exec(select(JobRun)).all()
-    assert len(job_runs) == 2
-    
-    # The new job run should be marked as successful with skip details
-    new_job_run = job_runs[1]  # Second job run
-    assert new_job_run.status == JobStatus.SUCCESS
-    assert new_job_run.details['skipped'] == True
-    assert new_job_run.details['reason'] == "Recent backup exists"
+    assert len(job_runs) == 1
+    assert job_runs[0] == existing_backup
 
 
 @patch("jobs.database_backup_job.storage.Client")

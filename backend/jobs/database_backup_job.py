@@ -1,10 +1,11 @@
-from datetime import datetime, date, timedelta
+from datetime import date
 from pathlib import Path
 
 from google.cloud import storage
-from sqlmodel import Session, select
+from sqlmodel import Session
 
 from database.db import ENGINE
+from database.data_access import has_recent_successful_backup
 from jobs.base_job import BaseJob
 from model.job_run import JobRun, JobStatus, JobType, DatabaseBackupDetails
 from monitoring.logging import JOB_LOGGER
@@ -16,6 +17,12 @@ from settings import SETTINGS
 def run_database_backup_job():
     JOB_LOGGER.info("🔄 Running scheduled database backup job...")
     with Session(ENGINE) as session:
+        # Check if we need a backup before creating job entry
+        if has_recent_successful_backup(session, SETTINGS.DATABASE_BACKUP_INTERVAL_DAYS):
+            JOB_LOGGER.info(f"✅ Recent backup found within {SETTINGS.DATABASE_BACKUP_INTERVAL_DAYS} days, skipping...")
+            return
+        
+        # Only create job entry if we actually need to backup
         DatabaseBackupJob(session).run()
 
 
@@ -35,11 +42,6 @@ class DatabaseBackupJob(BaseJob):
 
     def _execute(self) -> dict:
         """Execute the database backup job."""
-        if self._has_recent_successful_backup(self._backup_interval_days):
-            JOB_LOGGER.info(f"✅ Recent backup found within {self._backup_interval_days} days, skipping...")
-            # Return empty details for skipped backup - still counts as success
-            return {"skipped": True, "reason": "Recent backup exists"}
-            
         backup_date = date.today()
         backup_filename = f"{self._file_prefix}-{backup_date.strftime('%Y-%m-%d')}.db"
         
@@ -80,15 +82,6 @@ class DatabaseBackupJob(BaseJob):
             
         return context
 
-    def _has_recent_successful_backup(self, days: int) -> bool:
-        cutoff_time = datetime.now() - timedelta(days=days)
-        
-        statement = (select(JobRun)
-                    .where(JobRun.job_type == JobType.DATABASE_BACKUP)
-                    .where(JobRun.status == JobStatus.SUCCESS)
-                    .where(JobRun.timestamp >= cutoff_time))
-        
-        return self._session.exec(statement).first() is not None
 
     def _get_database_size_mb(self) -> float:
         db_size_bytes = self._database_path.stat().st_size

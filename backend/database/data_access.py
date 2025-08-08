@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from cachetools import TTLCache, cached
 from sqlalchemy import String, Select, func
@@ -104,3 +104,15 @@ def save_foods_to_db(session: Session, foods: list[Food]) -> None:
     for food in foods:
         session.merge(food)
     session.commit()
+
+
+def has_recent_successful_backup(session: Session, days: int) -> bool:
+    """Check if there's a successful backup within the specified number of days."""
+    cutoff_time = datetime.now() - timedelta(days=days)
+    
+    statement = (select(JobRun)
+                .where(JobRun.job_type == JobType.DATABASE_BACKUP)
+                .where(JobRun.status == JobStatus.SUCCESS)
+                .where(JobRun.timestamp >= cutoff_time))
+    
+    return session.exec(statement).first() is not None

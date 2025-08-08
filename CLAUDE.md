@@ -49,8 +49,9 @@ Located in `/browser-extension/` directory. This is a **cross-platform** extensi
 
 **Database Layer:**
 - SQLite database with SQLModel ORM for type safety
-- Data access layer pattern (`database/data_access.py`) - all DB operations go through this layer
-- Jobs use data access functions instead of direct DB manipulation
+- Data access layer pattern (`database/data_access.py`) - **ALL DB operations go through this layer**
+- **CRITICAL**: Jobs use data access functions instead of direct DB manipulation
+- **NEVER** write SQL queries or session operations directly in jobs - use data access functions
 - Proper separation of concerns between jobs and data persistence
 
 **Job System:**
@@ -87,3 +88,4 @@ Located in `/browser-extension/` directory. This is a **cross-platform** extensi
 - **Environment**: Always use the project's virtual environment (`.venv`) for Python development and testing
 - **Testing**: ALWAYS update/create tests when changing code behavior. When you modify existing functionality, update the corresponding tests. When you add new functionality, write new tests. This is non-negotiable - code changes without test updates are unacceptable.
 - **Imports**: ALWAYS place all imports at the top of the file. Never use local imports inside functions unless absolutely necessary for circular import resolution or optional dependencies.
+- **Commit Messages**: NEVER mention tests in commit messages since testing is mandatory and expected for all changes.

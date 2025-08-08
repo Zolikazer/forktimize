@@ -1,10 +1,11 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import pytest
 from sqlmodel import SQLModel, create_engine, Session, select
 
 from database.data_access import get_unique_dates_after, get_foods_for_given_date, is_database_empty, \
-    get_available_dates_for_vendor, has_successful_job_run, create_job_run, update_job_run, save_foods_to_db, filter_blacklisted_foods
+    get_available_dates_for_vendor, has_successful_job_run, create_job_run, update_job_run, save_foods_to_db, filter_blacklisted_foods, \
+    has_recent_successful_backup
 from food_vendors.food_vendor_type import FoodVendorType
 from model.food import Food
 from model.job_run import JobRun, JobStatus, JobType, FoodDataCollectorDetails, DatabaseBackupDetails
@@ -214,3 +215,51 @@ def test_update_job_run_raises_error_for_nonexistent_id(session):
     """Test that update_job_run raises ValueError for nonexistent job ID."""
     with pytest.raises(ValueError, match="JobRun with id 99999 not found"):
         update_job_run(session, 99999, JobStatus.SUCCESS, {})
+
+
+def test_has_recent_successful_backup_returns_true_when_recent_backup_exists(session):
+    """Test that has_recent_successful_backup returns True when a recent successful backup exists."""
+    # Create a successful backup from 2 days ago
+    recent_backup = JobRun(
+        job_type=JobType.DATABASE_BACKUP,
+        status=JobStatus.SUCCESS,
+        timestamp=datetime.now() - timedelta(days=2),
+        details={"backup_filename": "backup.db"}
+    )
+    session.add(recent_backup)
+    session.commit()
+    
+    # Should return True for 7-day interval
+    assert has_recent_successful_backup(session, 7) == True
+
+
+def test_has_recent_successful_backup_returns_false_when_no_recent_backup(session):
+    """Test that has_recent_successful_backup returns False when no recent backup exists."""
+    # Create an old successful backup from 10 days ago
+    old_backup = JobRun(
+        job_type=JobType.DATABASE_BACKUP,
+        status=JobStatus.SUCCESS,
+        timestamp=datetime.now() - timedelta(days=10),
+        details={"backup_filename": "old_backup.db"}
+    )
+    session.add(old_backup)
+    session.commit()
+    
+    # Should return False for 7-day interval
+    assert has_recent_successful_backup(session, 7) == False
+
+
+def test_has_recent_successful_backup_ignores_failed_backups(session):
+    """Test that has_recent_successful_backup ignores failed backups."""
+    # Create a recent failed backup
+    failed_backup = JobRun(
+        job_type=JobType.DATABASE_BACKUP,
+        status=JobStatus.FAILURE,
+        timestamp=datetime.now() - timedelta(days=1),
+        details={"error": "backup failed"}
+    )
+    session.add(failed_backup)
+    session.commit()
+    
+    # Should return False even though there's a recent backup (but it failed)
+    assert has_recent_successful_backup(session, 7) == False
