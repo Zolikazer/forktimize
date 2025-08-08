@@ -78,6 +78,7 @@ class Settings(BaseSettings):
     DATABASE_BACKUP_BUCKET_NAME: str = "forktimize_backup"
     DATABASE_BACKUP_FILE_PREFIX: str = "forktimize-backup"
     DATABASE_BACKUP_INTERVAL_DAYS: int = 7
+    DATABASE_BACKUP_LOCAL_FORMAT: str = "{stem}_backup_{timestamp}{suffix}"
 
     @computed_field
     def database_connection_string(self) -> str:
