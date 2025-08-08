@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from sqlmodel import Session
@@ -16,31 +17,10 @@ from monitoring.logging import LoggingMiddleware, APP_LOGGER
 from routers.meal_planner import meal_planner
 from settings import SETTINGS
 
-app = FastAPI(root_path="/api")
-app.include_router(meal_planner)
-app.add_middleware(LoggingMiddleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-
-@app.exception_handler(MealPlanRequestException)
-async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException):
-    return JSONResponse(
-        status_code=422,
-        content={
-            "code": exc.error_code,
-            "message": exc.message
-        }
-    )
-
-
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
     with Session(ENGINE) as session:
         APP_LOGGER.info("🚀 Starting up...")
         APP_LOGGER.info(f"🔧 Environment: {os.getenv('ENV', 'development')} mode: {SETTINGS.MODE.name}")
@@ -61,9 +41,32 @@ def on_startup():
         except Exception as e:
             APP_LOGGER.error(f"Failed to initialize application: {e}")
             raise  # Re-raise to prevent app from starting in broken state
-
-
-@app.on_event("shutdown")
-def shutdown_event():
+    
+    yield  # App runs here
+    
+    # Shutdown
     SCHEDULER.shutdown()
     APP_LOGGER.info("Jobs stopped.")
+
+
+app = FastAPI(root_path="/api", lifespan=lifespan)
+app.include_router(meal_planner)
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.exception_handler(MealPlanRequestException)
+async def meal_plan_exception_handler(_: Request, exc: MealPlanRequestException):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "code": exc.error_code,
+            "message": exc.message
+        }
+    )
