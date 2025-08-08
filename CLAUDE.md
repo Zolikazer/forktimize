@@ -86,3 +86,4 @@ Located in `/browser-extension/` directory. This is a **cross-platform** extensi
 - **Comments**: Only add comments for critical information that is not obvious from the code itself
 - **Environment**: Always use the project's virtual environment (`.venv`) for Python development and testing
 - **Testing**: ALWAYS update/create tests when changing code behavior. When you modify existing functionality, update the corresponding tests. When you add new functionality, write new tests. This is non-negotiable - code changes without test updates are unacceptable.
+- **Imports**: ALWAYS place all imports at the top of the file. Never use local imports inside functions unless absolutely necessary for circular import resolution or optional dependencies.
