@@ -42,7 +42,6 @@ class FoodDataCollectorJob(BaseJob):
                  strategy: FoodCollectionStrategy,
                  year: int,
                  week: int,
-                 base_logger: logging.Logger = JOB_LOGGER,
                  delay: float = SETTINGS.FETCHING_DELAY,
                  timeout: int = SETTINGS.FETCHING_TIMEOUT,
                  headers: dict[str, str] = SETTINGS.HEADERS,
@@ -53,7 +52,6 @@ class FoodDataCollectorJob(BaseJob):
         self._strategy = strategy
         self._year = year
         self._week = week
-        self._base_logger = base_logger
         self._delay = delay
         self._timeout = timeout
         self._fetch_images = fetch_images
@@ -184,7 +182,6 @@ class FoodDataCollector:
                     strategy=strategy,
                     year=current_year,
                     week=week,
-                    base_logger=self._logger,  # Pass the same logger from orchestrator
                     delay=self._delay,
                     timeout=self._timeout,
                     headers=self._headers,

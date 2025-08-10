@@ -31,13 +31,11 @@ class DatabaseBackupJob(BaseJob):
                  session: Session,
                  bucket_name: str = SETTINGS.DATABASE_BACKUP_BUCKET_NAME,
                  file_prefix: str = SETTINGS.DATABASE_BACKUP_FILE_PREFIX,
-                 database_path: str = SETTINGS.DATABASE_PATH,
-                 backup_interval_days: int = SETTINGS.DATABASE_BACKUP_INTERVAL_DAYS):
+                 database_path: str = SETTINGS.DATABASE_PATH):
         super().__init__(session, JobType.DATABASE_BACKUP)
         self._bucket_name = bucket_name
         self._file_prefix = file_prefix
         self._database_path = Path(database_path)
-        self._backup_interval_days = backup_interval_days
         self._storage_client = storage.Client()
 
     def _execute(self) -> dict:
