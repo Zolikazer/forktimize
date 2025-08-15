@@ -1,6 +1,9 @@
 // Cross-browser API
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 
+// Get constants
+const { MESSAGE_TYPES, UI_TEXT } = window.FORKTIMIZE_CONSTANTS;
+
 document.addEventListener('DOMContentLoaded', () => {
   loadMealPlans();
 });
@@ -64,7 +67,7 @@ function createDayCard(date, plan) {
     </div>
     <div class="auto-cart-section">
       <button class="auto-cart-btn" data-date="${date}" data-vendor="${plan.foodVendor}">
-        🛒 Auto-Add to Cart
+        ${UI_TEXT.BUTTON_DEFAULT}
       </button>
     </div>
   `;
@@ -85,14 +88,14 @@ function setupAutoCartHandlers(mealPlans) {
       
       // Disable button during processing
       button.disabled = true;
-      button.textContent = '🔄 Processing...';
+      button.textContent = UI_TEXT.BUTTON_PROCESSING;
       
       try {
         // Send message to content script
         const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
         
         await browserAPI.tabs.sendMessage(tab.id, {
-          type: 'FORKTIMIZE_AUTO_CART',
+          type: MESSAGE_TYPES.AUTO_CART,
           data: {
             date: date,
             vendor: vendor,
@@ -101,18 +104,18 @@ function setupAutoCartHandlers(mealPlans) {
         });
         
         // Success feedback
-        button.textContent = '✅ Added to Cart!';
+        button.textContent = UI_TEXT.BUTTON_SUCCESS;
         setTimeout(() => {
           button.disabled = false;
-          button.textContent = '🛒 Auto-Add to Cart';
+          button.textContent = UI_TEXT.BUTTON_DEFAULT;
         }, 2000);
         
       } catch (error) {
         console.error('Auto-cart failed:', error);
-        button.textContent = '❌ Failed';
+        button.textContent = UI_TEXT.BUTTON_FAILED;
         setTimeout(() => {
           button.disabled = false;
-          button.textContent = '🛒 Auto-Add to Cart';
+          button.textContent = UI_TEXT.BUTTON_DEFAULT;
         }, 2000);
       }
     });

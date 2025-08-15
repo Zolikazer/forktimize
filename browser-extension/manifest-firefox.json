@@ -31,7 +31,7 @@
         "https://*.teletal.hu/*",
         "https://*.efood.hu/*"
       ],
-      "js": ["content.js"],
+      "js": ["constants.js", "content.js"],
       "run_at": "document_end"
     }
   ],

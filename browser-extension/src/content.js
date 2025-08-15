@@ -3,15 +3,18 @@ console.log('Forktimize extension loaded on:', window.location.hostname);
 // Cross-browser API compatibility
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 
+// Get constants
+const { MESSAGE_TYPES, VENDOR_SITES, CITYFOOD_SELECTORS } = window.FORKTIMIZE_CONSTANTS;
+
 // Listen for messages from the webpage
 window.addEventListener('message', (event) => {
   // Check if extension is present
-  if (event.data.type === 'FORKTIMIZE_EXTENSION_CHECK') {
-    window.postMessage({type: 'FORKTIMIZE_EXTENSION_PRESENT'}, '*');
+  if (event.data.type === MESSAGE_TYPES.EXTENSION_CHECK) {
+    window.postMessage({type: MESSAGE_TYPES.EXTENSION_PRESENT}, '*');
   }
   
   // Handle meal plan data export
-  if (event.data.type === 'FORKTIMIZE_MEAL_PLAN_DATA') {
+  if (event.data.type === MESSAGE_TYPES.MEAL_PLAN_DATA) {
     console.log('🔥 Meal plan data received:', event.data.data);
     
     const mealPlanData = event.data.data;
@@ -46,7 +49,7 @@ window.addEventListener('message', (event) => {
 browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('🔔 Content script received message:', message);
   
-  if (message.type === 'FORKTIMIZE_AUTO_CART') {
+  if (message.type === MESSAGE_TYPES.AUTO_CART) {
     handleAutoCart(message.data)
       .then(result => {
         console.log('✅ Auto-cart completed:', result);
@@ -67,7 +70,7 @@ async function handleAutoCart(data) {
   console.log('🛒 Starting auto-cart for:', data);
   
   // Check if we're on CityFood site
-  if (window.location.hostname !== 'rendel.cityfood.hu') {
+  if (window.location.hostname !== VENDOR_SITES.cityfood) {
     throw new Error('Not on CityFood site');
   }
   
@@ -100,12 +103,12 @@ async function addFoodToCart(foodName, targetDate) {
   console.log(`🔍 Looking for food: "${foodName}" for date: ${targetDate}`);
   
   // Step 1: Find any food with this exact name
-  const allFoodTitles = document.querySelectorAll('.food-top-title');
+  const allFoodTitles = document.querySelectorAll(CITYFOOD_SELECTORS.FOOD_TITLE);
   let foundFoodElement = null;
   
   for (const title of allFoodTitles) {
     if (title.textContent.trim() === foodName) {
-      foundFoodElement = title.closest('.food');
+      foundFoodElement = title.closest(CITYFOOD_SELECTORS.FOOD_CONTAINER);
       console.log('✅ Found food element:', foundFoodElement);
       break;
     }
@@ -117,7 +120,7 @@ async function addFoodToCart(foodName, targetDate) {
   }
   
   // Step 2: Get the category this food belongs to
-  const category = foundFoodElement.closest('.category');
+  const category = foundFoodElement.closest(CITYFOOD_SELECTORS.CATEGORY);
   if (!category) {
     console.error('❌ Could not find category for food');
     return false;
@@ -126,12 +129,12 @@ async function addFoodToCart(foodName, targetDate) {
   console.log('📂 Found category:', category);
   
   // Step 3: Get all foods in this category
-  const foodsInCategory = category.querySelectorAll('.food');
+  const foodsInCategory = category.querySelectorAll(CITYFOOD_SELECTORS.FOOD_CONTAINER);
   console.log(`📊 Found ${foodsInCategory.length} foods in this category`);
   
   // Step 4: Convert date to day index by checking the date buttons on the page
   function getDateToDayIndex(targetDate) {
-    const dateButtons = document.querySelectorAll('.date-button');
+    const dateButtons = document.querySelectorAll(CITYFOOD_SELECTORS.DATE_BUTTON);
     
     for (let i = 0; i < dateButtons.length; i++) {
       const buttonDate = dateButtons[i].getAttribute('data-date');
@@ -160,7 +163,7 @@ async function addFoodToCart(foodName, targetDate) {
   console.log('🎯 Target food element:', targetFoodElement);
   
   // Step 6: VALIDATE - Check if the food at this position actually matches our target
-  const targetFoodTitle = targetFoodElement.querySelector('.food-top-title')?.textContent.trim();
+  const targetFoodTitle = targetFoodElement.querySelector(CITYFOOD_SELECTORS.FOOD_TITLE)?.textContent.trim();
   console.log(`🔍 Checking food at position ${dayIndex}: "${targetFoodTitle}"`);
   
   if (targetFoodTitle !== foodName) {
@@ -174,7 +177,7 @@ async function addFoodToCart(foodName, targetDate) {
   console.log('✅ Food name matches! Proceeding to add to cart.');
   
   // Step 7: Find and click the add button
-  const addButton = targetFoodElement.querySelector('button[aria-label*="Kosárhoz adás:"]');
+  const addButton = targetFoodElement.querySelector(CITYFOOD_SELECTORS.ADD_BUTTON);
   if (!addButton) {
     console.error('❌ Could not find add button');
     return false;
