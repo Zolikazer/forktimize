@@ -6,42 +6,52 @@ const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
 // Get constants
 const { MESSAGE_TYPES, VENDOR_SITES, CITYFOOD_SELECTORS } = window.FORKTIMIZE_CONSTANTS;
 
-// Listen for messages from the webpage
-window.addEventListener('message', (event) => {
-  // Check if extension is present
-  if (event.data.type === MESSAGE_TYPES.EXTENSION_CHECK) {
+// Message Handlers - Clean separation of concerns
+const MessageHandlers = {
+  handleExtensionCheck() {
     window.postMessage({type: MESSAGE_TYPES.EXTENSION_PRESENT}, '*');
-  }
-  
-  // Handle meal plan data export
-  if (event.data.type === MESSAGE_TYPES.MEAL_PLAN_DATA) {
-    console.log('🔥 Meal plan data received:', event.data.data);
+  },
+
+  async handleMealPlanData(data) {
+    console.log('🔥 Meal plan data received:', data);
     
-    const mealPlanData = event.data.data;
-    const planDate = mealPlanData.date; // Assuming the frontend sends a date field
-    
-    // Get existing meal plans and add/update this one
-    browserAPI.storage.local.get(['forktimizeMealPlans']).then((result) => {
-      const existingPlans = result.forktimizeMealPlans || {};
-      
-      // Add or update the meal plan for this specific date
-      existingPlans[planDate] = {
-        ...mealPlanData,
-        addedAt: new Date().toISOString()
-      };
-      
-      // Store updated meal plans
-      return browserAPI.storage.local.set({
-        forktimizeMealPlans: existingPlans,
-        lastUpdated: new Date().toISOString()
-      });
-    }).then(() => {
-      console.log(`✅ Meal plan for ${planDate} stored successfully!`);
-      alert(`🎉 Meal plan for ${planDate} sent to extension!`);
-    }).catch((error) => {
+    try {
+      await StorageOperations.saveMealPlan(data);
+      console.log(`✅ Meal plan for ${data.date} stored successfully!`);
+      alert(`🎉 Meal plan for ${data.date} sent to extension!`);
+    } catch (error) {
       console.error('❌ Failed to store meal plan data:', error);
       alert('❌ Failed to save meal plan to extension');
+    }
+  }
+};
+
+// Storage Operations - Centralized data persistence
+const StorageOperations = {
+  async saveMealPlan(mealPlanData) {
+    const result = await browserAPI.storage.local.get(['forktimizeMealPlans']);
+    const existingPlans = result.forktimizeMealPlans || {};
+    
+    existingPlans[mealPlanData.date] = {
+      ...mealPlanData,
+      addedAt: new Date().toISOString()
+    };
+    
+    return browserAPI.storage.local.set({
+      forktimizeMealPlans: existingPlans,
+      lastUpdated: new Date().toISOString()
     });
+  }
+};
+
+// Listen for messages from the webpage
+window.addEventListener('message', (event) => {
+  if (event.data.type === MESSAGE_TYPES.EXTENSION_CHECK) {
+    MessageHandlers.handleExtensionCheck();
+  }
+  
+  if (event.data.type === MESSAGE_TYPES.MEAL_PLAN_DATA) {
+    MessageHandlers.handleMealPlanData(event.data.data);
   }
 });
 
@@ -50,7 +60,7 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('🔔 Content script received message:', message);
   
   if (message.type === MESSAGE_TYPES.AUTO_CART) {
-    handleAutoCart(message.data)
+    AutoCartOperations.handleAutoCart(message.data)
       .then(result => {
         console.log('✅ Auto-cart completed:', result);
         sendResponse({ success: true, result });
@@ -65,75 +75,140 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Auto-cart functionality for CityFood
-async function handleAutoCart(data) {
-  console.log('🛒 Starting auto-cart for:', data);
-  
-  // Check if we're on CityFood site
-  if (window.location.hostname !== VENDOR_SITES.cityfood) {
-    throw new Error('Not on CityFood site');
-  }
-  
-  const { date, foods } = data;
-  const results = [];
-  
-  // Process each food
-  for (const food of foods) {
-    try {
-      const foodName = typeof food === 'object' ? food.name : food;
-      console.log(`🔍 Processing food: ${foodName}`);
-      
-      const success = await addFoodToCart(foodName, date);
-      results.push({ food: foodName, success });
-      
-      // Small delay between foods
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-    } catch (error) {
-      console.error(`❌ Failed to add ${food}:`, error);
-      results.push({ food, success: false, error: error.message });
+// Auto-Cart Operations - CityFood integration
+const AutoCartOperations = {
+  async handleAutoCart(data) {
+    console.log('🛒 Starting auto-cart for:', data);
+    
+    this._validateSite();
+    
+    const { date, foods } = data;
+    const results = [];
+    
+    for (const food of foods) {
+      try {
+        const foodName = this._extractFoodName(food);
+        console.log(`🔍 Processing food: ${foodName}`);
+        
+        const success = await this.addFoodToCart(foodName, date);
+        results.push({ food: foodName, success });
+        
+        await this._delay(500);
+        
+      } catch (error) {
+        console.error(`❌ Failed to add ${food}:`, error);
+        results.push({ food, success: false, error: error.message });
+      }
     }
-  }
-  
-  return results;
-}
+    
+    return results;
+  },
 
-// The proven auto-cart function from our console testing
-async function addFoodToCart(foodName, targetDate) {
-  console.log(`🔍 Looking for food: "${foodName}" for date: ${targetDate}`);
-  
-  // Step 1: Find any food with this exact name
-  const allFoodTitles = document.querySelectorAll(CITYFOOD_SELECTORS.FOOD_TITLE);
-  let foundFoodElement = null;
-  
-  for (const title of allFoodTitles) {
-    if (title.textContent.trim() === foodName) {
-      foundFoodElement = title.closest(CITYFOOD_SELECTORS.FOOD_CONTAINER);
-      console.log('✅ Found food element:', foundFoodElement);
-      break;
+  _validateSite() {
+    if (window.location.hostname !== VENDOR_SITES.cityfood) {
+      throw new Error('Not on CityFood site');
     }
+  },
+
+  _extractFoodName(food) {
+    return typeof food === 'object' ? food.name : food;
+  },
+
+  _delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
+
+  async addFoodToCart(foodName, targetDate) {
+    console.log(`🔍 Looking for food: "${foodName}" for date: ${targetDate}`);
+    
+    const foodElement = FoodMatcher.findFoodByName(foodName);
+    if (!foodElement) {
+      console.error('❌ Food not found:', foodName);
+      return false;
+    }
+
+    const category = FoodMatcher.findCategory(foodElement);
+    if (!category) {
+      console.error('❌ Could not find category for food');
+      return false;
+    }
+
+    const dayIndex = DateUtils.getDateToDayIndex(targetDate);
+    if (dayIndex === -1) {
+      return false;
+    }
+
+    const targetFoodElement = FoodMatcher.getFoodAtPosition(category, dayIndex);
+    if (!targetFoodElement) {
+      return false;
+    }
+
+    const isValid = FoodMatcher.validateFoodMatch(targetFoodElement, foodName, dayIndex, targetDate);
+    if (!isValid) {
+      return false;
+    }
+
+    return CartActions.clickAddButton(targetFoodElement);
   }
-  
-  if (!foundFoodElement) {
-    console.error('❌ Food not found:', foodName);
-    return false;
+};
+
+// Food Matching Utilities - Clean DOM operations
+const FoodMatcher = {
+  findFoodByName(foodName) {
+    const allFoodTitles = document.querySelectorAll(CITYFOOD_SELECTORS.FOOD_TITLE);
+    
+    for (const title of allFoodTitles) {
+      if (title.textContent.trim() === foodName) {
+        const foundElement = title.closest(CITYFOOD_SELECTORS.FOOD_CONTAINER);
+        console.log('✅ Found food element:', foundElement);
+        return foundElement;
+      }
+    }
+    return null;
+  },
+
+  findCategory(foodElement) {
+    const category = foodElement.closest(CITYFOOD_SELECTORS.CATEGORY);
+    if (category) {
+      console.log('📂 Found category:', category);
+    }
+    return category;
+  },
+
+  getFoodAtPosition(category, dayIndex) {
+    const foodsInCategory = category.querySelectorAll(CITYFOOD_SELECTORS.FOOD_CONTAINER);
+    console.log(`📊 Found ${foodsInCategory.length} foods in this category`);
+    
+    if (dayIndex >= foodsInCategory.length) {
+      console.error(`❌ Day index ${dayIndex} exceeds available foods (${foodsInCategory.length})`);
+      return null;
+    }
+    
+    const targetElement = foodsInCategory[dayIndex];
+    console.log('🎯 Target food element:', targetElement);
+    return targetElement;
+  },
+
+  validateFoodMatch(targetFoodElement, expectedFoodName, dayIndex, targetDate) {
+    const actualFoodTitle = targetFoodElement.querySelector(CITYFOOD_SELECTORS.FOOD_TITLE)?.textContent.trim();
+    console.log(`🔍 Checking food at position ${dayIndex}: "${actualFoodTitle}"`);
+    
+    if (actualFoodTitle !== expectedFoodName) {
+      console.error(`❌ Food mismatch!`);
+      console.error(`   Expected: "${expectedFoodName}"`);
+      console.error(`   Found:    "${actualFoodTitle}"`);
+      console.error(`   Position: ${dayIndex} (date: ${targetDate})`);
+      return false;
+    }
+    
+    console.log('✅ Food name matches! Proceeding to add to cart.');
+    return true;
   }
-  
-  // Step 2: Get the category this food belongs to
-  const category = foundFoodElement.closest(CITYFOOD_SELECTORS.CATEGORY);
-  if (!category) {
-    console.error('❌ Could not find category for food');
-    return false;
-  }
-  
-  console.log('📂 Found category:', category);
-  
-  // Step 3: Get all foods in this category
-  const foodsInCategory = category.querySelectorAll(CITYFOOD_SELECTORS.FOOD_CONTAINER);
-  console.log(`📊 Found ${foodsInCategory.length} foods in this category`);
-  
-  // Step 4: Convert date to day index by checking the date buttons on the page
-  function getDateToDayIndex(targetDate) {
+};
+
+// Date Utilities - Date to day index conversion
+const DateUtils = {
+  getDateToDayIndex(targetDate) {
     const dateButtons = document.querySelectorAll(CITYFOOD_SELECTORS.DATE_BUTTON);
     
     for (let i = 0; i < dateButtons.length; i++) {
@@ -147,47 +222,21 @@ async function addFoodToCart(foodName, targetDate) {
     console.error(`❌ Date ${targetDate} not found in available dates`);
     return -1;
   }
-  
-  const dayIndex = getDateToDayIndex(targetDate);
-  if (dayIndex === -1) {
-    return false;
+};
+
+// Cart Actions - DOM interactions for adding to cart
+const CartActions = {
+  clickAddButton(foodElement) {
+    const addButton = foodElement.querySelector(CITYFOOD_SELECTORS.ADD_BUTTON);
+    if (!addButton) {
+      console.error('❌ Could not find add button');
+      return false;
+    }
+    
+    console.log('🔘 Found add button:', addButton);
+    addButton.click();
+    console.log('🎉 Successfully added to cart!');
+    
+    return true;
   }
-  
-  // Step 5: Get the target food element
-  if (dayIndex >= foodsInCategory.length) {
-    console.error(`❌ Day index ${dayIndex} exceeds available foods (${foodsInCategory.length})`);
-    return false;
-  }
-  
-  const targetFoodElement = foodsInCategory[dayIndex];
-  console.log('🎯 Target food element:', targetFoodElement);
-  
-  // Step 6: VALIDATE - Check if the food at this position actually matches our target
-  const targetFoodTitle = targetFoodElement.querySelector(CITYFOOD_SELECTORS.FOOD_TITLE)?.textContent.trim();
-  console.log(`🔍 Checking food at position ${dayIndex}: "${targetFoodTitle}"`);
-  
-  if (targetFoodTitle !== foodName) {
-    console.error(`❌ Food mismatch!`);
-    console.error(`   Expected: "${foodName}"`);
-    console.error(`   Found:    "${targetFoodTitle}"`);
-    console.error(`   Position: ${dayIndex} (date: ${targetDate})`);
-    return false;
-  }
-  
-  console.log('✅ Food name matches! Proceeding to add to cart.');
-  
-  // Step 7: Find and click the add button
-  const addButton = targetFoodElement.querySelector(CITYFOOD_SELECTORS.ADD_BUTTON);
-  if (!addButton) {
-    console.error('❌ Could not find add button');
-    return false;
-  }
-  
-  console.log('🔘 Found add button:', addButton);
-  
-  // Step 8: Click the add button
-  addButton.click();
-  console.log('🎉 Successfully added to cart!');
-  
-  return true;
-}
+};
