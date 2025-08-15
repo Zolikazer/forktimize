@@ -4,10 +4,22 @@
   "description": "Minimal cross-browser extension for Forktimize",
   "scripts": {
     "build": "./build.sh",
+    "build:vite": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "type-check": "tsc --noEmit",
     "dev:firefox": "web-ext run --source-dir=dist/firefox",
     "dev:chrome": "echo 'Load dist/chrome/ in Chrome developer mode'"
   },
   "devDependencies": {
+    "@types/chrome": "^0.1.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/webextension-polyfill": "^0.12.3",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2",
+    "vitest": "^3.2.4",
     "web-ext": "^7.0.0"
   }
 }
