@@ -34,6 +34,9 @@ function displayMealPlans(mealPlans) {
     const dayCard = createDayCard(date, plan);
     container.appendChild(dayCard);
   });
+  
+  // Add click handlers for auto-cart buttons
+  setupAutoCartHandlers(mealPlans);
 }
 
 function createDayCard(date, plan) {
@@ -59,9 +62,61 @@ function createDayCard(date, plan) {
     <div class="foods-list">
       ${foodsList}
     </div>
+    <div class="auto-cart-section">
+      <button class="auto-cart-btn" data-date="${date}" data-vendor="${plan.foodVendor}">
+        🛒 Auto-Add to Cart
+      </button>
+    </div>
   `;
   
   return card;
+}
+
+function setupAutoCartHandlers(mealPlans) {
+  const autoCartButtons = document.querySelectorAll('.auto-cart-btn');
+  
+  autoCartButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const date = e.target.getAttribute('data-date');
+      const vendor = e.target.getAttribute('data-vendor');
+      const plan = mealPlans[date];
+      
+      console.log('🛒 Auto-cart clicked for:', date, vendor);
+      
+      // Disable button during processing
+      button.disabled = true;
+      button.textContent = '🔄 Processing...';
+      
+      try {
+        // Send message to content script
+        const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+        
+        await browserAPI.tabs.sendMessage(tab.id, {
+          type: 'FORKTIMIZE_AUTO_CART',
+          data: {
+            date: date,
+            vendor: vendor,
+            foods: plan.foods || []
+          }
+        });
+        
+        // Success feedback
+        button.textContent = '✅ Added to Cart!';
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = '🛒 Auto-Add to Cart';
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Auto-cart failed:', error);
+        button.textContent = '❌ Failed';
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = '🛒 Auto-Add to Cart';
+        }, 2000);
+      }
+    });
+  });
 }
 
 // Listen for storage changes to update UI in real-time
