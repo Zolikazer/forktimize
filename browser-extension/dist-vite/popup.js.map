@@ -1,0 +1,1 @@
+{"version":3,"file":"popup.js","sources":["../src/popup.ts"],"sourcesContent":["// TypeScript version - for now just import the existing JS logic\nimport './constants';\n\nconsole.log('TypeScript popup script loaded! 🔥');\n\n// For now, we'll load the old JS popup script alongside\n// Later we'll migrate piece by piece"],"names":[],"mappings":";AAGA,QAAQ,IAAI,oCAAoC;"}

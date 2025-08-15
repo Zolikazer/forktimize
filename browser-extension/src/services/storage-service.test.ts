@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { StorageService, type MealPlan } from '../StorageService';
+import { StorageService, type MealPlan } from './storage-service';
 
 // Mock browser API
 const mockStorageAPI = {
