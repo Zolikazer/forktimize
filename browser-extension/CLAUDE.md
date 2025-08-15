@@ -3,71 +3,112 @@
 ## Overview
 Cross-platform browser extension (Chrome/Firefox) that integrates with the main Forktimize web app for meal planning workflow optimization.
 
-## Current Implementation Status
+## 🚀 Architecture Vision
 
-### ✅ Completed Features
+### Service Layer Architecture (TypeScript)
+**Philosophy**: Clean separation of concerns using ES6 classes with explicit dependencies and pure utility functions.
+
+**Service Structure:**
+```
+src/services/
+├── storage-service.ts       # ✅ Meal plan storage abstraction
+├── storage-service.test.ts  # ✅ Co-located tests
+├── dom-service.ts           # 🚧 DOM utilities (find, click, validate)
+├── cart-service.ts          # 🚧 Cart automation business logic
+└── message-service.ts       # 🚧 Popup ↔ content communication
+```
+
+**Dependency Flow:**
+```
+MessageService (orchestrator)
+    ↓
+CartService (business logic)
+    ↓ uses
+DomService + StorageService (utilities)
+```
+
+**Technology Stack:**
+- **TypeScript** for type safety and better developer experience
+- **Vite** for modern build pipeline with hot reload
+- **Vitest** for fast unit testing with mocking
+- **ES6 Classes** for services with private methods
+- **Pure functions** for utilities (validation, DOM queries)
+
+### 🎯 Current Implementation Status
+
+#### ✅ Completed Features
 - **Multi-day storage**: Extension stores meal plans by date instead of overriding
-- **Cross-browser compatibility**: Works on both Chrome and Firefox
+- **Cross-browser compatibility**: Works on both Chrome and Firefox  
 - **Frontend integration**: "Send to Extension 📱" button in MealPlan component
-- **Clean popup UI**: Displays meal plans organized by day with proper formatting
+- **Auto-cart functionality**: Working CityFood cart automation with validation
+- **Clean popup UI**: Displays meal plans with auto-cart buttons
 - **Real-time updates**: Popup refreshes automatically when new plans are added
-- **Data structure handling**: Properly extracts food names and vendor info from frontend data
+- **Modern build system**: Vite + TypeScript with testing setup
+- **Service architecture**: StorageService with comprehensive tests
 
-### 🚧 Current Architecture
+#### 🚧 Legacy JavaScript (Working, but needs migration)
+- **content.js**: Message handling & auto-cart logic (needs service extraction)
+- **popup.js**: UI management with ButtonStateManager (partially refactored)
+- **constants.js**: Shared constants (migrated to TypeScript)
 
-**Data Flow:**
-1. Frontend detects extension presence via `FORKTIMIZE_EXTENSION_CHECK` message
-2. User generates meal plan and clicks "Send to Extension 📱" 
-3. Extension receives `FORKTIMIZE_MEAL_PLAN_DATA` with: `{date, foodVendor, foods[], exportedAt}`
-4. Extension stores plans in `forktimizeMealPlans` object keyed by date
-5. Popup displays all stored plans sorted chronologically
+### 🔄 Migration Strategy
 
-**File Structure:**
-```
-browser-extension/
-├── src/
-│   ├── content.js      # Message handling & storage logic
-│   ├── popup.html      # Extension popup interface
-│   ├── popup.js        # Popup data loading & display
-│   └── background.js   # Service worker (minimal)
-├── manifest-chrome.json
-├── manifest-firefox.json
-├── build.sh           # Cross-browser build script
-└── dist/              # Built extension files (gitignored)
-```
+**Phase 1: Service Layer** *(Current)*
+1. ✅ `storage-service.ts` - Clean storage abstraction
+2. 🚧 `dom-service.ts` - Extract DOM utilities from content.js
+3. 🚧 `cart-service.ts` - Extract auto-cart business logic
+4. 🚧 `message-service.ts` - Clean popup ↔ content communication
 
-## Next Phase: Auto-Cart Integration
+**Phase 2: Integration**
+- Gradually replace legacy JS with TypeScript services
+- Maintain backward compatibility during transition
+- Keep dual build system (bash + Vite) until migration complete
 
-### 🎯 Planned Features
-1. **Vendor site detection**: Recognize food vendor websites 
-2. **Cart automation**: Auto-add meal plan items to vendor shopping carts
-3. **Multi-vendor support**: Handle different cart systems/APIs
-4. **Error handling**: Graceful failures with user feedback
+**Phase 3: Multi-vendor Support**
+- Vendor abstraction layer for different food sites
+- InterFood, Teletal, eFood support
 
-### 🛠️ Development Commands
+## 🛠️ Development Commands
+
+### Legacy Build (JavaScript)
 ```bash
-# Build extension
-./build.sh
-
-# Test in browsers
-# Chrome: Load unpacked from dist/chrome/
-# Firefox: Load temporary add-on from dist/firefox/manifest.json
+./build.sh                    # Cross-browser extension build
+npm run dev:firefox          # Test in Firefox
+npm run dev:chrome           # Instructions for Chrome
 ```
 
-### 📊 Current Todo Status
-- [x] Multi-day storage implementation
-- [x] Better popup UI with day organization  
-- [x] Frontend integration button
-- [x] Test multi-day meal plan storage
-- [ ] Research food vendor cart structures
-- [ ] Design auto-cart functionality
-- [ ] Implement vendor-specific automation
-- [ ] Add error handling for cart operations
-- [ ] End-to-end flow testing
+### Modern Build (TypeScript)
+```bash
+npm run build:vite           # TypeScript compilation
+npm run dev                  # Watch mode for development
+npm run test                 # Run all tests in watch mode
+npm run test:run             # Run tests once
+npm run type-check           # TypeScript validation
+```
 
-## Technical Notes
-- Uses WebExtensions API for cross-browser compatibility
-- Storage via `browser.storage.local` API
-- Real-time UI updates via storage change listeners
-- Minimal build system - no complex bundlers needed
-- Follows defensive coding practices for unknown data structures
+## 📋 Development Standards
+
+### File Naming
+- **Services**: `kebab-case.ts` (e.g., `storage-service.ts`)
+- **Tests**: Co-located with `.test.ts` suffix (e.g., `storage-service.test.ts`)
+- **Classes**: ES6 classes with `private` methods and parameter properties
+- **Types**: Export interfaces for public APIs
+
+### Code Style
+- **Explicit dependencies**: Services inject dependencies via constructor
+- **Pure utilities**: Functions with no side effects for DOM/validation
+- **Type safety**: Full TypeScript coverage with proper interfaces
+- **Test coverage**: Comprehensive tests for all service methods
+
+### Communication Style
+- Casual, friendly Gen Z tone with emojis 🔥
+- Short, direct responses  
+- Focus on getting things done
+- Use "bro" and casual language
+
+## 🎯 Next Steps
+1. **dom-service.ts** - Extract DOM utilities from content.js
+2. **cart-service.ts** - Extract auto-cart business logic  
+3. **message-service.ts** - Clean popup ↔ content communication
+4. **Integration** - Replace legacy JS with TypeScript services
+5. **Multi-vendor** - Add InterFood, Teletal, eFood support
