@@ -14,13 +14,27 @@ window.addEventListener('message', (event) => {
   if (event.data.type === 'FORKTIMIZE_MEAL_PLAN_DATA') {
     console.log('🔥 Meal plan data received:', event.data.data);
     
-    // Store the meal plan data in extension storage
-    browserAPI.storage.local.set({
-      forktimizeMealPlan: event.data.data,
-      lastUpdated: new Date().toISOString()
+    const mealPlanData = event.data.data;
+    const planDate = mealPlanData.date; // Assuming the frontend sends a date field
+    
+    // Get existing meal plans and add/update this one
+    browserAPI.storage.local.get(['forktimizeMealPlans']).then((result) => {
+      const existingPlans = result.forktimizeMealPlans || {};
+      
+      // Add or update the meal plan for this specific date
+      existingPlans[planDate] = {
+        ...mealPlanData,
+        addedAt: new Date().toISOString()
+      };
+      
+      // Store updated meal plans
+      return browserAPI.storage.local.set({
+        forktimizeMealPlans: existingPlans,
+        lastUpdated: new Date().toISOString()
+      });
     }).then(() => {
-      console.log('✅ Meal plan data stored successfully!');
-      alert('🎉 Meal plan sent to extension successfully!');
+      console.log(`✅ Meal plan for ${planDate} stored successfully!`);
+      alert(`🎉 Meal plan for ${planDate} sent to extension!`);
     }).catch((error) => {
       console.error('❌ Failed to store meal plan data:', error);
       alert('❌ Failed to save meal plan to extension');
