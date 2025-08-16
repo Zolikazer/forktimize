@@ -1,21 +1,27 @@
 #!/bin/bash
 
-echo "🔨 Building cross-browser extension..."
+echo "🔨 Building TypeScript extension..."
 
-# Clean previous builds
-rm -rf dist/
+# Clean dist directory
+rm -rf dist
+mkdir -p dist
 
-# Create build directories
-mkdir -p dist/chrome dist/firefox
+# Build main files (popup, background)
+echo "🔧 Building main files..."
+npm run build:vite:main
 
-# Copy source files to both builds
-cp src/* dist/chrome/
-cp src/* dist/firefox/
+# Build content script separately and ensure it doesn't overwrite
+echo "🔧 Building content script..."
+npm run build:vite:content
 
-# Copy appropriate manifests
-cp manifest-chrome.json dist/chrome/manifest.json
-cp manifest-firefox.json dist/firefox/manifest.json
+# Copy static files needed for extension
+echo "📄 Copying static files..."
+cp src/popup.html dist/
+cp manifest-chrome.json dist/manifest-chrome.json
+cp manifest-firefox.json dist/manifest-firefox.json
 
-echo "✅ Chrome build: dist/chrome/"
-echo "✅ Firefox build: dist/firefox/"
-echo "🎉 Build complete!"
+# Create a default manifest.json pointing to Firefox version (main platform)
+cp manifest-firefox.json dist/manifest.json
+
+echo "✅ TypeScript extension build complete in dist/"
+echo "🚀 Load dist/ in your browser for testing!"

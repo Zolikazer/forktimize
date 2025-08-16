@@ -1,1 +1,0 @@
-{"version":3,"file":"background.js","sources":["../src/background.ts"],"sourcesContent":["// TypeScript version of background script\nconsole.log('TypeScript background script loaded! 🔥');\n\n// Minimal background script for now\n// Later we'll add proper service worker functionality"],"names":[],"mappings":"AACA,QAAQ,IAAI,yCAAyC;"}

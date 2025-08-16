@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   build: {
-    outDir: 'dist-vite',
+    outDir: 'dist',
     emptyOutDir: false, // Don't clean directory so main build files are preserved
     rollupOptions: {
       input: {

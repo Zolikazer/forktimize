@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   build: {
-    outDir: 'dist-vite',
+    outDir: 'dist',
     rollupOptions: {
       input: {
         'popup-main': resolve(__dirname, 'src/popup-main.ts'),
