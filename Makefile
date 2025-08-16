@@ -23,10 +23,14 @@ test-frontend:
 	cd frontend;npm run test
 
 test-backend:
-	cd backend;source .venv/bin/activate;python -m unittest discover
+	cd backend;source .venv/bin/activate;python -m pytest
+
+test-extension:
+	cd browser-extension;npm run test:run
 
 test-unit: test-backend
 	$(MAKE) test-frontend
+	$(MAKE) test-extension
 
 e2e-test:
 	cd frontend && npm run test:e2e
