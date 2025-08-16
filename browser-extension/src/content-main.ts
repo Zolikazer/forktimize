@@ -1,31 +1,36 @@
-// TypeScript content script - handles frontend messages
+// TypeScript content script - clean orchestrator using MessageService
 import { StorageService } from './services/storage-service';
+import { MessageService } from './services/message-service';
 
 console.log('TypeScript content script loaded on:', window.location.hostname);
 
 const storageService = new StorageService();
+const messageService = new MessageService();
 
-// Listen for messages from the frontend
-window.addEventListener('message', async (event) => {
-  console.log('🔔 Content script received message:', event.data);
+// Extension handshake protocol
+messageService.onExtensionSyn(() => {
+  console.log('🤝 Received SYN from frontend, sending ACK');
+  messageService.sendExtensionAck();
+  console.log('✅ Extension handshake protocol completed');
+});
 
-  // Check if extension is present
-  if (event.data.type === 'FORKTIMIZE_EXTENSION_CHECK') {
-    window.postMessage({ type: 'FORKTIMIZE_EXTENSION_PRESENT' }, '*');
-    console.log('✅ Extension presence confirmed');
+// Meal plan data handling
+messageService.onMealPlanData(async (data) => {
+  console.log('🔥 Meal plan data received:', data);
+  
+  try {
+    await storageService.saveMealPlan(data);
+    console.log(`✅ Meal plan for ${data.date} saved successfully!`);
+    alert(`🎉 Meal plan for ${data.date} sent to extension!`);
+  } catch (error) {
+    console.error('❌ Failed to save meal plan:', error);
+    alert('❌ Failed to save meal plan to extension');
   }
+});
 
-  // Handle meal plan data from frontend
-  if (event.data.type === 'FORKTIMIZE_MEAL_PLAN_DATA') {
-    console.log('🔥 Meal plan data received:', event.data.data);
-    
-    try {
-      await storageService.saveMealPlan(event.data.data);
-      console.log(`✅ Meal plan for ${event.data.data.date} saved successfully!`);
-      alert(`🎉 Meal plan for ${event.data.data.date} sent to extension!`);
-    } catch (error) {
-      console.error('❌ Failed to save meal plan:', error);
-      alert('❌ Failed to save meal plan to extension');
-    }
-  }
+// Auto-cart handling (placeholder for future)
+messageService.onAutoCart(async (data, sendResponse) => {
+  console.log('🛒 Auto-cart request received:', data);
+  // TODO: Implement cart automation when we refactor that part
+  sendResponse({ success: false, message: 'Auto-cart not implemented yet' });
 });

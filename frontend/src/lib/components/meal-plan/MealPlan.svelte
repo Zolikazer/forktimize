@@ -9,10 +9,10 @@
     let extensionPresent = false;
 
     onMount(() => {
-        window.postMessage({type: 'FORKTIMIZE_EXTENSION_CHECK'}, '*');
+        window.postMessage({type: 'FORKTIMIZE_HANDSHAKE_SYN'}, '*');
 
         window.addEventListener('message', (event) => {
-            if (event.data.type === 'FORKTIMIZE_EXTENSION_PRESENT') {
+            if (event.data.type === 'FORKTIMIZE_HANDSHAKE_ACK') {
                 extensionPresent = true;
             }
         });
