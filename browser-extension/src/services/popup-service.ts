@@ -1,6 +1,6 @@
 // PopupService - Clean TypeScript popup logic using our services
-import { StorageService, type MealPlansStorage } from './services/storage-service';
-import { MessageService } from './services/message-service';
+import { StorageService, type MealPlansStorage } from './storage-service';
+import { MessageService } from './message-service';
 
 interface ButtonState {
   PROCESSING: string;
@@ -62,11 +62,11 @@ export class PopupService {
   private createDayCard(date: string, plan: any) {
     const card = this.document.createElement('div');
     card.className = 'day-plan';
-    
+
     const formattedDate = this.formatDate(date);
     const foodsList = this.generateFoodsList(plan.foods);
     const vendorName = plan.foodVendor || 'Unknown Vendor';
-    
+
     card.innerHTML = `
       <div class="day-header">${formattedDate}</div>
       <div class="vendor-info">📍 ${this.escapeHtml(vendorName)}</div>
@@ -94,13 +94,13 @@ export class PopupService {
   private async handleAutoCartClick(button: HTMLButtonElement, plan: any) {
     const date = button.getAttribute('data-date');
     const vendor = button.getAttribute('data-vendor');
-    
+
     if (!date || !vendor) return;
 
     console.log('🛒 Auto-cart clicked for:', date, vendor);
-    
+
     this.setButtonState(button, 'PROCESSING');
-    
+
     try {
       const currentTab = await this.messageService.getCurrentTab();
       if (!currentTab.id) throw new Error('No active tab');
@@ -121,7 +121,7 @@ export class PopupService {
   private setButtonState(button: HTMLButtonElement, state: keyof ButtonState) {
     button.disabled = state === 'PROCESSING';
     button.textContent = this.UI_TEXT[state];
-    
+
     if (state === 'SUCCESS' || state === 'FAILED') {
       setTimeout(() => {
         button.disabled = false;
@@ -134,7 +134,7 @@ export class PopupService {
   private formatDate(date: string): string {
     return new Date(date).toLocaleDateString('en-US', {
       weekday: 'short',
-      month: 'short', 
+      month: 'short',
       day: 'numeric'
     });
   }
@@ -143,7 +143,7 @@ export class PopupService {
     if (!foods || foods.length === 0) {
       return 'No foods listed';
     }
-    
+
     return foods
       .map(food => typeof food === 'object' ? food.name : food)
       .map(foodName => `• ${this.escapeHtml(foodName || 'Unnamed food')}`)

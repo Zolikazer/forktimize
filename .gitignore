@@ -45,3 +45,4 @@ docker-compose.override.yml
 
 # Browser extension build artifacts
 browser-extension/dist/
+browser-extension/dist-vite/

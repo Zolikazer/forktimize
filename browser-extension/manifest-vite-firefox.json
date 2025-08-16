@@ -1,0 +1,47 @@
+{
+  "manifest_version": 2,
+  "name": "Forktimize - Smart Meal Planning (TypeScript)",
+  "version": "1.0.0",
+  "description": "Plan optimal meals based on nutritional constraints and food vendor availability",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "https://forktimize.xyz/*",
+    "http://localhost:5173/*",
+    "http://127.0.0.1:5173/*",
+    "http://localhost/*",
+    "https://*.cityfood.hu/*",
+    "https://*.interfood.hu/*",
+    "https://*.teletal.hu/*",
+    "https://*.efood.hu/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://forktimize.xyz/*",
+        "http://localhost:5173/*",
+        "http://127.0.0.1:5173/*",
+        "http://localhost/*",
+        "https://*.cityfood.hu/*",
+        "https://*.interfood.hu/*",
+        "https://*.teletal.hu/*",
+        "https://*.efood.hu/*"
+      ],
+      "js": ["content-main.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Forktimize Meal Planner (TS)"
+  },
+  "applications": {
+    "gecko": {
+      "id": "forktimize-ts@forktimize.xyz"
+    }
+  }
+}
