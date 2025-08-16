@@ -112,7 +112,7 @@ describe('MessageService', () => {
   });
 
   describe('onAutoCart', () => {
-    it('should listen for auto-cart messages and call callback', () => {
+    it('should listen for auto-cart messages and call callback with sendResponse', () => {
       const callback = vi.fn();
       const testData = { date: '2025-01-15', foods: ['Pizza'] };
       const sendResponse = vi.fn();
@@ -131,6 +131,23 @@ describe('MessageService', () => {
 
       expect(callback).toHaveBeenCalledWith(testData, sendResponse);
       expect(result).toBe(true); // Should return true for async response
+    });
+
+    it('should not call callback for other message types', () => {
+      const callback = vi.fn();
+      const sendResponse = vi.fn();
+      
+      messageService.onAutoCart(callback);
+
+      const runtimeListener = mockBrowserAPI.runtime.onMessage.addListener.mock.calls[0][0];
+      const result = runtimeListener(
+        { type: 'OTHER_MESSAGE', data: {} },
+        {},
+        sendResponse
+      );
+
+      expect(callback).not.toHaveBeenCalled();
+      expect(result).toBeUndefined(); // Should not return true for non-matching messages
     });
   });
 
