@@ -1,6 +1,6 @@
 // PopupService - Clean TypeScript popup logic using our services
 import { StorageService, type MealPlansStorage } from './storage-service';
-import { MessageService } from './message-service';
+import { sendAutoCartMessage, getCurrentTab } from './browser-messaging';
 
 interface ButtonState {
   PROCESSING: string;
@@ -19,7 +19,6 @@ export class PopupService {
 
   constructor(
     private storageService: StorageService,
-    private messageService: MessageService,
     private document: Document = window.document
   ) {}
 
@@ -102,10 +101,10 @@ export class PopupService {
     this.setButtonState(button, 'PROCESSING');
 
     try {
-      const currentTab = await this.messageService.getCurrentTab();
+      const currentTab = await getCurrentTab();
       if (!currentTab.id) throw new Error('No active tab');
 
-      await this.messageService.sendAutoCartMessage(currentTab.id, {
+      await sendAutoCartMessage(currentTab.id, {
         date,
         vendor,
         foods: plan.foods || []

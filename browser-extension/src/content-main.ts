@@ -1,6 +1,5 @@
 // TypeScript content script - functional orchestration with dependency injection
 import { StorageService } from './services/storage-service';
-import { MessageService } from './services/message-service';
 import { CartService } from './services/cart-service';
 import { DomService } from './services/dom-service';
 import { setupContentScript } from './content-orchestrator';
@@ -22,7 +21,6 @@ console.log('TypeScript content script loaded on:', window.location.hostname);
 
 // Create service instances
 const storageService = new StorageService();
-const messageService = new MessageService();
 const domService = new DomService(CITYFOOD_SELECTORS);
 const cartService = new CartService(
   domService, 
@@ -35,4 +33,4 @@ const cartService = new CartService(
 );
 
 // Setup content script with dependency injection
-setupContentScript(cartService, messageService, storageService);
+setupContentScript(cartService, storageService);

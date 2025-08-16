@@ -1,15 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PopupService } from './popup-service';
 
+// Mock message functions
+vi.mock('./browser-messaging', () => ({
+  getCurrentTab: vi.fn(),
+  sendAutoCartMessage: vi.fn()
+}));
+
 // Mock services
 const mockStorageService = {
   loadAllMealPlans: vi.fn(),
   onStorageChange: vi.fn()
-};
-
-const mockMessageService = {
-  getCurrentTab: vi.fn(),
-  sendAutoCartMessage: vi.fn()
 };
 
 // Mock DOM
@@ -35,7 +36,6 @@ describe('PopupService', () => {
     mockDocument = createMockDocument();
     popupService = new PopupService(
       mockStorageService as any,
-      mockMessageService as any,
       mockDocument as any
     );
   });
@@ -63,7 +63,7 @@ describe('PopupService', () => {
     });
 
     it('should create cards for meal plans', async () => {
-      const mockContainer = { 
+      const mockContainer = {
         innerHTML: '',
         appendChild: vi.fn()
       };
@@ -96,26 +96,28 @@ describe('PopupService', () => {
 
   describe('handleAutoCartClick', () => {
     it('should send auto-cart message successfully', async () => {
+      const { getCurrentTab, sendAutoCartMessage } = await import('./browser-messaging');
+
       const mockButton = {
         getAttribute: vi.fn(),
         disabled: false,
         textContent: ''
       };
-      
+
       mockButton.getAttribute
         .mockReturnValueOnce('2025-01-15') // date
         .mockReturnValueOnce('CityFood');  // vendor
 
       const mockTab = { id: 123 };
-      mockMessageService.getCurrentTab.mockResolvedValue(mockTab);
-      mockMessageService.sendAutoCartMessage.mockResolvedValue(undefined);
+      (getCurrentTab as any).mockResolvedValue(mockTab);
+      (sendAutoCartMessage as any).mockResolvedValue(undefined);
 
       const plan = { foods: ['Pizza'] };
 
       // Call private method via any cast for testing
       await (popupService as any).handleAutoCartClick(mockButton, plan);
 
-      expect(mockMessageService.sendAutoCartMessage).toHaveBeenCalledWith(123, {
+      expect(sendAutoCartMessage).toHaveBeenCalledWith(123, {
         date: '2025-01-15',
         vendor: 'CityFood',
         foods: ['Pizza']
@@ -123,17 +125,19 @@ describe('PopupService', () => {
     });
 
     it('should handle auto-cart failure', async () => {
+      const { getCurrentTab } = await import('./browser-messaging');
+
       const mockButton = {
         getAttribute: vi.fn(),
         disabled: false,
         textContent: ''
       };
-      
+
       mockButton.getAttribute
         .mockReturnValueOnce('2025-01-15')
         .mockReturnValueOnce('CityFood');
 
-      mockMessageService.getCurrentTab.mockRejectedValue(new Error('Tab error'));
+      (getCurrentTab as any).mockRejectedValue(new Error('Tab error'));
 
       const plan = { foods: ['Pizza'] };
 

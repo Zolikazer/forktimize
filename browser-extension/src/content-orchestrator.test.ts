@@ -1,8 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setupContentScript, handleMealPlanData, handleAutoCart } from './content-orchestrator';
 import type { CartService } from './services/cart-service';
-import type { MessageService } from './services/message-service';
 import type { StorageService } from './services/storage-service';
+
+// Mock message functions
+vi.mock('./services/browser-messaging', () => ({
+  onExtensionSyn: vi.fn(),
+  sendExtensionAck: vi.fn(),
+  onMealPlanData: vi.fn(),
+  onAutoCart: vi.fn()
+}));
 
 // Mock services
 const createMockCartService = (): CartService => ({
@@ -10,15 +17,6 @@ const createMockCartService = (): CartService => ({
   addFoodToCart: vi.fn(),
   validateFoodsAvailable: vi.fn(),
   analyzeFoodAvailability: vi.fn()
-} as any);
-
-const createMockMessageService = (): MessageService => ({
-  onExtensionSyn: vi.fn(),
-  onMealPlanData: vi.fn(),
-  onAutoCart: vi.fn(),
-  sendExtensionAck: vi.fn(),
-  sendAutoCartMessage: vi.fn(),
-  getCurrentTab: vi.fn()
 } as any);
 
 const createMockStorageService = (): StorageService => ({
@@ -31,39 +29,41 @@ const createMockStorageService = (): StorageService => ({
 
 describe('Content Orchestrator', () => {
   let mockCartService: CartService;
-  let mockMessageService: MessageService;
   let mockStorageService: StorageService;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Mock global alert
     global.alert = vi.fn();
-    
+
     mockCartService = createMockCartService();
-    mockMessageService = createMockMessageService();
     mockStorageService = createMockStorageService();
   });
 
   describe('setupContentScript', () => {
-    it('should setup all message handlers', () => {
-      setupContentScript(mockCartService, mockMessageService, mockStorageService);
+    it('should setup all message handlers', async () => {
+      const { onExtensionSyn, onMealPlanData, onAutoCart } = await import('./services/browser-messaging');
 
-      expect(mockMessageService.onExtensionSyn).toHaveBeenCalledWith(expect.any(Function));
-      expect(mockMessageService.onMealPlanData).toHaveBeenCalledWith(expect.any(Function));
-      expect(mockMessageService.onAutoCart).toHaveBeenCalledWith(expect.any(Function));
+      setupContentScript(mockCartService, mockStorageService);
+
+      expect(onExtensionSyn).toHaveBeenCalledWith(expect.any(Function));
+      expect(onMealPlanData).toHaveBeenCalledWith(expect.any(Function));
+      expect(onAutoCart).toHaveBeenCalledWith(expect.any(Function));
     });
 
-    it('should setup extension handshake correctly', () => {
-      setupContentScript(mockCartService, mockMessageService, mockStorageService);
+    it('should setup extension handshake correctly', async () => {
+      const { onExtensionSyn, sendExtensionAck } = await import('./services/browser-messaging');
+
+      setupContentScript(mockCartService, mockStorageService);
 
       // Get the callback that was passed to onExtensionSyn
-      const handshakeCallback = (mockMessageService.onExtensionSyn as any).mock.calls[0][0];
-      
+      const handshakeCallback = (onExtensionSyn as any).mock.calls[0][0];
+
       // Execute the callback
       handshakeCallback();
 
-      expect(mockMessageService.sendExtensionAck).toHaveBeenCalled();
+      expect(sendExtensionAck).toHaveBeenCalled();
     });
   });
 
@@ -180,12 +180,14 @@ describe('Content Orchestrator', () => {
 
   describe('Integration - message handler callbacks', () => {
     it('should wire meal plan handler correctly', async () => {
-      setupContentScript(mockCartService, mockMessageService, mockStorageService);
+      const { onMealPlanData } = await import('./services/browser-messaging');
+
+      setupContentScript(mockCartService, mockStorageService);
       (mockStorageService.saveMealPlan as any).mockResolvedValue(undefined);
 
       // Get the callback that was passed to onMealPlanData
-      const mealPlanCallback = (mockMessageService.onMealPlanData as any).mock.calls[0][0];
-      
+      const mealPlanCallback = (onMealPlanData as any).mock.calls[0][0];
+
       const testData = { date: '2025-01-15', foods: ['Pizza'] };
       await mealPlanCallback(testData);
 
@@ -193,12 +195,14 @@ describe('Content Orchestrator', () => {
     });
 
     it('should wire auto-cart handler correctly', async () => {
-      setupContentScript(mockCartService, mockMessageService, mockStorageService);
+      const { onAutoCart } = await import('./services/browser-messaging');
+
+      setupContentScript(mockCartService, mockStorageService);
       (mockCartService.processAutoCart as any).mockResolvedValue([{ food: 'Pizza', success: true }]);
 
       // Get the callback that was passed to onAutoCart
-      const autoCartCallback = (mockMessageService.onAutoCart as any).mock.calls[0][0];
-      
+      const autoCartCallback = (onAutoCart as any).mock.calls[0][0];
+
       const testData = { date: '2025-01-15', foods: ['Pizza'] };
       const mockSendResponse = vi.fn();
       await autoCartCallback(testData, mockSendResponse);

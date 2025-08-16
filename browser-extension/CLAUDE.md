@@ -15,7 +15,7 @@ src/services/
 ├── storage-service.test.ts  # ✅ Co-located tests
 ├── dom-service.ts           # 🚧 DOM utilities (find, click, validate)
 ├── cart-service.ts          # 🚧 Cart automation business logic
-└── message-service.ts       # 🚧 Popup ↔ content communication
+└── browser-messaging.ts       # 🚧 Popup ↔ content communication
 ```
 
 **Dependency Flow:**
@@ -57,7 +57,7 @@ DomService + StorageService (utilities)
 1. ✅ `storage-service.ts` - Clean storage abstraction
 2. 🚧 `dom-service.ts` - Extract DOM utilities from content.js
 3. 🚧 `cart-service.ts` - Extract auto-cart business logic
-4. 🚧 `message-service.ts` - Clean popup ↔ content communication
+4. 🚧 `browser-messaging.ts` - Clean popup ↔ content communication
 
 **Phase 2: Integration**
 - Gradually replace legacy JS with TypeScript services
@@ -109,6 +109,6 @@ npm run type-check           # TypeScript validation
 ## 🎯 Next Steps
 1. **dom-service.ts** - Extract DOM utilities from content.js
 2. **cart-service.ts** - Extract auto-cart business logic  
-3. **message-service.ts** - Clean popup ↔ content communication
+3. **browser-messaging.ts** - Clean popup ↔ content communication
 4. **Integration** - Replace legacy JS with TypeScript services
 5. **Multi-vendor** - Add InterFood, Teletal, eFood support

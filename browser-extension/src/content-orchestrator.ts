@@ -1,41 +1,40 @@
 // Content script orchestration - functional approach with dependency injection
 import type { CartService } from './services/cart-service';
-import type { MessageService } from './services/message-service';
 import type { StorageService } from './services/storage-service';
+import { onExtensionSyn, sendExtensionAck, onMealPlanData, onAutoCart } from './services/browser-messaging';
 
 export function setupContentScript(
   cartService: CartService,
-  messageService: MessageService,
   storageService: StorageService
 ) {
-  setupExtensionHandshake(messageService);
-  setupMealPlanHandler(messageService, storageService);
-  setupAutoCartHandler(messageService, cartService);
+  setupExtensionHandshake();
+  setupMealPlanHandler(storageService);
+  setupAutoCartHandler(cartService);
 }
 
-function setupExtensionHandshake(messageService: MessageService) {
-  messageService.onExtensionSyn(() => {
+function setupExtensionHandshake() {
+  onExtensionSyn(() => {
     console.log('🤝 Received SYN from frontend, sending ACK');
-    messageService.sendExtensionAck();
+    sendExtensionAck();
     console.log('✅ Extension handshake protocol completed');
   });
 }
 
-function setupMealPlanHandler(messageService: MessageService, storageService: StorageService) {
-  messageService.onMealPlanData(async (data) => {
+function setupMealPlanHandler(storageService: StorageService) {
+  onMealPlanData(async (data) => {
     await handleMealPlanData(data, storageService);
   });
 }
 
-function setupAutoCartHandler(messageService: MessageService, cartService: CartService) {
-  messageService.onAutoCart(async (data, sendResponse) => {
+function setupAutoCartHandler(cartService: CartService) {
+  onAutoCart(async (data, sendResponse) => {
     await handleAutoCart(data, sendResponse, cartService);
   });
 }
 
 export async function handleMealPlanData(data: any, storageService: StorageService) {
   console.log('🔥 Meal plan data received:', data);
-  
+
   try {
     await storageService.saveMealPlan(data);
     console.log(`✅ Meal plan for ${data.date} saved successfully!`);
@@ -48,32 +47,32 @@ export async function handleMealPlanData(data: any, storageService: StorageServi
 
 export async function handleAutoCart(data: any, sendResponse: (response: any) => void, cartService: CartService) {
   console.log('🛒 Auto-cart request received:', data);
-  
+
   try {
     const results = await cartService.processAutoCart(data);
     const successCount = results.filter(r => r.success).length;
     const totalCount = results.length;
-    
+
     if (successCount === totalCount) {
-      sendResponse({ 
-        success: true, 
+      sendResponse({
+        success: true,
         message: `Successfully added all ${successCount} foods to cart!`,
-        results 
+        results
       });
     } else {
-      sendResponse({ 
-        success: false, 
+      sendResponse({
+        success: false,
         message: `Added ${successCount}/${totalCount} foods to cart`,
-        results 
+        results
       });
     }
   } catch (error) {
     console.error('❌ Auto-cart failed:', error);
     const errorMessage = extractErrorMessage(error);
-    sendResponse({ 
-      success: false, 
+    sendResponse({
+      success: false,
       message: `Auto-cart failed: ${errorMessage}`,
-      error: errorMessage 
+      error: errorMessage
     });
   }
 }

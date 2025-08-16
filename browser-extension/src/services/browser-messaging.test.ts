@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { MessageService } from './message-service';
+import {
+  sendAutoCartMessage,
+  getCurrentTab,
+  onExtensionSyn,
+  onMealPlanData,
+  sendExtensionAck,
+  onAutoCart
+} from './browser-messaging';
 
 const mockBrowserAPI = {
   tabs: {
@@ -13,9 +20,7 @@ const mockBrowserAPI = {
   }
 };
 
-describe('MessageService', () => {
-  let messageService: MessageService;
-
+describe('Message Service Functions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock window object for DOM-related tests
@@ -27,7 +32,6 @@ describe('MessageService', () => {
       writable: true,
       configurable: true
     });
-    messageService = new MessageService(mockBrowserAPI as any);
   });
 
   describe('sendAutoCartMessage', () => {
@@ -41,7 +45,7 @@ describe('MessageService', () => {
 
       mockBrowserAPI.tabs.sendMessage.mockResolvedValue({ success: true });
 
-      await messageService.sendAutoCartMessage(tabId, data);
+      await sendAutoCartMessage(tabId, data, mockBrowserAPI as any);
 
       expect(mockBrowserAPI.tabs.sendMessage).toHaveBeenCalledWith(tabId, {
         type: 'FORKTIMIZE_AUTO_CART',
@@ -55,12 +59,12 @@ describe('MessageService', () => {
       const mockTab = { id: 123, url: 'https://rendel.cityfood.hu' };
       mockBrowserAPI.tabs.query.mockResolvedValue([mockTab]);
 
-      const result = await messageService.getCurrentTab();
+      const result = await getCurrentTab(mockBrowserAPI as any);
 
       expect(result).toBe(mockTab);
-      expect(mockBrowserAPI.tabs.query).toHaveBeenCalledWith({ 
-        active: true, 
-        currentWindow: true 
+      expect(mockBrowserAPI.tabs.query).toHaveBeenCalledWith({
+        active: true,
+        currentWindow: true
       });
     });
   });
@@ -68,7 +72,7 @@ describe('MessageService', () => {
   describe('onExtensionSyn', () => {
     it('should listen for SYN messages and call callback', () => {
       const callback = vi.fn();
-      messageService.onExtensionSyn(callback);
+      onExtensionSyn(callback);
 
       expect(window.addEventListener).toHaveBeenCalledWith('message', expect.any(Function));
 
@@ -81,7 +85,7 @@ describe('MessageService', () => {
 
     it('should not call callback for other message types', () => {
       const callback = vi.fn();
-      messageService.onExtensionSyn(callback);
+      onExtensionSyn(callback);
 
       const messageListener = (window.addEventListener as any).mock.calls[0][1];
       messageListener({ data: { type: 'OTHER_MESSAGE' } });
@@ -94,20 +98,41 @@ describe('MessageService', () => {
     it('should listen for meal plan data and call callback with data', () => {
       const callback = vi.fn();
       const testData = { date: '2025-01-15', foods: ['Pizza'] };
-      messageService.onMealPlanData(callback);
+      onMealPlanData(callback);
 
       expect(window.addEventListener).toHaveBeenCalledWith('message', expect.any(Function));
 
       // Simulate meal plan message
       const messageListener = (window.addEventListener as any).mock.calls[0][1];
-      messageListener({ 
-        data: { 
-          type: 'FORKTIMIZE_MEAL_PLAN_DATA', 
-          data: testData 
-        } 
+      messageListener({
+        data: {
+          type: 'FORKTIMIZE_MEAL_PLAN_DATA',
+          data: testData
+        }
       });
 
       expect(callback).toHaveBeenCalledWith(testData);
+    });
+
+    it('should not call callback for other message types', () => {
+      const callback = vi.fn();
+      onMealPlanData(callback);
+
+      const messageListener = (window.addEventListener as any).mock.calls[0][1];
+      messageListener({ data: { type: 'OTHER_MESSAGE' } });
+
+      expect(callback).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('sendExtensionAck', () => {
+    it('should send ACK message via postMessage', () => {
+      sendExtensionAck();
+
+      expect(window.postMessage).toHaveBeenCalledWith(
+        { type: 'FORKTIMIZE_HANDSHAKE_ACK' },
+        '*'
+      );
     });
   });
 
@@ -116,8 +141,8 @@ describe('MessageService', () => {
       const callback = vi.fn();
       const testData = { date: '2025-01-15', foods: ['Pizza'] };
       const sendResponse = vi.fn();
-      
-      messageService.onAutoCart(callback);
+
+      onAutoCart(callback, mockBrowserAPI as any);
 
       expect(mockBrowserAPI.runtime.onMessage.addListener).toHaveBeenCalledWith(expect.any(Function));
 
@@ -136,8 +161,8 @@ describe('MessageService', () => {
     it('should not call callback for other message types', () => {
       const callback = vi.fn();
       const sendResponse = vi.fn();
-      
-      messageService.onAutoCart(callback);
+
+      onAutoCart(callback, mockBrowserAPI as any);
 
       const runtimeListener = mockBrowserAPI.runtime.onMessage.addListener.mock.calls[0][0];
       const result = runtimeListener(
@@ -148,17 +173,6 @@ describe('MessageService', () => {
 
       expect(callback).not.toHaveBeenCalled();
       expect(result).toBeUndefined(); // Should not return true for non-matching messages
-    });
-  });
-
-  describe('sendExtensionAck', () => {
-    it('should send ACK message via postMessage', () => {
-      messageService.sendExtensionAck();
-
-      expect(window.postMessage).toHaveBeenCalledWith(
-        { type: 'FORKTIMIZE_HANDSHAKE_ACK' },
-        '*'
-      );
     });
   });
 });
