@@ -1,41 +1,47 @@
-// PopupService - Clean TypeScript popup logic using our services
+// Popup utilities - Functional popup orchestration
 import { StorageService, type MealPlansStorage } from './storage-service';
 import { MealPlansContainerComponent } from '../components/meal-plans-container.component';
 
-export class PopupService {
+// Main popup initialization function
+export async function initializePopup(
+  storageService: StorageService,
+  document: Document = window.document
+): Promise<void> {
+  await loadAndDisplayMealPlans(storageService, document);
+  
+  // Auto-refresh on storage changes
+  storageService.onStorageChange(() => {
+    loadAndDisplayMealPlans(storageService, document);
+  });
+}
 
-  constructor(
-    private storageService: StorageService,
-    private document: Document = window.document
-  ) {}
+// Load and display meal plans
+export async function loadAndDisplayMealPlans(
+  storageService: StorageService,
+  document: Document
+): Promise<void> {
+  try {
+    const mealPlans = await storageService.loadAllMealPlans();
+    displayMealPlans(mealPlans, document);
+  } catch (error) {
+    console.error('Failed to load meal plans:', error);
+  }
+}
 
-  async initialize() {
-    await this.loadAndDisplayMealPlans();
-    this.storageService.onStorageChange(() => {
-      this.loadAndDisplayMealPlans();
-    });
+// Display meal plans using container component
+export function displayMealPlans(
+  mealPlans: MealPlansStorage,
+  document: Document
+): void {
+  const existingContainer = document.getElementById('meal-plans-container');
+  if (existingContainer) {
+    existingContainer.remove();
   }
 
-  private async loadAndDisplayMealPlans() {
-    try {
-      const mealPlans = await this.storageService.loadAllMealPlans();
-      this.displayMealPlans(mealPlans);
-    } catch (error) {
-      console.error('Failed to load meal plans:', error);
-    }
-  }
-
-  private displayMealPlans(mealPlans: MealPlansStorage) {
-    const existingContainer = this.document.getElementById('meal-plans-container');
-    if (existingContainer) {
-      existingContainer.remove();
-    }
-
-    const containerComponent = new MealPlansContainerComponent({ mealPlans });
-    const containerElement = containerComponent.render();
-    
-    // Mount to the parent element (assuming it exists)
-    const parentElement = this.document.body || this.document.documentElement;
-    parentElement.appendChild(containerElement);
-  }
+  const containerComponent = new MealPlansContainerComponent({ mealPlans });
+  const containerElement = containerComponent.render();
+  
+  // Mount to the parent element
+  const parentElement = document.body || document.documentElement;
+  parentElement.appendChild(containerElement);
 }

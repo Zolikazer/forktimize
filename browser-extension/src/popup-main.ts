@@ -1,11 +1,9 @@
-// Main popup entry point - TypeScript version
+// Main popup entry point - Functional approach
 import { StorageService } from './services/storage-service';
-import { PopupService } from './services/popup-service';
+import { initializePopup } from './services/popup-service';
 
-// Initialize services and start popup
+// Initialize popup with functional approach
 document.addEventListener('DOMContentLoaded', () => {
   const storageService = new StorageService();
-  const popupService = new PopupService(storageService);
-  
-  popupService.initialize();
+  initializePopup(storageService);
 });

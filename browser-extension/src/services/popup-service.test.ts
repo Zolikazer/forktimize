@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { PopupService } from './popup-service';
+import { initializePopup, loadAndDisplayMealPlans, displayMealPlans } from './popup-service';
 
 // Mock MealPlansContainer component
 vi.mock('../components/meal-plans-container.component', () => ({
@@ -45,24 +45,19 @@ const createMockDocument = () => ({
   }))
 });
 
-describe('PopupService', () => {
-  let popupService: PopupService;
+describe('Popup Functions', () => {
   let mockDocument: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockDocument = createMockDocument();
-    popupService = new PopupService(
-      mockStorageService as any,
-      mockDocument as any
-    );
   });
 
-  describe('initialize', () => {
+  describe('initializePopup', () => {
     it('should load meal plans and setup storage listener', async () => {
       mockStorageService.loadAllMealPlans.mockResolvedValue({});
 
-      await popupService.initialize();
+      await initializePopup(mockStorageService as any, mockDocument as any);
 
       expect(mockStorageService.loadAllMealPlans).toHaveBeenCalled();
       expect(mockStorageService.onStorageChange).toHaveBeenCalled();
@@ -80,9 +75,7 @@ describe('PopupService', () => {
       mockDocument.body = mockBody as any;
       mockDocument.getElementById.mockReturnValue(null); // No existing container
 
-      mockStorageService.loadAllMealPlans.mockResolvedValue({});
-
-      await popupService.initialize();
+      displayMealPlans({}, mockDocument as any);
 
       // Should create MealPlansContainer component with empty data
       expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans: {} });
@@ -107,9 +100,8 @@ describe('PopupService', () => {
           addedAt: '2025-01-15T10:00:00Z'
         }
       };
-      mockStorageService.loadAllMealPlans.mockResolvedValue(mealPlans);
 
-      await popupService.initialize();
+      displayMealPlans(mealPlans, mockDocument as any);
 
       // Should create MealPlansContainer component with meal plans data
       expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
@@ -117,8 +109,8 @@ describe('PopupService', () => {
     });
   });
 
-  describe('MealPlansContainer integration', () => {
-    it('should delegate rendering to MealPlansContainer component', async () => {
+  describe('loadAndDisplayMealPlans', () => {
+    it('should load data and delegate rendering to displayMealPlans', async () => {
       const { MealPlansContainerComponent } = await import('../components/meal-plans-container.component');
       
       const mockBody = {
@@ -138,9 +130,10 @@ describe('PopupService', () => {
       };
       mockStorageService.loadAllMealPlans.mockResolvedValue(mealPlans);
 
-      await popupService.initialize();
+      await loadAndDisplayMealPlans(mockStorageService as any, mockDocument as any);
 
-      // PopupService should focus on data orchestration, delegate rendering to component
+      // Should load data and delegate rendering to component
+      expect(mockStorageService.loadAllMealPlans).toHaveBeenCalled();
       expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
       expect(mockBody.appendChild).toHaveBeenCalled();
     });
