@@ -1,6 +1,6 @@
 // PopupService - Clean TypeScript popup logic using our services
 import { StorageService, type MealPlansStorage } from './storage-service';
-import { DayCardComponent } from '../components/day-card.component';
+import { MealPlansContainerComponent } from '../components/meal-plans-container.component';
 
 export class PopupService {
 
@@ -26,27 +26,16 @@ export class PopupService {
   }
 
   private displayMealPlans(mealPlans: MealPlansStorage) {
-    const container = this.document.getElementById('meal-plans-container');
-    if (!container) return;
-
-    const planDates = Object.keys(mealPlans);
-    if (planDates.length === 0) {
-      return; // Keep empty state
+    const existingContainer = this.document.getElementById('meal-plans-container');
+    if (existingContainer) {
+      existingContainer.remove();
     }
 
-    // Sort dates and create cards
-    planDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-    container.innerHTML = '';
-
-    planDates.forEach(date => {
-      const plan = mealPlans[date];
-      const dayCard = this.createDayCard(date, plan);
-      container.appendChild(dayCard);
-    });
-  }
-
-  private createDayCard(date: string, plan: any) {
-    const dayCard = new DayCardComponent({ date, plan });
-    return dayCard.render();
+    const containerComponent = new MealPlansContainerComponent({ mealPlans });
+    const containerElement = containerComponent.render();
+    
+    // Mount to the parent element (assuming it exists)
+    const parentElement = this.document.body || this.document.documentElement;
+    parentElement.appendChild(containerElement);
   }
 }

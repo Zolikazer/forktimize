@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PopupService } from './popup-service';
 
-// Mock DayCard component  
-vi.mock('../components/day-card.component', () => ({
-  DayCardComponent: vi.fn().mockImplementation(() => ({
+// Mock MealPlansContainer component
+vi.mock('../components/meal-plans-container.component', () => ({
+  MealPlansContainerComponent: vi.fn().mockImplementation(() => ({
     render: vi.fn().mockReturnValue(() => {
-      const card = document.createElement('div');
-      card.className = 'day-plan';
-      return card;
+      const container = document.createElement('div');
+      container.id = 'meal-plans-container';
+      return container;
     })()
   }))
 }));
@@ -70,25 +70,33 @@ describe('PopupService', () => {
   });
 
   describe('displayMealPlans', () => {
-    it('should handle empty meal plans', async () => {
-      const mockContainer = { innerHTML: '' };
-      mockDocument.getElementById.mockReturnValue(mockContainer);
+    it('should handle empty meal plans using MealPlansContainer', async () => {
+      const { MealPlansContainerComponent } = await import('../components/meal-plans-container.component');
+      
+      // Mock document.body for appendChild
+      const mockBody = {
+        appendChild: vi.fn()
+      };
+      mockDocument.body = mockBody as any;
+      mockDocument.getElementById.mockReturnValue(null); // No existing container
+
       mockStorageService.loadAllMealPlans.mockResolvedValue({});
 
       await popupService.initialize();
 
-      expect(mockDocument.getElementById).toHaveBeenCalledWith('meal-plans-container');
+      // Should create MealPlansContainer component with empty data
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans: {} });
+      expect(mockBody.appendChild).toHaveBeenCalled();
     });
 
-    it('should create cards for meal plans using DayCard component', async () => {
-      const { DayCardComponent } = await import('../components/day-card.component');
+    it('should create meal plans using MealPlansContainer component', async () => {
+      const { MealPlansContainerComponent } = await import('../components/meal-plans-container.component');
       
-      const mockContainer = {
-        innerHTML: '',
+      const mockBody = {
         appendChild: vi.fn()
       };
-
-      mockDocument.getElementById.mockReturnValue(mockContainer);
+      mockDocument.body = mockBody as any;
+      mockDocument.getElementById.mockReturnValue(null);
 
       const mealPlans = {
         '2025-01-15': {
@@ -103,27 +111,21 @@ describe('PopupService', () => {
 
       await popupService.initialize();
 
-      // Should create DayCard component
-      expect(DayCardComponent).toHaveBeenCalledWith({
-        date: '2025-01-15',
-        plan: mealPlans['2025-01-15']
-      });
-      
-      // Should call appendChild to add the card to container
-      expect(mockContainer.appendChild).toHaveBeenCalled();
+      // Should create MealPlansContainer component with meal plans data
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
+      expect(mockBody.appendChild).toHaveBeenCalled();
     });
   });
 
-  describe('DayCard integration', () => {
-    it('should use DayCard component for card rendering', async () => {
-      const { DayCardComponent } = await import('../components/day-card.component');
+  describe('MealPlansContainer integration', () => {
+    it('should delegate rendering to MealPlansContainer component', async () => {
+      const { MealPlansContainerComponent } = await import('../components/meal-plans-container.component');
       
-      const mockContainer = {
-        appendChild: vi.fn(),
-        innerHTML: ''
+      const mockBody = {
+        appendChild: vi.fn()
       };
-
-      mockDocument.getElementById.mockReturnValue(mockContainer);
+      mockDocument.body = mockBody as any;
+      mockDocument.getElementById.mockReturnValue(null);
 
       const mealPlans = {
         '2025-01-15': {
@@ -138,14 +140,9 @@ describe('PopupService', () => {
 
       await popupService.initialize();
 
-      // Should delegate card creation to DayCard component
-      expect(DayCardComponent).toHaveBeenCalledWith({
-        date: '2025-01-15',
-        plan: mealPlans['2025-01-15']
-      });
-      
-      // PopupService should focus on orchestration, not card details
-      expect(mockContainer.appendChild).toHaveBeenCalled();
+      // PopupService should focus on data orchestration, delegate rendering to component
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
+      expect(mockBody.appendChild).toHaveBeenCalled();
     });
   });
 });
