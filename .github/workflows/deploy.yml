@@ -57,7 +57,7 @@ jobs:
           working-directory: backend
           env:
             FETCH_IMAGES: false
-            WEEKS_TO_FETCH: 2
+            WEEKS_TO_FETCH: 3
             INCLUDE_HEAVY_JOBS: false
             MODE: testing
           run: |
