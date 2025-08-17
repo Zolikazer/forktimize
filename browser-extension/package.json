@@ -5,9 +5,9 @@
   "scripts": {
     "build": "./build.sh",
     "build:ts": "./build-vite.sh",
-    "build:vite": "vite build && vite build --config vite.content.config.ts",
+    "build:vite": "vite build && vite build --config vite.content-forktimize.config.ts && vite build --config vite.content-vendors.config.ts",
     "build:vite:main": "vite build",
-    "build:vite:content": "vite build --config vite.content.config.ts",
+    "build:vite:content": "vite build --config vite.content-forktimize.config.ts && vite build --config vite.content-vendors.config.ts",
     "dev": "vite build --watch",
     "dev:content": "vite build --config vite.content.config.ts --watch",
     "test": "vitest",

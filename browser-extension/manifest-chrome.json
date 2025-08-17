@@ -23,12 +23,18 @@
       "matches": [
         "https://forktimize.xyz/*",
         "http://localhost:5173/*",
+        "http://127.0.0.1:5173/*"
+      ],
+      "js": ["content-forktimize.js"]
+    },
+    {
+      "matches": [
         "https://*.cityfood.hu/*",
         "https://*.interfood.hu/*",
         "https://*.teletal.hu/*",
         "https://*.efood.hu/*"
       ],
-      "js": ["content-main.js"]
+      "js": ["content-vendors.js"]
     }
   ],
   "action": {
