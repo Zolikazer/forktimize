@@ -45,14 +45,6 @@ jobs:
           working-directory: browser-extension
           run: npm run test:run
 
-        - name: 🔨 Build extension
-          working-directory: browser-extension
-          run: ./build.sh
-
-        - name: 📦 Package extension
-          working-directory: browser-extension
-          run: ./package.sh
-
         - name: 🚀 Start FastAPI backend
           working-directory: backend
           env:
@@ -87,17 +79,36 @@ jobs:
             name: backend-logs
             path: ${{ env.LOG_DIR }}
 
-        - name: 📦 Upload extension packages
-          uses: actions/upload-artifact@v4
-          with:
-            name: forktimize-extension-packages
-            path: browser-extension/release/*.zip
-            retention-days: 30
+  build-extension:
+    name: 🔨 Build browser extension
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: 🧲 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 📦 Install extension deps
+        working-directory: browser-extension
+        run: npm ci
+
+      - name: 🔨 Build extension
+        working-directory: browser-extension
+        run: ./build.sh
+
+      - name: 📦 Package extension
+        working-directory: browser-extension
+        run: ./package.sh
+
+      - name: 📦 Upload extension packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: forktimize-extension-packages
+          path: browser-extension/release/*.zip
+          retention-days: 30
 
   deploy-backend:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, build-extension]
     steps:
       - name: 🚪 SSH & Deploy
         uses: appleboy/ssh-action@master
@@ -113,6 +124,8 @@ jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     needs:
+      - test
+      - build-extension
       - deploy-backend
     steps:
       - name: 📥 Checkout repo
