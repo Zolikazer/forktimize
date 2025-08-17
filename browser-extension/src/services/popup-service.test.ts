@@ -1,7 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PopupService } from './popup-service';
 
-// Mock AutoCartButton component
+// Mock DayCard component  
+vi.mock('../components/day-card.component', () => ({
+  DayCardComponent: vi.fn().mockImplementation(() => ({
+    render: vi.fn().mockReturnValue(() => {
+      const card = document.createElement('div');
+      card.className = 'day-plan';
+      return card;
+    })()
+  }))
+}));
+
+// Mock AutoCartButton component (for legacy test compatibility)
 vi.mock('../components/auto-cart-button.component', () => ({
   AutoCartButtonComponent: vi.fn().mockImplementation(() => ({
     render: vi.fn().mockReturnValue(document.createElement('button'))
@@ -69,58 +80,15 @@ describe('PopupService', () => {
       expect(mockDocument.getElementById).toHaveBeenCalledWith('meal-plans-container');
     });
 
-    it('should create cards for meal plans', async () => {
-      const mockContainer = {
-        innerHTML: '',
-        appendChild: vi.fn()
-      };
-      const mockAutoCartSection = {
-        appendChild: vi.fn()
-      };
-      const mockCard = {
-        className: '',
-        innerHTML: '',
-        querySelector: vi.fn().mockReturnValue(mockAutoCartSection)
-      };
-
-      mockDocument.getElementById.mockReturnValue(mockContainer);
-      mockDocument.createElement.mockReturnValue(mockCard);
-
-      const mealPlans = {
-        '2025-01-15': {
-          foodVendor: 'CityFood',
-          foods: ['Pizza']
-        }
-      };
-      mockStorageService.loadAllMealPlans.mockResolvedValue(mealPlans);
-
-      await popupService.initialize();
-
-      expect(mockContainer.appendChild).toHaveBeenCalled();
-      expect(mockCard.className).toBe('day-plan');
-      expect(mockAutoCartSection.appendChild).toHaveBeenCalled(); // AutoCartButton should be appended
-    });
-  });
-
-  describe('AutoCartButton integration', () => {
-    it('should create and mount AutoCartButton component in day cards', async () => {
-      const { AutoCartButtonComponent } = await import('../components/auto-cart-button.component');
+    it('should create cards for meal plans using DayCard component', async () => {
+      const { DayCardComponent } = await import('../components/day-card.component');
       
-      // Mock container and card elements
       const mockContainer = {
-        appendChild: vi.fn(),
-        innerHTML: ''
-      };
-      const mockCard = {
-        className: '',
         innerHTML: '',
-        querySelector: vi.fn().mockReturnValue({
-          appendChild: vi.fn()
-        })
+        appendChild: vi.fn()
       };
 
       mockDocument.getElementById.mockReturnValue(mockContainer);
-      mockDocument.createElement.mockReturnValue(mockCard);
 
       const mealPlans = {
         '2025-01-15': {
@@ -135,14 +103,49 @@ describe('PopupService', () => {
 
       await popupService.initialize();
 
-      // Should create AutoCartButton component
-      expect(AutoCartButtonComponent).toHaveBeenCalledWith({
+      // Should create DayCard component
+      expect(DayCardComponent).toHaveBeenCalledWith({
+        date: '2025-01-15',
         plan: mealPlans['2025-01-15']
       });
       
-      // Should call render on the component
-      const componentInstance = (AutoCartButtonComponent as any).mock.results[0].value;
-      expect(componentInstance.render).toHaveBeenCalled();
+      // Should call appendChild to add the card to container
+      expect(mockContainer.appendChild).toHaveBeenCalled();
+    });
+  });
+
+  describe('DayCard integration', () => {
+    it('should use DayCard component for card rendering', async () => {
+      const { DayCardComponent } = await import('../components/day-card.component');
+      
+      const mockContainer = {
+        appendChild: vi.fn(),
+        innerHTML: ''
+      };
+
+      mockDocument.getElementById.mockReturnValue(mockContainer);
+
+      const mealPlans = {
+        '2025-01-15': {
+          date: '2025-01-15',
+          foodVendor: 'CityFood',
+          foods: ['Pizza'],
+          exportedAt: '2025-01-15T10:00:00Z',
+          addedAt: '2025-01-15T10:00:00Z'
+        }
+      };
+      mockStorageService.loadAllMealPlans.mockResolvedValue(mealPlans);
+
+      await popupService.initialize();
+
+      // Should delegate card creation to DayCard component
+      expect(DayCardComponent).toHaveBeenCalledWith({
+        date: '2025-01-15',
+        plan: mealPlans['2025-01-15']
+      });
+      
+      // PopupService should focus on orchestration, not card details
+      expect(mockContainer.appendChild).toHaveBeenCalled();
     });
   });
 });
