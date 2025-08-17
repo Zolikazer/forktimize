@@ -37,6 +37,22 @@ jobs:
           working-directory: frontend
           run: npm test
 
+        - name: 📦 Install extension deps
+          working-directory: browser-extension
+          run: npm ci
+
+        - name: 🧪 Run extension tests
+          working-directory: browser-extension
+          run: npm run test:run
+
+        - name: 🔨 Build extension
+          working-directory: browser-extension
+          run: ./build.sh
+
+        - name: 📦 Package extension
+          working-directory: browser-extension
+          run: ./package.sh
+
         - name: 🚀 Start FastAPI backend
           working-directory: backend
           env:
@@ -70,6 +86,13 @@ jobs:
           with:
             name: backend-logs
             path: ${{ env.LOG_DIR }}
+
+        - name: 📦 Upload extension packages
+          uses: actions/upload-artifact@v4
+          with:
+            name: forktimize-extension-packages
+            path: browser-extension/release/*.zip
+            retention-days: 30
 
 
   deploy-backend:
