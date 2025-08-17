@@ -106,6 +106,11 @@ npm run type-check           # TypeScript validation
 - Focus on getting things done
 - Use "bro" and casual language
 
+### Commit Message Guidelines
+- Keep commit messages concise: maximum 7 lines total
+- Focus on what changed, not why (unless critical)
+- Avoid overly detailed explanations in commit messages
+
 ## 🎯 Next Steps
 1. **dom-service.ts** - Extract DOM utilities from content.js
 2. **cart-service.ts** - Extract auto-cart business logic  
