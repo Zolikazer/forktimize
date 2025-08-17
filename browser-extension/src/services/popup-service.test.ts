@@ -1,7 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PopupService } from './popup-service';
 
-// Mock message functions
+// Mock AutoCartButton component
+vi.mock('../components/auto-cart-button.component', () => ({
+  AutoCartButtonComponent: vi.fn().mockImplementation(() => ({
+    render: vi.fn().mockReturnValue(document.createElement('button'))
+  }))
+}));
+
+// Mock message functions (not needed anymore but keeping for compatibility)
 vi.mock('./browser-messaging', () => ({
   getCurrentTab: vi.fn(),
   sendAutoCartMessage: vi.fn()
@@ -67,13 +74,13 @@ describe('PopupService', () => {
         innerHTML: '',
         appendChild: vi.fn()
       };
+      const mockAutoCartSection = {
+        appendChild: vi.fn()
+      };
       const mockCard = {
         className: '',
         innerHTML: '',
-        querySelector: vi.fn().mockReturnValue({
-          addEventListener: vi.fn(),
-          getAttribute: vi.fn()
-        })
+        querySelector: vi.fn().mockReturnValue(mockAutoCartSection)
       };
 
       mockDocument.getElementById.mockReturnValue(mockContainer);
@@ -91,60 +98,51 @@ describe('PopupService', () => {
 
       expect(mockContainer.appendChild).toHaveBeenCalled();
       expect(mockCard.className).toBe('day-plan');
+      expect(mockAutoCartSection.appendChild).toHaveBeenCalled(); // AutoCartButton should be appended
     });
   });
 
-  describe('handleAutoCartClick', () => {
-    it('should send auto-cart message successfully', async () => {
-      const { getCurrentTab, sendAutoCartMessage } = await import('./browser-messaging');
-
-      const mockButton = {
-        getAttribute: vi.fn(),
-        disabled: false,
-        textContent: ''
+  describe('AutoCartButton integration', () => {
+    it('should create and mount AutoCartButton component in day cards', async () => {
+      const { AutoCartButtonComponent } = await import('../components/auto-cart-button.component');
+      
+      // Mock container and card elements
+      const mockContainer = {
+        appendChild: vi.fn(),
+        innerHTML: ''
+      };
+      const mockCard = {
+        className: '',
+        innerHTML: '',
+        querySelector: vi.fn().mockReturnValue({
+          appendChild: vi.fn()
+        })
       };
 
-      mockButton.getAttribute
-        .mockReturnValueOnce('2025-01-15') // date
-        .mockReturnValueOnce('CityFood');  // vendor
+      mockDocument.getElementById.mockReturnValue(mockContainer);
+      mockDocument.createElement.mockReturnValue(mockCard);
 
-      const mockTab = { id: 123 };
-      (getCurrentTab as any).mockResolvedValue(mockTab);
-      (sendAutoCartMessage as any).mockResolvedValue(undefined);
+      const mealPlans = {
+        '2025-01-15': {
+          date: '2025-01-15',
+          foodVendor: 'CityFood',
+          foods: ['Pizza'],
+          exportedAt: '2025-01-15T10:00:00Z',
+          addedAt: '2025-01-15T10:00:00Z'
+        }
+      };
+      mockStorageService.loadAllMealPlans.mockResolvedValue(mealPlans);
 
-      const plan = { foods: ['Pizza'] };
+      await popupService.initialize();
 
-      // Call private method via any cast for testing
-      await (popupService as any).handleAutoCartClick(mockButton, plan);
-
-      expect(sendAutoCartMessage).toHaveBeenCalledWith(123, {
-        date: '2025-01-15',
-        vendor: 'CityFood',
-        foods: ['Pizza']
+      // Should create AutoCartButton component
+      expect(AutoCartButtonComponent).toHaveBeenCalledWith({
+        plan: mealPlans['2025-01-15']
       });
-    });
-
-    it('should handle auto-cart failure', async () => {
-      const { getCurrentTab } = await import('./browser-messaging');
-
-      const mockButton = {
-        getAttribute: vi.fn(),
-        disabled: false,
-        textContent: ''
-      };
-
-      mockButton.getAttribute
-        .mockReturnValueOnce('2025-01-15')
-        .mockReturnValueOnce('CityFood');
-
-      (getCurrentTab as any).mockRejectedValue(new Error('Tab error'));
-
-      const plan = { foods: ['Pizza'] };
-
-      await (popupService as any).handleAutoCartClick(mockButton, plan);
-
-      // Should set button to failed state
-      expect(mockButton.textContent).toBe('❌ Failed');
+      
+      // Should call render on the component
+      const componentInstance = (AutoCartButtonComponent as any).mock.results[0].value;
+      expect(componentInstance.render).toHaveBeenCalled();
     });
   });
 });

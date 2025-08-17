@@ -1,21 +1,8 @@
 // PopupService - Clean TypeScript popup logic using our services
 import { StorageService, type MealPlansStorage } from './storage-service';
-import { sendAutoCartMessage, getCurrentTab } from './browser-messaging';
-
-interface ButtonState {
-  PROCESSING: string;
-  SUCCESS: string;
-  FAILED: string;
-  DEFAULT: string;
-}
+import { AutoCartButtonComponent } from '../components/auto-cart-button.component';
 
 export class PopupService {
-  private readonly UI_TEXT: ButtonState = {
-    PROCESSING: '⏳ Adding...',
-    SUCCESS: '✅ Added!',
-    FAILED: '❌ Failed',
-    DEFAULT: '🛒 Add to Cart'
-  };
 
   constructor(
     private storageService: StorageService,
@@ -70,64 +57,18 @@ export class PopupService {
       <div class="day-header">${formattedDate}</div>
       <div class="vendor-info">📍 ${this.escapeHtml(vendorName)}</div>
       <div class="foods-list">${foodsList}</div>
-      <div class="auto-cart-section">
-        <button class="auto-cart-btn" 
-                data-date="${this.escapeHtml(date)}" 
-                data-vendor="${this.escapeHtml(vendorName)}">
-          ${this.UI_TEXT.DEFAULT}
-        </button>
-      </div>
+      <div class="auto-cart-section"></div>
     `;
 
-    // Add click handler
-    const button = card.querySelector('.auto-cart-btn') as HTMLButtonElement;
-    if (button) {
-      button.addEventListener('click', () => {
-        this.handleAutoCartClick(button, plan);
-      });
-    }
+    // Create and mount AutoCartButton component
+    const autoCartButton = new AutoCartButtonComponent({ plan });
+    const autoCartSection = card.querySelector('.auto-cart-section') as HTMLElement;
+    const buttonElement = autoCartButton.render();
+    autoCartSection.appendChild(buttonElement);
 
     return card;
   }
 
-  private async handleAutoCartClick(button: HTMLButtonElement, plan: any) {
-    const date = button.getAttribute('data-date');
-    const vendor = button.getAttribute('data-vendor');
-
-    if (!date || !vendor) return;
-
-    console.log('🛒 Auto-cart clicked for:', date, vendor);
-
-    this.setButtonState(button, 'PROCESSING');
-
-    try {
-      const currentTab = await getCurrentTab();
-      if (!currentTab.id) throw new Error('No active tab');
-
-      await sendAutoCartMessage(currentTab.id, {
-        date,
-        vendor,
-        foods: plan.foods || []
-      });
-
-      this.setButtonState(button, 'SUCCESS');
-    } catch (error) {
-      console.error('Auto-cart failed:', error);
-      this.setButtonState(button, 'FAILED');
-    }
-  }
-
-  private setButtonState(button: HTMLButtonElement, state: keyof ButtonState) {
-    button.disabled = state === 'PROCESSING';
-    button.textContent = this.UI_TEXT[state];
-
-    if (state === 'SUCCESS' || state === 'FAILED') {
-      setTimeout(() => {
-        button.disabled = false;
-        button.textContent = this.UI_TEXT.DEFAULT;
-      }, 2000);
-    }
-  }
 
   // Utility methods
   private formatDate(date: string): string {
