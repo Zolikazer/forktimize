@@ -82,6 +82,7 @@ jobs:
   build-extension:
     name: 🔨 Build browser extension
     runs-on: ubuntu-latest
+    needs: test
 
     steps:
       - name: 🧲 Checkout code
@@ -108,7 +109,7 @@ jobs:
 
   deploy-backend:
     runs-on: ubuntu-latest
-    needs: [test, build-extension]
+    needs: build-extension
     steps:
       - name: 🚪 SSH & Deploy
         uses: appleboy/ssh-action@master
@@ -124,7 +125,6 @@ jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     needs:
-      - test
       - build-extension
       - deploy-backend
     steps:
