@@ -28,6 +28,12 @@ test-backend:
 test-extension:
 	cd browser-extension;npm run test:run
 
+build-extension:
+	cd browser-extension && ./build.sh
+
+package-extension: build-extension
+	cd browser-extension && ./package.sh
+
 test-unit: test-backend
 	$(MAKE) test-frontend
 	$(MAKE) test-extension
