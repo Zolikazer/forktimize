@@ -9,7 +9,7 @@
     "build:vite:main": "vite build",
     "build:vite:content": "vite build --config vite.content-forktimize.config.ts && vite build --config vite.content-vendors.config.ts",
     "dev": "vite build --watch",
-    "dev:content": "vite build --config vite.content.config.ts --watch",
+    "dev:content": "vite build --config vite.content-forktimize.config.ts --watch & vite build --config vite.content-vendors.config.ts --watch",
     "test": "vitest",
     "test:run": "vitest run",
     "type-check": "tsc --noEmit",
