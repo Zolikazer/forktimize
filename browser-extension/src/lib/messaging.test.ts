@@ -6,7 +6,7 @@ import {
   onMealPlanData,
   sendExtensionAck,
   onAutoCart
-} from './browser-messaging';
+} from './messaging';
 
 const mockBrowserAPI = {
   tabs: {

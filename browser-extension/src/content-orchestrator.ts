@@ -1,7 +1,7 @@
 // Content script orchestration - functional approach with dependency injection
 import type { CartService } from './services/cart-service';
 import type { StorageService } from './services/storage-service';
-import { onExtensionSyn, sendExtensionAck, onMealPlanData, onAutoCart } from './services/browser-messaging';
+import { onExtensionSyn, sendExtensionAck, onMealPlanData, onAutoCart } from './lib/messaging';
 
 export function setupContentScript(
   cartService: CartService,

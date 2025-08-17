@@ -4,7 +4,7 @@ import type { CartService } from './services/cart-service';
 import type { StorageService } from './services/storage-service';
 
 // Mock message functions
-vi.mock('./services/browser-messaging', () => ({
+vi.mock('./lib/messaging', () => ({
   onExtensionSyn: vi.fn(),
   sendExtensionAck: vi.fn(),
   onMealPlanData: vi.fn(),
@@ -43,7 +43,7 @@ describe('Content Orchestrator', () => {
 
   describe('setupContentScript', () => {
     it('should setup all message handlers', async () => {
-      const { onExtensionSyn, onMealPlanData, onAutoCart } = await import('./services/browser-messaging');
+      const { onExtensionSyn, onMealPlanData, onAutoCart } = await import('./lib/messaging');
 
       setupContentScript(mockCartService, mockStorageService);
 
@@ -53,7 +53,7 @@ describe('Content Orchestrator', () => {
     });
 
     it('should setup extension handshake correctly', async () => {
-      const { onExtensionSyn, sendExtensionAck } = await import('./services/browser-messaging');
+      const { onExtensionSyn, sendExtensionAck } = await import('./lib/messaging');
 
       setupContentScript(mockCartService, mockStorageService);
 
@@ -180,7 +180,7 @@ describe('Content Orchestrator', () => {
 
   describe('Integration - message handler callbacks', () => {
     it('should wire meal plan handler correctly', async () => {
-      const { onMealPlanData } = await import('./services/browser-messaging');
+      const { onMealPlanData } = await import('./lib/messaging');
 
       setupContentScript(mockCartService, mockStorageService);
       (mockStorageService.saveMealPlan as any).mockResolvedValue(undefined);
@@ -195,7 +195,7 @@ describe('Content Orchestrator', () => {
     });
 
     it('should wire auto-cart handler correctly', async () => {
-      const { onAutoCart } = await import('./services/browser-messaging');
+      const { onAutoCart } = await import('./lib/messaging');
 
       setupContentScript(mockCartService, mockStorageService);
       (mockCartService.processAutoCart as any).mockResolvedValue([{ food: 'Pizza', success: true }]);

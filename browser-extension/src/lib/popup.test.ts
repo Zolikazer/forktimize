@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { initializePopup, loadAndDisplayMealPlans, displayMealPlans } from './popup-service';
+import { initializePopup, loadAndDisplayMealPlans, displayMealPlans } from './popup';
 
 // Mock MealPlansContainer component
 vi.mock('../components/meal-plans-container.component', () => ({

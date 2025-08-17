@@ -2,10 +2,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { AutoCartButtonComponent } from './auto-cart-button.component';
 import type { MealPlan } from '../services/storage-service';
-import * as browserMessaging from '../services/browser-messaging';
+import * as browserMessaging from '../lib/messaging';
 
 // Mock the browser messaging module
-vi.mock('../services/browser-messaging', () => ({
+vi.mock('../lib/messaging', () => ({
   sendAutoCartMessage: vi.fn(),
   getCurrentTab: vi.fn()
 }));

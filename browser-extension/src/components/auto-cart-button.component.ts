@@ -1,6 +1,6 @@
 // AutoCartButton component - Handles auto-cart button UI and messaging
 import { BaseComponent } from './base/base-component';
-import { sendAutoCartMessage, getCurrentTab } from '../services/browser-messaging';
+import { sendAutoCartMessage, getCurrentTab } from '../lib/messaging';
 import type { MealPlan } from '../services/storage-service';
 
 export interface AutoCartButtonProps {
