@@ -6,14 +6,11 @@
   "permissions": [
     "storage",
     "activeTab",
-    "https://forktimize.xyz/*",
+    "https://forktimize.vercel.app/*",
     "http://localhost:5173/*",
     "http://127.0.0.1:5173/*",
     "http://localhost/*",
-    "https://*.cityfood.hu/*",
-    "https://*.interfood.hu/*",
-    "https://*.teletal.hu/*",
-    "https://*.efood.hu/*"
+    "https://rendel.cityfood.hu/*"
   ],
   "background": {
     "scripts": ["background.js"],
@@ -22,7 +19,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://forktimize.xyz/*",
+        "https://forktimize.vercel.app/*",
         "http://localhost:5173/*",
         "http://127.0.0.1:5173/*",
         "http://localhost/*"
@@ -32,10 +29,7 @@
     },
     {
       "matches": [
-        "https://*.cityfood.hu/*",
-        "https://*.interfood.hu/*",
-        "https://*.teletal.hu/*",
-        "https://*.efood.hu/*"
+        "https://rendel.cityfood.hu/*"
       ],
       "js": ["content-vendors.js"],
       "run_at": "document_end"

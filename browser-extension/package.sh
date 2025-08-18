@@ -19,6 +19,10 @@ fi
 # Create release directory
 mkdir -p release
 
+# Create production manifests (strip dev URLs)
+echo "🔧 Creating production manifests..."
+node scripts/strip-dev-urls.js
+
 # Create temporary directories for each browser
 TMP_DIR=$(mktemp -d)
 echo "📦 Preparing browser-specific packages in $TMP_DIR..."
@@ -28,13 +32,13 @@ mkdir -p "$TMP_DIR/chrome" "$TMP_DIR/firefox"
 cp -r dist/* "$TMP_DIR/chrome/"
 cp -r dist/* "$TMP_DIR/firefox/"
 
-# Set browser-specific manifests
-cp "$TMP_DIR/chrome/manifest-chrome.json" "$TMP_DIR/chrome/manifest.json"
-cp "$TMP_DIR/firefox/manifest-firefox.json" "$TMP_DIR/firefox/manifest.json"
+# Set production manifests
+cp manifest-chrome-prod.json "$TMP_DIR/chrome/manifest.json"
+cp manifest-firefox-prod.json "$TMP_DIR/firefox/manifest.json"
 
-# Remove the extra manifest files
-rm "$TMP_DIR/chrome/manifest-chrome.json" "$TMP_DIR/chrome/manifest-firefox.json"
-rm "$TMP_DIR/firefox/manifest-chrome.json" "$TMP_DIR/firefox/manifest-firefox.json"
+# Remove dev manifests from temp dirs
+rm -f "$TMP_DIR/chrome/manifest-chrome.json" "$TMP_DIR/chrome/manifest-firefox.json"
+rm -f "$TMP_DIR/firefox/manifest-chrome.json" "$TMP_DIR/firefox/manifest-firefox.json"
 
 # Package Chrome extension
 echo "📦 Creating Chrome package..."
@@ -44,12 +48,17 @@ echo "📦 Creating Chrome package..."
 echo "📦 Creating Firefox package..."
 (cd "$TMP_DIR/firefox" && zip -r "$SCRIPT_DIR/release/forktimize-extension-firefox.zip" . -x "*.map")
 
-# Clean up temp directories
+# Clean up temp directories and production manifests
 rm -rf "$TMP_DIR"
+rm -f manifest-chrome-prod.json manifest-firefox-prod.json
 
-echo "✅ Extension packages created:"
+echo "✅ Production extension packages created:"
 echo "   📁 release/forktimize-extension-chrome.zip"
 echo "   📁 release/forktimize-extension-firefox.zip"
+echo ""
+echo "🔒 Production changes:"
+echo "   - Removed development URLs (localhost, 127.0.0.1)"
+echo "   - Ready for store submission"
 
 # Show package info
 echo ""

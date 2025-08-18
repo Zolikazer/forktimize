@@ -8,12 +8,9 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://forktimize.xyz/*",
+    "https://forktimize.vercel.app/*",
     "http://localhost:5173/*",
-    "https://*.cityfood.hu/*",
-    "https://*.interfood.hu/*",
-    "https://*.teletal.hu/*",
-    "https://*.efood.hu/*"
+    "https://rendel.cityfood.hu/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -21,7 +18,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://forktimize.xyz/*",
+        "https://forktimize.vercel.app/*",
         "http://localhost:5173/*",
         "http://127.0.0.1:5173/*"
       ],
@@ -29,10 +26,7 @@
     },
     {
       "matches": [
-        "https://*.cityfood.hu/*",
-        "https://*.interfood.hu/*",
-        "https://*.teletal.hu/*",
-        "https://*.efood.hu/*"
+        "https://rendel.cityfood.hu/*"
       ],
       "js": ["content-vendors.js"]
     }
