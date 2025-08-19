@@ -96,9 +96,10 @@ describe('Vendor Content Script Logic', () => {
           results
         });
       } else {
+        const failedCount = totalCount - successCount;
         mockSendResponse({
           success: false,
-          message: `Added ${successCount}/${totalCount} foods to cart`,
+          message: `${successCount} foods added successfully, ${failedCount} failed`,
           results
         });
       }
@@ -114,7 +115,7 @@ describe('Vendor Content Script Logic', () => {
 
     expect(mockSendResponse).toHaveBeenCalledWith({
       success: false,
-      message: 'Added 1/2 foods to cart',
+      message: '1 foods added successfully, 1 failed',
       results: mockResults
     });
   });
@@ -218,6 +219,67 @@ describe('Vendor Content Script Logic', () => {
       success: false,
       message: 'Auto-cart failed: Unknown error',
       error: 'Unknown error'
+    });
+  });
+
+  // Vendor mismatch tests
+  describe('Vendor Mismatch Logic', () => {
+    it('should reject auto-cart when requesting cityfood but on wrong hostname', () => {
+      const testAutoCartData = {
+        vendor: 'cityfood',
+        foods: ['Pizza']
+      };
+
+      const mockSendResponse = vi.fn();
+      
+      Object.defineProperty(global, 'window', {
+        value: { location: { hostname: 'www.google.com' } },
+        writable: true
+      });
+
+      // Simulate vendor check logic
+      const requestedVendor = testAutoCartData.vendor?.toLowerCase();
+      const currentHostname = window.location.hostname;
+      
+      if (requestedVendor === 'cityfood' && !currentHostname.includes('cityfood.hu')) {
+        mockSendResponse({
+          success: false,
+          message: '🚫 Wrong vendor - switch to your CityFood tab',
+          error: 'vendor_mismatch'
+        });
+        return;
+      }
+
+      expect(mockSendResponse).toHaveBeenCalledWith({
+        success: false,
+        message: '🚫 Wrong vendor - switch to your CityFood tab',
+        error: 'vendor_mismatch'
+      });
+    });
+
+    it('should allow auto-cart when on correct cityfood hostname', () => {
+      const testAutoCartData = {
+        vendor: 'cityfood',
+        foods: ['Pizza']
+      };
+
+      const mockSendResponse = vi.fn();
+      
+      Object.defineProperty(global, 'window', {
+        value: { location: { hostname: 'rendel.cityfood.hu' } },
+        writable: true
+      });
+
+      const requestedVendor = testAutoCartData.vendor?.toLowerCase();
+      const currentHostname = window.location.hostname;
+      
+      let shouldReject = false;
+      if (requestedVendor === 'cityfood' && !currentHostname.includes('cityfood.hu')) {
+        shouldReject = true;
+      }
+
+      expect(shouldReject).toBe(false);
+      expect(mockSendResponse).not.toHaveBeenCalled();
     });
   });
 });

@@ -28,38 +28,68 @@ export class AutoCartButtonComponent extends BaseComponent<AutoCartButtonProps> 
   }
 
   private async handleClick(button: HTMLButtonElement): Promise<void> {
-    const { plan } = this.props;
-    
-    console.log('🛒 Auto-cart clicked for:', plan.date, plan.foodVendor);
-
+    this.logClickInfo();
     this.setButtonState(button, 'PROCESSING');
-
+    
     try {
-      const currentTab = await getCurrentTab();
-      if (!currentTab.id) throw new Error('No active tab');
-
-      await sendAutoCartMessage(currentTab.id, {
-        date: plan.date,
-        vendor: plan.foodVendor,
-        foods: plan.foods
-      });
-
-      this.setButtonState(button, 'SUCCESS');
+      const response = await this.executeAutoCart();
+      this.handleAutoCartResponse(response, button);
     } catch (error) {
-      console.error('Auto-cart failed:', error);
-      this.setButtonState(button, 'FAILED');
+      this.handleAutoCartError(error, button);
     }
   }
 
-  private setButtonState(button: HTMLButtonElement, state: keyof typeof this.UI_TEXT): void {
+  private logClickInfo(): void {
+    const { plan } = this.props;
+    console.log('🛒 Auto-cart clicked for:', plan.date, plan.foodVendor);
+  }
+
+  private async executeAutoCart(): Promise<any> {
+    const { plan } = this.props;
+    const currentTab = await getCurrentTab();
+    
+    if (!currentTab.id) {
+      throw new Error('No active tab');
+    }
+
+    return await sendAutoCartMessage(currentTab.id, {
+      date: plan.date,
+      vendor: plan.foodVendor,
+      foods: plan.foods
+    });
+  }
+
+  private handleAutoCartResponse(response: any, button: HTMLButtonElement): void {
+    if (response && response.success) {
+      this.setButtonState(button, 'SUCCESS');
+    } else {
+      this.setButtonState(button, 'FAILED', response?.message || 'Auto-cart failed');
+    }
+  }
+
+  private handleAutoCartError(error: unknown, button: HTMLButtonElement): void {
+    console.error('Auto-cart failed:', error);
+    
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const isConnectionError = errorMessage.includes('Could not establish connection') || 
+                             errorMessage.includes('Receiving end does not exist');
+    
+    if (isConnectionError) {
+      this.setButtonState(button, 'FAILED', '🌐 Open CityFood in another tab first');
+    } else {
+      this.setButtonState(button, 'FAILED', 'Auto-cart failed');
+    }
+  }
+
+  private setButtonState(button: HTMLButtonElement, state: keyof typeof this.UI_TEXT, customMessage?: string): void {
     button.disabled = state === 'PROCESSING';
-    button.textContent = this.UI_TEXT[state];
+    button.textContent = customMessage || this.UI_TEXT[state];
 
     if (state === 'SUCCESS' || state === 'FAILED') {
       setTimeout(() => {
         button.disabled = false;
         button.textContent = this.UI_TEXT.DEFAULT;
-      }, 2000);
+      }, 3000); // Longer timeout for error messages
     }
   }
 }

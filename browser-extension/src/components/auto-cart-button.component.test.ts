@@ -29,7 +29,10 @@ describe('AutoCartButtonComponent', () => {
 
     // Setup mocks
     vi.mocked(browserMessaging.getCurrentTab).mockResolvedValue(mockTab);
-    vi.mocked(browserMessaging.sendAutoCartMessage).mockResolvedValue(undefined);
+    vi.mocked(browserMessaging.sendAutoCartMessage).mockResolvedValue({
+      success: true,
+      message: 'Success!'
+    });
 
     // Create component
     component = new AutoCartButtonComponent({ plan: mockPlan });
@@ -99,7 +102,7 @@ describe('AutoCartButtonComponent', () => {
       
       await (component as any).handleClick(button);
       
-      expect(button.textContent).toBe('❌ Failed');
+      expect(button.textContent).toBe('Auto-cart failed');
       expect(consoleSpy).toHaveBeenCalledWith('Auto-cart failed:', expect.any(Error));
       
       consoleSpy.mockRestore();
@@ -113,13 +116,13 @@ describe('AutoCartButtonComponent', () => {
       
       await (component as any).handleClick(button);
       
-      expect(button.textContent).toBe('❌ Failed');
+      expect(button.textContent).toBe('Auto-cart failed');
       expect(consoleSpy).toHaveBeenCalledWith('Auto-cart failed:', expect.any(Error));
       
       consoleSpy.mockRestore();
     });
 
-    it('should reset button state after 2 seconds on success', async () => {
+    it('should reset button state after 3 seconds on success', async () => {
       const button = component.render() as HTMLButtonElement;
       
       await (component as any).handleClick(button);
@@ -127,15 +130,15 @@ describe('AutoCartButtonComponent', () => {
       // Should be in success state
       expect(button.textContent).toBe('✅ Added!');
       
-      // Fast-forward 2 seconds
-      vi.advanceTimersByTime(2000);
+      // Fast-forward 3 seconds
+      vi.advanceTimersByTime(3000);
       
       // Should reset to default state
       expect(button.disabled).toBe(false);
       expect(button.textContent).toBe('🛒 Add to Cart');
     });
 
-    it('should reset button state after 2 seconds on failure', async () => {
+    it('should reset button state after 3 seconds on failure', async () => {
       vi.mocked(browserMessaging.sendAutoCartMessage).mockRejectedValue(new Error('Test error'));
       
       const button = component.render() as HTMLButtonElement;
@@ -144,14 +147,43 @@ describe('AutoCartButtonComponent', () => {
       await (component as any).handleClick(button);
       
       // Should be in failed state
-      expect(button.textContent).toBe('❌ Failed');
+      expect(button.textContent).toBe('Auto-cart failed');
       
-      // Fast-forward 2 seconds
-      vi.advanceTimersByTime(2000);
+      // Fast-forward 3 seconds
+      vi.advanceTimersByTime(3000);
       
       // Should reset to default state
       expect(button.disabled).toBe(false);
       expect(button.textContent).toBe('🛒 Add to Cart');
+      
+      consoleSpy.mockRestore();
+    });
+
+    it('should handle vendor mismatch error from content script', async () => {
+      vi.mocked(browserMessaging.sendAutoCartMessage).mockResolvedValue({
+        success: false,
+        message: '🚫 Wrong vendor - switch to your CityFood tab',
+        error: 'vendor_mismatch'
+      });
+      
+      const button = component.render() as HTMLButtonElement;
+      
+      await (component as any).handleClick(button);
+      
+      expect(button.textContent).toBe('🚫 Wrong vendor - switch to your CityFood tab');
+    });
+
+    it('should handle connection failure with specific message', async () => {
+      vi.mocked(browserMessaging.sendAutoCartMessage).mockRejectedValue(
+        new Error('Could not establish connection. Receiving end does not exist.')
+      );
+      
+      const button = component.render() as HTMLButtonElement;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      
+      await (component as any).handleClick(button);
+      
+      expect(button.textContent).toBe('🌐 Open CityFood in another tab first');
       
       consoleSpy.mockRestore();
     });
@@ -204,6 +236,15 @@ describe('AutoCartButtonComponent', () => {
       
       expect(button.disabled).toBe(false);
       expect(button.textContent).toBe('🛒 Add to Cart');
+    });
+
+    it('should handle custom error messages', () => {
+      const button = component.render() as HTMLButtonElement;
+      
+      (component as any).setButtonState(button, 'FAILED', '🚫 Custom error message');
+      
+      expect(button.disabled).toBe(false);
+      expect(button.textContent).toBe('🚫 Custom error message');
     });
   });
 });

@@ -36,33 +36,67 @@ const cartService = new CartService(
 async function handleAutoCart(data: any, sendResponse: (response: any) => void) {
   console.log('🛒 Auto-cart request received:', data);
 
+  if (!isValidVendorForCurrentSite(data.vendor)) {
+    sendVendorMismatchResponse(sendResponse);
+    return;
+  }
+
   try {
     const results = await cartService.processAutoCart(data);
-    const successCount = results.filter(r => r.success).length;
-    const totalCount = results.length;
-
-    if (successCount === totalCount) {
-      sendResponse({
-        success: true,
-        message: `Successfully added all ${successCount} foods to cart!`,
-        results
-      });
-    } else {
-      sendResponse({
-        success: false,
-        message: `Added ${successCount}/${totalCount} foods to cart`,
-        results
-      });
-    }
+    sendAutoCartResults(results, sendResponse);
   } catch (error) {
-    console.error('❌ Auto-cart failed:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    sendAutoCartError(error, sendResponse);
+  }
+}
+
+function isValidVendorForCurrentSite(vendor: string): boolean {
+  const requestedVendor = vendor?.toLowerCase();
+  const currentHostname = window.location.hostname;
+  
+  if (requestedVendor === 'cityfood') {
+    return currentHostname.includes('cityfood.hu');
+  }
+  
+  // Add more vendor checks here as we expand
+  return false;
+}
+
+function sendVendorMismatchResponse(sendResponse: (response: any) => void): void {
+  sendResponse({
+    success: false,
+    message: '🚫 Wrong vendor - switch to your CityFood tab',
+    error: 'vendor_mismatch'
+  });
+}
+
+function sendAutoCartResults(results: any[], sendResponse: (response: any) => void): void {
+  const successCount = results.filter(r => r.success).length;
+  const totalCount = results.length;
+
+  if (successCount === totalCount) {
+    sendResponse({
+      success: true,
+      message: `Successfully added all ${successCount} foods to cart!`,
+      results
+    });
+  } else {
+    const failedCount = totalCount - successCount;
     sendResponse({
       success: false,
-      message: `Auto-cart failed: ${errorMessage}`,
-      error: errorMessage
+      message: `${successCount} foods added successfully, ${failedCount} failed`,
+      results
     });
   }
+}
+
+function sendAutoCartError(error: unknown, sendResponse: (response: any) => void): void {
+  console.error('❌ Auto-cart failed:', error);
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  sendResponse({
+    success: false,
+    message: `Auto-cart failed: ${errorMessage}`,
+    error: errorMessage
+  });
 }
 
 // Setup auto-cart handler
