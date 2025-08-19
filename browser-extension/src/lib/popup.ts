@@ -1,6 +1,6 @@
 // Popup utilities - Functional popup orchestration
-import { StorageService, type MealPlansStorage } from './storage-service';
 import { MealPlansContainerComponent } from '../components/meal-plans-container.component';
+import {MealPlansStorage, StorageService} from "../services/storage-service";
 
 // Main popup initialization function
 export async function initializePopup(
@@ -8,7 +8,7 @@ export async function initializePopup(
   document: Document = window.document
 ): Promise<void> {
   await loadAndDisplayMealPlans(storageService, document);
-  
+
   // Auto-refresh on storage changes
   storageService.onStorageChange(() => {
     loadAndDisplayMealPlans(storageService, document);
@@ -40,7 +40,7 @@ export function displayMealPlans(
 
   const containerComponent = new MealPlansContainerComponent({ mealPlans });
   const containerElement = containerComponent.render();
-  
+
   // Mount to the parent element
   const parentElement = document.body || document.documentElement;
   parentElement.appendChild(containerElement);
