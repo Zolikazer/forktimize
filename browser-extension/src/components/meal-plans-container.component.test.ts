@@ -15,12 +15,29 @@ vi.mock('./day-card.component', () => ({
   }))
 }));
 
+// Mock ClearButton component
+vi.mock('./clear-button.component', () => ({
+  ClearButtonComponent: vi.fn().mockImplementation(() => ({
+    render: vi.fn().mockReturnValue(() => {
+      const button = document.createElement('button');
+      button.className = 'clear-btn';
+      button.textContent = '🗑️ Clear All';
+      return button;
+    })()
+  }))
+}));
+
 describe('MealPlansContainerComponent', () => {
   let component: MealPlansContainerComponent;
   let mockMealPlans: MealPlansStorage;
+  let mockStorageService: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    
+    mockStorageService = {
+      clearAllMealPlans: vi.fn().mockResolvedValue(void 0)
+    };
     
     mockMealPlans = {
       '2025-01-15': {
@@ -46,7 +63,7 @@ describe('MealPlansContainerComponent', () => {
       }
     };
 
-    component = new MealPlansContainerComponent({ mealPlans: mockMealPlans });
+    component = new MealPlansContainerComponent({ mealPlans: mockMealPlans, storageService: mockStorageService });
   });
 
   describe('render', () => {
@@ -84,16 +101,16 @@ describe('MealPlansContainerComponent', () => {
       const container = component.render();
       const cards = Array.from(container.children);
 
-      expect(cards).toHaveLength(3);
+      expect(cards).toHaveLength(4); // 1 clear button + 3 day cards
       
-      // Should be sorted: 01-14, 01-15, 01-16
-      expect(cards[0].getAttribute('data-date')).toBe('2025-01-14');
-      expect(cards[1].getAttribute('data-date')).toBe('2025-01-15');
-      expect(cards[2].getAttribute('data-date')).toBe('2025-01-16');
+      // Should be sorted: clear button, 01-14, 01-15, 01-16
+      expect(cards[1].getAttribute('data-date')).toBe('2025-01-14');
+      expect(cards[2].getAttribute('data-date')).toBe('2025-01-15');
+      expect(cards[3].getAttribute('data-date')).toBe('2025-01-16');
     });
 
     it('should handle empty meal plans', () => {
-      const emptyComponent = new MealPlansContainerComponent({ mealPlans: {} });
+      const emptyComponent = new MealPlansContainerComponent({ mealPlans: {}, storageService: mockStorageService });
       const container = emptyComponent.render();
 
       expect(container.tagName).toBe('DIV');
@@ -102,15 +119,37 @@ describe('MealPlansContainerComponent', () => {
       expect(container.innerHTML).toBe('');
     });
 
+    it('should show clear button when meal plans exist', async () => {
+      const { ClearButtonComponent } = await import('./clear-button.component');
+      
+      const container = component.render();
+      
+      // Should create ClearButton component
+      expect(ClearButtonComponent).toHaveBeenCalledWith({ storageService: mockStorageService });
+      
+      // Clear button should be first child
+      expect(container.children[0].className).toBe('clear-btn');
+    });
+
+    it('should not show clear button when no meal plans', async () => {
+      const { ClearButtonComponent } = await import('./clear-button.component');
+      const emptyComponent = new MealPlansContainerComponent({ mealPlans: {}, storageService: mockStorageService });
+      
+      emptyComponent.render();
+      
+      // Should not create ClearButton component for empty state
+      expect(ClearButtonComponent).not.toHaveBeenCalled();
+    });
+
     it('should handle single meal plan', () => {
       const singlePlan = {
         '2025-01-15': mockMealPlans['2025-01-15']
       };
-      const singleComponent = new MealPlansContainerComponent({ mealPlans: singlePlan });
+      const singleComponent = new MealPlansContainerComponent({ mealPlans: singlePlan, storageService: mockStorageService });
       const container = singleComponent.render();
 
-      expect(container.children).toHaveLength(1);
-      expect(container.children[0].getAttribute('data-date')).toBe('2025-01-15');
+      expect(container.children).toHaveLength(2); // 1 clear button + 1 day card
+      expect(container.children[1].getAttribute('data-date')).toBe('2025-01-15');
     });
 
     it('should sort dates correctly across different months', () => {
@@ -138,14 +177,14 @@ describe('MealPlansContainerComponent', () => {
         }
       };
 
-      const crossMonthComponent = new MealPlansContainerComponent({ mealPlans: crossMonthPlans });
+      const crossMonthComponent = new MealPlansContainerComponent({ mealPlans: crossMonthPlans, storageService: mockStorageService });
       const container = crossMonthComponent.render();
       const cards = Array.from(container.children);
 
-      // Should be sorted: 01-15, 01-31, 02-01
-      expect(cards[0].getAttribute('data-date')).toBe('2025-01-15');
-      expect(cards[1].getAttribute('data-date')).toBe('2025-01-31');
-      expect(cards[2].getAttribute('data-date')).toBe('2025-02-01');
+      // Should be sorted: clear button, 01-15, 01-31, 02-01
+      expect(cards[1].getAttribute('data-date')).toBe('2025-01-15');
+      expect(cards[2].getAttribute('data-date')).toBe('2025-01-31');
+      expect(cards[3].getAttribute('data-date')).toBe('2025-02-01');
     });
 
     it('should handle dates in random order and sort them correctly', () => {
@@ -156,15 +195,15 @@ describe('MealPlansContainerComponent', () => {
         '2025-01-05': mockMealPlans['2025-01-15']
       };
 
-      const randomComponent = new MealPlansContainerComponent({ mealPlans: randomOrderPlans });
+      const randomComponent = new MealPlansContainerComponent({ mealPlans: randomOrderPlans, storageService: mockStorageService });
       const container = randomComponent.render();
       const cards = Array.from(container.children);
 
-      // Should be sorted chronologically
-      expect(cards[0].getAttribute('data-date')).toBe('2025-01-05');
-      expect(cards[1].getAttribute('data-date')).toBe('2025-01-10');
-      expect(cards[2].getAttribute('data-date')).toBe('2025-01-20');
-      expect(cards[3].getAttribute('data-date')).toBe('2025-01-25');
+      // Should be sorted chronologically (after clear button)
+      expect(cards[1].getAttribute('data-date')).toBe('2025-01-05');
+      expect(cards[2].getAttribute('data-date')).toBe('2025-01-10');
+      expect(cards[3].getAttribute('data-date')).toBe('2025-01-20');
+      expect(cards[4].getAttribute('data-date')).toBe('2025-01-25');
     });
   });
 
@@ -172,12 +211,15 @@ describe('MealPlansContainerComponent', () => {
     it('should render complete container with all DayCard components', () => {
       const container = component.render();
       
-      // Verify overall structure
+      // Verify overall structure (1 clear button + 3 day cards)
       expect(container.id).toBe('meal-plans-container');
-      expect(container.children.length).toBe(3);
+      expect(container.children.length).toBe(4);
       
-      // Verify all cards are properly mounted
-      const cards = Array.from(container.children);
+      // Verify first child is clear button
+      expect(container.children[0].className).toBe('clear-btn');
+      
+      // Verify remaining cards are properly mounted
+      const cards = Array.from(container.children).slice(1); // Skip clear button
       cards.forEach(card => {
         expect(card.className).toBe('day-plan');
         expect(card.getAttribute('data-date')).toMatch(/^\d{4}-\d{2}-\d{2}$/);

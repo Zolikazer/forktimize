@@ -134,7 +134,7 @@ describe('Popup Functions', () => {
 
       // Should load data and delegate rendering to component
       expect(mockStorageService.loadAllMealPlans).toHaveBeenCalled();
-      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans, storageService: mockStorageService });
       expect(mockBody.appendChild).toHaveBeenCalled();
     });
   });

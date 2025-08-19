@@ -1,28 +1,5 @@
 # Multi-Vendor Browser Extension - MVP Design Document
 
-## 🎯 Auto-Cart Behavior Decision
-
-**Option 3: Always Try, Fail Gracefully** ✅
-
-### **Flow**
-1. User clicks "🛒 Add to Cart" button from extension popup
-2. Extension sends auto-cart message to **current active tab**
-3. **If active tab is vendor site**: Auto-cart proceeds normally ✅
-4. **If active tab is NOT vendor site**: Operation fails with clear error message ❌
-
-### **Why Option 3**
-- ✅ **Faster to ship** - minimal changes to current code
-- ✅ **Simple implementation** - no complex tab detection needed
-- ✅ **User learns quickly** - clear error messages guide correct behavior
-- ✅ **Progressive enhancement** - can upgrade to smarter detection later
-
-### **Key Error Messages**
-- 🌐 "Open CityFood in another tab first"
-- ⏰ "Switch to your CityFood tab and try again" 
-- 🚫 "No CityFood page found - please open rendel.cityfood.hu"
-
-**No tab detection, no button disabling - keep it simple!**
-
 ## 🍽️ Partial Success Handling
 
 **Option B: Keep Original Meal Plan Intact** ✅

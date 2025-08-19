@@ -22,7 +22,7 @@ export async function loadAndDisplayMealPlans(
 ): Promise<void> {
   try {
     const mealPlans = await storageService.loadAllMealPlans();
-    displayMealPlans(mealPlans, document);
+    displayMealPlans(mealPlans, document, storageService);
   } catch (error) {
     console.error('Failed to load meal plans:', error);
   }
@@ -31,14 +31,15 @@ export async function loadAndDisplayMealPlans(
 // Display meal plans using container component
 export function displayMealPlans(
   mealPlans: MealPlansStorage,
-  document: Document
+  document: Document,
+  storageService: StorageService
 ): void {
   const existingContainer = document.getElementById('meal-plans-container');
   if (existingContainer) {
     existingContainer.remove();
   }
 
-  const containerComponent = new MealPlansContainerComponent({ mealPlans });
+  const containerComponent = new MealPlansContainerComponent({ mealPlans, storageService });
   const containerElement = containerComponent.render();
 
   // Mount to the parent element
