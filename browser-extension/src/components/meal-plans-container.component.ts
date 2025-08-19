@@ -12,26 +12,40 @@ export interface MealPlansContainerProps {
 export class MealPlansContainerComponent extends BaseComponent<MealPlansContainerProps> {
   render(): HTMLElement {
     const { mealPlans, storageService } = this.props;
-    
-    const container = document.createElement('div');
-    container.id = 'meal-plans-container';
-
+    const container = this.createContainer();
     const planDates = Object.keys(mealPlans);
     
-    // Add clear button if there are meal plans
-    if (planDates.length > 0) {
-      const clearButton = new ClearButtonComponent({ storageService });
-      const clearElement = clearButton.render();
-      clearElement.style.marginBottom = '10px';
-      container.appendChild(clearElement);
+    if (planDates.length === 0) {
+      return this.handleEmptyState(container);
     }
     
-    // Handle empty state
-    if (planDates.length === 0) {
-      container.innerHTML = ''; // Keep empty state as is
-      return container;
-    }
+    this.addClearButton(container, storageService);
+    this.addDayCards(container, mealPlans);
+    
+    return container;
+  }
 
+  private createContainer(): HTMLElement {
+    const container = document.createElement('div');
+    container.id = 'meal-plans-container';
+    return container;
+  }
+
+  private handleEmptyState(container: HTMLElement): HTMLElement {
+    container.innerHTML = ''; // Keep empty state as is
+    return container;
+  }
+
+  private addClearButton(container: HTMLElement, storageService: StorageService): void {
+    const clearButton = new ClearButtonComponent({ storageService });
+    const clearElement = clearButton.render();
+    clearElement.style.marginBottom = '10px';
+    container.appendChild(clearElement);
+  }
+
+  private addDayCards(container: HTMLElement, mealPlans: MealPlansStorage): void {
+    const planDates = Object.keys(mealPlans);
+    
     // Sort dates chronologically and create DayCard components
     planDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
     
@@ -41,7 +55,5 @@ export class MealPlansContainerComponent extends BaseComponent<MealPlansContaine
       const cardElement = dayCard.render();
       container.appendChild(cardElement);
     });
-
-    return container;
   }
 }

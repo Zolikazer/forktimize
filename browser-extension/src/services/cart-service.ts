@@ -52,54 +52,83 @@ export class CartService {
     console.log(`🔍 Processing food: "${foodName}" for date: ${targetDate}`);
 
     try {
-      // Step 1: Find the food element
-      const foodElement = this.domService.findFoodByName(foodName);
-      if (!foodElement) {
-        throw new Error(`Food "${foodName}" not found`);
-      }
-
-      // Step 2: Get the category for positional logic
-      const category = this.domService.findCategory(foodElement);
-      if (!category) {
-        throw new Error('Could not find category for food');
-      }
-
-      // Step 3: Convert date to day index
-      const dayIndex = this.domService.getDateIndex(targetDate);
-      if (dayIndex === -1) {
-        throw new Error(`Date ${targetDate} not available`);
-      }
-
-      // Step 4: Get food at the target position
-      const targetFoodElement = this.domService.getFoodAtPosition(category, dayIndex);
-      if (!targetFoodElement) {
-        throw new Error(`No food at position ${dayIndex}`);
-      }
-
-      // Step 5: Validate the food matches what we expect
-      const isValid = this.domService.validateFoodMatch(
-        targetFoodElement, 
-        foodName, 
-        dayIndex, 
-        targetDate
-      );
-      if (!isValid) {
-        throw new Error('Food name mismatch at target position');
-      }
-
-      // Step 6: Click the add button
-      const success = this.domService.clickAddButton(targetFoodElement);
-      if (!success) {
-        throw new Error('Failed to click add button');
-      }
-
+      const foodData = await this.findFoodData(foodName, targetDate);
+      const success = await this.addToCart(foodData);
+      
       console.log(`✅ Successfully added "${foodName}" to cart`);
-      return true;
-
+      return success;
     } catch (error) {
       console.error(`❌ Failed to add "${foodName}":`, error);
       return false;
     }
+  }
+
+  private async findFoodData(foodName: string, targetDate: string) {
+    const foodElement = this.findFoodElement(foodName);
+    const category = this.findFoodCategory(foodElement);
+    const dayIndex = this.getTargetDayIndex(targetDate);
+    const targetFoodElement = this.getTargetFoodElement(category, dayIndex);
+    
+    this.validateFoodAtTarget(targetFoodElement, foodName, dayIndex, targetDate);
+    
+    return { targetFoodElement, foodName };
+  }
+
+  private findFoodElement(foodName: string): HTMLElement {
+    const foodElement = this.domService.findFoodByName(foodName);
+    if (!foodElement) {
+      throw new Error(`Food "${foodName}" not found`);
+    }
+    return foodElement;
+  }
+
+  private findFoodCategory(foodElement: HTMLElement): HTMLElement {
+    const category = this.domService.findCategory(foodElement);
+    if (!category) {
+      throw new Error('Could not find category for food');
+    }
+    return category;
+  }
+
+  private getTargetDayIndex(targetDate: string): number {
+    const dayIndex = this.domService.getDateIndex(targetDate);
+    if (dayIndex === -1) {
+      throw new Error(`Date ${targetDate} not available`);
+    }
+    return dayIndex;
+  }
+
+  private getTargetFoodElement(category: HTMLElement, dayIndex: number): HTMLElement {
+    const targetFoodElement = this.domService.getFoodAtPosition(category, dayIndex);
+    if (!targetFoodElement) {
+      throw new Error(`No food at position ${dayIndex}`);
+    }
+    return targetFoodElement;
+  }
+
+  private validateFoodAtTarget(
+    targetFoodElement: HTMLElement, 
+    foodName: string, 
+    dayIndex: number, 
+    targetDate: string
+  ): void {
+    const isValid = this.domService.validateFoodMatch(
+      targetFoodElement, 
+      foodName, 
+      dayIndex, 
+      targetDate
+    );
+    if (!isValid) {
+      throw new Error('Food name mismatch at target position');
+    }
+  }
+
+  private async addToCart(foodData: { targetFoodElement: HTMLElement, foodName: string }): Promise<boolean> {
+    const success = this.domService.clickAddButton(foodData.targetFoodElement);
+    if (!success) {
+      throw new Error('Failed to click add button');
+    }
+    return true;
   }
 
   // Bulk food validation
