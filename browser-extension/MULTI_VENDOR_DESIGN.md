@@ -1,4 +1,4 @@
-# Multi-Vendor Browser Extension - MVP Design Document
+# Multi-Vendor Browser Extension - Architecture Design Document
 
 ## 🍽️ Partial Success Handling
 
@@ -29,93 +29,228 @@
 
 **Philosophy: Meal plan is source of truth, cart is temporary workspace**
 
-## 🏪 Unsupported Vendor Handling
+---
 
-**Disabled Button with Tooltip Approach** ✅
+## 🏗️ Multi-Vendor Strategy Architecture
 
-### **Behavior**
-- Forktimize frontend checks if current vendor is supported by extension
-- **If supported** (CityFood, eFood, InterFood): Show normal "Send to Extension 📱" button
-- **If unsupported** (WoltFood, etc.): Show disabled button with explanatory tooltip
+### **Core Design Philosophy**
+- **Strategy Pattern**: Different vendors use different cart automation strategies
+- **Configuration-Driven**: Vendor differences handled by config, not code duplication
+- **Message-Driven**: Popup sends vendor context, content script adapts accordingly
+- **Scalable**: Easy to add new vendors without touching core logic
 
-### **Implementation**
+### **Architecture Overview**
+
 ```typescript
-const SUPPORTED_VENDORS = ['cityfood', 'efood', 'interfood'];
-const isSupported = SUPPORTED_VENDORS.includes(currentVendor);
-
-<button 
-  disabled={!isSupported}
-  title={isSupported ? "Send to Extension 📱" : "Extension doesn't support this vendor yet"}
->
-  Send to Extension 📱
-</button>
-```
-
-### **Why This Approach**
-- ✅ **User awareness** - Shows extension exists but doesn't support this vendor
-- ✅ **Feature discovery** - Users learn about extension capability
-- ✅ **Clear expectations** - Honest about current limitations
-- ✅ **Future-friendly** - Implies support might come later
-
-### **Visual States**
-- **Supported vendor**: Normal button styling, fully functional
-- **Unsupported vendor**: Grayed out button, tooltip explains limitation
-
-**No hidden buttons, no failed attempts - just honest, discoverable UX**
-
-## 🔄 Vendor Availability Sync Strategy
-
-**Extension as Source of Truth** ✅
-
-### **Two Sources of Truth Approach**
-- **Backend ↔ Frontend**: Backend API provides vendor list, URLs, available dates (existing)
-- **Extension ↔ Frontend**: Extension defines what vendors it supports for auto-cart
-
-### **Why This Works**
-- **Manifest constraint**: Extension must declare supported URLs in manifest anyway
-- **Capability separation**: Backend knows vendor data, Extension knows automation capabilities  
-- **Reduced complexity**: Only 2 sources instead of 3-way sync
-
-### **Frontend Logic Flow**
-```typescript
-// 1. Check if extension exists
-const extensionExists = await checkExtensionInstalled();
-if (!extensionExists) {
-  // Hide "Send to Extension" button completely
-  return;
+// Strategy Pattern for Vendor Differences
+abstract class BaseVendorStrategy {
+  abstract searchFood(foodName: string): Promise<void>;
+  abstract addToCart(): Promise<boolean>;
+  abstract validatePage(): boolean;
+  
+  // Shared utilities all vendors can use
+  protected waitForElement(selector: string) { /* ... */ }
+  protected clickElement(selector: string) { /* ... */ }
 }
 
-// 2. Check if extension supports current vendor
-const isSupported = await browser.runtime.sendMessage({
-  type: 'CHECK_VENDOR_SUPPORT', 
-  vendor: currentVendor
-});
-
-// 3. Show button state accordingly
-<button 
-  disabled={!isSupported}
-  title={isSupported ? "Send to Extension 📱" : "Extension doesn't support this vendor yet"}
->
-  Send to Extension 📱
-</button>
-```
-
-### **Extension Message Handler**
-```typescript
-// Extension responds to vendor support queries
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'CHECK_VENDOR_SUPPORT') {
-    const SUPPORTED_VENDORS = ['cityfood', 'efood', 'interfood'];
-    const isSupported = SUPPORTED_VENDORS.includes(message.vendor);
-    sendResponse(isSupported);
+// For vendors with similar UI (CityFood, eFood)
+class SimilarUIStrategy extends BaseVendorStrategy {
+  constructor(private config: SimilarUIVendorConfig) { super(); }
+  
+  async searchFood(foodName: string) {
+    // Shared logic using config.selectors
+    await this.clickElement(this.config.selectors.searchBox);
+    // Implementation uses config, not hardcoded values
   }
+}
+
+// For vendors with completely different UI (Wolt, FoodPanda)
+class CustomVendorStrategy extends BaseVendorStrategy {
+  async searchFood(foodName: string) {
+    // Completely different automation logic
+    await this.navigateToCategory();
+    await this.filterByName(foodName);
+  }
+}
+```
+
+### **Vendor Configuration System**
+
+```typescript
+interface VendorConfig {
+  id: string;
+  name: string;
+  domains: string[];
+  strategy: 'similar-ui' | 'custom';
+  selectors?: SimilarUISelectors; // For similar-ui strategy
+  customLogic?: CustomVendorStrategy; // For custom strategy
+}
+
+const VENDOR_CONFIGS = {
+  cityfood: {
+    id: 'cityfood',
+    name: 'CityFood',
+    strategy: 'similar-ui',
+    domains: ['rendel.cityfood.hu'],
+    selectors: {
+      searchBox: '.search-input',
+      searchButton: '.search-btn',
+      foodResults: '.food-item',
+      addToCartButton: '.add-to-cart'
+    }
+  },
+  efood: {
+    id: 'efood', 
+    name: 'eFood',
+    strategy: 'similar-ui', // Same strategy as CityFood!
+    domains: ['rendel.efood.hu'],
+    selectors: {
+      // Identical to CityFood since UI is the same
+      searchBox: '.search-input',
+      searchButton: '.search-btn',
+      foodResults: '.food-item',
+      addToCartButton: '.add-to-cart'
+    }
+  },
+  wolt: {
+    id: 'wolt',
+    name: 'Wolt',
+    strategy: 'custom', // Completely different approach
+    domains: ['wolt.com'],
+    customLogic: new WoltStrategy()
+  }
+}
+```
+
+### **Message-Driven Vendor Context**
+
+```typescript
+// Popup sends vendor info (no content script detection needed)
+const autoCartMessage = {
+  type: 'FORKTIMIZE_AUTO_CART',
+  data: {
+    date: '2025-01-15',
+    vendor: 'efood', // 👈 Popup knows the vendor!
+    foods: ['Pizza', 'Salad']
+  }
+};
+
+// Content script receives vendor and adapts
+onAutoCart(({ vendor, foods }, sendResponse) => {
+  const vendorConfig = VENDOR_CONFIGS[vendor];
+  if (!vendorConfig) {
+    throw new Error(`Unsupported vendor: ${vendor}`);
+  }
+  
+  const strategy = VendorStrategyFactory.create(vendorConfig);
+  const cartService = new CartService(strategy);
+  
+  cartService.processAutoCart(foods);
 });
 ```
 
-### **Benefits**
-- ✅ **Direct capability check** - extension knows exactly what it can automate
-- ✅ **No 3-way sync** - backend/frontend use existing API, extension is separate
-- ✅ **Clean UX** - no button if no extension, disabled if unsupported  
-- ✅ **Manifest alignment** - extension support matches declared URLs
+### **Strategy Factory Pattern**
 
-**Philosophy: Extension owns automation capabilities, backend owns vendor data**
+```typescript
+class VendorStrategyFactory {
+  static create(vendorConfig: VendorConfig): BaseVendorStrategy {
+    switch (vendorConfig.strategy) {
+      case 'similar-ui':
+        return new SimilarUIStrategy(vendorConfig);
+      case 'custom':
+        return vendorConfig.customLogic;
+      default:
+        throw new Error(`Unsupported strategy: ${vendorConfig.strategy}`);
+    }
+  }
+}
+```
+
+### **Clean CartService Implementation**
+
+```typescript
+class CartService {
+  constructor(private strategy: BaseVendorStrategy) {}
+  
+  async processAutoCart(foods: string[]): Promise<CartResult> {
+    // Validate we're on the right vendor page
+    if (!this.strategy.validatePage()) {
+      throw new Error('Wrong vendor page');
+    }
+    
+    const results = [];
+    
+    // Process each food using vendor-specific strategy
+    for (const food of foods) {
+      try {
+        await this.strategy.searchFood(food);
+        await this.strategy.addToCart();
+        results.push({ food, success: true });
+      } catch (error) {
+        results.push({ food, success: false, error: error.message });
+      }
+    }
+    
+    return { results, totalProcessed: foods.length };
+  }
+}
+```
+
+---
+
+## 🚀 Implementation Plan
+
+### **Phase 1: Foundation (No Breaking Changes)**
+1. **Create strategy interfaces** (`BaseVendorStrategy`, vendor types)
+2. **Extract CityFood logic** into `SimilarUIStrategy` 
+3. **Create vendor config system** with CityFood config
+
+### **Phase 2: Integration (Wire Everything Together)**
+4. **Add eFood config** (same strategy, different domain)
+5. **Update messaging** to pass vendor from popup
+6. **Create strategy factory** pattern
+7. **Refactor CartService** to use strategies
+
+### **Phase 3: Deployment (Enable Multi-Vendor)**
+8. **Update manifest files** for eFood domains
+9. **Update supported vendors** list in handshake
+10. **Comprehensive testing** for both vendors
+
+### **Benefits of This Architecture**
+
+#### **For Similar Vendors (CityFood/eFood):**
+- ✅ **Maximum code reuse** - Same strategy, different config
+- ✅ **Easy maintenance** - Update selectors in one place
+- ✅ **Type safety** - Shared interfaces prevent errors
+
+#### **For Different Vendors (Wolt, FoodPanda):**
+- ✅ **Complete flexibility** - Custom strategy per vendor
+- ✅ **No constraints** - Each can have totally different logic
+- ✅ **Clean separation** - No messy vendor-specific if/else chains
+
+#### **For the System:**
+- ✅ **Popup-driven** - No complex vendor detection in content scripts
+- ✅ **Scalable** - Add vendors without touching core logic
+- ✅ **Testable** - Mock strategies for different test scenarios
+- ✅ **Future-proof** - Architecture handles any vendor differences
+
+---
+
+## 🎯 Current Status
+
+### **✅ Completed Features**
+- ✅ **Vendor Support Check**: Extension validates vendor support during handshake
+- ✅ **Frontend Integration**: Smart button states (enabled/disabled) based on vendor support
+- ✅ **CityFood Support**: Full auto-cart functionality working
+- ✅ **Cross-browser Compatibility**: Chrome and Firefox support
+- ✅ **Test Coverage**: Comprehensive testing for existing functionality
+
+### **🚧 Next: Multi-Vendor Implementation**
+Ready to implement the strategy-based architecture to add eFood support and build foundation for future vendors.
+
+**Target Vendors:**
+- **CityFood** ✅ (currently supported)
+- **eFood** 🎯 (next target - identical UI to CityFood)
+- **Wolt** 🔮 (future - different UI, will use custom strategy)
+
+**Philosophy: Build it right once, scale effortlessly** 🔥
