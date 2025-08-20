@@ -75,4 +75,65 @@ describe('Forktimize Content Script Logic', () => {
 
     expect(mockSendExtensionAck).toHaveBeenCalled();
   });
+
+  describe('Vendor Support Logic', () => {
+    const SUPPORTED_VENDORS = ['cityfood'];
+
+    it('should support known vendors', () => {
+      const mockSendExtensionAck = vi.fn();
+      
+      // Simulate handshake with supported vendor
+      const handshakeCallback = (vendor?: string) => {
+        console.log('🤝 Received SYN from frontend for vendor:', vendor);
+        
+        const vendorSupported = vendor ? SUPPORTED_VENDORS.includes(vendor) : false;
+        console.log(`📋 Vendor "${vendor}" supported:`, vendorSupported);
+        
+        mockSendExtensionAck(vendorSupported);
+        console.log('✅ Extension handshake protocol completed');
+      };
+
+      handshakeCallback('cityfood');
+
+      expect(mockSendExtensionAck).toHaveBeenCalledWith(true);
+    });
+
+    it('should not support unknown vendors', () => {
+      const mockSendExtensionAck = vi.fn();
+      
+      // Simulate handshake with unsupported vendor
+      const handshakeCallback = (vendor?: string) => {
+        console.log('🤝 Received SYN from frontend for vendor:', vendor);
+        
+        const vendorSupported = vendor ? SUPPORTED_VENDORS.includes(vendor) : false;
+        console.log(`📋 Vendor "${vendor}" supported:`, vendorSupported);
+        
+        mockSendExtensionAck(vendorSupported);
+        console.log('✅ Extension handshake protocol completed');
+      };
+
+      handshakeCallback('efood');
+
+      expect(mockSendExtensionAck).toHaveBeenCalledWith(false);
+    });
+
+    it('should not support when no vendor provided', () => {
+      const mockSendExtensionAck = vi.fn();
+      
+      // Simulate handshake with no vendor
+      const handshakeCallback = (vendor?: string) => {
+        console.log('🤝 Received SYN from frontend for vendor:', vendor);
+        
+        const vendorSupported = vendor ? SUPPORTED_VENDORS.includes(vendor) : false;
+        console.log(`📋 Vendor "${vendor}" supported:`, vendorSupported);
+        
+        mockSendExtensionAck(vendorSupported);
+        console.log('✅ Extension handshake protocol completed');
+      };
+
+      handshakeCallback();
+
+      expect(mockSendExtensionAck).toHaveBeenCalledWith(false);
+    });
+  });
 });

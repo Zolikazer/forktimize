@@ -70,17 +70,32 @@ describe('Message Service Functions', () => {
   });
 
   describe('onExtensionSyn', () => {
-    it('should listen for SYN messages and call callback', () => {
+    it('should listen for SYN messages and call callback with vendor', () => {
       const callback = vi.fn();
       onExtensionSyn(callback);
 
       expect(window.addEventListener).toHaveBeenCalledWith('message', expect.any(Function));
 
-      // Simulate SYN message
+      // Simulate SYN message with vendor
+      const messageListener = (window.addEventListener as any).mock.calls[0][1];
+      messageListener({ 
+        data: { 
+          type: 'FORKTIMIZE_HANDSHAKE_SYN', 
+          vendor: 'cityfood' 
+        } 
+      });
+
+      expect(callback).toHaveBeenCalledWith('cityfood');
+    });
+
+    it('should call callback with undefined when no vendor provided', () => {
+      const callback = vi.fn();
+      onExtensionSyn(callback);
+
       const messageListener = (window.addEventListener as any).mock.calls[0][1];
       messageListener({ data: { type: 'FORKTIMIZE_HANDSHAKE_SYN' } });
 
-      expect(callback).toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledWith(undefined);
     });
 
     it('should not call callback for other message types', () => {
@@ -126,11 +141,26 @@ describe('Message Service Functions', () => {
   });
 
   describe('sendExtensionAck', () => {
-    it('should send ACK message via postMessage', () => {
-      sendExtensionAck();
+    it('should send ACK message with vendor support status', () => {
+      sendExtensionAck(true);
 
       expect(window.postMessage).toHaveBeenCalledWith(
-        { type: 'FORKTIMIZE_HANDSHAKE_ACK' },
+        { 
+          type: 'FORKTIMIZE_HANDSHAKE_ACK', 
+          vendorSupported: true 
+        },
+        '*'
+      );
+    });
+
+    it('should send ACK message with vendor not supported', () => {
+      sendExtensionAck(false);
+
+      expect(window.postMessage).toHaveBeenCalledWith(
+        { 
+          type: 'FORKTIMIZE_HANDSHAKE_ACK', 
+          vendorSupported: false 
+        },
         '*'
       );
     });

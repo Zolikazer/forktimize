@@ -5,11 +5,18 @@ import { onExtensionSyn, sendExtensionAck, onMealPlanData } from './lib/messagin
 // Initialize services
 const storageService = new StorageService();
 
+// Supported vendors list
+const SUPPORTED_VENDORS = ['cityfood'];
+
 // Setup extension handshake
 function setupExtensionHandshake() {
-  onExtensionSyn(() => {
-    console.log('🤝 Received SYN from frontend, sending ACK');
-    sendExtensionAck();
+  onExtensionSyn((vendor) => {
+    console.log('🤝 Received SYN from frontend for vendor:', vendor);
+    
+    const vendorSupported = vendor ? SUPPORTED_VENDORS.includes(vendor) : false;
+    console.log(`📋 Vendor "${vendor}" supported:`, vendorSupported);
+    
+    sendExtensionAck(vendorSupported);
     console.log('✅ Extension handshake protocol completed');
   });
 }

@@ -7,13 +7,19 @@
     import {onMount} from 'svelte';
 
     let extensionPresent = false;
+    let vendorSupported = false;
 
     onMount(() => {
-        window.postMessage({type: 'FORKTIMIZE_HANDSHAKE_SYN'}, '*');
+        // Enhanced handshake: send vendor info in SYN message
+        window.postMessage({
+            type: 'FORKTIMIZE_HANDSHAKE_SYN',
+            vendor: $mealPlanStore.foodVendor
+        }, '*');
 
         window.addEventListener('message', (event) => {
             if (event.data.type === 'FORKTIMIZE_HANDSHAKE_ACK') {
                 extensionPresent = true;
+                vendorSupported = event.data.vendorSupported || false;
             }
         });
     });
@@ -55,10 +61,18 @@
                      class="mr-2"/> {$mealPlanStore.foods.length} {$t.mealPlan.items()}
             </span>
             {#if extensionPresent}
-                <button class="tag is-light is-success bigger-tag extension-button has-text-weight-bold"
-                        on:click={handleExportClick}>
-                    📲 Send to Extension
-                </button>
+                {#if vendorSupported}
+                    <button class="tag is-light is-success bigger-tag extension-button has-text-weight-bold"
+                            on:click={handleExportClick}>
+                        📱 Send to Extension
+                    </button>
+                {:else}
+                    <button class="tag is-light is-warning bigger-tag extension-button-disabled has-text-weight-bold"
+                            disabled
+                            title="Extension doesn't support this vendor yet">
+                        📱 Send to Extension
+                    </button>
+                {/if}
             {/if}
         </div>
     </SectionHeader>
@@ -92,5 +106,18 @@
     .extension-button:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(72, 199, 142, 0.25);
+    }
+
+    .extension-button-disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        transition: none;
+    }
+
+    .extension-button-disabled:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: transparent;
+        filter: none;
     }
 </style>

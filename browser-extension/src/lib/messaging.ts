@@ -29,10 +29,10 @@ export async function getCurrentTab(browserAPI = getBrowserAPI()) {
 }
 
 // Frontend ↔ Content messaging (window.postMessage)
-export function onExtensionSyn(callback: () => void) {
+export function onExtensionSyn(callback: (vendor?: string) => void) {
   window.addEventListener('message', (event) => {
     if (event.data.type === 'FORKTIMIZE_HANDSHAKE_SYN') {
-      callback();
+      callback(event.data.vendor);
     }
   });
 }
@@ -45,8 +45,11 @@ export function onMealPlanData(callback: (data: any) => void) {
   });
 }
 
-export function sendExtensionAck() {
-  window.postMessage({ type: 'FORKTIMIZE_HANDSHAKE_ACK' }, '*');
+export function sendExtensionAck(vendorSupported: boolean) {
+  window.postMessage({ 
+    type: 'FORKTIMIZE_HANDSHAKE_ACK', 
+    vendorSupported 
+  }, '*');
 }
 
 // Popup ↔ Content messaging (runtime.onMessage)
