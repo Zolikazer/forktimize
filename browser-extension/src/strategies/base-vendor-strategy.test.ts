@@ -3,11 +3,17 @@ import { BaseVendorStrategy } from './base-vendor-strategy';
 
 // Test implementation of abstract class
 class TestVendorStrategy extends BaseVendorStrategy {
-  async searchFood(foodName: string): Promise<void> {
-    // Test implementation
+  async searchFood(foodName: string, targetDate: string): Promise<HTMLElement> {
+    const mockElement = document.createElement('div');
+    mockElement.textContent = foodName;
+    return mockElement;
   }
   
-  async addToCart(): Promise<boolean> {
+  validateFood(element: HTMLElement, expectedName: string, targetDate: string): boolean {
+    return element.textContent?.trim() === expectedName;
+  }
+  
+  async addToCart(element: HTMLElement): Promise<boolean> {
     return true;
   }
   
@@ -118,10 +124,12 @@ describe('BaseVendorStrategy', () => {
   describe('abstract method implementation', () => {
     it('should implement all required abstract methods', () => {
       expect(strategy.searchFood).toBeDefined();
+      expect(strategy.validateFood).toBeDefined();
       expect(strategy.addToCart).toBeDefined();
       expect(strategy.getVendorId).toBeDefined();
       
       expect(typeof strategy.searchFood).toBe('function');
+      expect(typeof strategy.validateFood).toBe('function');
       expect(typeof strategy.addToCart).toBe('function');
       expect(typeof strategy.getVendorId).toBe('function');
     });
@@ -130,8 +138,23 @@ describe('BaseVendorStrategy', () => {
       expect(strategy.getVendorId()).toBe('test-vendor');
     });
 
+    it('should return HTMLElement from searchFood', async () => {
+      const result = await strategy.searchFood('test-food', '2025-01-15');
+      expect(result).toBeInstanceOf(HTMLElement);
+      expect(result.textContent).toBe('test-food');
+    });
+
+    it('should validate food element correctly', () => {
+      const element = document.createElement('div');
+      element.textContent = 'Pizza';
+      
+      expect(strategy.validateFood(element, 'Pizza', '2025-01-15')).toBe(true);
+      expect(strategy.validateFood(element, 'Burger', '2025-01-15')).toBe(false);
+    });
+
     it('should return boolean from addToCart', async () => {
-      const result = await strategy.addToCart();
+      const element = document.createElement('button');
+      const result = await strategy.addToCart(element);
       expect(typeof result).toBe('boolean');
     });
   });

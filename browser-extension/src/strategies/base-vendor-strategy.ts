@@ -1,17 +1,20 @@
 // Base strategy interface for all vendors - unified contract
 
-import { CartResult } from '../types/vendor.types';
-
 export abstract class BaseVendorStrategy {
   /**
-   * Search for a specific food item
+   * Search for a specific food item and return the DOM element
    */
-  abstract searchFood(foodName: string): Promise<void>;
+  abstract searchFood(foodName: string, targetDate: string): Promise<HTMLElement>;
   
   /**
-   * Add the currently selected/found food to cart
+   * Validate that the found element matches expectations
    */
-  abstract addToCart(): Promise<boolean>;
+  abstract validateFood(element: HTMLElement, expectedName: string, targetDate: string): boolean;
+  
+  /**
+   * Add the specific food element to cart
+   */
+  abstract addToCart(element: HTMLElement): Promise<boolean>;
   
   /**
    * Get vendor-specific identifier (cityfood, efood, wolt, etc.)
