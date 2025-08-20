@@ -30,7 +30,7 @@ describe('Vendor Content Script Logic', () => {
     // Simulate the auto-cart handler logic
     try {
       const results = await mockCartService.processAutoCart(testAutoCartData);
-      const successCount = results.filter(r => r.success).length;
+      const successCount = results.filter((r: any) => r.success).length;
       const totalCount = results.length;
 
       if (successCount === totalCount) {
@@ -86,7 +86,7 @@ describe('Vendor Content Script Logic', () => {
     // Simulate the auto-cart handler logic
     try {
       const results = await mockCartService.processAutoCart(testAutoCartData);
-      const successCount = results.filter(r => r.success).length;
+      const successCount = results.filter((r: any) => r.success).length;
       const totalCount = results.length;
 
       if (successCount === totalCount) {
@@ -138,7 +138,7 @@ describe('Vendor Content Script Logic', () => {
     // Simulate the auto-cart handler logic
     try {
       const results = await mockCartService.processAutoCart(testAutoCartData);
-      const successCount = results.filter(r => r.success).length;
+      const successCount = results.filter((r: any) => r.success).length;
       const totalCount = results.length;
 
       if (successCount === totalCount) {
@@ -189,7 +189,7 @@ describe('Vendor Content Script Logic', () => {
     // Simulate the auto-cart handler logic
     try {
       const results = await mockCartService.processAutoCart(testAutoCartData);
-      const successCount = results.filter(r => r.success).length;
+      const successCount = results.filter((r: any) => r.success).length;
       const totalCount = results.length;
 
       if (successCount === totalCount) {

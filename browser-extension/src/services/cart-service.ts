@@ -79,7 +79,7 @@ export class CartService {
     if (!foodElement) {
       throw new Error(`Food "${foodName}" not found`);
     }
-    return foodElement;
+    return foodElement as HTMLElement;
   }
 
   private findFoodCategory(foodElement: HTMLElement): HTMLElement {
@@ -87,7 +87,7 @@ export class CartService {
     if (!category) {
       throw new Error('Could not find category for food');
     }
-    return category;
+    return category as HTMLElement;
   }
 
   private getTargetDayIndex(targetDate: string): number {
@@ -103,7 +103,7 @@ export class CartService {
     if (!targetFoodElement) {
       throw new Error(`No food at position ${dayIndex}`);
     }
-    return targetFoodElement;
+    return targetFoodElement as HTMLElement;
   }
 
   private validateFoodAtTarget(

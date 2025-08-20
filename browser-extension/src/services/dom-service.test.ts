@@ -149,7 +149,7 @@ describe('DomService', () => {
       const dateButtons = [
         createMockElement({ attributes: { 'data-date': '2025-01-15' } }),
         createMockElement({ attributes: { 'data-date': '2025-01-16' } }),
-        createMockElement({ attributes: { 'data-date': null } }) // Should be filtered out
+        createMockElement({ attributes: { 'data-date': '' } }) // Should be filtered out
       ];
       mockDocument.querySelectorAll.mockReturnValue(dateButtons);
 
