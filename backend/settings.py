@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     PERF_LOG_FILE: str = "perf.log"
 
     DATABASE_PATH: str = f"/var/lib/forktimize/forktimize.db"
+    DATABASE_BACKUP_ENABLED: bool = True
     DATABASE_BACKUP_BUCKET_NAME: str = "forktimize_backup"
     DATABASE_BACKUP_FILE_PREFIX: str = "forktimize-backup"
     DATABASE_BACKUP_INTERVAL_DAYS: int = 7
@@ -101,6 +102,7 @@ class Settings(BaseSettings):
 class DevSettings(Settings):
     DATABASE_PATH: str = f"{Settings().PROJECT_ROOT_DIR}/forktimize.db"
     LOG_DIR: str = f"{Settings().PROJECT_ROOT_DIR}/logs"
+    DATABASE_BACKUP_ENABLED: bool = False
 
     @computed_field
     def food_image_dir(self) -> Path:

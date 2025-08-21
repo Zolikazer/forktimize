@@ -30,8 +30,12 @@ async def lifespan(app: FastAPI):
             APP_LOGGER.info("🌐 Database initialized.")
 
             SCHEDULER.add_job(run_collect_food_data_job, "cron", hour=0, minute=0)
-            SCHEDULER.add_job(run_database_backup_job, "cron", hour=22, minute=0)
-            APP_LOGGER.info("Jobs scheduled.")
+            
+            if SETTINGS.DATABASE_BACKUP_ENABLED:
+                SCHEDULER.add_job(run_database_backup_job, "cron", hour=22, minute=0)
+                APP_LOGGER.info("Jobs scheduled (including backup job).")
+            else:
+                APP_LOGGER.info("Jobs scheduled (backup job disabled).")
 
             if is_database_empty(session):
                 APP_LOGGER.info("🔄 Cold start detected. Running initial fetch job...")
