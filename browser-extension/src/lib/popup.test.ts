@@ -78,7 +78,7 @@ describe('Popup Functions', () => {
       displayMealPlans({}, mockDocument as any, mockStorageService as any);
 
       // Should create MealPlansContainer component with empty data
-      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans: {} });
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans: {}, storageService: mockStorageService });
       expect(mockBody.appendChild).toHaveBeenCalled();
     });
 
@@ -104,7 +104,7 @@ describe('Popup Functions', () => {
       displayMealPlans(mealPlans, mockDocument as any, mockStorageService as any);
 
       // Should create MealPlansContainer component with meal plans data
-      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans });
+      expect(MealPlansContainerComponent).toHaveBeenCalledWith({ mealPlans, storageService: mockStorageService });
       expect(mockBody.appendChild).toHaveBeenCalled();
     });
   });
